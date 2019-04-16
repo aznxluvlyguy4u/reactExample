@@ -1,0 +1,22 @@
+{
+  "name": "oceanpremium-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "next": "^8.0.4",
+    "path-match": "^1.2.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "url": "^0.11.0"
+  }
+}
