@@ -2,21 +2,30 @@
   "name": "oceanpremium-frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "server.js",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
+    "start-dev": "nodemon -w server/server.js server/server.js",
     "start": "NODE_ENV=production node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zeit/next-sass": "^1.0.1",
+    "aws-serverless-express": "^3.3.6",
+    "axios": "^0.18.0",
     "express": "^4.16.4",
     "next": "^8.0.4",
+    "node-sass": "^4.11.0",
     "path-match": "^1.2.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-modal": "^3.8.1",
     "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11"
   }
 }
