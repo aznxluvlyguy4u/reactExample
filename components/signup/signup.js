@@ -3,6 +3,8 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import {Component} from 'react';
 import './signup.scss';
 import RegisterMapping from '../../utils/mapping/RegisterRequest';
+import CustomInputComponent from './customInputComponent';
+import countrySelectComponent from './countrySelectComponent';
 
 const customStyles = {
   content : {
@@ -32,137 +34,127 @@ const validate = (values) => {
   return errors
 };
 
-const CustomInputComponent = ({
-  field, // { name, value, onChange, onBlur }
-  form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-  ...props
-}) => (
-  <div>
-    <input className={touched[field.name] &&
-      errors[field.name] ? 'error ' + field.name: field.name} type="text" {...field} {...props} />
-    {touched[field.name] &&
-      errors[field.name] && <span>{errors[field.name]}</span>}
-  </div>
-);
-
-class SignUp extends Component {
-  state = {  }
-  onSubmit(values){
-    console.log(values)
-    console.log(new RegisterMapping(values).returnPostPayload())
-    // validateForm().then(() => console.log('blah'))
+function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
+  function onSubmit(values) {
+    console.log(values);
   }
-  render() {
-    return ( <Modal
-      isOpen={this.props.modalIsOpen}
-      onAfterOpen={this.props.afterOpenModal}
-      onRequestClose={this.props.closeModal}
-      style={customStyles}
-    >
-    <div className="signup">
-      <h1>Sign Up</h1>
-      <p>To proceed with checkout</p>
-      <Formik
-      validate={validate}
-  initialValues={{
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  }}
-  onSubmit={values => this.onSubmit(values)}
-  render={(errors, touched, validateForm) => (
+  return ( <Modal
+    isOpen={modalIsOpen}
+    onAfterOpen={afterOpenModal}
+    onRequestClose={closeModal}
+    style={customStyles}
+  >
+  <div className="signup">
+    <h1>Sign Up</h1>
+    <p>To proceed with checkout</p>
+    <Formik
+    validate={validate}
+initialValues={{
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  streetName: '',
+  streetNumber: '',
+  postalCode: '',
+  addressAddition: '',
+  city: '',
+  country: '',
+  phonePrefix: '',
+  phoneNumber: ''
+}}
+onSubmit={values => onSubmit(values)}
+render={({ errors, touched, validateForm, setFieldValue }) => (
 
-    <Form>
-      <div className="firstName form-block">
-        <label htmlFor="firstName">Name</label>
-        <Field name="firstName" placeholder="First name" />
-        <ErrorMessage name="firstName" />
-      </div>
-
-      <div className="lastName form-block">
-        <label htmlFor="lastName">Surname</label>
-        <Field name="lastName" placeholder="Surname" />
-        <ErrorMessage name="lastName" />
-      </div>
-
-      <div className="email form-block">
-        <label htmlFor="email">Email</label>
-        <Field name="email" placeholder="Email" component={CustomInputComponent} />
-        {/* <Field className={errors.errors.email ? 'error' : ''} name="email" placeholder="Email address" type="email" /> */}
-        {/* <ErrorMessage component="span" name="email" /> */}
-      </div>
-
-      <div className="password form-block">
-        <label htmlFor="password">Password</label>
-        <Field name="password" placeholder="Password" type="password" />
-        <ErrorMessage name="password" />
-      </div>
-
-      <div className="confirmPassword form-block">
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <Field name="confirmPassword" placeholder="Confirm Password" type="password" />
-        <ErrorMessage name="confirmPassword" />
-      </div>
-
-      <div className="form-inline">
-      <div className="streetName form-block">
-          <label htmlFor="streetName">Street name</label>
-          <Field name="streetName" placeholder="Street name" />
-          <ErrorMessage name="streetName" />
-      </div>
-      <div className="streetNumber form-block">
-          <label htmlFor="streetNumber">Street number</label>
-          <Field name="streetNumber" placeholder="street Number" />
-          <ErrorMessage name="streetNumber" />
-      </div>
-      <div className="postalCode form-block">
-          <label htmlFor="postalCode">postalCode</label>
-          <Field name="postalCode" placeholder="postalCode" />
-          <ErrorMessage name="postalCode" />
-      </div>
-      </div>
-
-      <div className="addressAddition form-block">
-          <label htmlFor="addressAddition">Address Addition</label>
-          <Field name="addressAddition" placeholder="Address Addition" />
-          <ErrorMessage name="addressAddition" />
-      </div>
-
-      <div className="form-inline">
-        <div className="city form-block">
-            <label htmlFor="city">City</label>
-            <Field name="city" placeholder="City" />
-            <ErrorMessage name="city" />
-        </div>
-        <div className="country form-block">
-            <label htmlFor="country">Country</label>
-            <Field name="country" placeholder="Country" />
-            <ErrorMessage name="country" />
-        </div>
-      </div>
-
-      <div className="form-inline">
-        <div className="phonePrefix form-block">
-            <label htmlFor="phonePrefix">Phone prefix</label>
-            <Field name="phonePrefix" placeholder="Phone prefix" />
-            <ErrorMessage name="phonePrefix" />
-        </div>
-        <div className="phoneNumber form-block">
-            <label htmlFor="phoneNumber">Phone number</label>
-            <Field name="phoneNumber" placeholder="Phone number" />
-            <ErrorMessage name="phoneNumber" />
-        </div>
-      </div>
-
-      <button className="fullwidth-button" type="submit">Next</button>
-    </Form>
-  )}
-    />
+  <Form>
+    <div className="firstName form-block">
+      <label htmlFor="firstName">Name</label>
+      <Field name="firstName" placeholder="First name" component={CustomInputComponent}/>
+      <ErrorMessage name="firstName" />
     </div>
-    </Modal> );
-  }
+
+    <div className="lastName form-block">
+      <label htmlFor="lastName">Surname</label>
+      <Field name="lastName" placeholder="Surname" component={CustomInputComponent}/>
+      <ErrorMessage name="lastName" />
+    </div>
+
+    <div className="email form-block">
+      <label htmlFor="email">Email</label>
+      <Field name="email" placeholder="Email" component={CustomInputComponent} />
+      {/* <Field className={errors.errors.email ? 'error' : ''} name="email" placeholder="Email address" type="email" /> */}
+      {/* <ErrorMessage component="span" name="email" /> */}
+    </div>
+
+    <div className="password form-block">
+      <label htmlFor="password">Password</label>
+      <Field name="password" placeholder="Password" type="password" component={CustomInputComponent}/>
+      <ErrorMessage name="password" />
+    </div>
+
+    <div className="confirmPassword form-block">
+      <label htmlFor="confirmPassword">Confirm Password</label>
+      <Field name="confirmPassword" placeholder="Confirm Password" type="password" component={CustomInputComponent}/>
+      <ErrorMessage name="confirmPassword" />
+    </div>
+
+    <div className="form-inline">
+    <div className="streetName form-block">
+        <label htmlFor="streetName">Street name</label>
+        <Field name="streetName" placeholder="Street name" component={CustomInputComponent}/>
+        <ErrorMessage name="streetName" />
+    </div>
+    <div className="streetNumber form-block">
+        <label htmlFor="streetNumber">Street number</label>
+        <Field name="streetNumber" placeholder="street Number" component={CustomInputComponent}/>
+        <ErrorMessage name="streetNumber" />
+    </div>
+    <div className="postalCode form-block">
+        <label htmlFor="postalCode">postalCode</label>
+        <Field name="postalCode" placeholder="postalCode" component={CustomInputComponent}/>
+        <ErrorMessage name="postalCode" />
+    </div>
+    </div>
+
+    <div className="addressAddition form-block">
+        <label htmlFor="addressAddition">Address Addition</label>
+        <Field name="addressAddition" placeholder="Address Addition" component={CustomInputComponent}/>
+        <ErrorMessage name="addressAddition" />
+    </div>
+
+    <div className="form-inline">
+      <div className="city form-block">
+          <label htmlFor="city">City</label>
+          <Field name="city" placeholder="City" component={CustomInputComponent}/>
+          <ErrorMessage name="city" />
+      </div>
+      <div className="country form-block">
+          <label htmlFor="country">Country</label>
+          <Field name="country" placeholder="Country" setFieldValue={setFieldValue} component={countrySelectComponent}/>
+          <ErrorMessage name="country" />
+      </div>
+    </div>
+
+    <div className="form-inline">
+      <div className="phonePrefix form-block">
+          <label htmlFor="phonePrefix">Prefix</label>
+          <Field name="phonePrefix" placeholder="Prefix" />
+          <ErrorMessage name="phonePrefix" />
+      </div>
+      <div className="phoneNumber form-block">
+          <label htmlFor="phoneNumber">Phone number</label>
+          <Field name="phoneNumber" placeholder="Phone number" />
+          <ErrorMessage name="phoneNumber" />
+      </div>
+    </div>
+
+    <button className="fullwidth-button" type="submit">Next</button>
+  </Form>
+)}
+  />
+  </div>
+  </Modal> );
 }
 
 export default SignUp;

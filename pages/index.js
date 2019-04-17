@@ -12,7 +12,6 @@ class IndexPage extends React.Component {
   async componentDidMount () {
   }
 
-
   render () {
     return (
       <Default meta={meta}>

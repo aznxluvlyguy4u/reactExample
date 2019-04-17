@@ -19,10 +19,10 @@
     width: 50%;
   }
   .phonePrefix {
-    width: 25%;
+    width: 20%;
   }
   .phoneNumber{
-    width: 75%;
+    width: 80%;
   }
   .postalCode {
     width: 35%;
@@ -55,8 +55,11 @@
     font-family: $font-stack;
     width: 100%;
     border: 2px solid $input-color;
-    color: $input-color;
+    color: $blue;
     padding: 10px;
+    @include placeholder {
+      color: $input-color;
+    }
     .inline{
       display: inline
     }
@@ -72,7 +75,7 @@
 }
 
 .fullwidth-button{
-  margin-top: 5px;
+  margin-top: 15px;
   background-color: $yellow;
   width: 100%;
   border:none;
