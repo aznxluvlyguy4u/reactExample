@@ -3,13 +3,48 @@
 .signup{
   min-width: 450px;
   padding:10px;
+  margin-bottom: 50px;
+}
+
+.form-inline{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-start;
+  align-content: space-around;
+  .country {
+    width: 50%;
+  }
+  .city {
+    width: 50%;
+  }
+  .phonePrefix {
+    width: 25%;
+  }
+  .phoneNumber{
+    width: 75%;
+  }
+  .postalCode {
+    width: 35%;
+  }
+  .addressAddition{
+    width: 65%;
+  }
+  .streetName{
+    width: 45%;
+  }
+  .streetNumber{
+    width: 25%;
+  }
 }
 
 .form-block{
   display:block;
   margin-bottom: 10px;
   margin-top: 10px;
+  padding-right: 10px;
   label {
+    width: 100%;
     display:block;
     font-size: 12px;
     font-weight:bold;
@@ -22,6 +57,9 @@
     border: 2px solid $input-color;
     color: $input-color;
     padding: 10px;
+    .inline{
+      display: inline
+    }
   }
   .error {
     border: 2px solid $red;
