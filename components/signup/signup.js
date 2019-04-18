@@ -87,7 +87,7 @@ function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
     <Formik
     validate={validate}
     validationSchema={SignupSchema}
-    initialValues={testValues}
+    initialValues={initialValues}
     onSubmit={onSubmit}
     render={({ errors, touched, validateForm, setFieldValue }) => (
 
