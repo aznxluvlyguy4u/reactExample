@@ -29,9 +29,7 @@ const SignupSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(6, 'Too Long!')
     .required('This is a required field'),
-  addressAddition: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!'),
+  addressAddition: Yup.string(),
   city: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')

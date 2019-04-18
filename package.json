@@ -31,10 +31,12 @@
     "react-select": "^2.4.3",
     "react-toastify": "^5.1.0",
     "sass-resources-loader": "^2.0.0",
+    "uninstall": "0.0.0",
     "url": "^0.11.0",
     "yup": "^0.27.0"
   },
   "devDependencies": {
+    "dotenv": "^7.0.0",
     "nodemon": "^1.18.11"
   }
 }

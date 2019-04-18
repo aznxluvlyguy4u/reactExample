@@ -127,7 +127,7 @@ function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
             <Field name="streetNumber" placeholder="street Number" component={CustomInputComponent}/>
         </div>
         <div className="postalCode form-block">
-            <label htmlFor="postalCode">postalCode</label>
+            <label htmlFor="postalCode">Postal code</label>
             <Field name="postalCode" placeholder="postalCode" component={CustomInputComponent}/>
         </div>
         </div>

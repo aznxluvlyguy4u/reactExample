@@ -17,7 +17,9 @@ module.exports = withCSS(withSass({
         }
       }
     })
-
+    config['node'] = {
+      fs: "empty"
+   }
     return config
   }
 }))

@@ -4,10 +4,10 @@ import handleRestResponse from "../requestUtil";
 
 export function registerUser(json) {
   const payload = new RegisterRequest(json).returnPostPayload();
-    const url = `${MOCK_URL}/register`;
+    const url = `${URL}/users/register`;
     return fetch(url, {
       method: 'POST',
-      body: payload,
+      body: JSON.stringify(payload),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

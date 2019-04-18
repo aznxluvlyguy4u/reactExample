@@ -1,4 +1,5 @@
-import * as Sentry from '@sentry/browser';import { Component } from 'react';
+import * as Sentry from '@sentry/browser';
+import { Component } from 'react';
 
 export default class ErrorLogging extends Component {
   constructor(props) {
@@ -7,6 +8,7 @@ export default class ErrorLogging extends Component {
   }
 
   componentDidMount(){
+    require('dotenv').config()
     Sentry.init({
       dsn: 'https://733cb82e193b4ed88b7e5aa074bbcd10@sentry.io/1441370',
     });
