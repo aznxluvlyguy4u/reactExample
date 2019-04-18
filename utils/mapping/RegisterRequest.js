@@ -23,7 +23,7 @@ export default class RegisterRequest {
       "address": {
         "country" : {
           "alpha2code": this.country.alpha2Code,
-          "callingCode": this.country.callingCode,
+          "callingCodes": this.country.callingCode,
           "name": this.country.name
         },
         "city": {
@@ -34,7 +34,7 @@ export default class RegisterRequest {
         "streetBlock": this.addressAddition,
         "postalCode": this.postalCode,
         "phone": {
-          "number": this.phoneNumber,
+          "phoneNumber": this.phoneNumber,
           "countryCode": this.phonePrefix
         }
       },

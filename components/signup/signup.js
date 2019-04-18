@@ -62,22 +62,15 @@ const initialValues = {
 }
 function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
   async function onSubmit(values, bag) {
-    console.log(values)
     try {
     await registerUser(values)
     toast.success("Success")
     } catch(error){
       bag.setSubmitting(false)
       if (error.statusCode === 403){
-        bag.setErrors({email: error.message})
+        bag.setErrors({email: error.status})
       }
       if (error.statusCode === 400){
-        // console.log("test error")
-        // const obj = new RegisterError(error.message)
-        // console.log(obj)
-        // console.log(obj.returnResponsePayload())
-        // const payload = new RegisterError(error.message).returnResponsePayload();
-        // console.log(payload)
         bag.setErrors(new RegisterError(error.message).returnResponsePayload())
       }
     }

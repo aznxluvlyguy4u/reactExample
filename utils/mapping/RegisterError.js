@@ -1,7 +1,5 @@
 export default class RegisterError {
   constructor(json) {
-    // this.firstName = "dsfsdf";
-    // this.lastName = "test";
     this.firstName = json.firstName;
     this.lastName = json.lastName;
     this.email = json.emailAddress;
@@ -11,6 +9,7 @@ export default class RegisterError {
     this.country = json.address.country;
     this.addressAddition = json.address.streetBlock;
     this.phoneNumber = json.address.phone.phoneNumber;
+    this.phonePrefix = json.address.phone.countryCode;
   }
 
   returnResponsePayload() {
@@ -23,13 +22,8 @@ export default class RegisterError {
       "country": this.country,
       "phoneNumber": this.phoneNumber,
       "postalCode": this.postalCode,
-      "addressAddition": this.addressAddition
+      "addressAddition": this.addressAddition,
+      "phonePrefix": this.phonePrefix
     }
   }
 }
-
-// export default  class RegisterError {
-//   constructor() {
-//     this.test = "hello world";
-//   }
-// }
