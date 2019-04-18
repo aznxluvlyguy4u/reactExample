@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Select from 'react-select'
+import {continents, countries, languages, languagesAll} from 'countries-list';
+import { transformCountryData } from '../../utils/data/countryDataUtil';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' }
-]
+const options = transformCountryData(countries)
 
 const colourStyles = {
   control: styles => ({ ...styles, backgroundColor: 'white', fontSize: '11px', color: '#D3D3D3', borderRadius: '0px', border: 'solid 2px #D3D3D3', paddingTop: '4px', paddingBottom: '4px', 'boxShadow': 'none', '&:hover': {
@@ -39,11 +37,12 @@ function CountrySelectComponent({
 
   function onChange(value) {
     if (typeof setFieldValue === 'function') setFieldValue(field.name, value.value);
-    if (typeof setFieldValue === 'function') setFieldValue('phonePrefix', '+31');
+    if (typeof setFieldValue === 'function') setFieldValue('phonePrefix', '+'+value.phone);
     setDropdownValue(value);
   }
 
-  return (<>
+  return (
+   <>
     <Select  components={
     {
       DropdownIndicator: () => null,
