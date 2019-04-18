@@ -72,10 +72,13 @@ function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
         bag.setErrors({email: error.message})
       }
       if (error.statusCode === 400){
-        console.log("error")
-        const payload = new RegisterError(error.message).returnResponsePayload();
-        console.log(payload)
-        // bag.setErrors(new RegisterError(error.message).returnResponsePayload())
+        // console.log("test error")
+        // const obj = new RegisterError(error.message)
+        // console.log(obj)
+        // console.log(obj.returnResponsePayload())
+        // const payload = new RegisterError(error.message).returnResponsePayload();
+        // console.log(payload)
+        bag.setErrors(new RegisterError(error.message).returnResponsePayload())
       }
     }
   }

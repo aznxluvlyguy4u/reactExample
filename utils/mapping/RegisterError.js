@@ -1,21 +1,19 @@
 export default class RegisterError {
   constructor(json) {
-    console.log('registererror')
+    // this.firstName = "dsfsdf";
+    // this.lastName = "test";
     this.firstName = json.firstName;
     this.lastName = json.lastName;
-    // this.password = state.password;
     this.email = json.emailAddress;
-    // this.streetName = state.streetName;
     this.streetNumber = json.address.streetNumber;
     this.postalCode = json.address.postalCode;
-    this.city = state.address.city;
+    this.city = json.address.city;
     this.country = json.address.country;
-    this.addressAddition = state.address.streetBlock;
-    this.phoneNumber = json.phone.phoneNumber;
-    // this.phonePrefix = state.phonePrefix;
+    this.addressAddition = json.address.streetBlock;
+    this.phoneNumber = json.address.phone.phoneNumber;
   }
+
   returnResponsePayload() {
-    console.log('returnresponsepayload')
     return {
       "firstName": this.firstName,
       "lastName": this.lastName,
@@ -29,3 +27,9 @@ export default class RegisterError {
     }
   }
 }
+
+// export default  class RegisterError {
+//   constructor() {
+//     this.test = "hello world";
+//   }
+// }
