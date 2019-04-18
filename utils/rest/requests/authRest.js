@@ -1,4 +1,4 @@
-import { DEV_URL, MOCK_URL } from "../requestConstants";
+import { URL } from "../requestConstants";
 import RegisterRequest from "../../mapping/RegisterRequest";
 import handleRestResponse from "../requestUtil";
 

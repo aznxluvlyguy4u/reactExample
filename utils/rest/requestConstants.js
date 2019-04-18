@@ -1,4 +1,4 @@
-const DEV_URL = 'localhost:3000'
+const DEV_URL = 'http://localhost:3000'
 const MOCK_URL = 'http://localhost:3001'
 const LOCAL_URL = 'http://localhost:8080/api/v1'
 const PROD_URL = ''
