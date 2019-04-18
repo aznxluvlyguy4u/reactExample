@@ -49,6 +49,8 @@ function CountrySelectComponent({
       IndicatorSeparator: () => null
     }
   } styles={colourStyles} onChange={onChange} options={options} />
+  {touched[field.name] &&
+      errors[field.name] && <span>{errors[field.name]}</span>}
     <input name={field.name} type="hidden" value={dropdownValue.value ? dropdownValue.value : dropdownValue} />
   </>);
 }

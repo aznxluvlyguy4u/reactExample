@@ -29,8 +29,10 @@
     "react-dom": "^16.8.6",
     "react-modal": "^3.8.1",
     "react-select": "^2.4.3",
+    "react-toastify": "^5.1.0",
     "sass-resources-loader": "^2.0.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.11"
