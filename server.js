@@ -11,9 +11,11 @@ app
   .then(() => {
     const server = express();
 
-    // server.get("/", (req, res) => {
-    //   return app.render(req, res, "/", req.params);
-    // });
+    server.get("/", (req, res) => {
+      return app.render(req, res, "/", req.params);
+    });
+
+    // server.use('/static', express.static(path.join(__dirname, 'static')))
 
     // server.get("/dogs", (req, res) => {
     //   return app.render(req, res, "/dogs", req.params);

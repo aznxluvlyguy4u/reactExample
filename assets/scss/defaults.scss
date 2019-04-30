@@ -1,0 +1,21 @@
+@import '_variables';
+
+body {
+  font-family: $font-stack;
+  color: $black;
+}
+
+h1 {
+  font-family: $font-stack;
+  color: $black;
+  font-size: 36;
+  font-weight: bold
+}
+
+p {
+  font-family: $font-stack;
+  color: $black;
+  font-size:18;
+}
+
+textarea, select, input, button { outline: none; }
