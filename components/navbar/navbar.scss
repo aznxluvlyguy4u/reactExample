@@ -1,0 +1,55 @@
+.nav-wrapper {
+  position: absolute;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  -webkit-transition: background-color 300ms linear;
+  -ms-transition: background-color 300ms linear;
+  transition: background-color 300ms linear;
+  ul {
+    li {
+      display: inline-block;
+      list-style: none;
+      a {
+        color: white;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.logo {
+  margin-top:15px;
+  margin-left:25px;
+}
+
+.nav {
+  margin-right: 25px;
+}
+
+.nav-top {
+  position: fixed;
+  color: black;
+  background-color: white;
+  display: flex;
+  -webkit-transition: background-color 300ms linear;
+  -ms-transition: background-color 300ms linear;
+  transition: background-color 300ms linear;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  ul {
+    li {
+      display: inline-block;
+      list-style: none;
+      a {
+        color: black;
+        text-decoration: none;
+      }
+    }
+  }
+}
