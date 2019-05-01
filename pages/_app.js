@@ -14,7 +14,7 @@ import rootReducer from '../reducers/rootReducer';
 * @param {string} options.storeKey This key will be used to preserve store in global namespace for safe HMR
 */
 const makeStore = (initialState, options) => {
-    return createStore(reducer, initialState);
+    return createStore(rootReducer, initialState);
 };
 
 class MyApp extends App {

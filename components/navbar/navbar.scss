@@ -13,6 +13,10 @@
     align-items: center;
     justify-content: flex-start;
     height: 70px;
+    width: 75%;
+    @include for-tablet-portrait-up {
+      width: 300px;
+    }
     .logo {
       margin-top: 5px;
       margin-left:40px;
@@ -21,26 +25,52 @@
       margin-left: 30px;
     }
   }
+  .burger-menu {
+    border:none;
+    background-color: transparent;
+    font-size: 25px;
+    margin-right:20px;
+    cursor: pointer;
+  }
   .nav {
-    display: flex;
-    align-items:center;
-    ul {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      width: 500px;
-      li {
-        margin-left: 50px;
-        margin-right: 20px;
-        display: inline-block;
-        list-style: none;
-        a {
-          text-decoration: none;
+    &.responsive {
+      position:absolute;
+      top: 70px;
+      background-color:grey;
+      width: 100%;
+      ul {
+        padding:0;
+        margin:0;
+        width: 100%;
+        li {
+          list-style:none;
+          width: 100%;
         }
       }
     }
-    margin-right: 25px;
+      // display: none;
+
+    @include for-tablet-portrait-up {
+      align-items:center;
+      display:flex;
+      ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        width: 332px;
+        li {
+          margin-left: 50px;
+          margin-right: 20px;
+          display: inline-block;
+          list-style: none;
+          a {
+            text-decoration: none;
+          }
+        }
+      }
+      margin-right: 25px;
+    }
   }
 }
 
@@ -51,6 +81,15 @@
   a {
     color: $white;
   }
+  .nav {
+    &.responsive {
+      background-color:transparent;
+      color:white;
+    }
+  }
+  .burger-menu {
+    color: white;
+  }
 }
 
 .fixed {
@@ -59,6 +98,15 @@
   background-color: $white;
   @include transition(background-color 300ms linear);
   @include box-shadow(0px 2px 21px 0px rgba(196,196,196,0.44));
+  .nav {
+    &.responsive {
+      background-color:white;
+      color:black;
+    }
+  }
+  .burger-menu {
+    color: black;
+  }
   a {
     color: $black;
   }
@@ -96,6 +144,7 @@
 
 .search-wrapper {
   display: flex;
+  justify-content: flex-start;
   align-items:center;
 }
 
@@ -118,5 +167,15 @@
   align-items: center;
   img {
     margin-right:5px;
+  }
+}
+
+.input-wrapper {
+  width: inherit;
+}
+
+.burger-menu {
+  @include for-tablet-portrait-up {
+    display:none;
   }
 }

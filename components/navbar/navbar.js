@@ -18,11 +18,13 @@ export default class Navbar extends React.Component {
     this.state = {
       signUpModalIsOpen: false,
       nav: 'transparent',
-      cartCount: 0
+      cartCount: 0,
+      responsive: true
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.updateDimensions = this.updateDimensions.bind(this);
   }
 
   componentWillMount() {
@@ -32,11 +34,14 @@ export default class Navbar extends React.Component {
   }
 
   componentDidMount(){
+    this.updateDimensions()
     window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   nav = React.createRef();
@@ -53,6 +58,14 @@ export default class Navbar extends React.Component {
     }
   };
 
+  updateDimensions = () => {
+    if (window.innerWidth < 800){
+      this.setState({responsive: true})
+      return
+    }
+    this.setState({responsive: false})
+  }
+
   openModal() {
     this.setState({ signUpModalIsOpen: true });
   }
@@ -63,6 +76,7 @@ export default class Navbar extends React.Component {
     Router.push('/search?keyword='+values.keyword)
   }
   render() {
+    console.log(this.state.responsive)
     return (
       <div className={"nav-base " + this.state.nav}>
       {this.props.search ? <div className="logo-wrapper">
@@ -88,8 +102,7 @@ export default class Navbar extends React.Component {
           <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/logo_dark.png" : "/static/images/logo.png"} alt="Logo" height="25" width="120" /></a>
         </Link>
       </div>}
-
-        <nav ref={this.nav} className='nav'>
+        <nav ref={this.nav} className={this.state.responsive === true ? 'nav responsive' : 'nav'}>
           <ul>
             <li>
               <Link href='/'><a>Shop</a></Link>
@@ -105,6 +118,8 @@ export default class Navbar extends React.Component {
             </li> */}
           </ul>
         </nav>
+        <button className="burger-menu" type="submit"><FontAwesome.FaBars /></button>
+
         {/* <SignUp modalIsOpen={this.state.signUpModalIsOpen} openModal={this.openModal} closeModal={this.closeModal}></SignUp> */}
       </div>
     );

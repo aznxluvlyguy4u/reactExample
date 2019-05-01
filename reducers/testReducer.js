@@ -1,4 +1,4 @@
-export default testReducer = (state = {foo: ''}, action) => {
+const testReducer = (state = {foo: ''}, action) => {
   switch (action.type) {
       case 'FOO':
           return {...state, foo: action.payload};
@@ -6,3 +6,5 @@ export default testReducer = (state = {foo: ''}, action) => {
           return state
   }
 };
+
+export default testReducer;
