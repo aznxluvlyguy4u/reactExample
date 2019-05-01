@@ -1,55 +1,65 @@
-.nav-wrapper {
-  position: absolute;
-  color: white;
+@import '../../assets/scss/_variables';
+@import '../../assets/scss/_mixins';
+
+.nav-base {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
-  -webkit-transition: background-color 300ms linear;
-  -ms-transition: background-color 300ms linear;
-  transition: background-color 300ms linear;
-  ul {
-    li {
-      display: inline-block;
-      list-style: none;
-      a {
-        color: white;
-        text-decoration: none;
+  .logo-wrapper {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 70px;
+    .logo {
+      margin-top: 5px;
+      margin-left:40px;
+    }
+    .search {
+      margin-left: 30px;
+    }
+  }
+  .nav {
+    display: flex;
+    align-items:center;
+    ul {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      width: 300px;
+      li {
+        margin-left: 50px;
+        margin-right: 20px;
+        display: inline-block;
+        list-style: none;
+        a {
+          text-decoration: none;
+        }
       }
     }
+    margin-right: 25px;
   }
 }
 
-.logo {
-  margin-top:15px;
-  margin-left:25px;
+.transparent {
+  position: absolute;
+  color: $white;
+  @include transition(background-color 300ms linear);
+  a {
+    color: $white;
+  }
 }
 
-.nav {
-  margin-right: 25px;
-}
-
-.nav-top {
+.fixed {
   position: fixed;
-  color: black;
-  background-color: white;
-  display: flex;
-  -webkit-transition: background-color 300ms linear;
-  -ms-transition: background-color 300ms linear;
-  transition: background-color 300ms linear;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  ul {
-    li {
-      display: inline-block;
-      list-style: none;
-      a {
-        color: black;
-        text-decoration: none;
-      }
-    }
+  color: $black;
+  background-color: $white;
+  @include transition(background-color 300ms linear);
+  @include box-shadow(0px 2px 21px 0px rgba(196,196,196,0.44));
+  a {
+    color: $black;
   }
 }

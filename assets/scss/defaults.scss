@@ -1,8 +1,17 @@
 @import '_variables';
+@import '_mixins';
+
+html {
+  margin:0;
+  padding:0;
+}
 
 body {
   font-family: $font-stack;
   color: $black;
+  margin:0;
+  padding:0;
+  background-color: #E5E5E5;
 }
 
 h1 {

@@ -15,6 +15,10 @@ app
       return app.render(req, res, "/", req.params);
     });
 
+    server.get("/test", (req, res) => {
+      return app.render(req, res, "/test", req.params);
+    });
+
     // server.use('/static', express.static(path.join(__dirname, 'static')))
 
     // server.get("/dogs", (req, res) => {
