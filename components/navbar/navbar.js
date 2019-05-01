@@ -53,7 +53,7 @@ export default class Navbar extends React.Component {
       <div className={"nav-base " + this.state.nav}>
       {this.props.search ? <div className="logo-wrapper">
         <Link href='/'>
-          <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/icon_dark.png" : "/static/images/logo.png"} alt="Logo" height={this.state.nav === 'fixed' ? 23 : 25} width={this.state.nav === 'fixed' ? 31 : 120} /></a>
+          <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/icon_dark.png" : "/static/images/logo.png"} alt="Logo" height={this.props.nav === 'fixed' ? 23 : 25} width={this.props.nav === 'fixed' ? 31 : 120} /></a>
         </Link>
         <div className="search">test</div>
       </div> : <div className="logo-wrapper">
