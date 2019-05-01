@@ -1,8 +1,8 @@
-const express = require("express");
-const next = require("next");
+const express = require('express');
+const next = require('next');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
-const dev = process.env.NODE_ENV !== "production";
+const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -11,12 +11,12 @@ app
   .then(() => {
     const server = express();
 
-    server.get("/", (req, res) => {
-      return app.render(req, res, "/", req.params);
+    server.get('/', (req, res) => {
+      return app.render(req, res, '/', req.params);
     });
 
-    server.get("/test", (req, res) => {
-      return app.render(req, res, "/test", req.params);
+    server.get('/test', (req, res) => {
+      return app.render(req, res, '/test', req.params);
     });
 
     // server.use('/static', express.static(path.join(__dirname, 'static')))
