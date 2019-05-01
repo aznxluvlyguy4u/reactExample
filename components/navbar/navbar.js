@@ -8,6 +8,10 @@ import CustomInputComponent from '../signup/customInputComponent';
 import Router from 'next/router';
 import * as FontAwesome from 'react-icons/lib/fa'
 
+const initialValues = {
+  keyword: ""
+}
+
 export default class Navbar extends React.Component {
   constructor() {
     super();
@@ -56,10 +60,8 @@ export default class Navbar extends React.Component {
     this.setState({ signUpModalIsOpen: false });
   }
   onSubmit(values){
-    console.log(values);
-    Router.push('/search')
+    Router.push('/search?keyword='+values.keyword)
   }
-
   render() {
     return (
       <div className={"nav-base " + this.state.nav}>
@@ -68,12 +70,13 @@ export default class Navbar extends React.Component {
           <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/icon_dark.png" : "/static/images/logo.png"} alt="Logo" height={this.props.nav === 'fixed' ? 23 : 25} width={this.props.nav === 'fixed' ? 31 : 120} /></a>
         </Link>
         <Formik
+    initialValues={initialValues}
     onSubmit={this.onSubmit}
     render={({ errors, touched, validateForm, setFieldValue }) => (
       <Form>
         <div className="search-wrapper">
           <div className="search form-block">
-            <Field name="search" placeholder="Anything, anytime, any place" component={CustomInputComponent}/>
+            <Field name="keyword" placeholder="Anything, anytime, any place" component={CustomInputComponent}/>
           </div>
           <button className="search-button" type="submit"><FontAwesome.FaSearch /></button>
         </div>

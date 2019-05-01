@@ -1,5 +1,5 @@
 import React from 'react';
-import Default from '../layouts/default';
+import Default from '../../layouts/default';
 import './index.scss';
 
 const meta = { title: 'Oceanpremium - Shop', description: 'Index description' };
