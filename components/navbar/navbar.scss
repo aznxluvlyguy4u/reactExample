@@ -1,5 +1,5 @@
-@import '../../assets/scss/_variables';
-@import '../../assets/scss/_mixins';
+@import "../../assets/scss/_variables";
+@import "../../assets/scss/_mixins";
 
 .nav-base {
   display: flex;
@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     img {
-      margin-right:5px;
+      margin-right: 5px;
     }
   }
   .mobile-menu {
@@ -20,10 +20,10 @@
     right: 0;
     color: #fff;
     li {
-      padding:10px;
-      padding-left:20px;
+      padding: 10px;
+      padding-left: 20px;
       a {
-        text-decoration:none;
+        text-decoration: none;
       }
     }
 
@@ -46,6 +46,9 @@
       height: 40px;
       font-size: 30px;
       color: black;
+      button{
+        height: 200% !important;
+      }
     }
 
     .menu-item {
@@ -64,7 +67,7 @@
     }
   }
   .logo-wrapper {
-    display:flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
@@ -75,37 +78,37 @@
     }
     .logo {
       margin-top: 5px;
-      margin-left:40px;
+      margin-left: 40px;
     }
     .search {
       margin-left: 30px;
     }
   }
   .nav {
-      align-items:center;
-      display:flex;
-      .cart {
-        width: 27px;
-        height:24px;
-        background-size:cover;
-      }
-      ul {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        width: 332px;
-        li {
-          margin-left: 50px;
-          margin-right: 20px;
-          display: inline-block;
-          list-style: none;
-          a {
-            text-decoration: none;
-          }
+    align-items: center;
+    display: flex;
+    .cart {
+      width: 27px;
+      height: 24px;
+      background-size: cover;
+    }
+    ul {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      width: 332px;
+      li {
+        margin-left: 50px;
+        margin-right: 20px;
+        display: inline-block;
+        list-style: none;
+        a {
+          text-decoration: none;
         }
       }
     }
+  }
 }
 
 .transparent {
@@ -113,7 +116,7 @@
   color: $white;
   @include transition(background-color 300ms linear);
   .cart {
-    background-image: url('/static/images/cart_white.png')
+    background-image: url("/static/images/cart_white.png");
   }
   a {
     color: $white;
@@ -127,7 +130,7 @@
       color: $black;
     }
     .cart {
-      background-image: url('/static/images/cart_dark.png')
+      background-image: url("/static/images/cart_dark.png");
     }
   }
 }
@@ -137,14 +140,14 @@
   color: $black;
   background-color: $white;
   @include transition(background-color 300ms linear);
-  @include box-shadow(0px 2px 21px 0px rgba(196,196,196,0.44));
+  @include box-shadow(0px 2px 21px 0px rgba(196, 196, 196, 0.44));
   .cart {
-    background-image: url('/static/images/cart_dark.png')
+    background-image: url("/static/images/cart_dark.png");
   }
   .nav {
     &.responsive {
-      background-color:white;
-      color:black;
+      background-color: white;
+      color: black;
     }
   }
   .bm-burger-button {
@@ -157,7 +160,7 @@
 
 .bm-burger-button {
   display: flex;
-  align-items:center;
+  align-items: center;
   position: absolute;
   top: 0;
   right: 0;
@@ -168,8 +171,8 @@
 .search-wrapper {
   display: flex;
   justify-content: flex-start;
-  align-items:center;
-  .search-button{
+  align-items: center;
+  .search-button {
     color: $white;
     border: none;
     background-color: $yellow;
@@ -178,18 +181,18 @@
     border-radius: $border-radius;
     cursor: pointer;
     font-size: 18px;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     justify-content: center;
   }
-  .form-block{
-    display:block;
+  .form-block {
+    display: block;
     margin-bottom: 10px;
     margin-top: 10px;
     padding-right: 10px;
-    input{
+    input {
       border-radius: $border-radius;
-      box-sizing:border-box;
+      box-sizing: border-box;
       font-family: $font-stack;
       width: 100%;
       border: $border-width solid $input-color;
@@ -198,15 +201,15 @@
       @include placeholder {
         color: $input-color;
       }
-      .inline{
-        display: inline
+      .inline {
+        display: inline;
       }
     }
     .error {
       border: $border-width solid $red;
       color: $red;
     }
-    span{
+    span {
       color: $red;
       font-size: 12px;
     }

@@ -79,8 +79,8 @@ export default class Navbar extends React.Component {
       }
       return (
         <li>
-          <Link className='menu-item' key={menuItem.title} to={'/'+menuItem.title}>
-            {menuItem.title}
+          <Link key={menuItem.title} href={'/'+menuItem.title}>
+            <a>{menuItem.title}</a>
           </Link>
         </li>
       )

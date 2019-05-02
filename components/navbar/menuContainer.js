@@ -2,27 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import * as FontAwesome from 'react-icons/lib/fa';
 
-function useWindowWidth() {
-  return window.innerWidth;
-}
-
 export default class MenuContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { open: false };
+    this.state = { open: false, width: undefined };
+    this.useWindowWidth = this.useWindowWidth.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener('resize', useWindowWidth);
+    window.addEventListener('resize', this.useWindowWidth);
+    this.useWindowWidth();
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', useWindowWidth);
+    window.removeEventListener('resize', this.useWindowWidth);
+  }
+
+  useWindowWidth() {
+    this.setState({ width: window.innerWidth });
+    return window.innerWidth;
   }
 
   render() {
-    const screenWidth = useWindowWidth();
-    if (screenWidth < 800) {
+    if (this.state.width <= 800) {
       return (
         <div className={`mobile-menu ${this.state.open ? 'open' : ''}`}>
           <Menu
