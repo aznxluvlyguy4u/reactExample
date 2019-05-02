@@ -7,6 +7,8 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import CustomInputComponent from '../signup/customInputComponent';
 import Router from 'next/router';
 import * as FontAwesome from 'react-icons/lib/fa'
+import { slide as Menu } from 'react-burger-menu';
+import MenuContainer from './menuContainer';
 
 const initialValues = {
   keyword: ""
@@ -19,29 +21,25 @@ export default class Navbar extends React.Component {
       signUpModalIsOpen: false,
       nav: 'transparent',
       cartCount: 0,
-      responsive: true
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.updateDimensions = this.updateDimensions.bind(this);
+    this.menuItems = [{ title: 'bla' }, { title: 'bla' }, { title: 'cart', icon: true }]
   }
 
   componentWillMount() {
     if (this.props.nav === "fixed") {
-      this.setState({nav: 'fixed'})
+      this.setState({ nav: 'fixed' })
     }
   }
 
-  componentDidMount(){
-    this.updateDimensions()
+  componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
-    window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
-    window.removeEventListener("resize", this.updateDimensions);
   }
 
   nav = React.createRef();
@@ -58,68 +56,68 @@ export default class Navbar extends React.Component {
     }
   };
 
-  updateDimensions = () => {
-    if (window.innerWidth < 800){
-      this.setState({responsive: true})
-      return
-    }
-    this.setState({responsive: false})
-  }
-
   openModal() {
     this.setState({ signUpModalIsOpen: true });
   }
   closeModal() {
     this.setState({ signUpModalIsOpen: false });
   }
-  onSubmit(values){
-    Router.push('/search?keyword='+values.keyword)
+  onSubmit(values) {
+    Router.push('/search?keyword=' + values.keyword)
+  }
+  showSettings(event) {
+    event.preventDefault();
   }
   render() {
-    console.log(this.state.responsive)
+    const items = this.menuItems.map(menuItem => {
+      if (menuItem.icon === true) {
+        return (
+          <li>
+            <Link href='/test'><a><div className="cart-wrapper"><img height="18" width="25" alt="cart" src={this.state.nav === 'fixed' ? "/static/images/cart_dark.png" : "/static/images/cart_white.png"} />{this.state.cartCount}</div></a></Link>
+          </li>
+        )
+      }
+      return (
+        <li>
+          <Link className='menu-item' key={menuItem.title} to={'/'+menuItem.title}>
+            {menuItem.title}
+          </Link>
+        </li>
+      )
+    })
     return (
       <div className={"nav-base " + this.state.nav}>
-      {this.props.search ? <div className="logo-wrapper">
-        <Link href='/'>
-          <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/icon_dark.png" : "/static/images/logo.png"} alt="Logo" height={this.props.nav === 'fixed' ? 23 : 25} width={this.props.nav === 'fixed' ? 31 : 120} /></a>
-        </Link>
-        <Formik
-    initialValues={initialValues}
-    onSubmit={this.onSubmit}
-    render={({ errors, touched, validateForm, setFieldValue }) => (
-      <Form>
-        <div className="search-wrapper">
-          <div className="search form-block">
-            <Field name="keyword" placeholder="Anything, anytime, any place" component={CustomInputComponent}/>
-          </div>
-          <button className="search-button" type="submit"><FontAwesome.FaSearch /></button>
-        </div>
-      </Form>
-    )}
-      />
-      </div> : <div className="logo-wrapper">
-        <Link href='/'>
-          <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/logo_dark.png" : "/static/images/logo.png"} alt="Logo" height="25" width="120" /></a>
-        </Link>
-      </div>}
-        <nav ref={this.nav} className={this.state.responsive === true ? 'nav responsive' : 'nav'}>
-          <ul>
-            <li>
-              <Link href='/'><a>Shop</a></Link>
-            </li>
-            <li>
-              <Link href='/test'><a>Test</a></Link>
-            </li>
-            <li>
-              <Link href='/test'><a><div className="cart-wrapper"><img height="18" width="25" alt="cart" src={this.state.nav === 'fixed' ? "/static/images/cart_dark.png" : "/static/images/cart_white.png"}/> {this.state.cartCount}</div></a></Link>
-            </li>
-            {/* <li>
+        {this.props.search ? <div className="logo-wrapper">
+          <Link href='/'>
+            <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/icon_dark.png" : "/static/images/logo.png"} alt="Logo" height={this.props.nav === 'fixed' ? 23 : 25} width={this.props.nav === 'fixed' ? 31 : 120} /></a>
+          </Link>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={this.onSubmit}
+            render={({ errors, touched, validateForm, setFieldValue }) => (
+              <Form>
+                <div className="search-wrapper">
+                  <div className="search form-block">
+                    <Field name="keyword" placeholder="Anything, anytime, any place" component={CustomInputComponent} />
+                  </div>
+                  <button className="search-button" type="submit"><FontAwesome.FaSearch /></button>
+                </div>
+              </Form>
+            )}
+          />
+        </div> : <div className="logo-wrapper">
+            <Link href='/'>
+              <a><img className="logo" src={this.state.nav === 'fixed' ? "/static/images/logo_dark.png" : "/static/images/logo.png"} alt="Logo" height="25" width="120" /></a>
+            </Link>
+          </div>}
+
+        <MenuContainer menuItems={this.menuItems}>
+         {items}
+          {/* <li>
               <button onClick={this.openModal}>Open Modal</button>
             </li> */}
-          </ul>
-        </nav>
-        <button className="burger-menu" type="submit"><FontAwesome.FaBars /></button>
-
+        </MenuContainer>
+        {/* <button onClick={this.showSettings} className="burger-menu" type="submit"><FontAwesome.FaBars /></button> */}
         {/* <SignUp modalIsOpen={this.state.signUpModalIsOpen} openModal={this.openModal} closeModal={this.closeModal}></SignUp> */}
       </div>
     );
