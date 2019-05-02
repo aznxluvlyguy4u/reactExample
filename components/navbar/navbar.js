@@ -73,7 +73,7 @@ export default class Navbar extends React.Component {
       if (menuItem.icon === true) {
         return (
           <li>
-            <Link href='/test'><a><div className="cart-wrapper"><img height="18" width="25" alt="cart" src={this.state.nav === 'fixed' ? "/static/images/cart_dark.png" : "/static/images/cart_white.png"} />{this.state.cartCount}</div></a></Link>
+            <Link href='/test'><a><div className="cart-wrapper"><div className="cart"></div><span>{this.state.cartCount}</span></div></a></Link>
           </li>
         )
       }
