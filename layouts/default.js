@@ -6,6 +6,7 @@ import ErrorLogging from '../components/errorlogging';
 import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/header/header';
+import Footer from '../components/footer/footer';
 
 export default ({
   children, meta, nav, search,
@@ -16,6 +17,7 @@ export default ({
       <Meta props={meta} />
       <Header nav={nav} search={search} />
       { children }
+      <Footer />
     </div>
   </ErrorLogging>
 );
