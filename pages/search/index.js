@@ -1,10 +1,10 @@
 import React from 'react';
-import Default from '../layouts/default';
-import './index/index.scss';
+import Default from '../../layouts/default';
+import '../index/index.scss';
 
 const meta = { title: 'Oceanpremium - Test', description: 'Index description' };
 
-class TestPage extends React.Component {
+class SearchPage extends React.Component {
   render() {
     return (
       <Default nav="fixed" search meta={meta} />
@@ -12,4 +12,4 @@ class TestPage extends React.Component {
   }
 }
 
-export default TestPage;
+export default SearchPage;

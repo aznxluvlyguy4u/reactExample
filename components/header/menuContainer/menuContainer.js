@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { slide as Menu } from 'react-burger-menu';
 import * as FontAwesome from 'react-icons/lib/fa';
+import './menuContainer.scss';
 
 export default class MenuContainer extends React.Component {
   constructor(props) {

@@ -1,0 +1,83 @@
+@import "../../assets/scss/_variables";
+@import "../../assets/scss/_mixins";
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  .cart-wrapper {
+    display: flex;
+    align-items: center;
+    .cart {
+      margin-right: 5px;
+    }
+    img {
+      margin-right: 5px;
+    }
+  }
+
+  .logo-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 70px;
+    width: 75%;
+    @include for-tablet-portrait-up {
+      width: 300px;
+    }
+    .logo {
+      margin-top: 5px;
+      margin-left: $nav_margin;
+    }
+  }
+}
+
+.transparent {
+  position: absolute;
+  color: $white;
+  @include transition(background-color 300ms linear);
+  .cart {
+    background-image: url("/static/images/cart_white.png");
+  }
+  a {
+    color: $white;
+  }
+  .bm-burger-button {
+    color: white;
+  }
+  .mobile-menu {
+    color: black;
+    a {
+      color: $black;
+    }
+    .cart {
+      background-image: url("/static/images/cart_dark.png");
+    }
+  }
+}
+
+.fixed {
+  position: fixed;
+  color: $black;
+  background-color: $white;
+  @include transition(background-color 300ms linear);
+  @include box-shadow(0px 2px 21px 0px rgba(196, 196, 196, 0.44));
+  .cart {
+    background-image: url("/static/images/cart_dark.png");
+  }
+  .nav {
+    &.responsive {
+      background-color: white;
+      color: black;
+    }
+  }
+  .bm-burger-button {
+    color: black;
+  }
+  a {
+    color: $black;
+  }
+}
