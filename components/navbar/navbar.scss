@@ -10,6 +10,9 @@
   .cart-wrapper {
     display: flex;
     align-items: center;
+    .cart {
+      margin-right: 5px;
+    }
     img {
       margin-right: 5px;
     }
