@@ -1,0 +1,97 @@
+version: 2
+jobs:
+  build-dev:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Setup Dependencies
+          command: npm install
+      - run:
+          name: Setup Dev Dependencies
+          command: npm install --only=dev
+      - run:
+          name: Run eslint
+          command: npm run eslint
+  build-prod:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Setup Dependencies
+          command: npm install
+      - run:
+          name: Setup Dev Dependencies
+          command: npm install --only=dev
+      - run:
+          name: Run eslint
+          command: npm run eslint
+  build-eslint:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Setup Dependencies
+          command: npm install
+      - run:
+          name: Setup Dev Dependencies
+          command: npm install --only=dev
+      - run:
+          name: Run eslint
+          command: npm run eslint
+  build-sonar:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run: sudo wget https://s3.eu-central-1.amazonaws.com/jvt.maven.repo/nl/jongensvantechniek/sonar/sonar-scanner-cli-3.2.0.1227-linux.zip -P ~/
+      - run: sudo unzip ~/sonar-scanner-cli-3.2.0.1227-linux.zip -d ~/
+      - run: echo "sonar.projectKey=$sonar_project_key" | sudo tee -a ~/sonar-scanner-3.2.0.1227-linux/conf/sonar-scanner.properties
+      - run: echo "sonar.sources=$sonar_sources" | sudo tee -a ~/sonar-scanner-3.2.0.1227-linux/conf/sonar-scanner.properties
+      - run: echo "sonar.host.url=$sonar_host_url" | sudo tee -a  ~/sonar-scanner-3.2.0.1227-linux/conf/sonar-scanner.properties
+      - run: echo "sonar.login=$sonar_token" | sudo tee -a  ~/sonar-scanner-3.2.0.1227-linux/conf/sonar-scanner.properties
+      - run: sudo ~/sonar-scanner-3.2.0.1227-linux/bin/sonar-scanner
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-prod:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-prod:
+          requires:
+            - build-prod
+            - build-sonar
+          filters:
+            branches:
+              only: master
+      - build-eslint:
+          filters:
+            branches:
+              only:
+                - /feature/.*/
+                - /feat/.*/
+      - build-dev:
+          filters:
+            branches:
+              only:
+                - development
+      - build-sonar:
+          filters:
+            branches:
+              only:
+                - development
+                - /feature/.*/
+                - /feat/.*/

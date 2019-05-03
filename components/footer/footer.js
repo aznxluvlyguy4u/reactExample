@@ -40,6 +40,7 @@ export default class Footer extends React.Component {
             </ul>
           </div>
         </div>
+
         <img className="logo" alt="logo" src="/static/images/logo_dark.png" height="35" width="150" />
         <div className="copyright-wrapper">
           <span>© 2019 Ocean Premium - Water Toys anytime anywhere.</span>

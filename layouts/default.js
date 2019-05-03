@@ -1,6 +1,7 @@
 import React from 'react';
 import Meta from '../components/meta';
 import '../assets/scss/fonts.scss';
+import '../assets/scss/icons.scss';
 import '../assets/scss/defaults.scss';
 import ErrorLogging from '../components/errorlogging';
 import { ToastContainer, Slide } from 'react-toastify';

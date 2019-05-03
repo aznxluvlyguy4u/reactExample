@@ -28,7 +28,7 @@ export default class SearchInput extends React.Component {
               <div className="search form-block">
                 <Field name="keyword" placeholder="Anything, anytime, any place" component={CustomInputComponent} />
               </div>
-              <button className="search-button" type="submit"><FontAwesome.FaSearch /></button>
+              <button className="search-button" type="submit"><i className="icon-search" /></button>
             </div>
           </Form>
         )}

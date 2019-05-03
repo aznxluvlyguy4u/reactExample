@@ -30,7 +30,7 @@ export default class MenuContainer extends React.Component {
         <div className={`mobile-menu ${this.state.open ? 'open' : ''}`}>
           <Menu
             customBurgerIcon={<FontAwesome.FaBars />}
-            customCrossIcon={<FontAwesome.FaClose />}
+            customCrossIcon={<i className="icon-x" />}
             width={240}
             isOpen={this.state.open}
             onStateChange={({ isOpen }) => this.setState({ open: isOpen })}
