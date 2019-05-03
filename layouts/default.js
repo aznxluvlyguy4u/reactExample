@@ -28,9 +28,9 @@ export default Default;
 
 Default.propTypes = {
   children: PropTypes.element.isRequired,
-  nav: PropTypes.string.isRequired,
+  nav: PropTypes.string,
   search: PropTypes.bool,
   meta: PropTypes.shape.isRequired,
 };
 
-Default.defaultProps = { search: false };
+Default.defaultProps = { search: false, nav: 'transparent' };

@@ -4,7 +4,7 @@ import Head from 'next/head';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Meta = ({ title, description }) => (
+const Meta = ({ props: { title, description } }) => (
   <div>
     <Head>
       <title>{ title || 'Next.js Test Title' }</title>
@@ -18,6 +18,5 @@ const Meta = ({ title, description }) => (
 export default Meta;
 
 Meta.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  props: PropTypes.shape.isRequired,
 };
