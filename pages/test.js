@@ -4,12 +4,8 @@ import './index/index.scss';
 
 const meta = { title: 'Oceanpremium - Test', description: 'Index description' };
 
-class TestPage extends React.Component {
-  render() {
-    return (
-      <Default nav="fixed" search meta={meta} />
-    );
-  }
-}
+const TestPage = () => (
+  <Default nav="fixed" search meta={meta} />
+);
 
 export default TestPage;

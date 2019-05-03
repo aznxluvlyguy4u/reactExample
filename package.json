@@ -20,6 +20,7 @@
     "aws-serverless-express": "^3.3.6",
     "axios": "^0.18.0",
     "countries-list": "^2.4.2",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "formik": "^1.5.2",
     "jsdom": "^15.0.0",
@@ -29,6 +30,7 @@
     "next-redux-wrapper": "^3.0.0-alpha.2",
     "node-sass": "^4.11.0",
     "path-match": "^1.2.4",
+    "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-burger-menu": "^2.6.10",
     "react-dom": "^16.8.6",
@@ -44,6 +46,7 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "dotenv": "^7.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",

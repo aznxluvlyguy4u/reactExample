@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
-import * as FontAwesome from 'react-icons/lib/fa';
 import './menuContainer.scss';
+import PropTypes from 'prop-types';
 
 export default class MenuContainer extends React.Component {
   constructor(props) {
@@ -47,3 +47,7 @@ export default class MenuContainer extends React.Component {
     return <nav className="nav"><ul>{this.props.children}</ul></nav>;
   }
 }
+
+MenuContainer.propTypes = {
+  children: PropTypes.element.isRequired,
+};

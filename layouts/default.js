@@ -1,15 +1,16 @@
 import React from 'react';
-import Meta from '../components/meta';
+import { Slide, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../assets/scss/defaults.scss';
 import '../assets/scss/fonts.scss';
 import '../assets/scss/icons.scss';
-import '../assets/scss/defaults.scss';
+import PropTypes from 'prop-types';
 import ErrorLogging from '../components/errorlogging';
-import { ToastContainer, Slide } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Header from '../components/header/header';
 import Footer from '../components/footer/footer';
+import Header from '../components/header/header';
+import Meta from '../components/meta';
 
-export default ({
+const Default = ({
   children, meta, nav, search,
 }) => (
   <ErrorLogging>
@@ -22,3 +23,14 @@ export default ({
     </div>
   </ErrorLogging>
 );
+
+export default Default;
+
+Default.propTypes = {
+  children: PropTypes.element.isRequired,
+  nav: PropTypes.string.isRequired,
+  search: PropTypes.bool,
+  meta: PropTypes.shape.isRequired,
+};
+
+Default.defaultProps = { search: false };
