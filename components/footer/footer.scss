@@ -1,7 +1,9 @@
+@import "../../assets/scss/_variables";
+@import "../../assets/scss/_mixins";
+
 .footer {
   background-color: white;
   border-top: 0.25px solid #C4C4C4;
-  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,12 +30,19 @@
     padding-bottom: 30px;
     padding-top: 30px;
     display: flex;
+    @include for-phone-only {
+      flex-direction: column;
+    }
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
     border-bottom: 0.25px solid #C4C4C4;
     .column{
       margin-right: 25px;
+      // @include for-tablet-portrait-up {
+      //   width: 50%;
+      // }
+
       h2 {
         text-transform: uppercase;
         font-size:18px;
