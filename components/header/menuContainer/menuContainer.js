@@ -38,6 +38,7 @@ export default class MenuContainer extends React.Component {
             disableAutoFocus
             className="nav"
           >
+            <img className="logo" alt="logo" src="/static/images/logo_dark.png" height="25" width="120" />
             {this.props.children ? this.props.children : null}
           </Menu>
         </div>

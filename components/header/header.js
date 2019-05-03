@@ -17,7 +17,7 @@ export default class Header extends React.Component {
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.menuItems = [{ title: 'bla' }, { title: 'bla' }, { title: 'cart', icon: true }]
+    this.menuItems = [{ title: 'Bla', slug: 'bla' }, { title: 'Bla', slug: 'bla' }, { title: 'Cart', slug: 'cart', icon: true }]
   }
 
   componentWillMount() {
@@ -57,13 +57,13 @@ export default class Header extends React.Component {
       if (menuItem.icon === true) {
         return (
           <li>
-            <Link href='/test'><a><div className="cart-wrapper"><div className="cart"></div><span>{this.state.cartCount}</span></div></a></Link>
+            <Link href={'/'+menuItem.slug}><a><div className="cart-wrapper"><span className="cart-title">{menuItem.title}</span><div className="cart"><div className="cart-icon"></div><span>{this.state.cartCount}</span></div></div></a></Link>
           </li>
         )
       }
       return (
         <li>
-          <Link key={menuItem.title} href={'/'+menuItem.title}>
+          <Link key={menuItem.title} href={'/'+menuItem.slug}>
             <a>{menuItem.title}</a>
           </Link>
         </li>

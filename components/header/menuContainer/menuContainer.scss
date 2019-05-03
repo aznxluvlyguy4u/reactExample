@@ -8,15 +8,25 @@
   color: #fff;
   li {
     padding: 10px;
-    padding-left: 20px;
+    margin-left: 40px;
+    font-size:20px;
+    border-bottom: solid $input-color 0.25px;
     a {
       text-decoration: none;
     }
   }
-
+  .bm-menu{
+    padding-top:40px;
+    width:100%;
+  }
   .bm-menu-wrap {
     padding-top: 60px;
     background: #fff;
+  }
+  .logo {
+    position:absolute;
+    top: 22px;
+    left:22px;
   }
 
   &.open {
@@ -58,11 +68,6 @@
   align-items: center;
   display: flex;
   padding-right: $nav_margin;
-  .cart {
-    width: 27px;
-    height: 24px;
-    background-size: cover;
-  }
   ul {
     display: flex;
     flex-direction: row;
