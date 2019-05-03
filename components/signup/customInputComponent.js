@@ -3,7 +3,7 @@ const CustomInputComponent = ({
   form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
   ...props
 }) => (
-  <div>
+  <div className="input-wrapper">
     <input className={touched[field.name] &&
       errors[field.name] ? 'error ': ''} type="text" {...field} {...props} />
     {touched[field.name] &&

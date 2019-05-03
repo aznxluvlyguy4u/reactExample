@@ -3,7 +3,7 @@ const MOCK_URL = 'http://localhost:3001'
 const LOCAL_URL = 'http://localhost:8080/api/v1'
 const PROD_URL = ''
 
-const URL = ''
+var URL = ''
 switch (process.env.STAGE) {
   case "dev":
     URL = DEV_URL
@@ -19,4 +19,4 @@ switch (process.env.STAGE) {
   break;
 }
 
-export {URL}
+export {LOCAL_URL}
