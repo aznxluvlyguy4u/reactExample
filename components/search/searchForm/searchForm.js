@@ -3,6 +3,7 @@ import Router from 'next/router';
 import React, { Component } from 'react';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchForm.scss';
+import searchReducer from '../../../reducers/searchReducer';
 
 const initialValues = {
   keyword: '',

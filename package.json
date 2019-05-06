@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@emotion/core": "^10.0.10",
     "@sentry/browser": "^5.0.8",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",
@@ -36,8 +37,10 @@
     "react-dom": "^16.8.6",
     "react-icons": "^2.2.7",
     "react-modal": "^3.8.1",
+    "react-paginate": "^6.3.0",
     "react-redux": "^7.0.3",
     "react-select": "^2.4.3",
+    "react-spinners": "^0.5.4",
     "react-toastify": "^5.1.0",
     "redux": "^4.0.1",
     "sass-resources-loader": "^2.0.0",
