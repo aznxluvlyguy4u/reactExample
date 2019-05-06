@@ -44,7 +44,7 @@ class SearchInput extends Component {
           <Form>
             <div className="search-wrapper">
               <div className="search form-block">
-                <Field name="keyword" value={this.state.search} placeholder="Anything, anytime, any place" component={CustomInputComponent} />
+                <Field onChange={e => this.onChangeValue(e.target.value)} name="keyword" value={this.state.search} placeholder="Anything, anytime, any place" component={CustomInputComponent} />
               </div>
               <button className="search-button" type="submit"><i className="icon-search" /></button>
             </div>
