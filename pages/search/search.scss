@@ -1,0 +1,8 @@
+@import '../../assets/scss/_variables';
+@import '../../assets/scss/_mixins';
+
+.page-wrapper {
+  margin-top:70px+$default-margin-top;
+  margin-left: $default-margin;
+  margin-right: $default-margin;
+}
