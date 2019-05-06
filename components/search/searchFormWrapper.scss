@@ -1,13 +1,24 @@
-.search-wrapper {
-  height: 500px;
-  width: 420px;
+@import '../../assets/scss/_variables';
+@import '../../assets/scss/_mixins';
+
+.searchform-wrapper {
   background-color: white;
   position: absolute;
   top: 100px;
-  left: 10%;
+  left: 5%;
+  right: 5%;
   display: flex;
   flex-direction: column;
   padding: 30px;
+  @include for-tablet-portrait-up {
+    left: 10%;
+    width: 420px;
+  }
+  @include for-phone-only {
+    left: 0px;
+    right: 0px;
+    top:70px;
+  }
 
   h1 {
     font-size: 36px;
