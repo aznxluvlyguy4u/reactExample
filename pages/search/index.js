@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import Default from '../../layouts/default';
 import '../index/index.scss';
-import { getProducts } from '../../utils/rest/requests/products';
+import { connect } from 'react-redux';
+import { updateSearch } from '../../actions/searchActions';
+import searchReducer from '../../reducers/searchReducer';
+// import { getProducts } from '../../utils/rest/requests/products';
 
 const meta = { title: 'Oceanpremium - Test', description: 'Index description' };
 
@@ -11,12 +14,14 @@ class SearchPage extends Component {
     this.state = { };
   }
 
+
   static async getInitialProps({ query }) {
-    console.log('SLUG', query.slug);
-    return {};
+    return { keyword: query.keyword };
   }
 
   componentDidMount() {
+    const { keyword, dispatch } = this.props;
+    dispatch(updateSearch({ keyword }));
     // try {
     //   getProducts();
     // } catch (error) {
@@ -25,8 +30,9 @@ class SearchPage extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (<Default nav="fixed" search meta={meta} />);
   }
 }
 
-export default SearchPage;
+export default connect(searchReducer)(SearchPage);

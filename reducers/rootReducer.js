@@ -1,8 +1,8 @@
-import testReducer from './testReducer.js';
-import {combineReducers} from "redux";
+import { combineReducers } from 'redux';
+import searchReducer from './searchReducer';
 
 const rootReducer = combineReducers({
-  testReducer,
-})
+  searchReducer,
+});
 
 export default rootReducer;

@@ -16,7 +16,7 @@ app
 
     server.get('/test', (req, res) => app.render(req, res, '/test', req.params));
 
-    server.get('/search/:slug', (req, res) => app.render(req, res, '/search', { slug: req.params.slug }));
+    // server.get('/search/:slug', (req, res) => app.render(req, res, '/search', { slug: req.params.slug }));
     // server.use('/static', express.static(path.join(__dirname, 'static')))
 
     // server.get("/dogs", (req, res) => {
