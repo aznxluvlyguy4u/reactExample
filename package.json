@@ -33,6 +33,7 @@
     "path-match": "^1.2.4",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
+    "react-alice-carousel": "^1.13.11",
     "react-burger-menu": "^2.6.10",
     "react-dom": "^16.8.6",
     "react-icons": "^2.2.7",

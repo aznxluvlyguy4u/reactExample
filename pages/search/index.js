@@ -21,7 +21,7 @@ class SearchPage extends Component {
   }
 
   static async getInitialProps({ query }) {
-    return { keyword: query.keyword };
+    return { keyword: query.keyword, category_id: query.category };
   }
 
   componentWillMount() {
@@ -46,10 +46,10 @@ class SearchPage extends Component {
   }
 
   async getProducts() {
-    const { keyword, dispatch } = this.props;
+    const { category_id, keyword, dispatch } = this.props;
     try {
       this.setState({ loading: true });
-      const response = await getProducts(keyword);
+      const response = await getProducts(keyword, category_id);
       this.setState({
         loading: false, products: response.data.products, total_page_count: response.data.meta.total_row_count / response.data.meta.per_page, current_page: response.data.page,
       });

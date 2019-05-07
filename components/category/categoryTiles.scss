@@ -1,0 +1,25 @@
+.alice-carousel {
+  width: 100% !important;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  .category-tile{
+    height: 300px;
+    width:80%;
+    margin-left:10%;
+    margin-right:10%;
+    display: flex;
+    justify-content: center;
+    background-size: cover;
+    span {
+      position: absolute;
+      bottom:30px;
+      color:white;
+    }
+  }
+}
+
+.category-wrapper {
+  margin-left: 10%;
+  margin-right: 10%;
+  width: 80%;
+}
