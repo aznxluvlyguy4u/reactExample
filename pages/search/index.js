@@ -8,6 +8,7 @@ import { getProducts } from '../../utils/rest/requests/products';
 import ReactPaginate from 'react-paginate';
 import './search.scss';
 import Loader from '../../components/loader';
+import Link from 'next/link';
 
 const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
 
@@ -60,6 +61,7 @@ class SearchPage extends Component {
 
   render() {
     const { products, loading } = this.state;
+    console.log(products);
     return (
       <Default nav="fixed" search meta={meta}>
         <div className="page-wrapper">
@@ -73,9 +75,17 @@ class SearchPage extends Component {
 
               {loading ? <Loader /> : null}
               {products.map(item => (
-                <div className="result-item">
-                  <img src={item.custom_fields.public_icon_thumb_url ? item.custom_fields.public_icon_thumb_url : '/static/images/flyboard.png'} />
-                </div>
+                <Link href="/products">
+                  <a>
+                    <div className="result-item">
+                      <img src={item.custom_fields.public_icon_thumb_url ? item.custom_fields.public_icon_thumb_url : '/static/images/flyboard.png'} />
+                      <h2>{item.name}</h2>
+                      <span>
+                        {`${item.rental_rate.properties.day_price} / day`}
+                      </span>
+                    </div>
+                  </a>
+                </Link>
               ))}
             </div>
 
