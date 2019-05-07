@@ -2,25 +2,45 @@
 @import '../../assets/scss/_mixins';
 
 .page-wrapper {
-  margin-top: 70px+$default-margin-top;
-  margin-left: $default-margin;
-  margin-right: $default-margin;
+  padding-top: 70px+$default-margin-top;
+  padding-left: $default-margin;
+  padding-right: $default-margin;
+
   min-height: 100vh;
 
   .result-wrapper {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: left;
     margin-left: $default-margin;
     margin-right: $default-margin;
     flex-wrap: wrap;
 
+    .searchresult-title {
+      width: 100%;
+    }
+
     .result-item {
-      width: 18%;
-      padding-left: 3.5%;
-      padding-right: 3.5%;
-      padding-top:10px;
-      padding-bottom:10px;
+      width: 32.6%;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-right: 0.7%;
+
+      @include for-phone-only {
+        width: 49.3%;
+      }
+
+      @include for-tablet-portrait-up {
+        width: 32.6%;
+      }
+
+      @include for-tablet-landscape-up {
+        width: 24.3%;
+      }
+
+      @include for-desktop-up {
+        width: 19.3%;
+      }
 
       img {
         width: 100%;

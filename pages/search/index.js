@@ -9,7 +9,7 @@ import ReactPaginate from 'react-paginate';
 import './search.scss';
 import Loader from '../../components/loader';
 
-const meta = { title: 'Oceanpremium - Test', description: 'Index description' };
+const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
 
 class SearchPage extends Component {
   constructor(props) {
@@ -65,9 +65,12 @@ class SearchPage extends Component {
         <div className="page-wrapper">
           <h1>Search Results</h1>
           <div className="search-block">
-            <h3>Matching Water Toys</h3>
-            <span>Search through hundreds of Water Toys and add them to your trip!</span>
             <div className="result-wrapper">
+              <div className="searchresult-title">
+                <h3>Matching Water Toys</h3>
+                <span>Search through hundreds of Water Toys and add them to your trip!</span>
+              </div>
+
               {loading ? <Loader /> : null}
               {products.map(item => (
                 <div className="result-item">

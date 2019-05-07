@@ -20,7 +20,7 @@ class SearchInput extends Component {
     });
   }
 
-  onSubmit(values) {
+  onSubmit() {
     if (this.state.search === '') {
       Router.push('/search');
       return;
@@ -29,13 +29,10 @@ class SearchInput extends Component {
   }
 
   onChangeValue(value) {
-    // const { dispatch } = this.props;
     this.setState({ search: value });
-    // dispatch(updateSearch({ keyword: value }));
   }
 
   render() {
-    console.log(this.props);
     return (
       <Formik
         initialValues={initialValues}

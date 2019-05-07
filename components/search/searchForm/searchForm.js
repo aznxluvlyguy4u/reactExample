@@ -10,7 +10,6 @@ const initialValues = {
 };
 
 function onSubmit(values) {
-  console.log(values);
   if (values.keyword === '') {
     Router.push('/search');
     return;
