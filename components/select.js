@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import {
-  continents, countries, languages, languagesAll,
-} from 'countries-list';
-import { transformCountryData } from '../../utils/data/countryDataUtil';
-
-const options = transformCountryData(countries);
 
 const colourStyles = {
   control: styles => ({
@@ -40,7 +34,7 @@ const colourStyles = {
   input: styles => ({ ...styles, color: '#19303B', fontSize: '11px' }),
 };
 
-function CountrySelectComponent({
+function CustomSelect({
   field, // { name, value, onChange, onBlur }
   form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
   setFieldValue, // Setting field value with Formik
@@ -49,12 +43,12 @@ function CountrySelectComponent({
   const [dropdownValue, setDropdownValue] = useState(field.value);
 
   function onChange(value) {
-    if (typeof setFieldValue === 'function') setFieldValue(field.name, value.value);
-    if (typeof setFieldValue === 'function') setFieldValue('phonePrefix', `+${value.phone}`);
+    setFieldValue.setFieldValue(field.name, JSON.parse(value.value));
     setDropdownValue(value);
   }
 
   return (
+
     <>
       <Select
         components={
@@ -65,7 +59,7 @@ function CountrySelectComponent({
   }
         styles={colourStyles}
         onChange={onChange}
-        options={options}
+        options={props.options}
       />
       {touched[field.name]
       && errors[field.name] && <span>{errors[field.name]}</span>}
@@ -74,4 +68,4 @@ function CountrySelectComponent({
   );
 }
 
-export default CountrySelectComponent;
+export default CustomSelect;

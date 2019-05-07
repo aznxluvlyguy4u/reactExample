@@ -1,14 +1,14 @@
+import { isEmpty } from 'lodash';
+import Link from 'next/link';
 import React, { Component } from 'react';
-import Default from '../../layouts/default';
-import '../index/index.scss';
 import { connect } from 'react-redux';
 import { updateSearch } from '../../actions/searchActions';
+import Loader from '../../components/loader';
+import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
 import { getProducts } from '../../utils/rest/requests/products';
-import ReactPaginate from 'react-paginate';
+import '../index/index.scss';
 import './search.scss';
-import Loader from '../../components/loader';
-import Link from 'next/link';
 
 const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
 
@@ -16,7 +16,7 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: false,
+      products: [], total_page_count: 0, current_page: 0, loading: false, notFound: false,
     };
   }
 
@@ -48,19 +48,25 @@ class SearchPage extends Component {
   async getProducts() {
     const { category_id, keyword, dispatch } = this.props;
     try {
-      this.setState({ loading: true });
+      this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id);
       this.setState({
-        loading: false, products: response.data.products, total_page_count: response.data.meta.total_row_count / response.data.meta.per_page, current_page: response.data.page,
+        notFound: false, loading: false, products: response.data.products, total_page_count: response.data.meta.total_row_count / response.data.meta.per_page, current_page: response.data.page,
       });
     } catch (error) {
+      this.setState({ loading: false });
+
+      if (error.statusCode === 404) {
+        this.setState({ notFound: true });
+      }
+
       console.log(error);
     }
   }
 
 
   render() {
-    const { products, loading } = this.state;
+    const { products, loading, notFound } = this.state;
     console.log(products);
     return (
       <Default nav="fixed" search meta={meta}>
@@ -68,12 +74,16 @@ class SearchPage extends Component {
           <h1>Search Results</h1>
           <div className="search-block">
             <div className="result-wrapper">
-              <div className="searchresult-title">
-                <h3>Matching Water Toys</h3>
-                <span>Search through hundreds of Water Toys and add them to your trip!</span>
-              </div>
-
+              {notFound === true ? <h2>No results found for your search query</h2> : null}
               {loading ? <Loader /> : null}
+              {isEmpty(products) ? (
+                null
+              ) : (
+                <div className="searchresult-title">
+                  <h3>Matching Water Toys</h3>
+                  <span>Search through hundreds of Water Toys and add them to your trip!</span>
+                </div>
+              )}
               {products.map(item => (
                 <Link href="/products">
                   <a>

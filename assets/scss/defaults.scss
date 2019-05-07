@@ -40,3 +40,11 @@ a:hover
 }
 
 textarea, select, input, button { outline: none; }
+
+.form-inline {
+  display:flex;
+  justify-content: space-between;
+  .form-block{
+    width:49%;
+  }
+}
