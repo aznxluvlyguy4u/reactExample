@@ -11,6 +11,7 @@ import CustomSelect from '../../select';
 // import { transformCountryData } from '../../../utils/data/countryDataUtil';
 import { getLocations } from '../../../utils/rest/requests/locations';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
+import { NullCheckQueryParams, toQueryParameterString } from '../../../utils/queryparams';
 
 const initialValues = {
   keyword: '',
@@ -19,12 +20,12 @@ const initialValues = {
 };
 
 function onSubmit(values) {
-  console.log(values);
-  // if (values.keyword === '') {
-  //   Router.push('/search');
-  //   return;
-  // }
-  // Router.push(`/search?keyword=${values.keyword}`);
+  const params = toQueryParameterString(NullCheckQueryParams(values));
+  if (values.keyword === '' && values.deliveryLocation === '' && values.deliveryLocation === '') {
+    Router.push('/search');
+    return;
+  }
+  Router.push(`/search${params}`);
 }
 
 class SearchForm extends Component {
