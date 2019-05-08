@@ -23,9 +23,23 @@
   }
 }
 
+.CalendarDay__default{
+  &:hover{
+    background: $yellow;
+    color: #fff;
+    border:$yellow;
+  }
+}
+
 .CalendarDay__selected_start {
   background: $yellow;
-  // border: 1px double #33dacd;
+  border:$yellow;
+  color: #fff;
+}
+
+.CalendarDay__selected_end {
+  background: $yellow;
+  border:$yellow;
   color: #fff;
 }
 .CalendarDay__selected {

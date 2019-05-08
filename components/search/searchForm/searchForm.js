@@ -76,10 +76,10 @@ class SearchForm extends Component {
                 </div>
               </div>
               <div className="date form-block">
-                {/* <div>
+                <div className="label-wrapper">
                   <label htmlFor="collectionDateRange">Collection Date</label>
                   <label htmlFor="collectionDateRange">Pickup Date</label>
-                </div> */}
+                </div>
 
                 <Field name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
               </div>

@@ -12,11 +12,12 @@ class CategoryTiles extends Component {
     this.state = { categories: [] };
     this.responsive = {
       0: { items: 1 },
-      400: { items: 2 },
+      500: { items: 2 },
       700: { items: 3 },
-      800: { items: 4 },
-      1024: { items: 5 },
-      1800: { items: 6 },
+      1000: { items: 4 },
+      1200: { items: 5 },
+      1500: { items: 6 },
+      1800: { items: 7 },
     };
   }
 
