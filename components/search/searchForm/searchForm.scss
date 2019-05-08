@@ -8,6 +8,9 @@
     margin-top: 10px;
 
     label {
+      @media (min-width: 300px) and (max-width: 386px) {
+        height:30px
+      }
       width: 100%;
       display: block;
       font-size: 12px;
