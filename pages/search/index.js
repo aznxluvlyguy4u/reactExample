@@ -9,6 +9,8 @@ import searchReducer from '../../reducers/searchReducer';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
+import ProductsRequest from '../../utils/mapping/products/ProductResponse';
+import ProductResponse from '../../utils/mapping/products/ProductResponse';
 
 const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
 
@@ -21,7 +23,9 @@ class SearchPage extends Component {
   }
 
   static async getInitialProps({ query }) {
-    return { keyword: query.keyword, category_id: query.category };
+    return {
+      keyword: query.keyword, category_id: query.category, deliveryLocation: query.deliveryLocation, collectionLocation: query.collectionLocation, deliveryDate: query.deliveryDate, collectionDate: query.collectionDate,
+    };
   }
 
   componentWillMount() {
@@ -46,12 +50,14 @@ class SearchPage extends Component {
   }
 
   async getProducts() {
-    const { category_id, keyword, dispatch } = this.props;
+    const {
+      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+    } = this.props;
     try {
       this.setState({ loading: true, notFound: false });
-      const response = await getProducts(keyword, category_id);
+      const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate);
       this.setState({
-        notFound: false, loading: false, products: response.data.products, total_page_count: response.data.meta.total_row_count / response.data.meta.per_page, current_page: response.data.page,
+        notFound: false, loading: false, products: response.data.products.map(i => new ProductResponse(i).returnProduct()), total_page_count: response.data.meta.total_row_count / response.data.meta.per_page, current_page: response.data.page,
       });
     } catch (error) {
       this.setState({ loading: false });
@@ -63,7 +69,6 @@ class SearchPage extends Component {
       console.log(error);
     }
   }
-
 
   render() {
     const { products, loading, notFound } = this.state;
@@ -88,10 +93,10 @@ class SearchPage extends Component {
                 <Link href="/products">
                   <a>
                     <div className="result-item">
-                      <img src={item.custom_fields.public_icon_thumb_url ? item.custom_fields.public_icon_thumb_url : '/static/images/flyboard.png'} />
+                      <img src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
                       <h2>{item.name}</h2>
                       <span>
-                        {`${item.rental_rate.properties.day_price} / day`}
+                        {`${item.rates.day_rate} / day`}
                       </span>
                     </div>
                   </a>

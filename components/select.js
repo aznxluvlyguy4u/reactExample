@@ -7,7 +7,7 @@ const colourStyles = {
     backgroundColor: 'white',
     fontSize: '11px',
     color: '#D3D3D3',
-    borderRadius: '0px',
+    borderRadius: '3px',
     border: 'solid 2px #D3D3D3',
     paddingTop: '4px',
     paddingBottom: '4px',

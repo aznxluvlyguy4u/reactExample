@@ -18,6 +18,8 @@ const initialValues = {
   keyword: '',
   deliveryLocation: '',
   collectionLocation: '',
+  collectionDate: '',
+  deliveryDate: '',
 };
 
 function onSubmit(values) {
