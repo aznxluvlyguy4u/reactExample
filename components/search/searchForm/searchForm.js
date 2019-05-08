@@ -22,12 +22,12 @@ const initialValues = {
 
 function onSubmit(values) {
   console.log(values);
-  // const params = toQueryParameterString(NullCheckQueryParams(values));
-  // if (values.keyword === '' && values.deliveryLocation === '' && values.deliveryLocation === '') {
-  //   Router.push('/search');
-  //   return;
-  // }
-  // Router.push(`/search${params}`);
+  const params = toQueryParameterString(NullCheckQueryParams(values));
+  if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
+    Router.push('/search');
+    return;
+  }
+  Router.push(`/search${params}`);
 }
 
 class SearchForm extends Component {
@@ -74,7 +74,11 @@ class SearchForm extends Component {
                 </div>
               </div>
               <div className="date form-block">
-                {/* <label htmlFor="collectionDateRange">Collection Date</label> */}
+                {/* <div>
+                  <label htmlFor="collectionDateRange">Collection Date</label>
+                  <label htmlFor="collectionDateRange">Pickup Date</label>
+                </div> */}
+
                 <Field name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
               </div>
               <button className="search-button-full" type="submit">Search</button>

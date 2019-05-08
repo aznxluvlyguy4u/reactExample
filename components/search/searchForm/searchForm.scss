@@ -1,6 +1,14 @@
 @import '../../../assets/scss/_variables';
 @import '../../../assets/scss/_mixins';
 
+.css-1sgmdda {
+  height: 23px !important;
+}
+
+.css-yyw35f-control {
+  border-radius: 3px !important;
+}
+
 .searchform-wrapper {
   .form-block {
     display: block;
@@ -23,7 +31,7 @@
       border: 2px solid $input-color;
       color: $blue;
       padding: 10px;
-      border-radius:3px;
+      border-radius: 3px;
       font-size: 11px;
       font-weight: 400;
       height: 40px;
@@ -50,13 +58,13 @@
 }
 
 .search-button-full {
-  width:100%;
+  width: 100%;
   background-color: $yellow;
-  border:none;
+  border: none;
   color: white;
-  font-size:18px;
-  padding-top:10px;
-  padding-bottom:10px;
+  font-size: 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border-radius: 3px;
   cursor: pointer;
 }

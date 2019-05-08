@@ -9,6 +9,12 @@ export function NullCheckQueryParams(values) {
   if (values.collectionLocation !== '') {
     queryParameters.push({ column: 'collectionLocation', value: values.collectionLocation.storeId });
   }
+  if (values.deliveryDate !== '') {
+    queryParameters.push({ column: 'deliveryDate', value: values.deliveryDate });
+  }
+  if (values.collectionDate !== '') {
+    queryParameters.push({ column: 'collectionDate', value: values.collectionDate });
+  }
   return queryParameters;
 }
 
