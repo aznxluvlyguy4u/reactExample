@@ -3,10 +3,10 @@ import handleRestResponse from '../requestUtil';
 
 function returnCorrectURL(keyword, category_id) {
   if (keyword !== undefined && category_id === undefined) {
-    return `${BASE_URL}/products?page=1&per_page=10&q[name_or_product_group_name_or_product_tags_name_cont]=${keyword}`;
+    return `https://c6z1cn1vpd.execute-api.eu-west-1.amazonaws.com/staging/api/v1/products?page=1&per_page=10&q[name_or_product_group_name_or_product_tags_name_cont]=${keyword}`;
   }
   if (keyword === undefined && category_id !== undefined) {
-    return `${BASE_URL}/products?page=1&per_page=10&q[product_group_id_eq]=${category_id}`;
+    return `https://c6z1cn1vpd.execute-api.eu-west-1.amazonaws.com/staging/api/v1/products?page=1&per_page=10&q[product_group_id_eq]=${category_id}`;
   }
 }
 

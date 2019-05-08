@@ -12,6 +12,7 @@ import CustomSelect from '../../select';
 import { getLocations } from '../../../utils/rest/requests/locations';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
 import { NullCheckQueryParams, toQueryParameterString } from '../../../utils/queryparams';
+import DatePicker from '../../datepicker/datepicker';
 
 const initialValues = {
   keyword: '',
@@ -20,12 +21,13 @@ const initialValues = {
 };
 
 function onSubmit(values) {
-  const params = toQueryParameterString(NullCheckQueryParams(values));
-  if (values.keyword === '' && values.deliveryLocation === '' && values.deliveryLocation === '') {
-    Router.push('/search');
-    return;
-  }
-  Router.push(`/search${params}`);
+  console.log(values);
+  // const params = toQueryParameterString(NullCheckQueryParams(values));
+  // if (values.keyword === '' && values.deliveryLocation === '' && values.deliveryLocation === '') {
+  //   Router.push('/search');
+  //   return;
+  // }
+  // Router.push(`/search${params}`);
 }
 
 class SearchForm extends Component {
@@ -70,6 +72,10 @@ class SearchForm extends Component {
                   <label htmlFor="collectionLocation">Collection Location</label>
                   <Field options={this.state.locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                 </div>
+              </div>
+              <div className="date form-block">
+                {/* <label htmlFor="collectionDateRange">Collection Date</label> */}
+                <Field name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
               </div>
               <button className="search-button-full" type="submit">Search</button>
             </div>
