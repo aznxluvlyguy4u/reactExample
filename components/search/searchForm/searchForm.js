@@ -23,13 +23,13 @@ const initialValues = {
 };
 
 function onSubmit(values) {
-  console.log(values);
-  const params = toQueryParameterString(NullCheckQueryParams(values));
+  const params = NullCheckQueryParams(values);
+  console.log(params);
   if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
     Router.push('/search');
     return;
   }
-  Router.push(`/search${params}`);
+  Router.push({ pathname: '/search', query: params });
 }
 
 class SearchForm extends Component {

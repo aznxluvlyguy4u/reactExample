@@ -25,7 +25,7 @@ class SearchInput extends Component {
       Router.push('/search');
       return;
     }
-    Router.push(`/search?keyword=${this.state.search}`);
+    Router.push({ pathname: '/search', query: { keyword: encodeURIComponent(this.state.search) } });
   }
 
   onChangeValue(value) {

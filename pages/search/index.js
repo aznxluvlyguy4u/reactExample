@@ -1,5 +1,4 @@
 import { isEmpty } from 'lodash';
-import Link from 'next/link';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateSearch } from '../../actions/searchActions';
@@ -9,8 +8,11 @@ import searchReducer from '../../reducers/searchReducer';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
-import ProductsRequest from '../../utils/mapping/products/ProductResponse';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
+import moment from 'moment';
+import Router from 'next/router';
+import Link from 'next/link';
+
 
 const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
 
@@ -18,13 +20,28 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: false, notFound: false,
+      products: [], total_page_count: 0, current_page: 0, loading: false, notFound: false, query: {},
     };
   }
 
   static async getInitialProps({ query }) {
+    if (query.deliveryDate !== null && !moment(query.deliveryDate, moment.ISO_8601).isValid()) {
+      query.deliveryDate = null;
+    }
+    if (query.collectionDate !== null && !moment(query.collectionDate, moment.ISO_8601).isValid()) {
+      query.collectionDate = null;
+    }
+    if (query.category !== null && !Number.isInteger(query.category)) {
+      query.category_id = null;
+    }
+    if (query.deliveryLocation !== null && !Number.isInteger(query.deliveryLocation)) {
+      query.deliveryLocation = null;
+    }
+    if (query.collectionLocation !== null && !Number.isInteger(query.collectionLocation)) {
+      query.collectionLocation = null;
+    }
     return {
-      keyword: query.keyword, category_id: query.category, deliveryLocation: query.deliveryLocation, collectionLocation: query.collectionLocation, deliveryDate: query.deliveryDate, collectionDate: query.collectionDate,
+      keyword: decodeURIComponent(query.keyword), category_id: query.category, deliveryLocation: query.deliveryLocation, collectionLocation: query.collectionLocation, deliveryDate: query.deliveryDate, collectionDate: query.collectionDate,
     };
   }
 
@@ -34,13 +51,17 @@ class SearchPage extends Component {
   }
 
   async componentDidMount() {
-    const { keyword, dispatch } = this.props;
+    const {
+      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+    } = this.props;
     dispatch(updateSearch({ keyword }));
     await this.getProducts(keyword);
   }
 
   async componentDidUpdate() {
-    const { keyword, dispatch } = this.props;
+    const {
+      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+    } = this.props;
 
     if (this.props.keyword !== await this.props.searchReducer.search.keyword) {
       this.setState({ products: [] });
@@ -72,7 +93,6 @@ class SearchPage extends Component {
 
   render() {
     const { products, loading, notFound } = this.state;
-    console.log(products);
     return (
       <Default nav="fixed" search meta={meta}>
         <div className="page-wrapper">
@@ -103,7 +123,6 @@ class SearchPage extends Component {
                 </Link>
               ))}
             </div>
-
           </div>
         </div>
       </Default>
