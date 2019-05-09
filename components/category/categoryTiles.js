@@ -3,26 +3,29 @@ import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import './categoryTiles.scss';
 import Link from 'next/link';
+import Carousel from 'nuka-carousel';
 import { getCategories } from '../../utils/rest/requests/categories';
 
-const handleOnDragStart = e => e.preventDefault();
 class CategoryTiles extends Component {
   constructor(props) {
     super(props);
-    this.state = { categories: [] };
-    this.responsive = {
-      0: { items: 1 },
-      500: { items: 2 },
-      700: { items: 3 },
-      1000: { items: 4 },
-      1200: { items: 5 },
-      1500: { items: 6 },
-      1800: { items: 7 },
-    };
+    this.state = { categories: [], width: undefined };
+    this.useWindowWidth = this.useWindowWidth.bind(this);
   }
 
   async componentDidMount() {
     await this.retrieveCategories();
+    window.addEventListener('resize', this.useWindowWidth);
+    this.useWindowWidth();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.useWindowWidth);
+  }
+
+  useWindowWidth() {
+    this.setState({ width: window.innerWidth });
+    return window.innerWidth;
   }
 
   async retrieveCategories() {
@@ -48,24 +51,26 @@ class CategoryTiles extends Component {
   }
 
   render() {
-    const { categories } = this.state;
-    return (
-      <div className="category-wrapper">
-        <h2>Something for everyone</h2>
-        <AliceCarousel
-          mouseDragEnabled
-          duration={2000}
-          items={categories}
-          autoPlayInterval={5000}
-          autoPlayDirection="rtl"
-          autoPlay
-          buttonsDisabled
-          keysControlDisabled
-          dotsDisabled
-          responsive={this.responsive}
-        />
-      </div>
-    );
+    const { categories, width } = this.state;
+    if (width) {
+      return (
+        <div className="category-wrapper">
+          <h2>Something for everyone</h2>
+          <Carousel
+            autoplay
+            autoplayInterval={2000}
+            cellSpacing={20}
+            dragging
+            slidesToScroll={1}
+            slidesToShow={Math.round(width / 250)}
+            withoutControls
+            wrapAround
+          >
+            { categories.map(category => category)}
+          </Carousel>
+        </div>
+      );
+    } return null;
   }
 }
 
