@@ -18,7 +18,7 @@ export default class Header extends React.Component {
 
     // this.openModal = this.openModal.bind(this);
     // this.closeModal = this.closeModal.bind(this);
-    this.menuItems = [{ id: 1, title: 'Bla', slug: 'bla' }, { id: 2, title: 'Bla', slug: 'bla' }, { id: 3,title: 'Cart', slug: 'cart', icon: true }];
+    this.menuItems = [{ id: 1, title: 'Shop', slug: 'bla' }, { id: 2, title: 'Contact', slug: 'bla' }, { id: 3,title: 'Cart', slug: 'cart', icon: true }];
   }
 
   componentWillMount() {

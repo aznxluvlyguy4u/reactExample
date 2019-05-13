@@ -64,7 +64,7 @@ class SearchForm extends Component {
             <div>
               <div className="keyword form-block">
                 <label htmlFor="keyword">I am looking for</label>
-                <Field name="keyword" placeholder="Anything, anywhere" component={CustomInputComponent} />
+                <Field name="keyword" placeholder="Anything, anywhere..." component={CustomInputComponent} />
               </div>
               <div className="form-inline">
                 <div className="location form-block">

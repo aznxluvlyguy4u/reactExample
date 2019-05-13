@@ -20,6 +20,7 @@ class SearchPage extends Component {
       products: [], total_page_count: 0, current_page: 0, loading: false, notFound: false, query: {},
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
+    this.counter = 0;
   }
 
   static async getInitialProps({ query }) {
@@ -57,28 +58,31 @@ class SearchPage extends Component {
     dispatch(updateSearch({
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     }));
-    await this.getProducts();
+    // await this.getProducts();
   }
 
-  async componentDidUpdate() {
-    const {
-      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
-    } = this.props;
-    if (keyword !== ''){
-      this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
-    }
-    // const query = {
-    //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-    // };
-    // console.log(NullCheckFrontendQueryParam(query));
+  async componentDidUpdate(prevProps) {
+    this.counter ++
+    console.log(this.counter)
+    return
+    // const {
+    //   category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+    // } = this.props;
+    // if (keyword !== ''){
+    //   this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
+    // }
+    // // const query = {
+    // //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+    // // };
+    // // console.log(NullCheckFrontendQueryParam(query));
 
-    if (keyword !== this.props.searchReducer.search.keyword) {
+    if (prevProps.searchReducer.search.keyword !== this.props.searchReducer.search.keyword) {
       // console.log('stop');
       this.setState({ products: [] });
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
       }));
-      await this.getProducts();
+      // await this.getProducts();
     }
   }
 
@@ -89,8 +93,11 @@ class SearchPage extends Component {
     try {
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate);
+      console.log(response);
       const products = response.data.map(i => new ProductResponse(i).returnProduct());
+
       const myArray = products.filter(obj => obj.available === true);
+
       this.setState({
         notFound: false,
         loading: false,
@@ -111,7 +118,6 @@ class SearchPage extends Component {
     const {
       products, loading, notFound, query,
     } = this.state;
-    console.log(this.props.searchReducer.search);
     return (
       <Default nav="fixed" search meta={this.meta}>
         <div className="page-wrapper">

@@ -13,6 +13,7 @@
     border-bottom: solid $input-color 0.25px;
     padding-bottom: 5px;
     margin-top: 20px;
+    margin-left: 30px;
 
     a {
       text-decoration: none;
@@ -86,7 +87,6 @@
   ul {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     justify-content: flex-end;
     width: 332px;
 
