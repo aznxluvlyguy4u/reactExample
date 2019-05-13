@@ -1,3 +1,23 @@
+export function NullCheckFrontendQueryParam(values) {
+  const queryParameters = {};
+  if (values.keyword !== null) {
+    queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
+  }
+  if (values.deliveryLocation !== null) {
+    queryParameters.deliveryLocation = values.deliveryLocation.storeId;
+  }
+  if (values.collectionLocation !== null) {
+    queryParameters.collectionLocation = values.collectionLocation.storeId;
+  }
+  if (values.deliveryDate !== null) {
+    queryParameters.deliveryDate = values.deliveryDate;
+  }
+  if (values.collectionDate !== null) {
+    queryParameters.collectionDate = values.collectionDate;
+  }
+  return queryParameters;
+}
+
 export function NullCheckQueryParams(values) {
   const queryParameters = {};
   if (values.keyword !== '') {

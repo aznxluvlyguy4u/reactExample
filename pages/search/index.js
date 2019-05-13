@@ -12,6 +12,7 @@ import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import moment from 'moment';
 import Router from 'next/router';
 import Link from 'next/link';
+import { NullCheckFrontendQueryParam } from '../../utils/queryparams';
 
 
 const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
@@ -48,15 +49,6 @@ class SearchPage extends Component {
     };
   }
 
-  // componentWillMount() {
-  //   const {
-  //     keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
-  //   } = this.props;
-  //   dispatch(updateSearch({
-  //     keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-  //   }));
-  // }
-
   async componentDidMount() {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
@@ -72,14 +64,18 @@ class SearchPage extends Component {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
 
-    if (this.props.keyword !== await this.props.searchReducer.search.keyword) {
-      // console.log(this.props.searchReducer.search.keyword);
-      // console.log(this.props);
-      // this.setState({ products: [] });
+    // const query = {
+    //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+    // };
+    // console.log(NullCheckFrontendQueryParam(query));
+
+    if (keyword !== this.props.searchReducer.search.keyword) {
+      // console.log('stop');
+      this.setState({ products: [] });
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
       }));
-      // await this.getProducts();
+      await this.getProducts();
     }
   }
 
@@ -99,17 +95,18 @@ class SearchPage extends Component {
       });
     } catch (error) {
       this.setState({ loading: false });
-
       if (error.code === 404) {
         this.setState({ notFound: true });
       }
-
       console.log(error);
     }
   }
 
   render() {
-    const { products, loading, notFound } = this.state;
+    const {
+      products, loading, notFound, query,
+    } = this.state;
+    console.log(this.props.searchReducer.search);
     return (
       <Default nav="fixed" search meta={meta}>
         <div className="page-wrapper">

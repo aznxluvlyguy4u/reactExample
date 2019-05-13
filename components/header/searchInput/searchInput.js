@@ -6,6 +6,7 @@ import CustomInputComponent from '../../signup/customInputComponent';
 import './searchInput.scss';
 import searchReducer from '../../../reducers/searchReducer';
 import { updateSearch } from '../../../actions/searchActions';
+import { cloneDeep } from 'lodash';
 
 const initialValues = {
   keyword: '',
@@ -26,8 +27,11 @@ class SearchInput extends Component {
     //   Router.push('/search');
     //   return;
     // }
+
     // dispatch(updateSearch(this.props.searchReducer.search));
-    const query = this.props.searchReducer.search;
+    // const query = cloneDeep(this.props.searchReducer.search);
+    // query.keyword = this.state.search;
+    const query = { keyword: this.state.search };
     Router.push({ pathname: '/search', query });
   }
 

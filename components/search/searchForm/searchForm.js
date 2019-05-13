@@ -13,6 +13,8 @@ import { getLocations } from '../../../utils/rest/requests/locations';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
 import { NullCheckQueryParams, toQueryParameterString } from '../../../utils/queryparams';
 import DatePicker from '../../datepicker/datepicker';
+import { connect } from 'react-redux';
+import { updateSearch } from '../../../actions/searchActions';
 
 const initialValues = {
   keyword: '',
@@ -21,15 +23,6 @@ const initialValues = {
   collectionDate: '',
   deliveryDate: '',
 };
-
-function onSubmit(values) {
-  const params = NullCheckQueryParams(values);
-  if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
-    Router.push('/search');
-    return;
-  }
-  Router.push({ pathname: '/search', query: params });
-}
 
 class SearchForm extends Component {
   constructor(props) {
@@ -41,6 +34,19 @@ class SearchForm extends Component {
     await this.retrieveLocations();
     // const options = transformCountryData(countries);
     // console.log(options);
+  }
+
+  onSubmit(values) {
+    const { dispatch } = this.props;
+    const params = NullCheckQueryParams(values);
+    dispatch(updateSearch({
+      keyword: values.keyword,
+    }));
+    if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
+      Router.push('/search');
+      return;
+    }
+    Router.push({ pathname: '/search', query: params });
   }
 
   async retrieveLocations() {
@@ -56,7 +62,7 @@ class SearchForm extends Component {
     return (
       <Formik
         initialValues={initialValues}
-        onSubmit={onSubmit}
+        onSubmit={this.onSubmit.bind(this)}
         render={setFieldValue => (
           <Form>
             <div>
@@ -91,4 +97,4 @@ class SearchForm extends Component {
   }
 }
 
-export default SearchForm;
+export default connect(searchReducer)(SearchForm);
