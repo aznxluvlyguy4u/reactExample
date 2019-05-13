@@ -58,16 +58,16 @@ class SearchPage extends Component {
     dispatch(updateSearch({
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     }));
-    // await this.getProducts();
+    await this.getProducts();
   }
 
   async componentDidUpdate(prevProps) {
-    this.counter ++
-    console.log(this.counter)
-    return
-    // const {
-    //   category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
-    // } = this.props;
+    // this.counter ++
+    // console.log(this.counter)
+    // return
+    const {
+      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+    } = this.props;
     // if (keyword !== ''){
     //   this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
     // }
@@ -76,13 +76,12 @@ class SearchPage extends Component {
     // // };
     // // console.log(NullCheckFrontendQueryParam(query));
 
-    if (prevProps.searchReducer.search.keyword !== this.props.searchReducer.search.keyword) {
-      // console.log('stop');
+    if (prevProps.keyword !== keyword) {
       this.setState({ products: [] });
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
       }));
-      // await this.getProducts();
+      await this.getProducts();
     }
   }
 
