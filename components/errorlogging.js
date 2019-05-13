@@ -45,5 +45,5 @@ export default class ErrorLogging extends Component {
 }
 
 ErrorLogging.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.array.isRequired,
 };

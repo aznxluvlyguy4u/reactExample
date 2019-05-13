@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchInput.scss';
 import searchReducer from '../../../reducers/searchReducer';
+import PropTypes from 'prop-types';
 
 const initialValues = {
   keyword: '',
@@ -54,3 +55,7 @@ class SearchInput extends Component {
 }
 
 export default connect(searchReducer)(SearchInput);
+
+SearchInput.propTypes = {
+  searchReducer: PropTypes.element.isRequired,
+};

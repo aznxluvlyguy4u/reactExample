@@ -27,10 +27,10 @@ const Default = ({
 export default Default;
 
 Default.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.array.isRequired,
   nav: PropTypes.string,
   search: PropTypes.bool,
-  meta: PropTypes.shape.isRequired,
+  meta: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 Default.defaultProps = { search: false, nav: 'transparent' };

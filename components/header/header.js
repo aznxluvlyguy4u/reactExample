@@ -18,7 +18,7 @@ export default class Header extends React.Component {
 
     // this.openModal = this.openModal.bind(this);
     // this.closeModal = this.closeModal.bind(this);
-    this.menuItems = [{ title: 'Bla', slug: 'bla' }, { title: 'Bla', slug: 'bla' }, { title: 'Cart', slug: 'cart', icon: true }];
+    this.menuItems = [{ id: 1, title: 'Bla', slug: 'bla' }, { id: 2, title: 'Bla', slug: 'bla' }, { id: 3,title: 'Cart', slug: 'cart', icon: true }];
   }
 
   componentWillMount() {
@@ -63,7 +63,7 @@ export default class Header extends React.Component {
     const items = this.menuItems.map((menuItem) => {
       if (menuItem.icon === true) {
         return (
-          <li>
+          <li key={menuItem.id}>
             <Link href={`/${menuItem.slug}`}>
               <a>
                 <div className="cart-wrapper">
@@ -81,7 +81,7 @@ export default class Header extends React.Component {
         );
       }
       return (
-        <li>
+        <li key={menuItem.id}>
           <Link key={menuItem.title} href={`/${menuItem.slug}`}>
             <a>{menuItem.title}</a>
           </Link>
@@ -93,14 +93,14 @@ export default class Header extends React.Component {
         {search ? (
           <div className="logo-wrapper">
             <Link href="/">
-              <a><img className="logo" src={navType === 'fixed' ? '/static/images/icon_dark.png' : '/static/images/logo.png'} alt="Logo" height={nav === 'fixed' ? 23 : 25} width={nav === 'fixed' ? 31 : 120} /></a>
+              <a><img className="logo" alt="logo" src={navType === 'fixed' ? '/static/images/icon_dark.png' : '/static/images/logo.png'} alt="Logo" height={nav === 'fixed' ? 23 : 25} width={nav === 'fixed' ? 31 : 120} /></a>
             </Link>
             <SearchInput />
           </div>
         ) : (
           <div className="logo-wrapper">
             <Link href="/">
-              <a><img className="logo" src={navType === 'fixed' ? '/static/images/logo_dark.png' : '/static/images/logo.png'} alt="Logo" height="25" width="120" /></a>
+              <a><img className="logo" alt="logo" src={navType === 'fixed' ? '/static/images/logo_dark.png' : '/static/images/logo.png'} alt="Logo" height="25" width="120" /></a>
             </Link>
           </div>
         )}

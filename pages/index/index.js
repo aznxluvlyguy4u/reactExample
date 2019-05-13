@@ -4,7 +4,7 @@ import './index.scss';
 import SearchFormWrapper from '../../components/search/searchFormWrapper';
 import CategoryTiles from '../../components/category/categoryTiles';
 
-const meta = { title: 'Oceanpremium - Shop', description: 'Index description' };
+const meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
 
 const IndexPage = () => (
   <Default meta={meta}>

@@ -18,5 +18,5 @@ const Meta = ({ props: { title, description } }) => (
 export default Meta;
 
 Meta.propTypes = {
-  props: PropTypes.shape.isRequired,
+  props: PropTypes.objectOf(PropTypes.any).isRequired,
 };

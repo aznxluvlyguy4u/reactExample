@@ -13,14 +13,13 @@ import '../index/index.scss';
 import './search.scss';
 
 
-const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
-
 class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       products: [], total_page_count: 0, current_page: 0, loading: false, notFound: false, query: {},
     };
+    this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
   }
 
   static async getInitialProps({ query }) {
@@ -51,6 +50,10 @@ class SearchPage extends Component {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
+
+    if (keyword !== ''){
+      this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
+    }
     dispatch(updateSearch({
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     }));
@@ -61,7 +64,9 @@ class SearchPage extends Component {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
-
+    if (keyword !== ''){
+      this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
+    }
     // const query = {
     //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     // };
@@ -108,7 +113,7 @@ class SearchPage extends Component {
     } = this.state;
     console.log(this.props.searchReducer.search);
     return (
-      <Default nav="fixed" search meta={meta}>
+      <Default nav="fixed" search meta={this.meta}>
         <div className="page-wrapper">
           <h1>Search Results</h1>
           <div className="search-block">
@@ -127,7 +132,7 @@ class SearchPage extends Component {
                 <Link href="/products">
                   <a>
                     <div className="result-item">
-                      <img src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
+                      <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
                       <h2>{item.name}</h2>
                       <span>
                         {`${item.rates.day_rate} / day`}

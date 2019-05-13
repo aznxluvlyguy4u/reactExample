@@ -47,9 +47,6 @@ class DatePicker extends Component {
       <DateRangePicker
         startDatePlaceholderText="Start Date"
         endDatePlaceholderText="End Date"
-        startDateAriaLabel="Start date"
-        endDateAriaLabel="End Date"
-        // DateRangePicker
         hideKeyboardShortcutsPanel
         customArrowIcon=""
         startDate={this.state.startDate} // momentPropTypes.momentObj or null,
