@@ -2,8 +2,10 @@ export default class ProductResponse {
   constructor(state) {
     this.id = state.id;
     this.name = state.name;
-    this.public_icon_url = state.custom_fields.public_icon_url;
-    this.day_rate = state.rental_rate.properties.day_price;
+    this.description = state.description;
+    this.public_icon_url = state.images[0].fullImageUrl;
+    this.day_rate = state.rates[0].price;
+    this.available = parseFloat(state.rates[0].quantityAvailable) > 0.0;
   }
 
   returnProduct() {
@@ -16,6 +18,7 @@ export default class ProductResponse {
       rates: {
         day_rate: this.day_rate,
       },
+      available: this.available,
     };
   }
 }

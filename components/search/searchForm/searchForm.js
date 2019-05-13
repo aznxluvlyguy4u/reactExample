@@ -24,7 +24,6 @@ const initialValues = {
 
 function onSubmit(values) {
   const params = NullCheckQueryParams(values);
-  console.log(params);
   if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
     Router.push('/search');
     return;

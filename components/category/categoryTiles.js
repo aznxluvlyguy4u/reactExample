@@ -32,7 +32,7 @@ class CategoryTiles extends Component {
     try {
       const response = await getCategories();
       this.setState({
-        categories: response.data.product_groups.map(i => (
+        categories: response.data.map(i => (
           <Link href={`/search?category=${i.id}`}>
             <a draggable="false">
               <div

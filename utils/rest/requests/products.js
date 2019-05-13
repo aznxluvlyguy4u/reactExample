@@ -6,8 +6,8 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
   const params = toQueryParameterString(NullCheckProps({
     keyword, category, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
   }));
-  console.log(params);
-  const url = `https://c6z1cn1vpd.execute-api.eu-west-1.amazonaws.com/staging/api/v1/products?page=1&per_page=10${params}`;
+  const url = `${BASE_URL}/products/inventory${params}`;
+  console.log(url);
   return fetch(url, {
     method: 'GET',
     headers: {

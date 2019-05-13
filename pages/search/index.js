@@ -25,6 +25,9 @@ class SearchPage extends Component {
   }
 
   static async getInitialProps({ query }) {
+    if (query.keyword === undefined) {
+      query.keyword = '';
+    }
     if (query.deliveryDate !== null && !moment(query.deliveryDate, moment.ISO_8601).isValid()) {
       query.deliveryDate = null;
     }
@@ -34,10 +37,10 @@ class SearchPage extends Component {
     if (query.category !== null && !Number.isInteger(query.category)) {
       query.category_id = null;
     }
-    if (query.deliveryLocation !== null && !Number.isInteger(query.deliveryLocation)) {
+    if (query.deliveryLocation !== null && isNaN(query.deliveryLocation)) {
       query.deliveryLocation = null;
     }
-    if (query.collectionLocation !== null && !Number.isInteger(query.collectionLocation)) {
+    if (query.collectionLocation !== null && isNaN(query.collectionLocation)) {
       query.collectionLocation = null;
     }
     return {
@@ -45,17 +48,23 @@ class SearchPage extends Component {
     };
   }
 
-  componentWillMount() {
-    const { keyword, dispatch } = this.props;
-    dispatch(updateSearch({ keyword }));
-  }
+  // componentWillMount() {
+  //   const {
+  //     keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+  //   } = this.props;
+  //   dispatch(updateSearch({
+  //     keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+  //   }));
+  // }
 
   async componentDidMount() {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
-    dispatch(updateSearch({ keyword }));
-    await this.getProducts(keyword);
+    dispatch(updateSearch({
+      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+    }));
+    await this.getProducts();
   }
 
   async componentDidUpdate() {
@@ -64,9 +73,13 @@ class SearchPage extends Component {
     } = this.props;
 
     if (this.props.keyword !== await this.props.searchReducer.search.keyword) {
-      this.setState({ products: [] });
-      dispatch(updateSearch({ keyword }));
-      await this.getProducts(keyword);
+      // console.log(this.props.searchReducer.search.keyword);
+      // console.log(this.props);
+      // this.setState({ products: [] });
+      dispatch(updateSearch({
+        keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+      }));
+      // await this.getProducts();
     }
   }
 
@@ -78,12 +91,16 @@ class SearchPage extends Component {
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate);
       this.setState({
-        notFound: false, loading: false, products: response.data.products.map(i => new ProductResponse(i).returnProduct()), total_page_count: response.data.meta.total_row_count / response.data.meta.per_page, current_page: response.data.page,
+        notFound: false,
+        loading: false,
+        products: response.data.map(i => new ProductResponse(i).returnProduct()),
+        total_page_count: response.meta.total_row_count / response.meta.per_page,
+        current_page: response.data.page,
       });
     } catch (error) {
       this.setState({ loading: false });
 
-      if (error.statusCode === 404) {
+      if (error.code === 404) {
         this.setState({ notFound: true });
       }
 

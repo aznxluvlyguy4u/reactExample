@@ -1,7 +1,7 @@
 export function NullCheckQueryParams(values) {
   const queryParameters = {};
   if (values.keyword !== '') {
-    queryParameters.keyword = encodeURIComponent(values.keyword);
+    queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
   }
   if (values.deliveryLocation !== '') {
     queryParameters.deliveryLocation = values.deliveryLocation.storeId;
@@ -20,25 +20,25 @@ export function NullCheckQueryParams(values) {
 
 export function NullCheckProps(values) {
   const queryParameters = [];
-  console.log(values);
-  if (values.keyword !== undefined) {
+  if (values.keyword !== '') {
     queryParameters.push({ column: 'q[name_or_product_group_name_or_product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
   }
   if (values.deliveryLocation !== null) {
-    queryParameters.push({ column: 'deliveryLocation', value: values.deliveryLocation });
+    queryParameters.push({ column: 'store_id', value: values.deliveryLocation });
   }
   if (values.category !== undefined) {
     queryParameters.push({ column: 'q[product_group_id_eq]', value: values.category });
   }
-  if (values.collectionLocation !== null) {
-    queryParameters.push({ column: 'collectionLocation', value: values.collectionLocation });
-  }
+  // if (values.collectionLocation !== null) {
+  //   queryParameters.push({ column: 'collectionLocation', value: values.collectionLocation });
+  // }
   if (values.deliveryDate !== null) {
-    queryParameters.push({ column: 'deliveryDate', value: values.deliveryDate });
+    queryParameters.push({ column: 'starts_at', value: values.deliveryDate });
   }
   if (values.collectionDate !== null) {
-    queryParameters.push({ column: 'collectionDate', value: values.collectionDate });
+    queryParameters.push({ column: 'ends_at', value: values.collectionDate });
   }
+  queryParameters.push({ column: 'filtermode[]', value: 'rental' });
   return queryParameters;
 }
 

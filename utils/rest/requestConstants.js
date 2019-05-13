@@ -1,7 +1,7 @@
 const MOCK_URL = 'http://localhost:3001';
 const LOCAL_URL = 'http://localhost:8080/api/v1';
 const DEV_URL = 'https://1qie0vagy1.execute-api.eu-west-1.amazonaws.com/dev/api/v1/';
-const STAGING_URL = 'https://edz650cm14.execute-api.eu-west-1.amazonaws.com/staging/api/v1';
+const STAGING_URL = 'https://zu6wjlgc49.execute-api.eu-west-1.amazonaws.com/staging/api/v1';
 const PROD_URL = '';
 
 // function ReturnCondition() {

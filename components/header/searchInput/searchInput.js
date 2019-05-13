@@ -21,11 +21,14 @@ class SearchInput extends Component {
   }
 
   onSubmit() {
-    if (this.state.search === '') {
-      Router.push('/search');
-      return;
-    }
-    Router.push({ pathname: '/search', query: { keyword: encodeURIComponent(this.state.search) } });
+    const { dispatch } = this.props;
+    // if (this.state.search === '') {
+    //   Router.push('/search');
+    //   return;
+    // }
+    // dispatch(updateSearch(this.props.searchReducer.search));
+    const query = this.props.searchReducer.search;
+    Router.push({ pathname: '/search', query });
   }
 
   onChangeValue(value) {
