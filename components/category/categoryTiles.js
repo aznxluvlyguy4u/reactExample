@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
 import './categoryTiles.scss';
 import Link from 'next/link';
 import Carousel from 'nuka-carousel';

@@ -1,18 +1,16 @@
 import { isEmpty } from 'lodash';
+import moment from 'moment';
+import Link from 'next/link';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateSearch } from '../../actions/searchActions';
 import Loader from '../../components/loader';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
+import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
-import ProductResponse from '../../utils/mapping/products/ProductResponse';
-import moment from 'moment';
-import Router from 'next/router';
-import Link from 'next/link';
-import { NullCheckFrontendQueryParam } from '../../utils/queryparams';
 
 
 const meta = { title: 'Oceanpremium - Search', description: 'Index description' };
@@ -86,10 +84,12 @@ class SearchPage extends Component {
     try {
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate);
+      const products = response.data.map(i => new ProductResponse(i).returnProduct());
+      const myArray = products.filter(obj => obj.available === true);
       this.setState({
         notFound: false,
         loading: false,
-        products: response.data.map(i => new ProductResponse(i).returnProduct()),
+        products: myArray,
         total_page_count: response.meta.total_row_count / response.meta.per_page,
         current_page: response.data.page,
       });

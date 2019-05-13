@@ -1,20 +1,16 @@
 import { Field, Form, Formik } from 'formik';
 import Router from 'next/router';
 import React, { Component } from 'react';
-import CustomInputComponent from '../../signup/customInputComponent';
-import './searchForm.scss';
-import searchReducer from '../../../reducers/searchReducer';
-import CustomSelect from '../../select';
-// import {
-//   continents, countries, languages, languagesAll,
-// } from 'countries-list';
-// import { transformCountryData } from '../../../utils/data/countryDataUtil';
-import { getLocations } from '../../../utils/rest/requests/locations';
-import { transformLocationData } from '../../../utils/data/countryDataUtil';
-import { NullCheckQueryParams, toQueryParameterString } from '../../../utils/queryparams';
-import DatePicker from '../../datepicker/datepicker';
 import { connect } from 'react-redux';
 import { updateSearch } from '../../../actions/searchActions';
+import searchReducer from '../../../reducers/searchReducer';
+import { transformLocationData } from '../../../utils/data/countryDataUtil';
+import { NullCheckQueryParams } from '../../../utils/queryparams';
+import { getLocations } from '../../../utils/rest/requests/locations';
+import DatePicker from '../../datepicker/datepicker';
+import CustomSelect from '../../select';
+import CustomInputComponent from '../../signup/customInputComponent';
+import './searchForm.scss';
 
 const initialValues = {
   keyword: '',

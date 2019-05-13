@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchInput.scss';
 import searchReducer from '../../../reducers/searchReducer';
-import { updateSearch } from '../../../actions/searchActions';
-import { cloneDeep } from 'lodash';
 
 const initialValues = {
   keyword: '',
@@ -22,16 +20,12 @@ class SearchInput extends Component {
   }
 
   onSubmit() {
-    const { dispatch } = this.props;
-    // if (this.state.search === '') {
-    //   Router.push('/search');
-    //   return;
-    // }
-
-    // dispatch(updateSearch(this.props.searchReducer.search));
-    // const query = cloneDeep(this.props.searchReducer.search);
-    // query.keyword = this.state.search;
-    const query = { keyword: this.state.search };
+    const { search } = this.state;
+    if (search === '') {
+      Router.push('/search');
+      return;
+    }
+    const query = { keyword: search };
     Router.push({ pathname: '/search', query });
   }
 
