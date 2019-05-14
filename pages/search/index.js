@@ -97,11 +97,10 @@ class SearchPage extends Component {
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, this.state.current_page);
       const products = response.data.map(i => new ProductResponse(i).returnProduct());
-      const myArray = products.filter(obj => obj.available === true);
       this.setState({
         notFound: false,
         loading: false,
-        products: type === 'append' ? [...myArray, ...this.state.products] : myArray,
+        products: type === 'append' ? [...products, ...this.state.products] : products,
         total_page_count: Math.ceil(response.meta.totalRowCount / response.meta.perPage),
         current_page: response.meta.page,
       });
