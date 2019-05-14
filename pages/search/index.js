@@ -2,10 +2,10 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import Link from 'next/link';
 import React, { Component } from 'react';
-import { Collapse } from 'react-collapse';
 import { connect } from 'react-redux';
 import { updateSearch } from '../../actions/searchActions';
 import Loader from '../../components/loader';
+import Pagination from '../../components/pagination';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
@@ -31,7 +31,7 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false, query: {}, open: false,
+      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false, query: {},
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
     this.counter = 0;
@@ -81,7 +81,7 @@ class SearchPage extends Component {
     } = this.props;
 
     if (prevProps.keyword !== keyword) {
-      this.setState({ products: [], current_page: 0 });
+      this.setState({ products: [], current_page: 0, total_page_count: 0 });
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
       }));
@@ -115,7 +115,7 @@ class SearchPage extends Component {
     }
   }
 
-  async toggleClass() {
+  async getMoreProducts() {
     await this.getProducts('append');
   }
 
@@ -123,8 +123,6 @@ class SearchPage extends Component {
     const {
       products, loading, notFound, query, current_page, total_page_count,
     } = this.state;
-    console.log(`page: ${this.state.current_page}`);
-    console.log(`total page count: ${this.state.total_page_count}`);
 
     return (
       <Default nav="fixed" search meta={this.meta}>
@@ -141,11 +139,10 @@ class SearchPage extends Component {
                   <span>Search through hundreds of Water Toys and add them to your trip!</span>
                 </div>
               )}
-              <Collapse isOpened className="result-wrapper">
+              <Pagination total_page_count={this.state.total_page_count} current_page={this.state.current_page} onClick={() => this.getMoreProducts()}>
                 {getHTML(products)}
-              </Collapse>
+              </Pagination>
               {loading ? <Loader /> : null}
-              {total_page_count > current_page ? <button className="showmore" onClick={() => this.toggleClass()}>Show More (+4) ></button> : null}
             </div>
           </div>
         </div>
