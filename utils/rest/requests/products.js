@@ -3,7 +3,6 @@ import handleRestResponse from '../requestUtil';
 import { toQueryParameterString, NullCheckProps } from '../../queryparams';
 
 export function getProducts(keyword, category, deliveryLocation, collectionLocation, deliveryDate, collectionDate, page) {
-  // console.log(`?page=${page + 1}&per_page=10`);
   const params = toQueryParameterString(NullCheckProps({
     keyword, category, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
   }));

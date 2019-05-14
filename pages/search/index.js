@@ -63,7 +63,7 @@ class SearchPage extends Component {
 
   async componentDidMount() {
     const {
-      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
 
     if (keyword !== '') {
@@ -77,7 +77,7 @@ class SearchPage extends Component {
 
   async componentDidUpdate(prevProps) {
     const {
-      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
 
     if (prevProps.keyword !== keyword) {
@@ -93,21 +93,22 @@ class SearchPage extends Component {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     } = this.props;
+    const { current_page, products } = this.state;
     try {
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, this.state.current_page);
-      const products = response.data.map(i => new ProductResponse(i).returnProduct());
+      const responseProducts = response.data.map(i => new ProductResponse(i).returnProduct());
       this.setState({
         notFound: false,
         loading: false,
-        products: type === 'append' ? [...products, ...this.state.products] : products,
+        products: type === 'append' ? [...responseProducts, ...products] : responseProducts,
         total_page_count: Math.ceil(response.meta.totalRowCount / response.meta.perPage),
         current_page: response.meta.page,
       });
     } catch (error) {
       this.setState({ loading: false });
       if (error.code === 404) {
-        if (this.state.current_page === 0) {
+        if (current_page === 0) {
           this.setState({ notFound: true });
         }
       }
@@ -121,7 +122,7 @@ class SearchPage extends Component {
 
   render() {
     const {
-      products, loading, notFound, query, current_page, total_page_count,
+      products, loading, notFound, total_page_count, current_page,
     } = this.state;
 
     return (
@@ -139,7 +140,7 @@ class SearchPage extends Component {
                   <span>Search through hundreds of Water Toys and add them to your trip!</span>
                 </div>
               )}
-              <Pagination total_page_count={this.state.total_page_count} current_page={this.state.current_page} onClick={() => this.getMoreProducts()}>
+              <Pagination total_page_count={total_page_count} current_page={current_page} onClick={() => this.getMoreProducts()}>
                 {getHTML(products)}
               </Pagination>
               {loading ? <Loader /> : null}

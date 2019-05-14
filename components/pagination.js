@@ -8,12 +8,13 @@ class Pagination extends Component {
   }
 
   render() {
+    const { children, total_page_count, current_page, onClick } = this.props;
     return (
       <div>
         <Collapse isOpened className="result-wrapper">
-          {this.props.children}
+          {children}
         </Collapse>
-        {this.props.total_page_count > this.props.current_page ? <button className="showmore" onClick={this.props.onClick}>Show More (+4) ></button> : null}
+        {total_page_count > current_page ? <button className="showmore" onClick={onClick}>Show More (+4) ></button> : null}
       </div>
     );
   }

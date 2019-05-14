@@ -94,14 +94,14 @@ export default class Header extends React.Component {
         {search ? (
           <div className="logo-wrapper">
             <Link href="/">
-              <a><img className="logo" alt="logo" src={navType === 'fixed' ? '/static/images/icon_dark.png' : '/static/images/logo.png'} alt="Logo" height={nav === 'fixed' ? 23 : 25} width={nav === 'fixed' ? 31 : 120} /></a>
+              <a><img className="logo" alt="Logo" src={navType === 'fixed' ? '/static/images/icon_dark.png' : '/static/images/logo.png'} height={nav === 'fixed' ? 23 : 25} width={nav === 'fixed' ? 31 : 120} /></a>
             </Link>
             <SearchInput />
           </div>
         ) : (
           <div className="logo-wrapper">
             <Link href="/">
-              <a><img className="logo" alt="logo" src={navType === 'fixed' ? '/static/images/logo_dark.png' : '/static/images/logo.png'} alt="Logo" height="25" width="120" /></a>
+              <a><img className="logo" alt="Logo" src={navType === 'fixed' ? '/static/images/logo_dark.png' : '/static/images/logo.png'} height="25" width="120" /></a>
             </Link>
           </div>
         )}
