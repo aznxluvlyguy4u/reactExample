@@ -1,0 +1,41 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+
+
+      {
+          "type": "firefox",
+          "request": "launch",
+          "name": "Next: Chrome",
+          "url": "http://localhost:3000",
+          "webRoot": "${workspaceFolder}"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Next: Node",
+        "runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
+        "program": "${workspaceFolder}/server.js",
+        "restart": true,
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+    }
+      // {
+      //   "type": "node",
+      //   "request": "launch",
+      //   "name": "Next: Node",
+      //   "program": "${workspaceFolder}/server.js",
+      //   "runtimeArgs": [
+      //       "--inspect"
+      //   ],
+      //   "port": 9229,
+      //   "console": "integratedTerminal"
+      // }
+  ],
+  "compounds": [
+      {
+          "name": "Next: Full",
+          "configurations": ["Next: Node", "Next: Chrome"]
+      }
+  ]
+}

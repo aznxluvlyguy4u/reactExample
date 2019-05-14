@@ -67,7 +67,7 @@ export function toQueryParameterString(queryParams) {
   if (queryParams !== null && queryParams.length > 0) {
     queryParams.map((item, index) => {
       if (index === 0) {
-        params = `${params}?${item.column}=${item.value}`;
+        params = `${params}&${item.column}=${item.value}`;
       }
       if (index > 0 && index < queryParams.length) {
         params = `${params}&${item.column}=${item.value}`;
