@@ -101,7 +101,7 @@ class SearchPage extends Component {
       this.setState({
         notFound: false,
         loading: false,
-        products: type === 'append' ? [...responseProducts, ...products] : responseProducts,
+        products: type === 'append' ? [...products, ...responseProducts] : responseProducts,
         total_page_count: Math.ceil(response.meta.totalRowCount / response.meta.perPage),
         current_page: response.meta.page,
       });

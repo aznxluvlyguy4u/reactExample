@@ -6,6 +6,9 @@
   justify-content: flex-start;
   align-items: center;
   margin-left: $nav_margin;
+  @include for-tablet-portrait-up {
+    width: 220px;
+  }
 
   .search-button {
     color: $white;
