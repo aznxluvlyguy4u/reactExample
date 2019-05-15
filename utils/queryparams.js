@@ -41,7 +41,7 @@ export function NullCheckQueryParams(values) {
 export function NullCheckProps(values) {
   const queryParameters = [];
   if (values.keyword !== '') {
-    queryParameters.push({ column: 'q[name_or_product_group_name_or_product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
+    queryParameters.push({ column: 'q[product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
   }
   if (values.deliveryLocation !== null) {
     queryParameters.push({ column: 'store_id', value: values.deliveryLocation });
