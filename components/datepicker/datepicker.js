@@ -3,6 +3,7 @@ import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'rea
 import 'react-dates/lib/css/_datepicker.css';
 import React, { Component } from 'react';
 import './datepicker.scss';
+import moment from 'moment';
 // import ThemedStyleSheet from 'react-with-styles/lib/ThemedStyleSheet';
 // import aphroditeInterface from 'react-with-styles-interface-aphrodite';
 // import DefaultTheme from 'react-dates/lib/theme/DefaultTheme';
@@ -32,6 +33,37 @@ class DatePicker extends Component {
     this.state = { startDate: null, endDate: null, focusedInput: null };
   }
 
+  componentDidMount() {
+    console.log(this.props.startDate);
+    console.log(this.props.endDate);
+    if (this.props.startDate !== null && this.props.startDate !== undefined) {
+      this.setState({ startDate: moment.utc(this.props.startDate) });
+    }
+    if (this.props.endDate !== null && this.props.endDate !== undefined) {
+      this.setState({ endDate: moment.utc(this.props.endDate) });
+    }
+  }
+
+  componentDidUpdate(prevProps, nextProps) {
+    console.log(prevProps);
+    console.log(nextProps);
+    if (prevProps.startDate !== this.props.startDate) {
+      this.setState({ startDate: moment.utc(this.props.startDate) });
+      console.log('DONE');
+    }
+    // console.log(this.props.startDate);
+    // if (prevProps.startDate !== this.props.startDate) {
+    //   // console.log(prevProps.startDate);
+    //   // console.log(this.props.startDate);
+    //   this.setState({ startDate: this.props.startDate });
+    // }
+    // if (prevProps.endDate !== this.props.endDate) {
+    //   // console.log(prevProps.endDate);
+    //   // console.log(this.props.endDate);
+    //   this.setState({ endDate: this.props.endDate });
+    // }
+  }
+
   onChange(startDate, endDate) {
     this.setState({ startDate, endDate });
     if (startDate !== null) {
@@ -40,6 +72,7 @@ class DatePicker extends Component {
     if (endDate !== null) {
       this.props.setFieldValue.setFieldValue('collectionDate', endDate.toDate().toISOString());
     }
+    // this.props.onChange();
   }
 
   render() {

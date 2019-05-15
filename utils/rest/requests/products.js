@@ -11,6 +11,7 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
     per_page = 4;
   }
   const url = `${BASE_URL}/products/inventory?page=${page + 1}&per_page=${per_page}${params}`;
+  console.log(url);
   return fetch(url, {
     method: 'GET',
     headers: {

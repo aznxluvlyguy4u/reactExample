@@ -12,7 +12,7 @@ export function transformCountryData(countries) {
 export function transformLocationData(locations) {
   const locationsdata = Object.keys(locations).map((key, index) => {
     const obj = {};
-    obj.value = JSON.stringify({ id: locations[key].id, storeId: locations[key].storeIds[0] });
+    obj.value = locations[key].id;
     obj.label = `${locations[key].name}`;
     return obj;
   });

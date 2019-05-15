@@ -12,6 +12,7 @@ import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
+import SearchEdit from '../../components/searchedit/searchEdit';
 
 const getHTML = products => products.map(item => (
   <Link href="/products">
@@ -121,6 +122,7 @@ class SearchPage extends Component {
   }
 
   render() {
+    console.log(this.props.searchReducer);
     const {
       products, loading, notFound, total_page_count, current_page,
     } = this.state;
@@ -128,6 +130,7 @@ class SearchPage extends Component {
     return (
       <Default nav="fixed" search meta={this.meta}>
         <div className="page-wrapper">
+          <SearchEdit />
           <h1>Search Results</h1>
           <div className="search-block">
             <div className="result-wrapper">

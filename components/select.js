@@ -46,6 +46,7 @@ function CustomSelect({
   function onChange(value) {
     setFieldValue.setFieldValue(field.name, JSON.parse(value.value));
     setDropdownValue(value);
+    // props.onChange();
   }
 
   return (
@@ -61,6 +62,7 @@ function CustomSelect({
         styles={colourStyles}
         onChange={onChange}
         options={props.options}
+        value={props.value}
       />
       {touched[field.name]
       && errors[field.name] && <span>{errors[field.name]}</span>}
