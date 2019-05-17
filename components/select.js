@@ -36,13 +36,6 @@ const colourStyles = {
 };
 
 class CustomSelect extends Component {
-  // function CustomSelect({
-  //   field, // { name, value, onChange, onBlur }
-  //   form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-  //   setFieldValue, // Setting field value with Formik
-  //   ...props
-  // }) {
-  // const [dropdownValue, setDropdownValue] = useState(field.value);
   constructor(props) {
     super(props);
     // Don't call this.setState() here!

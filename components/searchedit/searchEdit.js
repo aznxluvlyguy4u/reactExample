@@ -42,7 +42,6 @@ class SearchEdit extends Component {
   mergeObj(obj) {
     this.props.dispatch(updateSearchObject(this.props.searchReducer.search, obj));
     const query = CreateQueryParams(this.props.searchReducer.search);
-    console.log(query);
     Router.push({ pathname: '/search', query });
   }
 
