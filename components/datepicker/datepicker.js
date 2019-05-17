@@ -34,19 +34,20 @@ class DatePicker extends Component {
   }
 
   componentDidMount() {
-    if (this.props.startDate !== null && this.props.startDate !== undefined) {
-      this.setState({ startDate: moment.utc(this.props.startDate) });
-    }
-    if (this.props.endDate !== null && this.props.endDate !== undefined) {
-      this.setState({ endDate: moment.utc(this.props.endDate) });
-    }
+    // console.log(this.props.startDate);
+    // if (this.props.startDate !== null && this.props.startDate !== undefined) {
+    //   this.setState({ startDate: moment.utc(this.props.startDate) });
+    // }
+    // if (this.props.endDate !== null && this.props.endDate !== undefined) {
+    //   this.setState({ endDate: moment.utc(this.props.endDate) });
+    // }
   }
 
   componentDidUpdate(prevProps, nextProps) {
-    if (prevProps.startDate !== this.props.startDate) {
+    if (prevProps.startDate !== this.props.startDate && this.props.startDate !== undefined && this.props.startDate !== null) {
       this.setState({ startDate: moment.utc(this.props.startDate) });
     }
-    if (prevProps.endDate !== this.props.endDate) {
+    if (prevProps.endDate !== this.props.endDate && this.props.endDate !== undefined && this.props.endDate !== null) {
       this.setState({ endDate: moment.utc(this.props.endDate) });
     }
   }
@@ -54,12 +55,13 @@ class DatePicker extends Component {
   onChange(startDate, endDate) {
     this.setState({ startDate, endDate });
     if (startDate !== null) {
+      this.props.onChange({ collectionDate: startDate.toISOString() });
       this.props.setFieldValue.setFieldValue('deliveryDate', startDate.toDate().toISOString());
     }
     if (endDate !== null) {
+      this.props.onChange({ deliveryDate: endDate.toISOString() });
       this.props.setFieldValue.setFieldValue('collectionDate', endDate.toDate().toISOString());
     }
-    // this.props.onChange();
   }
 
   render() {

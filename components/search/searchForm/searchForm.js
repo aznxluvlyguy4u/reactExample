@@ -33,6 +33,7 @@ class SearchForm extends Component {
   }
 
   onSubmit(values) {
+    console.log(values);
     const { dispatch } = this.props;
     const params = NullCheckQueryParams(values);
     dispatch(updateSearch({
@@ -82,7 +83,7 @@ class SearchForm extends Component {
                   <label htmlFor="collectionDateRange">Pickup Date</label>
                 </div>
 
-                <Field name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+                <Field onChange={() => console.log('test')} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
               </div>
               <button className="search-button-full" type="submit">Search</button>
             </div>

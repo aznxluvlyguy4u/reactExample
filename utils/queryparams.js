@@ -24,10 +24,10 @@ export function NullCheckQueryParams(values) {
     queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
   }
   if (values.deliveryLocation !== '') {
-    queryParameters.deliveryLocation = values.deliveryLocation;
+    queryParameters.deliveryLocation = values.deliveryLocation.value;
   }
   if (values.collectionLocation !== '') {
-    queryParameters.collectionLocation = values.collectionLocation;
+    queryParameters.collectionLocation = values.collectionLocation.value;
   }
   if (values.deliveryDate !== '') {
     queryParameters.deliveryDate = values.deliveryDate;

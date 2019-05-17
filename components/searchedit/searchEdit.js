@@ -8,7 +8,7 @@ import searchReducer from '../../reducers/searchReducer';
 import { getLocations } from '../../utils/rest/requests/locations';
 import { transformLocationData } from '../../utils/data/countryDataUtil';
 import './searchedit.scss';
-
+import {updateSearchObject} from '../../actions/searchActions'
 
 const initialValues = {
   deliveryLocation: '',
@@ -21,6 +21,7 @@ class SearchEdit extends Component {
   constructor(props) {
     super(props);
     this.state = { locations: [] };
+    this.mergeObj = this.mergeObj.bind(this);
   }
 
   async componentDidMount() {
@@ -34,6 +35,10 @@ class SearchEdit extends Component {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  mergeObj(obj){
+    this.props.dispatch(updateSearchObject(this.props.searchReducer.search, obj))
   }
 
   render() {
@@ -53,7 +58,7 @@ class SearchEdit extends Component {
                     <Field onChange={() => console.log('test')} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
                   <div>
-                    <Field onChange={() => console.log('test')} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+                    <Field onChange={this.mergeObj} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
                   </div>
                 </div>
               </div>
