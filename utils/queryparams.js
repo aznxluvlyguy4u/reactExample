@@ -52,13 +52,12 @@ export function NullCheckProps(values) {
   if (values.collectionLocation !== null) {
     queryParameters.push({ column: 'collection_location_id', value: values.collectionLocation });
   }
-  if (values.deliveryDate !== null) {
-    queryParameters.push({ column: 'starts_at', value: values.deliveryDate });
-  }
   if (values.collectionDate !== null) {
-    queryParameters.push({ column: 'ends_at', value: values.collectionDate });
+    queryParameters.push({ column: 'starts_at', value: values.collectionDate });
   }
-  queryParameters.push({ column: 'filtermode[]', value: 'rental' });
+  if (values.deliveryDate !== null) {
+    queryParameters.push({ column: 'ends_at', value: values.deliveryDate });
+  }
   return queryParameters;
 }
 

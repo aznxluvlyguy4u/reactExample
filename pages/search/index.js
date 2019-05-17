@@ -109,7 +109,8 @@ class SearchPage extends Component {
     } catch (error) {
       this.setState({ loading: false });
       if (error.code === 404) {
-        if (current_page === 0) {
+        console.log(current_page)
+        if (current_page <= 1) {
           this.setState({ notFound: true });
         }
       }
