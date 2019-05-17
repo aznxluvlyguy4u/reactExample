@@ -61,7 +61,7 @@ class SearchEdit extends Component {
                   <div className="edit-row">
                     <Field onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
-                  <div>
+                  <div className="other-wrapper">
                     <Field onChange={this.mergeObj} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
                   </div>
                 </div>
