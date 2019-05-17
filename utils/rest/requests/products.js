@@ -3,6 +3,20 @@ import handleRestResponse from '../requestUtil';
 import { toQueryParameterString, NullCheckProps } from '../../queryparams';
 import { throttle, debounce } from 'throttle-debounce';
 
+function requestAllWithDelay (urls, delay) {
+  return urls.reduce((promise, url) => {
+    return promise
+      .then((responses) => {
+        return fetch(url) // Or whatever request library you're using. If it doesn't support promises, you can wrap it in `new Promise((resolve, reject) => someLib(url, { onSuccess: resolve, onError: reject }));` or something similar.
+          .then(response => {
+            return new Promise(resolve => {
+              setTimeout(resolve, delay, responses.concat(response)); // replies.concat might not work, depending on how you want to accumulate all the data. Maybe you don't even care about the responses?
+            })
+          })
+      })
+
+  }, Promise.resolve([]))
+}
 
 export function getProducts(keyword, category, deliveryLocation, collectionLocation, deliveryDate, collectionDate, page) {    // Throttled function
      const params = toQueryParameterString(NullCheckProps({
