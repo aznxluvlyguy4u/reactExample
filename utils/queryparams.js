@@ -44,14 +44,14 @@ export function NullCheckProps(values) {
     queryParameters.push({ column: 'q[product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
   }
   if (values.deliveryLocation !== null) {
-    queryParameters.push({ column: 'store_id', value: values.deliveryLocation });
+    queryParameters.push({ column: 'delivery_location_id', value: values.deliveryLocation });
   }
   if (values.category !== undefined) {
     queryParameters.push({ column: 'q[product_group_id_eq]', value: values.category });
   }
-  // if (values.collectionLocation !== null) {
-  //   queryParameters.push({ column: 'collectionLocation', value: values.collectionLocation });
-  // }
+  if (values.collectionLocation !== null) {
+    queryParameters.push({ column: 'collection_location_id', value: values.collectionLocation });
+  }
   if (values.deliveryDate !== null) {
     queryParameters.push({ column: 'starts_at', value: values.deliveryDate });
   }

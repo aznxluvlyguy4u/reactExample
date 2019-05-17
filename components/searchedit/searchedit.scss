@@ -1,0 +1,47 @@
+@import "../../assets/scss/_variables";
+@import "../../assets/scss/_mixins";
+
+.searchedit {
+  margin-top:70px;
+  padding-top:20px;
+  padding-bottom:20px;
+  padding-left: 5%;
+  padding-right: 5%;
+  @include box-shadow(0px 2px 21px 0px rgba(196, 196, 196, 0.44));
+  .form-inline{
+    justify-content: flex-start;
+    .edit-row{
+      width: 100px;
+      padding-right: 20px;
+    }
+    .DateInput{
+      border: solid 2px #D3D3D3;
+      border-radius:3px;
+      width: 100px;
+      margin-right: 20px;
+      min-height:34px;
+    }
+    .DateInput input {
+      height: auto;
+      box-sizing: border-box;
+      font-size:12px;
+      text-align: center;
+      padding:4px;
+    }
+    .DateInput_input__focused {
+      border: none;
+    }
+    .css-1g6ulci-singleValue{
+      width: 100%;
+      text-align:center;
+      left:1%;
+    }
+    .css-1hwfws3{
+      padding: 0px 6px;
+    }
+    .css-bgy2mi-control{
+      // min-height:auto;
+      padding:0;
+    }
+  }
+}

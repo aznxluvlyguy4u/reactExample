@@ -2,7 +2,7 @@
 @import '../../assets/scss/_mixins';
 
 .page-wrapper {
-  padding-top: 50px+$default-margin-top;
+  padding-top: $default-margin-top;
   padding-left: $default-margin;
   padding-right: $default-margin;
   min-height: 100vh;

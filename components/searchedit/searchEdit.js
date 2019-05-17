@@ -7,6 +7,8 @@ import DatePicker from '../datepicker/datepicker';
 import searchReducer from '../../reducers/searchReducer';
 import { getLocations } from '../../utils/rest/requests/locations';
 import { transformLocationData } from '../../utils/data/countryDataUtil';
+import './searchedit.scss';
+
 
 const initialValues = {
   deliveryLocation: '',
@@ -36,29 +38,29 @@ class SearchEdit extends Component {
 
   render() {
     const { locations } = this.state;
-    console.log(this.props.searchReducer.search.startDate);
-    console.log(this.props.searchReducer.search.endDate);
     return (
-      <Formik
-        initialValues={initialValues}
-        render={setFieldValue => (
-          <Form>
-            <div>
-              <div className="form-inline">
-                <div className="location form-block">
-                  <Field onChange={() => console.log('test')} value={locations.find(x => x.id === this.props.searchReducer.deliveryLocation)} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
-                </div>
-                <div className="location form-block">
-                  <Field onChange={() => console.log('test')} value={locations.find(x => x.id === this.props.searchReducer.collectionLocation)} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
-                </div>
-                <div className="date form-block">
-                  <Field onChange={() => console.log('test')} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+      <div className="searchedit">
+        <Formik
+          initialValues={initialValues}
+          render={setFieldValue => (
+            <Form>
+              <div>
+                <div className="form-inline">
+                  <div className="edit-row">
+                    <Field onChange={() => console.log('test')} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  </div>
+                  <div className="edit-row">
+                    <Field onChange={() => console.log('test')} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  </div>
+                  <div>
+                    <Field onChange={() => console.log('test')} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Form>
-        )}
-      />
+            </Form>
+          )}
+        />
+      </div>
     );
   }
 }

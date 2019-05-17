@@ -34,8 +34,6 @@ class DatePicker extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.startDate);
-    console.log(this.props.endDate);
     if (this.props.startDate !== null && this.props.startDate !== undefined) {
       this.setState({ startDate: moment.utc(this.props.startDate) });
     }
@@ -45,23 +43,12 @@ class DatePicker extends Component {
   }
 
   componentDidUpdate(prevProps, nextProps) {
-    console.log(prevProps);
-    console.log(nextProps);
     if (prevProps.startDate !== this.props.startDate) {
       this.setState({ startDate: moment.utc(this.props.startDate) });
-      console.log('DONE');
     }
-    // console.log(this.props.startDate);
-    // if (prevProps.startDate !== this.props.startDate) {
-    //   // console.log(prevProps.startDate);
-    //   // console.log(this.props.startDate);
-    //   this.setState({ startDate: this.props.startDate });
-    // }
-    // if (prevProps.endDate !== this.props.endDate) {
-    //   // console.log(prevProps.endDate);
-    //   // console.log(this.props.endDate);
-    //   this.setState({ endDate: this.props.endDate });
-    // }
+    if (prevProps.endDate !== this.props.endDate) {
+      this.setState({ endDate: moment.utc(this.props.endDate) });
+    }
   }
 
   onChange(startDate, endDate) {

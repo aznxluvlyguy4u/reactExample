@@ -129,8 +129,8 @@ class SearchPage extends Component {
 
     return (
       <Default nav="fixed" search meta={this.meta}>
+        <SearchEdit />
         <div className="page-wrapper">
-          <SearchEdit />
           <h1>Search Results</h1>
           <div className="search-block">
             <div className="result-wrapper">
