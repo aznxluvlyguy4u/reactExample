@@ -81,7 +81,7 @@ class SearchPage extends Component {
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
     } = this.props;
 
-    if (prevProps.keyword !== keyword) {
+    if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,

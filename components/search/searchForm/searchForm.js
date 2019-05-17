@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updateSearch } from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
-import { NullCheckQueryParams } from '../../../utils/queryparams';
+import { NullCheckQueryParams, CreateQueryParams } from '../../../utils/queryparams';
 import { getLocations } from '../../../utils/rest/requests/locations';
 import DatePicker from '../../datepicker/datepicker';
 import CustomSelect from '../../select';
@@ -33,12 +33,13 @@ class SearchForm extends Component {
   }
 
   onSubmit(values) {
-    console.log(values);
     const { dispatch } = this.props;
     const params = NullCheckQueryParams(values);
     dispatch(updateSearch({
       keyword: values.keyword,
     }));
+
+    CreateQueryParams(values);
     if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
       Router.push('/search');
       return;
@@ -70,11 +71,11 @@ class SearchForm extends Component {
               <div className="form-inline">
                 <div className="location form-block">
                   <label htmlFor="deliveryLocation">Delivery Location</label>
-                  <Field options={this.state.locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  <Field onChange={() => console.log('test')} options={this.state.locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                 </div>
                 <div className="location form-block">
                   <label htmlFor="collectionLocation">Collection Location</label>
-                  <Field options={this.state.locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  <Field onChange={() => console.log('test')} options={this.state.locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                 </div>
               </div>
               <div className="date form-block">

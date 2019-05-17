@@ -55,10 +55,11 @@ class CustomSelect extends Component {
   }
 
   onChange(value) {
-    console.log(value);
     this.props.setFieldValue.setFieldValue(this.props.field.name, value);
     this.setDropdownValue(value);
-    // props.onChange();
+    const obj = {};
+    obj[this.props.field.name] = value.value.toString();
+    this.props.onChange(obj);
   }
 
   render() {
@@ -71,7 +72,7 @@ class CustomSelect extends Component {
       >
         {this.props.form.touched[this.props.field.name]
         && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
-        {/* <input name={this.props.field.name} type="hidden" value={this.state.value} /> */}
+        <input name={this.props.field.name} type="hidden" value={this.state.value} />
       </Select>
     );
   }

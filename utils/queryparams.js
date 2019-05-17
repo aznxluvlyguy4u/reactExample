@@ -62,6 +62,26 @@ export function NullCheckProps(values) {
   return queryParameters;
 }
 
+export function CreateQueryParams(state) {
+  const queryParameters = {};
+  if (state.keyword !== '' && state.keyword !== undefined && state.keyword !== null) {
+    queryParameters.keyword = state.keyword;
+  }
+  if (state.deliveryLocation !== '' && state.deliveryLocation !== undefined && state.deliveryLocation !== null) {
+    queryParameters.deliveryLocation = state.deliveryLocation;
+  }
+  if (state.collectionLocation !== '' && state.collectionLocation !== undefined && state.collectionLocation !== null) {
+    queryParameters.collectionLocation = state.collectionLocation;
+  }
+  if (state.deliveryDate !== '' && state.deliveryDate !== undefined && state.deliveryDate !== null) {
+    queryParameters.deliveryDate = state.deliveryDate;
+  }
+  if (state.collectionDate !== '' && state.collectionDate !== undefined && state.collectionDate !== null) {
+    queryParameters.collectionDate = state.collectionDate;
+  }
+  return queryParameters;
+}
+
 export function toQueryParameterString(queryParams) {
   let params = '';
   if (queryParams !== null && queryParams.length > 0) {

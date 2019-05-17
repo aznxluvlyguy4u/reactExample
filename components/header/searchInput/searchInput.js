@@ -6,6 +6,8 @@ import CustomInputComponent from '../../signup/customInputComponent';
 import './searchInput.scss';
 import searchReducer from '../../../reducers/searchReducer';
 import PropTypes from 'prop-types';
+import { updateSearchObject } from '../../../actions/searchActions';
+import { CreateQueryParams } from '../../../utils/queryparams';
 
 const initialValues = {
   keyword: '',
@@ -26,7 +28,9 @@ class SearchInput extends Component {
       Router.push('/search');
       return;
     }
-    const query = { keyword: search };
+    const queryparam = { keyword: search };
+    this.props.dispatch(updateSearchObject(this.props.searchReducer.search, queryparam));
+    const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });
   }
 

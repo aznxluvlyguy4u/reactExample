@@ -8,7 +8,9 @@ import searchReducer from '../../reducers/searchReducer';
 import { getLocations } from '../../utils/rest/requests/locations';
 import { transformLocationData } from '../../utils/data/countryDataUtil';
 import './searchedit.scss';
-import {updateSearchObject} from '../../actions/searchActions'
+import { updateSearchObject } from '../../actions/searchActions';
+import { CreateQueryParams } from '../../utils/queryparams';
+import Router from 'next/router';
 
 const initialValues = {
   deliveryLocation: '',
@@ -37,8 +39,11 @@ class SearchEdit extends Component {
     }
   }
 
-  mergeObj(obj){
-    this.props.dispatch(updateSearchObject(this.props.searchReducer.search, obj))
+  mergeObj(obj) {
+    this.props.dispatch(updateSearchObject(this.props.searchReducer.search, obj));
+    const query = CreateQueryParams(this.props.searchReducer.search);
+    console.log(query);
+    Router.push({ pathname: '/search', query });
   }
 
   render() {
@@ -52,10 +57,10 @@ class SearchEdit extends Component {
               <div>
                 <div className="form-inline">
                   <div className="edit-row">
-                    <Field onChange={() => console.log('test')} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                    <Field onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
                   <div className="edit-row">
-                    <Field onChange={() => console.log('test')} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                    <Field onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
                   <div>
                     <Field onChange={this.mergeObj} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
