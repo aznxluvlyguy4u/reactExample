@@ -13,6 +13,7 @@ import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
 import SearchEdit from '../../components/searchedit/searchEdit';
+import {debounce, partial} from 'lodash';
 
 const getHTML = products => products.map(item => (
   <Link href="/products">
@@ -73,6 +74,8 @@ class SearchPage extends Component {
     dispatch(updateSearch({
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     }));
+
+  // throttle(function(){this.getProducts('update')}, 300, {trailing: false})
     await this.getProducts('update');
   }
 
@@ -91,6 +94,7 @@ class SearchPage extends Component {
   }
 
   async getProducts(type) {
+    console.log('called')
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     } = this.props;
