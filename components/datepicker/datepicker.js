@@ -67,8 +67,8 @@ class DatePicker extends Component {
   render() {
     return (
       <DateRangePicker
-        startDatePlaceholderText="Start Date"
-        endDatePlaceholderText="End Date"
+        startDatePlaceholderText={this.props.placeholders[0]}
+        endDatePlaceholderText={this.props.placeholders[1]}
         hideKeyboardShortcutsPanel
         customArrowIcon=""
         startDate={this.state.startDate} // momentPropTypes.momentObj or null,

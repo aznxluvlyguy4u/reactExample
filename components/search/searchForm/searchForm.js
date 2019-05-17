@@ -84,7 +84,7 @@ class SearchForm extends Component {
                   <label htmlFor="collectionDateRange">Pickup Date</label>
                 </div>
 
-                <Field onChange={() => console.log('test')} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+                <Field placeholders={['Date', 'Date']} onChange={() => console.log('test')} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
               </div>
               <button className="search-button-full" type="submit">Search</button>
             </div>

@@ -14,7 +14,7 @@ const colourStyles = {
     fontSize: '11px',
     color: '#D3D3D3',
     borderRadius: '0px',
-    border: 'solid 2px #D3D3D3',
+    border: 'solid 1px #D3D3D3',
     paddingTop: '4px',
     paddingBottom: '4px',
     boxShadow: 'none',

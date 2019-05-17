@@ -56,13 +56,13 @@ class SearchEdit extends Component {
               <div>
                 <div className="form-inline">
                   <div className="edit-row">
-                    <Field onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                    <Field placeholder="Delivery Location" onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
                   <div className="edit-row">
-                    <Field onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                    <Field placeholder="Collection Location" onChange={this.mergeObj} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
                   <div className="other-wrapper">
-                    <Field onChange={this.mergeObj} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+                    <Field placeholders={['Delivery Date', 'Collection Date']} onChange={this.mergeObj} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder='Delivery Date' setFieldValue={setFieldValue} component={DatePicker} />
                   </div>
                 </div>
               </div>

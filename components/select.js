@@ -9,7 +9,7 @@ const colourStyles = {
     fontSize: '11px',
     color: '#D3D3D3',
     borderRadius: '3px',
-    border: 'solid 2px #D3D3D3',
+    border: 'solid 1px #D3D3D3',
     paddingTop: '4px',
     paddingBottom: '4px',
     boxShadow: 'none',
@@ -56,12 +56,14 @@ class CustomSelect extends Component {
   }
 
   render() {
+    console.log(this.props.placeholder);
     return (
       <Select
         styles={colourStyles}
         onChange={this.onChange}
         options={this.props.options}
         value={this.state.value ? this.state.value : this.props.value}
+        placeholder={this.props.placeholder ? this.props.placeholder : 'Default'}
       >
         {this.props.form.touched[this.props.field.name]
         && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
