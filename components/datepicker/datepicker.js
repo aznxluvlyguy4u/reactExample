@@ -56,11 +56,11 @@ class DatePicker extends Component {
     this.setState({ startDate, endDate });
     if (startDate !== null) {
       this.props.onChange({ collectionDate: startDate.toISOString() });
-      this.props.setFieldValue.setFieldValue('deliveryDate', startDate.toDate().toISOString());
+      this.props.setFieldValue.setFieldValue('collectionDate', startDate.toDate().toISOString());
     }
     if (endDate !== null) {
       this.props.onChange({ deliveryDate: endDate.toISOString() });
-      this.props.setFieldValue.setFieldValue('collectionDate', endDate.toDate().toISOString());
+      this.props.setFieldValue.setFieldValue('deliveryDate', endDate.toDate().toISOString());
     }
   }
 
