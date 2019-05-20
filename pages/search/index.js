@@ -1,22 +1,22 @@
-import { isEmpty, debounce, partial } from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import Link from 'next/link';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import slugify from 'slugify';
 import { updateSearch } from '../../actions/searchActions';
 import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
+import SearchEdit from '../../components/searchedit/searchEdit';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
-import SearchEdit from '../../components/searchedit/searchEdit';
-
 
 const getHTML = products => products.map(item => (
-  <Link href="/products">
+  <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
     <a>
       <div className="result-item">
         <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />

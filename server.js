@@ -12,7 +12,7 @@ app
   .then(() => {
     const server = express();
     server.get('/', (req, res) => app.render(req, res, '/', req.params));
-    server.get('/detail/:id', (req, res) => app.render(req, res, '/detail', { id: req.params.id }));
+    server.get('/detail/:id/:slug', (req, res) => app.render(req, res, '/detail', { id: req.params.id, slug: req.param.slug }));
     // server.use('/static', express.static(path.join(__dirname, 'static')))
     server.get('*', (req, res) => handle(req, res));
 
