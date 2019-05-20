@@ -11,6 +11,7 @@ import DatePicker from '../../datepicker/datepicker';
 import CustomSelect from '../../select';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchForm.scss';
+import searchValidation from './searchValidation';
 
 const initialValues = {
   keyword: '',
@@ -59,6 +60,7 @@ class SearchForm extends Component {
   render() {
     return (
       <Formik
+        validationSchema={searchValidation}
         initialValues={initialValues}
         onSubmit={this.onSubmit.bind(this)}
         render={setFieldValue => (

@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, debounce, partial } from 'lodash';
 import moment from 'moment';
 import Link from 'next/link';
 import React, { Component } from 'react';
@@ -13,7 +13,7 @@ import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
 import SearchEdit from '../../components/searchedit/searchEdit';
-import {debounce, partial} from 'lodash';
+
 
 const getHTML = products => products.map(item => (
   <Link href="/products">
@@ -75,8 +75,13 @@ class SearchPage extends Component {
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     }));
 
-  // throttle(function(){this.getProducts('update')}, 300, {trailing: false})
-    await this.getProducts('update');
+    // throttle(function(){this.getProducts('update')}, 300, {trailing: false})
+    if (keyword === '') {
+      this.setState({ notFound: true, loading: false });
+    } else {
+      this.setState({ notFound: false });
+      await this.getProducts('update');
+    }
   }
 
   async componentDidUpdate(prevProps) {
@@ -89,12 +94,17 @@ class SearchPage extends Component {
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
       }));
-      await this.getProducts('update');
+      if (keyword === '') {
+        this.setState({ notFound: true, loading: false });
+      } else {
+        this.setState({ notFound: false });
+        await this.getProducts('update');
+      }
     }
   }
 
   async getProducts(type) {
-    console.log('called')
+    console.log('called');
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     } = this.props;
@@ -113,7 +123,7 @@ class SearchPage extends Component {
     } catch (error) {
       this.setState({ loading: false });
       if (error.code === 404) {
-        console.log(current_page)
+        console.log(current_page);
         if (current_page <= 1) {
           this.setState({ notFound: true });
         }
