@@ -11,18 +11,9 @@ app
   .prepare()
   .then(() => {
     const server = express();
-
     server.get('/', (req, res) => app.render(req, res, '/', req.params));
-
-    server.get('/test', (req, res) => app.render(req, res, '/test', req.params));
-
-    // server.get('/search/:slug', (req, res) => app.render(req, res, '/search', { slug: req.params.slug }));
+    server.get('/detail/:id', (req, res) => app.render(req, res, '/detail', { id: req.params.id }));
     // server.use('/static', express.static(path.join(__dirname, 'static')))
-
-    // server.get("/dogs", (req, res) => {
-    //   return app.render(req, res, "/dogs", req.params);
-    // });
-
     server.get('*', (req, res) => handle(req, res));
 
     server.listen(port, (err) => {
