@@ -11,7 +11,7 @@ body {
   color: $black;
   margin:0;
   padding:0;
-  background-color: #E5E5E5;
+  background-color: $white;
 }
 
 h1 {
@@ -27,4 +27,24 @@ p {
   font-size:18;
 }
 
+a {
+  color: $blue;
+  text-decoration: none;
+}
+
+a:hover
+{
+   color:$blue;
+   text-decoration:none;
+   cursor:pointer;
+}
+
 textarea, select, input, button { outline: none; }
+
+.form-inline {
+  display:flex;
+  justify-content: space-between;
+  .form-block{
+    width:49%;
+  }
+}

@@ -1,0 +1,24 @@
+.slider {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  .category-tile {
+    background-position: center center;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    background-size: cover;
+
+    span {
+      position: absolute;
+      bottom: 30px;
+      color: white;
+    }
+  }
+}
+
+.category-wrapper {
+  margin-top: 80px;
+  margin-left: 10%;
+  margin-right: 10%;
+  width: 80%;
+}

@@ -49,5 +49,5 @@ export default class MenuContainer extends React.Component {
 }
 
 MenuContainer.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.array.isRequired,
 };

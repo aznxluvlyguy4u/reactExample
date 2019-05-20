@@ -6,6 +6,9 @@
   justify-content: flex-start;
   align-items: center;
   margin-left: $nav_margin;
+  @include for-tablet-portrait-up {
+    width: 220px;
+  }
 
   .search-button {
     color: $white;
@@ -35,6 +38,7 @@
       border: $border-width solid $input-color;
       color: $blue;
       padding: 10px;
+      -webkit-appearance: none;
 
       @include placeholder {
         color: $input-color;

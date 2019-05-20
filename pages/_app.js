@@ -1,8 +1,8 @@
-import React from "react";
-import {createStore} from "redux";
-import {Provider} from "react-redux";
-import App, {Container} from "next/app";
-import withRedux from "next-redux-wrapper";
+import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import App, { Container } from 'next/app';
+import withRedux from 'next-redux-wrapper';
 import rootReducer from '../reducers/rootReducer';
 
 /**
@@ -13,30 +13,26 @@ import rootReducer from '../reducers/rootReducer';
 * @param {boolean} options.debug User-defined debug mode param
 * @param {string} options.storeKey This key will be used to preserve store in global namespace for safe HMR
 */
-const makeStore = (initialState, options) => {
-    return createStore(rootReducer, initialState);
-};
+const makeStore = (initialState, options) => createStore(rootReducer, initialState);
 
 class MyApp extends App {
+  // static async getInitialProps({Component, ctx}) {
+  //     // we can dispatch from here too
+  //     ctx.store.dispatch({type: 'FOO', payload: 'foo'});
+  //     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+  //     return {pageProps};
+  // }
 
-    // static async getInitialProps({Component, ctx}) {
-    //     // we can dispatch from here too
-    //     ctx.store.dispatch({type: 'FOO', payload: 'foo'});
-    //     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-    //     return {pageProps};
-    // }
-
-    render() {
-        const {Component, pageProps, store} = this.props;
-        return (
-            <Container>
-                <Provider store={store}>
-                    <Component {...pageProps} />
-                </Provider>
-            </Container>
-        );
-    }
-
+  render() {
+    const { Component, pageProps, store } = this.props;
+    return (
+      <Container>
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
+      </Container>
+    );
+  }
 }
 
 export default withRedux(makeStore)(MyApp);

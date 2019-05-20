@@ -1,7 +1,10 @@
+@import "../../assets/scss/_variables";
+@import "../../assets/scss/_mixins";
+
 .background-wrapper {
   background-color: black;
-  height: 500px;
+  height: 750px;
   background-image: url("/static/images/background-image.png");
-  // background-position: center center;
+  background-repeat: none;
   background-size: cover;
 }

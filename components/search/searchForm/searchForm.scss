@@ -1,0 +1,74 @@
+@import '../../../assets/scss/_variables';
+@import '../../../assets/scss/_mixins';
+
+.searchform-wrapper {
+  .form-block {
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+    label {
+      @media (min-width: 300px) and (max-width: 386px) {
+        height:30px
+      }
+      width: 100%;
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      text-transform: uppercase
+    }
+
+    input {
+      box-sizing: border-box;
+      font-family: $font-stack;
+      width: 100%;
+      border: 1px solid $input-color;
+      color: $blue;
+      padding: 10px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 400;
+      -webkit-appearance: none;
+
+      @include placeholder {
+        color: $input-color;
+      }
+
+      .inline {
+        display: inline
+      }
+    }
+
+    .error {
+      border: 2px solid $red;
+      color: $red;
+    }
+
+    span {
+      color: $red;
+      font-size: 12px;
+    }
+  }
+}
+
+.search-button-full {
+  width: 100%;
+  background-color: $yellow;
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.label-wrapper{
+  display:flex;
+  justify-content: space-between;
+  label {
+    width:49% !important;
+  }
+}

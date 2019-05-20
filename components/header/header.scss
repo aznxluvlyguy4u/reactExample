@@ -7,6 +7,10 @@
   flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
+  z-index: 1;
+  li {
+    font-weight: lighter;
+  }
 
   .cart-wrapper {
     display: flex;
@@ -90,7 +94,7 @@
 
 .fixed {
   // position: absolute;
-  // top: 0;
+  top: 0;
   // bottom: 0;
   // right: 0;
   // left: 0;
@@ -100,7 +104,7 @@
   color: $black;
   background-color: $white;
   @include transition(background-color 300ms linear);
-  @include box-shadow(0px 2px 21px 0px rgba(196, 196, 196, 0.44));
+  @include box-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
 
   .cart-icon {
     background-image: url("/static/images/cart_dark.png");

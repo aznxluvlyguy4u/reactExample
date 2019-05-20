@@ -1,0 +1,76 @@
+import React, { useState, Component } from 'react';
+import Select from 'react-select';
+import './select.scss';
+
+const colourStyles = {
+  control: styles => ({
+    ...styles,
+    backgroundColor: 'white',
+    fontSize: '11px',
+    color: '#D3D3D3',
+    borderRadius: '3px',
+    border: 'solid 1px #D3D3D3',
+    paddingTop: '4px',
+    paddingBottom: '4px',
+    boxShadow: 'none',
+    '&:hover': {
+      borderColor: 'solid transparent 2px',
+    },
+  }),
+  option: (styles, {
+    data, isDisabled, isFocused, isSelected,
+  }) => ({
+    ...styles,
+    backgroundColor: 'white',
+    color: '#19303B',
+    cursor: isDisabled ? 'not-allowed' : 'default',
+    fontSize: '11px',
+    fontWeight: 'bold',
+    width: '100%',
+  }),
+  menu: styles => ({ ...styles, borderRadius: '0px' }),
+  placeholder: styles => ({ ...styles, color: '#D3D3D3' }),
+  singleValue: styles => ({ ...styles, color: '#19303B' }),
+  noOptionsMessage: styles => ({ ...styles, color: '#D3D3D3', fontSize: '11px' }),
+  input: styles => ({ ...styles, color: '#19303B', fontSize: '11px' }),
+};
+
+class CustomSelect extends Component {
+  constructor(props) {
+    super(props);
+    // Don't call this.setState() here!
+    this.state = { value: undefined };
+    this.onChange = this.onChange.bind(this);
+  }
+
+  setDropdownValue(value) {
+    this.setState({ value });
+  }
+
+  onChange(value) {
+    this.props.setFieldValue.setFieldValue(this.props.field.name, value);
+    this.setDropdownValue(value);
+    const obj = {};
+    obj[this.props.field.name] = value.value.toString();
+    this.props.onChange(obj);
+  }
+
+  render() {
+    console.log(this.props.placeholder);
+    return (
+      <Select
+        styles={colourStyles}
+        onChange={this.onChange}
+        options={this.props.options}
+        value={this.state.value ? this.state.value : this.props.value}
+        placeholder={this.props.placeholder ? this.props.placeholder : 'Default'}
+      >
+        {this.props.form.touched[this.props.field.name]
+        && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
+        <input name={this.props.field.name} type="hidden" value={this.state.value} />
+      </Select>
+    );
+  }
+}
+
+export default CustomSelect;
