@@ -75,7 +75,6 @@ class SearchPage extends Component {
       keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     }));
 
-    // throttle(function(){this.getProducts('update')}, 300, {trailing: false})
     if (keyword === '' && category_id) {
       this.setState({ notFound: false });
       await this.getProducts('update');
@@ -107,7 +106,6 @@ class SearchPage extends Component {
   }
 
   async getProducts(type) {
-    console.log('called');
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     } = this.props;
@@ -126,7 +124,6 @@ class SearchPage extends Component {
     } catch (error) {
       this.setState({ loading: false });
       if (error.code === 404) {
-        console.log(current_page);
         if (current_page <= 1) {
           this.setState({ notFound: true });
         }
