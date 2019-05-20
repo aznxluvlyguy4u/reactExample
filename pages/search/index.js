@@ -65,7 +65,7 @@ class SearchPage extends Component {
 
   async componentDidMount() {
     const {
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch, category_id,
     } = this.props;
 
     if (keyword !== '') {
@@ -76,7 +76,10 @@ class SearchPage extends Component {
     }));
 
     // throttle(function(){this.getProducts('update')}, 300, {trailing: false})
-    if (keyword === '') {
+    if (keyword === '' && category_id) {
+      this.setState({ notFound: false });
+      await this.getProducts('update');
+    } else if (keyword === '') {
       this.setState({ notFound: true, loading: false });
     } else {
       this.setState({ notFound: false });
@@ -86,7 +89,7 @@ class SearchPage extends Component {
 
   async componentDidUpdate(prevProps) {
     const {
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch,
+      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch, category_id,
     } = this.props;
 
     if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
@@ -94,7 +97,7 @@ class SearchPage extends Component {
       dispatch(updateSearch({
         keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
       }));
-      if (keyword === '') {
+      if (keyword === '' || category_id === '') {
         this.setState({ notFound: true, loading: false });
       } else {
         this.setState({ notFound: false });
