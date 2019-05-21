@@ -90,7 +90,7 @@ class SearchEdit extends Component {
                           <label htmlFor="collectionDateRange">Delivery Date</label>
                         </div>
                       ) : null}
-                      <Field placeholders={['Delivery Date', 'Collection Date']} onChange={this.props.onChange ? this.props.onChange : null} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Delivery Date" setFieldValue={setFieldValue} component={DatePicker} />
+                      <Field validation={this.props.validation} placeholders={['Delivery Date', 'Collection Date']} onChange={this.props.onChange ? this.props.onChange : null} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Delivery Date" setFieldValue={setFieldValue} component={DatePicker} />
                     </div>
                     {this.props.submit ? <button className="search-button-full" type="submit">Confirm Itinerary</button> : null}
                   </div>

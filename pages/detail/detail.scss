@@ -5,13 +5,17 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
+  .active {
+    display:inline;
+  }
 }
 .fullWidthImage{
   width: 100%;
   height: 300px;
   background-size: cover;
   background-position: center center;
-  margin-top:10%;
+  margin-top: 8%;
   @include for-phone-only {
     height: 250px;
   }
@@ -26,8 +30,20 @@
 }
 
 .description {
-  min-height: 600px;
-  width:60%;
+  min-height: 200px;
+  width:40%;
+  @include for-phone-only {
+    width:100%;
+  }
+  @include for-tablet-portrait-up {
+    width:40%;
+  }
+  @include for-tablet-landscape-up {
+    width: 60%
+  }
+  @include for-desktop-up {
+    width: 70%
+  }
   h2 {
     font-weight: normal;
     font-size:20px;
@@ -38,7 +54,20 @@
 }
 
 .form {
-  width:40%;
+  display:none;
+  width:60%;
+  @include for-phone-only {
+    width:100%;
+  }
+  @include for-tablet-portrait-up {
+    width:40%;
+  }
+  @include for-tablet-landscape-up {
+    width: 40%
+  }
+  @include for-desktop-up {
+    width: 30%
+  }
   height:600px;
   .validation{
     font-size:12px;
@@ -72,8 +101,6 @@
     margin-top: 10px;
   }
   h3 {
-    margin-left: 5%;
-    margin-right: 5%;
     font-weight:normal;
     font-size:20px;
   }
@@ -82,9 +109,16 @@
     @include box-shadow(none)
   }
   .form-inline{
+    justify-content: space-between !important;
     .other-wrapper {
       width: 100%;
       margin-top:20px;
+      @include for-phone-only {
+        width:100% !important;
+      }
+      @include for-tablet-portrait-up {
+        width:100% !important;
+      }
     }
     .label-wrapper{
       display:flex;
@@ -92,7 +126,7 @@
     }
     flex-wrap:wrap;
       .DateInput{
-        width:50% !important;
+        width:48% !important;
         padding:0 !important;
         margin: 0!important;
       }
@@ -100,13 +134,24 @@
   label{
     font-size: 12px;
     font-weight:bold;
-    width: 49% !important;
+    width: 48% !important;
   }
   .searchform {
 
   }
   .edit-row{
     padding:0 !important;
-    width: 50% !important;
+    width: 48% !important;
+  }
+}
+
+.titlewrapper{
+  display:flex;
+  justify-content: space-between;
+  margin-left: 5%;
+  margin-right: 5%;
+  h4 {
+    color: $yellow;
+    font-weight:normal;
   }
 }

@@ -63,8 +63,23 @@ class DatePicker extends Component {
     }
   }
 
+  returnValidation(){
+    if (this.props.validation){
+      return <div className="validationWrapper">
+          <div>
+            {this.props.form.touched.deliveryDate
+        && this.state.startDate === null ? 'This is a required field' : ''}
+          </div>
+          <div>
+            {this.props.form.touched.collectionDate
+        && this.state.endDate === null ? 'This is a required field' : ''}
+          </div>
+        </div>
+    }
+    return null
+  }
+
   render() {
-    console.log(this.props);
     return (
       <div>
         <DateRangePicker
@@ -84,16 +99,7 @@ class DatePicker extends Component {
           block
           numberOfMonths={1}
         />
-        <div className="validationWrapper">
-          <div>
-            {this.props.form.touched.deliveryDate
-        && this.state.startDate === null ? 'This is a required field' : ''}
-          </div>
-          <div>
-            {this.props.form.touched.collectionDate
-        && this.state.endDate === null ? 'This is a required field' : ''}
-          </div>
-        </div>
+        {this.returnValidation()}
       </div>
     );
   }

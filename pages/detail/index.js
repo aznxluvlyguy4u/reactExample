@@ -3,13 +3,14 @@ import Default from '../../layouts/default';
 import './detail.scss';
 import { getProductById } from '../../utils/rest/requests/products';
 import SearchEdit from '../../components/searchedit/searchEdit';
+import SearchModal from '../../components/detail-modals/searchModal';
 
-const meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
 
 class DetailPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { product: undefined };
+    this.state = { product: undefined, active: [true, false] };
+    // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
 
   static async getInitialProps({ query }) {
@@ -18,8 +19,9 @@ class DetailPage extends Component {
     };
   }
 
-  componentDidMount() {
-    this.getProduct();
+  async componentDidMount() {
+    const { product } = this.state;
+    await this.getProduct();
   }
 
   async getProduct() {
@@ -40,7 +42,7 @@ class DetailPage extends Component {
     const { product } = this.state;
     if (product) {
       return (
-        <Default nav="fixed" search meta={meta}>
+        <Default nav="fixed" search meta={{ title: `${product.name} | OCEAN PREMIUM`,  description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
           <div className="page-wrapper">
             <div className="fullWidthImage" style={{ backgroundImage: `url(${product.images[0].fullImageUrl})` }} />
             <h1>{product.name}</h1>
@@ -49,10 +51,7 @@ class DetailPage extends Component {
                 <h2>Description</h2>
                 <span>{product.description}</span>
               </div>
-              <div className="form">
-                <h3>Add to cart</h3>
-                <SearchEdit label submit handleSubmit={this.submitSearch} validation />
-              </div>
+              <SearchModal active={this.state.active[0]} handleSubmit={this.submitSearch} />
             </div>
           </div>
         </Default>
