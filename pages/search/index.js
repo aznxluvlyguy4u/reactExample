@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
-import { updateSearch } from '../../actions/searchActions';
+import { updateSearch, updateSearchObject } from '../../actions/searchActions';
 import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
 import SearchEdit from '../../components/searchedit/searchEdit';
@@ -14,6 +14,8 @@ import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
+import { CreateQueryParams } from '../../utils/queryparams';
+import Router from 'next/router';
 
 const getHTML = products => products.map(item => (
   <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
@@ -37,6 +39,7 @@ class SearchPage extends Component {
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
     this.counter = 0;
+    this.mergeObj = this.mergeObj.bind(this);
   }
 
   static async getInitialProps({ query }) {
@@ -113,6 +116,7 @@ class SearchPage extends Component {
     try {
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, this.state.current_page);
+      console.log(response);
       const responseProducts = response.data.map(i => new ProductResponse(i).returnProduct());
       this.setState({
         notFound: false,
@@ -136,6 +140,12 @@ class SearchPage extends Component {
     await this.getProducts('append');
   }
 
+  mergeObj(obj) {
+    this.props.dispatch(updateSearchObject(this.props.searchReducer.search, obj));
+    const query = CreateQueryParams(this.props.searchReducer.search);
+    Router.push({ pathname: '/search', query });
+  }
+
   render() {
     console.log(this.props.searchReducer);
     const {
@@ -144,7 +154,7 @@ class SearchPage extends Component {
 
     return (
       <Default nav="fixed" search meta={this.meta}>
-        <SearchEdit />
+        <SearchEdit onChange={this.mergeObj} />
         <div className="page-wrapper">
           <h1>Search Results</h1>
           <div className="search-block">

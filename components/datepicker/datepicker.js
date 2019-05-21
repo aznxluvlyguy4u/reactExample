@@ -34,13 +34,12 @@ class DatePicker extends Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.startDate);
-    // if (this.props.startDate !== null && this.props.startDate !== undefined) {
-    //   this.setState({ startDate: moment.utc(this.props.startDate) });
-    // }
-    // if (this.props.endDate !== null && this.props.endDate !== undefined) {
-    //   this.setState({ endDate: moment.utc(this.props.endDate) });
-    // }
+    if (this.props.startDate !== null && this.props.startDate !== undefined) {
+      this.setState({ startDate: moment.utc(this.props.startDate) });
+    }
+    if (this.props.endDate !== null && this.props.endDate !== undefined) {
+      this.setState({ endDate: moment.utc(this.props.endDate) });
+    }
   }
 
   componentDidUpdate(prevProps, nextProps) {
@@ -55,16 +54,17 @@ class DatePicker extends Component {
   onChange(startDate, endDate) {
     this.setState({ startDate, endDate });
     if (startDate !== null) {
-      this.props.onChange({ collectionDate: startDate.toISOString() });
+      this.props.onChange ? this.props.onChange({ collectionDate: startDate.toISOString() }) : null;
       this.props.setFieldValue.setFieldValue('collectionDate', startDate.toDate().toISOString());
     }
     if (endDate !== null) {
-      this.props.onChange({ deliveryDate: endDate.toISOString() });
+      this.props.onChange ? this.props.onChange({ deliveryDate: endDate.toISOString() }) : null;
       this.props.setFieldValue.setFieldValue('deliveryDate', endDate.toDate().toISOString());
     }
   }
 
   render() {
+    console.log(this.props);
     return (
       <DateRangePicker
         startDatePlaceholderText={this.props.placeholders[0]}
@@ -72,9 +72,11 @@ class DatePicker extends Component {
         hideKeyboardShortcutsPanel
         customArrowIcon=""
         startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+        startDateId={this.props.form.touched.deliveryDate
+        && this.state.startDate === null ? 'error' : 'deliveryDate'} // PropTypes.string.isRequired,
         endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+        endDateId={this.props.form.touched.collectionDate
+        && this.state.endDate === null ? 'error' : 'collectionDate'} // PropTypes.string.isRequired,
         onDatesChange={({ startDate, endDate }) => this.onChange(startDate, endDate)} // PropTypes.func.isRequired,
         focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
         onFocusChange={focusedInput => this.setState({ focusedInput })}

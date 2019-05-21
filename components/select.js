@@ -52,23 +52,32 @@ class CustomSelect extends Component {
     this.setDropdownValue(value);
     const obj = {};
     obj[this.props.field.name] = value.value.toString();
-    this.props.onChange(obj);
+    if (this.props.onChange) {
+      this.props.onChange(obj);
+    }
+    // console.log(this.props.onChange ? this.props.onChange(obj) : null)
+    // this.props.onChange ? this.props.onChange(obj) : null;
   }
 
   render() {
-    console.log(this.props.placeholder);
     return (
-      <Select
-        styles={colourStyles}
-        onChange={this.onChange}
-        options={this.props.options}
-        value={this.state.value ? this.state.value : this.props.value}
-        placeholder={this.props.placeholder ? this.props.placeholder : 'Default'}
+      <div className={this.props.form.touched[this.props.field.name]
+        && this.props.form.errors[this.props.field.name] ? 'error ' : ''}
       >
-        {this.props.form.touched[this.props.field.name]
+        <Select
+          styles={colourStyles}
+          onChange={this.onChange}
+          options={this.props.options}
+          value={this.state.value ? this.state.value : this.props.value}
+          placeholder={this.props.placeholder ? this.props.placeholder : 'Default'}
+        >
+          {this.props.form.touched[this.props.field.name]
         && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
-        <input name={this.props.field.name} type="hidden" value={this.state.value} />
-      </Select>
+          <input name={this.props.field.name} type="hidden" value={this.state.value} />
+        </Select>
+        {this.props.form.touched[this.props.field.name]
+      && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
+      </div>
     );
   }
 }
