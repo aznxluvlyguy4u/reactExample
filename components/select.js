@@ -76,7 +76,7 @@ class CustomSelect extends Component {
           <input name={this.props.field.name} type="hidden" value={this.state.value} />
         </Select>
         {this.props.form.touched[this.props.field.name]
-      && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
+      && this.props.form.errors[this.props.field.name] && <span className="validation">{this.props.form.errors[this.props.field.name]}</span>}
       </div>
     );
   }

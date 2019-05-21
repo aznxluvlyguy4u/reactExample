@@ -66,23 +66,35 @@ class DatePicker extends Component {
   render() {
     console.log(this.props);
     return (
-      <DateRangePicker
-        startDatePlaceholderText={this.props.placeholders[0]}
-        endDatePlaceholderText={this.props.placeholders[1]}
-        hideKeyboardShortcutsPanel
-        customArrowIcon=""
-        startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-        startDateId={this.props.form.touched.deliveryDate
+      <div>
+        <DateRangePicker
+          startDatePlaceholderText={this.props.placeholders[0]}
+          endDatePlaceholderText={this.props.placeholders[1]}
+          hideKeyboardShortcutsPanel
+          customArrowIcon=""
+          startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+          startDateId={this.props.form.touched.deliveryDate
         && this.state.startDate === null ? 'error' : 'deliveryDate'} // PropTypes.string.isRequired,
-        endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-        endDateId={this.props.form.touched.collectionDate
+          endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+          endDateId={this.props.form.touched.collectionDate
         && this.state.endDate === null ? 'error' : 'collectionDate'} // PropTypes.string.isRequired,
-        onDatesChange={({ startDate, endDate }) => this.onChange(startDate, endDate)} // PropTypes.func.isRequired,
-        focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-        onFocusChange={focusedInput => this.setState({ focusedInput })}
-        block
-        numberOfMonths={1}
-      />
+          onDatesChange={({ startDate, endDate }) => this.onChange(startDate, endDate)} // PropTypes.func.isRequired,
+          focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+          onFocusChange={focusedInput => this.setState({ focusedInput })}
+          block
+          numberOfMonths={1}
+        />
+        <div className="validationWrapper">
+          <div>
+            {this.props.form.touched.deliveryDate
+        && this.state.startDate === null ? 'This is a required field' : ''}
+          </div>
+          <div>
+            {this.props.form.touched.collectionDate
+        && this.state.endDate === null ? 'This is a required field' : ''}
+          </div>
+        </div>
+      </div>
     );
   }
 }

@@ -40,6 +40,10 @@
 .form {
   width:40%;
   height:600px;
+  .validation{
+    font-size:12px;
+    color:red;
+  }
     #error{
       border:solid 2px red;
       border-radius:3px;
