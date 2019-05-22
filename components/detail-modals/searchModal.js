@@ -12,7 +12,7 @@ class SearchModal extends Component {
       <div className={this.props.active ? 'form active' : 'form'}>
         <div className="titlewrapper">
           <h3>Add to cart</h3>
-          <h4>1/4</h4>
+          <h4>{this.props.index+'/'+this.props.total}</h4>
         </div>
         <SearchEdit label submit handleSubmit={this.props.handleSubmit} validation />
       </div>

@@ -8,6 +8,7 @@
   flex-wrap: wrap;
   .active {
     display:inline;
+    @include transition(visibility 0s, opacity 0.5s linear);
   }
 }
 .fullWidthImage{
@@ -54,7 +55,7 @@
 }
 
 .form {
-  display:none;
+  display: none;
   width:60%;
   @include for-phone-only {
     width:100%;
@@ -142,6 +143,14 @@
   .edit-row{
     padding:0 !important;
     width: 48% !important;
+    &.accessory{
+      width:100% !important;
+      label{
+        width:auto !important;
+    font-size: 12px;
+    font-weight:bold;
+  }
+    }
   }
 }
 
@@ -154,4 +163,17 @@
     color: $yellow;
     font-weight:normal;
   }
+}
+
+.thumbnailImage{
+  background-size: cover;
+  background-position: center center;
+  height: 150px;
+  width:100%;
+}
+
+.title-wrapper{
+  display:flex;
+  justify-content: space-between;
+  width:100%;
 }
