@@ -106,6 +106,8 @@
     font-size:20px;
   }
   .searchedit{
+    padding-left: 0;
+    padding-right: 0;
     margin-top:0;
     @include box-shadow(none)
   }
@@ -157,8 +159,6 @@
 .titlewrapper{
   display:flex;
   justify-content: space-between;
-  margin-left: 5%;
-  margin-right: 5%;
   h4 {
     color: $yellow;
     font-weight:normal;
@@ -179,8 +179,6 @@
 }
 
 .paragraph-wrapper {
-  padding-left:5%;
-  padding-right:5%;
   h3 {
     font-size:12px;
     font-weight:bold;

@@ -71,7 +71,7 @@ class ConfigurationModal extends Component {
         contentLabel="Example Modal"
       >
         <div className="configuration-modal">
-          <h1>Option/Accessories Configuration</h1>
+          <h1>Option/Accessories Preferences</h1>
           <Formik
             initialValues={{
               items: [
@@ -119,7 +119,7 @@ class ConfigurationModal extends Component {
                     );
                   })}
                 </div>
-
+                {/* <span>We can't guarantee that the selected options is available</span> */}
                 <div className="button-wrapper">
                   <button className="cancel" type="button" onClick={this.props.closeModal}>Cancel</button>
                   <button className="save" type="submit">Save</button>

@@ -109,11 +109,11 @@ class DetailPage extends Component {
                 <h2>Description</h2>
                 <span>{product.description}</span>
               </div>
-              <SearchModal total={this.state.active.length} active={this.state.active[0]} handleSubmit={this.submitSearch} index={1} />
+              <SearchModal data={this.state.product} total={this.state.active.length} active={this.state.active[0]} handleSubmit={this.submitSearch} index={1} />
               {product.accessories ? product.accessories.map((item, index) => <OptionalAccessoiryModal daysInterval={this.state.item.daysInterval} total={this.state.active.length} index={index + 2} handleSubmit={this.submitAccesory} data={item} active={this.state.active[index + 1]} />) : null}
-              <SummaryModal item={this.state.item} accessories={this.state.accessories.filter(val => val.type !== 'mandatory')} active={this.state.active[this.state.active.length - 1]} index={this.state.active.length} total={this.state.active.length} />
+              <SummaryModal item={this.state.item} accessories={this.state.accessories.filter(val => val.type !== 'mandatory')} active={this.state.active[this.state.active.length - 1]} index={this.state.active.length+1} total={this.state.active.length} />
             </div>
-          </div>
+          </div> +
         </Default>
       );
     }
