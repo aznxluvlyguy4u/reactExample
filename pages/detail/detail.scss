@@ -177,3 +177,68 @@
   justify-content: space-between;
   width:100%;
 }
+
+.paragraph-wrapper {
+  padding-left:5%;
+  padding-right:5%;
+  h3 {
+    font-size:12px;
+    font-weight:bold;
+  }
+  .paragraph {
+    border-bottom: solid $grey 1px;
+    padding-bottom: 5px;
+    &.no-line{
+      padding-top:12px;
+      border:none;
+      height:50px;
+    }
+  }
+  .date-wrapper {
+    display:flex;
+    width:100%;
+    justify-content: center;
+    flex-direction: row;
+    .date-element{
+      font-weight:lighter;
+      text-align: center;
+      display:flex;
+      flex-direction: column;
+      padding:15px;
+      justify-content: center;
+    }
+  }
+  .content-wrapper {
+    display:flex;
+    justify-content: space-between;
+    width:100%;
+    .first {
+      width:80%;
+      &.bold{
+        font-weight:bold;
+      }
+    }
+    .second{
+      width:10%;
+      &.bold{
+        font-weight:bold;
+      }
+    }
+    div{
+      font-size:12px;
+      font-weight:normal;
+    }
+  }
+}
+
+.configure {
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  color: $yellow;
+  padding:0 0 0 0;
+  margin:0;
+  margin-top:10px;
+  font-family: $font-stack;
+  font-weight:bold;
+}

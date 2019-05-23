@@ -58,7 +58,6 @@ class SearchEdit extends Component {
 
   render() {
     const { locations } = this.state;
-    console.log(locations);
     if (!isEmpty(locations)) {
       return (
         <div className="searchedit">
