@@ -31,6 +31,7 @@ class OptionalAccessoiryModal extends Component {
     const { daysInterval, data } = this.props;
     const json = JSON.parse(value.dropdown);
     this.setState({quantity: json.quantity})
+    console.log(daysInterval)
     if (daysInterval) {
       const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity))
       this.setState({ price: price.toFixed(2) });
@@ -77,7 +78,7 @@ class OptionalAccessoiryModal extends Component {
                   <div className="edit-row accessory">
                     <div className="title-wrapper">
                       <label htmlFor="dropdown">{data.name}</label>
-                      {price ? <span>{`+ €${price}`}</span> : null}
+                      {price ? <span className="price-item">{`+ €${price}`}</span> : null}
                     </div>
                     <Field placeholder="quantity" onChange={this.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                   </div>
