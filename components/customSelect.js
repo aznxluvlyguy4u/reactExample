@@ -60,13 +60,12 @@ class CustomSelect extends Component {
 
   render() {
     const {
-      form, field, options, placeholder, isSearchable,
+      form, field, options, placeholder, isSearchable, arrow
     } = this.props;
     const { value } = this.state;
     return (
       <div className={form.touched[field.name]
-        && form.errors[field.name] ? 'error ' : ''}
-      >
+              && form.errors[field.name] ? 'error selectfield' : 'selectfield'}>
         <Select
           styles={colourStyles}
           onChange={this.onChange}

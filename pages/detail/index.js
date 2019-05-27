@@ -6,6 +6,7 @@ import SummaryModal from '../../components/detail-modals/summaryModal';
 import Default from '../../layouts/default';
 import { getProductById } from '../../utils/rest/requests/products';
 import './detail.scss';
+import Loader from '../../components/loader';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -124,7 +125,11 @@ class DetailPage extends Component {
         </Default>
       );
     }
-    return null;
+    return (<Default nav="fixed" search meta={{ title: `Detail Page | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
+    <div className="page-wrapper">
+    <Loader />
+    </div>
+    </Default>);
   }
 }
 
