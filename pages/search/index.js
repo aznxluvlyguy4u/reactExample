@@ -117,8 +117,11 @@ class SearchPage extends Component {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     } = this.props;
-    const { current_page, products } = this.state;
+    let { current_page, products } = this.state;
     try {
+      if (type === 'update') {
+        current_page = 0;
+      }
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, current_page);
       const responseProducts = response.data.map(i => new ProductResponse(i).returnProduct());
@@ -132,9 +135,7 @@ class SearchPage extends Component {
     } catch (error) {
       this.setState({ loading: false });
       if (error.code === 404) {
-        if (current_page <= 1) {
-          this.setState({ notFound: true });
-        }
+        this.setState({ notFound: true });
       }
       console.log(error);
     }
