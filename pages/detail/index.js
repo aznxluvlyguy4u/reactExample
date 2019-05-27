@@ -125,11 +125,13 @@ class DetailPage extends Component {
         </Default>
       );
     }
-    return (<Default nav="fixed" search meta={{ title: `Detail Page | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
+    return (
+<Default nav="fixed" search meta={{ title: `Detail Page | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
     <div className="page-wrapper">
     <Loader />
     </div>
-    </Default>);
+    </Default>
+);
   }
 }
 

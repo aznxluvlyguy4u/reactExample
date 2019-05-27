@@ -18,7 +18,7 @@ class OptionalAccessoiryModal extends Component {
 
   componentDidMount() {
     const { data, index } = this.props;
-    console.log(data.configurations)
+    console.log(data.configurations);
     const arr = [];
     const total = parseInt(data.rates[0].quantityAvailable) + 1;
     for (let i = 0; i < total; i++) {
@@ -30,10 +30,10 @@ class OptionalAccessoiryModal extends Component {
   onChange(value) {
     const { daysInterval, data } = this.props;
     const json = JSON.parse(value.dropdown);
-    this.setState({quantity: json.quantity})
-    console.log(daysInterval)
+    this.setState({ quantity: json.quantity });
+    console.log(daysInterval);
     if (daysInterval) {
-      const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity))
+      const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity));
       this.setState({ price: price.toFixed(2) });
     }
   }
@@ -57,15 +57,15 @@ class OptionalAccessoiryModal extends Component {
     const {
       price, quantity, modalIsOpen,
     } = this.state;
-    console.log(data.configurations)
-    console.log(quantity)
+    console.log(data.images);
+    const fullImageUrl = !isEmpty(data.images) ? data.images[0].fullImageUrl : undefined;
     return (
       <div className={active ? 'form active' : 'form'}>
         <div className="titlewrapper">
           <h3>Optional Accessories</h3>
           <h4>{`${index}/${total}`}</h4>
         </div>
-        <div className="thumbnailImage" style={{ backgroundImage: `url(${data.images[0].fullImageUrl})` }} />
+        <div className="thumbnailImage" style={{ backgroundImage: `url(${fullImageUrl})` }} />
         <Formik
           initialValues={{
             dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quanitity: 0, data, index }) },
@@ -82,7 +82,12 @@ class OptionalAccessoiryModal extends Component {
                     </div>
                     <Field placeholder="quantity" onChange={this.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                   </div>
-                  {!isEmpty(data.configurations) && quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure"><i className="icon-cog" />Advanced Configuration</button> : null}
+                  {!isEmpty(data.configurations) && quantity > 0 ? (
+                    <button type="button" onClick={this.toggleModal} className="configure">
+  <i className="icon-cog" />
+Advanced Configuration
+</button>
+                  ) : null}
                   <button className="search-button-full" type="submit">Next</button>
                 </div>
               </div>
