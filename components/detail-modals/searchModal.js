@@ -36,7 +36,7 @@ class SearchModal extends Component {
           <h4>{`${index}/${total}`}</h4>
         </div>
         <SearchEdit label submit handleSubmit={handleSubmit} validation />
-        {!isEmpty(data.configurations) ? <button type="button" onClick={this.toggleModal} className="configure">Advanced Configuration</button> : null}
+        {!isEmpty(data.configurations) ? <button type="button" onClick={this.toggleModal} className="configure"><i className="icon-cog"/>Advanced Configuration</button> : null}
         <ConfigurationModal quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
       </div>
     );

@@ -77,7 +77,7 @@ class OptionalAccessoiryModal extends Component {
                     </div>
                     <Field placeholder="quantity" onChange={this.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                   </div>
-                  {!isEmpty(data.configurations) && quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure">Advanced Configuration</button> : null}
+                  {!isEmpty(data.configurations) && quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure"><i className="icon-cog" />Advanced Configuration</button> : null}
                   <button className="search-button-full" type="submit">Next</button>
                 </div>
               </div>
