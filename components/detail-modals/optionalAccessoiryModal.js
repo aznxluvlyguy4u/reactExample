@@ -11,12 +11,6 @@ class OptionalAccessoiryModal extends Component {
       price: undefined, quantity: 0, modalIsOpen: false, options: [],
     };
     const { data, index } = this.props;
-    this.options = [
-      { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data, index }) },
-      { label: '1x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 1, data, index }) },
-      { label: '2x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 2, data, index }) },
-      { label: '3x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 3, data, index }) },
-    ];
     this.onChange = this.onChange.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -36,8 +30,8 @@ class OptionalAccessoiryModal extends Component {
     const { daysInterval, data } = this.props;
     const json = JSON.parse(value.dropdown);
     if (daysInterval) {
-      console.log(daysInterval * (parseInt(json.quantity) * parseInt(data.rates[0].price)));
-      this.setState({ quantity: parseInt(json.quantity), price: daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity)) });
+      const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity))
+      this.setState({ quantity: parseInt(json.quantity), price: price.toFixed(2) });
     }
   }
 
@@ -81,7 +75,7 @@ class OptionalAccessoiryModal extends Component {
                       <label htmlFor="dropdown">{data.name}</label>
                       {price ? <span>{`+ €${price}`}</span> : null}
                     </div>
-                    <Field placeholder="quantity" onChange={this.onChange} value={{ label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data: this.props.data, index: this.props.index }) }} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
+                    <Field placeholder="quantity" onChange={this.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                   </div>
                   {!isEmpty(data.configurations) && quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure">Advanced Configuration</button> : null}
                   <button className="search-button-full" type="submit">Next</button>

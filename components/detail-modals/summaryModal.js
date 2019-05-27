@@ -18,6 +18,7 @@ class SummaryModal extends Component {
     const {
       active, index, total, item, accessories,
     } = this.props;
+    const totalPrice = this.calculateTotalAccessoires() + item.totalPrice;
     return (
       <div className={active ? 'form active' : 'form'}>
         <div className="titlewrapper">
@@ -68,7 +69,7 @@ class SummaryModal extends Component {
             {/* <h3>Delivery fees</h3> */}
             <div className="content-wrapper">
               <div className="first bold">Total Rental Price</div>
-              <div className="second bold">{`€${this.calculateTotalAccessoires() + item.totalPrice}`}</div>
+              <div className="second bold">{`€${totalPrice.toFixed(2)}`}</div>
             </div>
           </div>
           <button className="search-button-full">Add to cart</button>

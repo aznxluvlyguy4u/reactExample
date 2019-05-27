@@ -45,6 +45,10 @@ class ConfigurationModal extends Component {
     this.setState({ modalIsOpen: true });
   }
 
+  closeModal() {
+    this.setState({ modalIsOpen: false });
+  }
+
   afterOpenModal() {
     // references are now sync'd and can be accessed.
   }
