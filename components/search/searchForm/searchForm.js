@@ -58,6 +58,7 @@ class SearchForm extends Component {
   }
 
   render() {
+    const { locations } = this.state;
     return (
       <Formik
         validationSchema={searchValidation}
@@ -73,11 +74,11 @@ class SearchForm extends Component {
               <div className="form-inline">
                 <div className="location form-block">
                   <label htmlFor="deliveryLocation">Delivery Location</label>
-                  <Field onChange={() => console.log('test')} options={this.state.locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  <Field onChange={() => console.log('test')} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                 </div>
                 <div className="location form-block">
                   <label htmlFor="collectionLocation">Collection Location</label>
-                  <Field onChange={() => console.log('test')} options={this.state.locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  <Field onChange={() => console.log('test')} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
                 </div>
               </div>
               <div className="date form-block">

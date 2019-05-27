@@ -19,7 +19,7 @@ export default class Loader extends React.Component {
   }
 
   render() {
-    const loading = this.state;
+    const { loading } = this.state;
     return (
       <div className="sweet-loading">
         <ScaleLoader

@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import Default from '../../layouts/default';
-import './detail.scss';
-import { getProductById } from '../../utils/rest/requests/products';
-import SearchEdit from '../../components/searchedit/searchEdit';
-import SearchModal from '../../components/detail-modals/searchModal';
-import OptionalAccessoiryModal from '../../components/detail-modals/optionalAccessoiryModal';
-import { merge } from 'lodash';
 import moment from 'moment';
+import React, { Component } from 'react';
+import OptionalAccessoiryModal from '../../components/detail-modals/optionalAccessoiryModal';
+import SearchModal from '../../components/detail-modals/searchModal';
 import SummaryModal from '../../components/detail-modals/summaryModal';
+import Default from '../../layouts/default';
+import { getProductById } from '../../utils/rest/requests/products';
+import './detail.scss';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -17,7 +15,13 @@ class DetailPage extends Component {
       product: undefined,
       active: [true],
       item: {
-        startDate: undefined, endDate: undefined, startLocation: undefined, endLocation: undefined, totalPrice: undefined, daysInterval: undefined, pricePerDay: undefined,
+        startDate: undefined,
+        endDate: undefined,
+        startLocation: undefined,
+        endLocation: undefined,
+        totalPrice: undefined,
+        daysInterval: undefined,
+        pricePerDay: undefined,
       },
     };
     this.submitSearch = this.submitSearch.bind(this);
@@ -32,12 +36,12 @@ class DetailPage extends Component {
   }
 
   async componentDidMount() {
-    const { product } = this.state;
     await this.getProduct();
   }
 
   async getProduct() {
     const { id } = this.props;
+    const { active } = this.state;
     try {
       const response = await getProductById(id);
       this.setState({ product: response.data });
@@ -45,7 +49,7 @@ class DetailPage extends Component {
       if (response.data.accessories) {
         response.data.accessories.map(item => arr.push(false));
         arr.push(false);
-        this.setState({ active: [...this.state.active, ...arr] });
+        this.setState({ active: [...active, ...arr] });
       }
     } catch (error) {
       console.log(error);
@@ -53,13 +57,13 @@ class DetailPage extends Component {
   }
 
   submitSearch(values) {
-    console.log(values);
+    const { active, product } = this.state;
     const collectionDate = moment(values.collectionDate);
     const deliveryDate = moment(values.deliveryDate);
     const daysInterval = deliveryDate.diff(collectionDate, 'days');
     const index = 1;
-    if (index < this.state.active.length) {
-      const arr = this.state.active.fill(false);
+    if (index < active.length) {
+      const arr = active.fill(false);
       arr[index] = true;
       this.setState({ active: arr });
     }
@@ -70,18 +74,19 @@ class DetailPage extends Component {
         endDate: deliveryDate,
         startLocation: values.collectionLocation,
         endLocation: values.deliveryLocation,
-        totalPrice: daysInterval * this.state.product.rates[0].price,
+        totalPrice: daysInterval * product.rates[0].price,
         daysInterval,
-        pricePerDay: this.state.product.rates[0].price,
+        pricePerDay: product.rates[0].price,
       },
     }));
   }
 
   submitAccesory(values) {
+    const { active, accessories } = this.state;
     const value = JSON.parse(values.dropdown.value);
     const { index } = value;
-    if (index < this.state.active.length) {
-      const arr = this.state.active.fill(false);
+    if (index < active.length) {
+      const arr = active.fill(false);
       arr[index] = true;
       this.setState({ active: arr });
     }
@@ -91,13 +96,15 @@ class DetailPage extends Component {
         data: value.data,
       };
       this.setState({
-        accessories: [...this.state.accessories, obj],
+        accessories: [...accessories, obj],
       });
     }
   }
 
   render() {
-    const { product } = this.state;
+    const {
+      product, active, accessories,
+    } = this.state;
     if (product) {
       return (
         <Default nav="fixed" search meta={{ title: `${product.name} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
@@ -109,11 +116,11 @@ class DetailPage extends Component {
                 <h2>Description</h2>
                 <span>{product.description}</span>
               </div>
-              <SearchModal data={this.state.product} total={this.state.active.length} active={this.state.active[0]} handleSubmit={this.submitSearch} index={1} />
-              {product.accessories ? product.accessories.map((item, index) => <OptionalAccessoiryModal daysInterval={this.state.item.daysInterval} total={this.state.active.length} index={index + 2} handleSubmit={this.submitAccesory} data={item} active={this.state.active[index + 1]} />) : null}
-              <SummaryModal item={this.state.item} accessories={this.state.accessories.filter(val => val.type !== 'mandatory')} active={this.state.active[this.state.active.length - 1]} index={this.state.active.length+1} total={this.state.active.length} />
+              <SearchModal data={product} total={active.length} active={active[0]} handleSubmit={this.submitSearch} index={1} />
+              {product.accessories ? product.accessories.map((item, index) => <OptionalAccessoiryModal daysInterval={item.daysInterval} total={active.length} index={index + 2} handleSubmit={this.submitAccesory} data={item} active={active[index + 1]} />) : null}
+              <SummaryModal item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} active={active[active.length - 1]} index={active.length + 1} total={active.length} />
             </div>
-          </div> +
+          </div>
         </Default>
       );
     }

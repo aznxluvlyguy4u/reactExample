@@ -10,11 +10,12 @@ class OptionalAccessoiryModal extends Component {
     this.state = {
       price: undefined, quantity: 0, modalIsOpen: false, options: [],
     };
+    const { data, index } = this.props;
     this.options = [
-      { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data: this.props.data, index: this.props.index }) },
-      { label: '1x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 1, data: this.props.data, index: this.props.index }) },
-      { label: '2x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 2, data: this.props.data, index: this.props.index }) },
-      { label: '3x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 3, data: this.props.data, index: this.props.index }) },
+      { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data, index }) },
+      { label: '1x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 1, data, index }) },
+      { label: '2x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 2, data, index }) },
+      { label: '3x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 3, data, index }) },
     ];
     this.onChange = this.onChange.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -22,19 +23,21 @@ class OptionalAccessoiryModal extends Component {
   }
 
   componentDidMount() {
+    const { data, index } = this.props;
     const arr = [];
-    const total = parseInt(this.props.data.rates[0].quantityAvailable) + 1;
+    const total = parseInt(data.rates[0].quantityAvailable) + 1;
     for (let i = 0; i < total; i++) {
-      arr.push({ label: `${i}x ${this.props.data.name}`, value: JSON.stringify({ quantity: i, data: this.props.data, index: this.props.index }) });
+      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ quantity: i, data, index }) });
     }
     this.setState({ options: arr });
   }
 
   onChange(value) {
+    const { daysInterval, data } = this.props;
     const json = JSON.parse(value.dropdown);
-    if (this.props.daysInterval) {
-      console.log(this.props.daysInterval * (parseInt(json.quantity) * parseInt(this.props.data.rates[0].price)));
-      this.setState({ quantity: parseInt(json.quantity), price: this.props.daysInterval * (parseInt(this.props.data.rates[0].price) * parseInt(json.quantity)) });
+    if (daysInterval) {
+      console.log(daysInterval * (parseInt(json.quantity) * parseInt(data.rates[0].price)));
+      this.setState({ quantity: parseInt(json.quantity), price: daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity)) });
     }
   }
 
@@ -52,37 +55,43 @@ class OptionalAccessoiryModal extends Component {
   }
 
   render() {
+    const {
+      active, index, total, data, handleSubmit,
+    } = this.props;
+    const {
+      price, quantity, modalIsOpen,
+    } = this.state;
     return (
-      <div className={this.props.active ? 'form active' : 'form'}>
+      <div className={active ? 'form active' : 'form'}>
         <div className="titlewrapper">
           <h3>Optional Accessories</h3>
-          <h4>{`${this.props.index}/${this.props.total}`}</h4>
+          <h4>{`${index}/${total}`}</h4>
         </div>
-        <div className="thumbnailImage" style={{ backgroundImage: `url(${this.props.data.images[0].fullImageUrl})` }} />
+        <div className="thumbnailImage" style={{ backgroundImage: `url(${data.images[0].fullImageUrl})` }} />
         <Formik
           initialValues={{
-            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quanitity: 0, data: this.props.data, index: this.props.index }) },
+            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quanitity: 0, data, index }) },
           }}
-          onSubmit={this.props.handleSubmit ? this.props.handleSubmit : undefined}
+          onSubmit={handleSubmit || undefined}
           render={setFieldValue => (
             <Form>
               <div>
                 <div className="form-inline">
                   <div className="edit-row accessory">
                     <div className="title-wrapper">
-                      <label htmlFor="dropdown">{this.props.data.name}</label>
-                      {this.state.price ? <span>{`+ €${this.state.price}`}</span> : null}
+                      <label htmlFor="dropdown">{data.name}</label>
+                      {price ? <span>{`+ €${price}`}</span> : null}
                     </div>
                     <Field placeholder="quantity" onChange={this.onChange} value={{ label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data: this.props.data, index: this.props.index }) }} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} component={CustomSelect} />
                   </div>
-                  {!isEmpty(this.props.data.configurations) && this.state.quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure">Advanced Configuration</button> : null}
+                  {!isEmpty(data.configurations) && quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure">Advanced Configuration</button> : null}
                   <button className="search-button-full" type="submit">Next</button>
                 </div>
               </div>
             </Form>
           )}
         />
-        <ConfigurationModal quantity={this.state.quantity} configurations={this.props.data.configurations} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} />
+        <ConfigurationModal quantity={quantity} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
       </div>
     );
   }

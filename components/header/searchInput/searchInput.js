@@ -1,13 +1,13 @@
 import { Field, Form, Formik } from 'formik';
 import Router from 'next/router';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { updateSearchObject } from '../../../actions/searchActions';
+import searchReducer from '../../../reducers/searchReducer';
+import { CreateQueryParams } from '../../../utils/queryparams';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchInput.scss';
-import searchReducer from '../../../reducers/searchReducer';
-import PropTypes from 'prop-types';
-import { updateSearchObject } from '../../../actions/searchActions';
-import { CreateQueryParams } from '../../../utils/queryparams';
 
 const initialValues = {
   keyword: '',
@@ -24,12 +24,13 @@ class SearchInput extends Component {
 
   onSubmit() {
     const { search } = this.state;
+    const { dispatch } = this.props;
     if (search === '') {
       Router.push('/search');
       return;
     }
     const queryparam = { keyword: search };
-    this.props.dispatch(updateSearchObject(this.props.searchReducer.search, queryparam));
+    dispatch(updateSearchObject(this.props.searchReducer.search, queryparam));
     const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });
   }
@@ -39,6 +40,7 @@ class SearchInput extends Component {
   }
 
   render() {
+    const { search } = this.state;
     return (
       <Formik
         initialValues={initialValues}
@@ -47,7 +49,7 @@ class SearchInput extends Component {
           <Form>
             <div className="search-wrapper">
               <div className="search form-block">
-                <Field onChange={e => this.onChangeValue(e.target.value)} name="keyword" value={this.state.search} placeholder="Anything, anytime, any place" component={CustomInputComponent} />
+                <Field onChange={e => this.onChangeValue(e.target.value)} name="keyword" value={search} placeholder="Anything, anytime, any place" component={CustomInputComponent} />
               </div>
               <button className="search-button" type="submit"><i className="icon-search" /></button>
             </div>

@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import Modal from 'react-modal';
-import ReactDOM from 'react-dom';
 import {
-  Field, Form, Formik, FieldArray, isEmptyChildren,
+  Field, FieldArray, Form, Formik,
 } from 'formik';
 import { isEmpty } from 'lodash';
-import CustomSelect from '../select';
+import React, { Component } from 'react';
+import Modal from 'react-modal';
 import { transformConfigurationData } from '../../utils/data/configurationDataUtil';
+import CustomSelect from '../select';
 import './modal.scss';
 
 const customStyles = {
@@ -27,24 +26,19 @@ Modal.setAppElement('body');
 class ConfigurationModal extends Component {
   constructor(props) {
     super(props);
+    const { modalIsOpen } = this.props;
     this.state = {
-      modalIsOpen: this.props.modalIsOpen,
+      modalIsOpen,
     };
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.setState({ modalIsOpen: this.props.modalIsOpen });
-  // }
-
-  componentDidUpdate(prevProps, nextProps) {
-    if (prevProps.modalIsOpen !== this.props.modalIsOpen) {
-      this.setState({ modalIsOpen: this.props.modalIsOpen });
+  componentDidUpdate(prevProps) {
+    const { modalIsOpen } = this.props;
+    if (prevProps.modalIsOpen !== modalIsOpen) {
+      this.setState({ modalIsOpen });
     }
-    // if (nextProps.modalIsOpen !== this.props.modalIsOpen) {
-    //   this.setState({ modalIsOpen: nextProps.modalIsOpen });
-    // }
   }
 
   openModal() {
@@ -60,13 +54,14 @@ class ConfigurationModal extends Component {
   }
 
   render() {
-    const i = 0;
-    const arr = new Array(this.props.quantity).fill(0);
+    const { quantity, closeModal, configurations } = this.props;
+    const { modalIsOpen } = this.state;
+    const arr = new Array(quantity).fill(0);
     return (
       <Modal
-        isOpen={this.state.modalIsOpen}
+        isOpen={modalIsOpen}
         onAfterOpen={this.afterOpenModal}
-        onRequestClose={this.props.closeModal}
+        onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Example Modal"
       >
@@ -102,8 +97,8 @@ class ConfigurationModal extends Component {
                           name="people"
                           render={helpers => (
                             <div className="input-wrapper">
-                              {!isEmpty(this.props.configurations) ? (
-                                this.props.configurations.map((configuration, index) => {
+                              {!isEmpty(configurations) ? (
+                                configurations.map((configuration, index) => {
                                   const configindex = index;
                                   return (
                                     <div className="configuration-wrapper">
@@ -121,7 +116,7 @@ class ConfigurationModal extends Component {
                 </div>
                 {/* <span>We can't guarantee that the selected options is available</span> */}
                 <div className="button-wrapper">
-                  <button className="cancel" type="button" onClick={this.props.closeModal}>Cancel</button>
+                  <button className="cancel" type="button" onClick={closeModal}>Cancel</button>
                   <button className="save" type="submit">Save</button>
                 </div>
               </Form>

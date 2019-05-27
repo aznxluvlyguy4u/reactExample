@@ -1,10 +1,10 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Slide, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../assets/scss/defaults.scss';
 import '../assets/scss/fonts.scss';
 import '../assets/scss/icons.scss';
-import PropTypes from 'prop-types';
 import ErrorLogging from '../components/errorlogging';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
