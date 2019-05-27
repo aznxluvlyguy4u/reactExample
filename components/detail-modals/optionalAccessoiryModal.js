@@ -18,6 +18,7 @@ class OptionalAccessoiryModal extends Component {
 
   componentDidMount() {
     const { data, index } = this.props;
+    console.log(data.configurations)
     const arr = [];
     const total = parseInt(data.rates[0].quantityAvailable) + 1;
     for (let i = 0; i < total; i++) {
@@ -29,9 +30,10 @@ class OptionalAccessoiryModal extends Component {
   onChange(value) {
     const { daysInterval, data } = this.props;
     const json = JSON.parse(value.dropdown);
+    this.setState({quantity: json.quantity})
     if (daysInterval) {
       const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity))
-      this.setState({ quantity: parseInt(json.quantity), price: price.toFixed(2) });
+      this.setState({ price: price.toFixed(2) });
     }
   }
 
@@ -54,6 +56,8 @@ class OptionalAccessoiryModal extends Component {
     const {
       price, quantity, modalIsOpen,
     } = this.state;
+    console.log(data.configurations)
+    console.log(quantity)
     return (
       <div className={active ? 'form active' : 'form'}>
         <div className="titlewrapper">
