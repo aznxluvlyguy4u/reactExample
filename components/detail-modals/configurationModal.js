@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import { transformConfigurationData } from '../../utils/data/configurationDataUtil';
-import CustomSelect from '../select';
+import CustomSelect from '../customSelect';
 import './modal.scss';
 
 const customStyles = {
@@ -103,7 +103,7 @@ class ConfigurationModal extends Component {
                                   return (
                                     <div className="configuration-wrapper">
                                       <label htmlFor={`items.${quantityindex}.configuration.${configindex}.value`}>{configuration.name}</label>
-                                      <Field value={transformConfigurationData(configuration.values)[0]} name={`items.${quantityindex}.configuration.${configindex}.value`} setFieldValue={setFieldValue} options={transformConfigurationData(configuration.values)} component={CustomSelect} />
+                                      <Field value={transformConfigurationData(configuration.values)[0]} name={`items.${quantityindex}.configuration.${configindex}.value`} setFieldValue={setFieldValue} options={transformConfigurationData(configuration.values)} isSearchable={false} component={CustomSelect} />
                                     </div>
                                   );
                                 })) : null}

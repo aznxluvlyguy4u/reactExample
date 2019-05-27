@@ -60,7 +60,7 @@ class CustomSelect extends Component {
 
   render() {
     const {
-      form, field, options, placeholder,
+      form, field, options, placeholder, isSearchable,
     } = this.props;
     const { value } = this.state;
     return (
@@ -73,6 +73,7 @@ class CustomSelect extends Component {
           options={options}
           value={value || this.props.value}
           placeholder={placeholder || 'Default'}
+          isSearchable={isSearchable === false ? false : true}
         >
           {form.touched[field.name]
         && form.errors[field.name] && <span>{form.errors[field.name]}</span>}

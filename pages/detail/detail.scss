@@ -32,18 +32,18 @@
 
 .description {
   min-height: 200px;
-  width:40%;
+  width:35%;
   @include for-phone-only {
     width:100%;
   }
   @include for-tablet-portrait-up {
-    width:40%;
+    width: 55%;
   }
   @include for-tablet-landscape-up {
-    width: 60%
+    width: 55%
   }
   @include for-desktop-up {
-    width: 70%
+    width: 65%
   }
   h2 {
     font-weight: normal;

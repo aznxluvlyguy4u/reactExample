@@ -8,7 +8,7 @@ import { transformLocationData } from '../../../utils/data/countryDataUtil';
 import { NullCheckQueryParams, CreateQueryParams } from '../../../utils/queryparams';
 import { getLocations } from '../../../utils/rest/requests/locations';
 import DatePicker from '../../datepicker/datepicker';
-import CustomSelect from '../../select';
+import CustomSelect from '../../customSelect';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchForm.scss';
 import searchValidation from './searchValidation';

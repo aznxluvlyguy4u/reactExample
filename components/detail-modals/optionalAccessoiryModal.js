@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { isEmpty } from 'lodash';
-import CustomSelect from '../select';
+import CustomSelect from '../customSelect';
 import ConfigurationModal from './configurationModal';
 
 class OptionalAccessoiryModal extends Component {
@@ -48,7 +48,6 @@ class OptionalAccessoiryModal extends Component {
   }
 
   closeModal() {
-    console.log('close');
     this.setState({
       modalIsOpen: false,
     });
@@ -82,7 +81,7 @@ class OptionalAccessoiryModal extends Component {
                       <label htmlFor="dropdown">{data.name}</label>
                       {price ? <span>{`+ €${price}`}</span> : null}
                     </div>
-                    <Field placeholder="quantity" onChange={this.onChange} value={{ label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data: this.props.data, index: this.props.index }) }} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} component={CustomSelect} />
+                    <Field placeholder="quantity" onChange={this.onChange} value={{ label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quantity: 0, data: this.props.data, index: this.props.index }) }} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                   </div>
                   {!isEmpty(data.configurations) && quantity > 0 ? <button type="button" onClick={this.toggleModal} className="configure">Advanced Configuration</button> : null}
                   <button className="search-button-full" type="submit">Next</button>

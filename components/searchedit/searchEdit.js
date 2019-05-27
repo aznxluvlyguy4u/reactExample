@@ -9,7 +9,7 @@ import { transformLocationData } from '../../utils/data/countryDataUtil';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getLocations } from '../../utils/rest/requests/locations';
 import DatePicker from '../datepicker/datepicker';
-import CustomSelect from '../select';
+import CustomSelect from '../customSelect';
 import './searchedit.scss';
 import searchEditValidation from './searchEditValidation';
 
@@ -50,7 +50,7 @@ class SearchEdit extends Component {
 
   render() {
     const {
-      validation, handleSubmit, label, onChange, submit
+      validation, handleSubmit, label, onChange, submit,
     } = this.props;
     const { locations } = this.state;
     if (!isEmpty(locations)) {
