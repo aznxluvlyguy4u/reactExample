@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import Select from 'react-select';
 import './select.scss';
 
@@ -43,32 +43,44 @@ class CustomSelect extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  onChange(value) {
+    const { setFieldValue, field, onChange } = this.props;
+    setFieldValue.setFieldValue(field.name, value);
+    this.setDropdownValue(value);
+    const obj = {};
+    obj[field.name] = value.value.toString();
+    if (onChange) {
+      onChange(obj);
+    }
+  }
+
   setDropdownValue(value) {
     this.setState({ value });
   }
 
-  onChange(value) {
-    this.props.setFieldValue.setFieldValue(this.props.field.name, value);
-    this.setDropdownValue(value);
-    const obj = {};
-    obj[this.props.field.name] = value.value.toString();
-    this.props.onChange(obj);
-  }
-
   render() {
-    console.log(this.props.placeholder);
+    const {
+      form, field, options, placeholder, isSearchable, arrow
+    } = this.props;
+    const { value } = this.state;
     return (
-      <Select
-        styles={colourStyles}
-        onChange={this.onChange}
-        options={this.props.options}
-        value={this.state.value ? this.state.value : this.props.value}
-        placeholder={this.props.placeholder ? this.props.placeholder : 'Default'}
-      >
-        {this.props.form.touched[this.props.field.name]
-        && this.props.form.errors[this.props.field.name] && <span>{this.props.form.errors[this.props.field.name]}</span>}
-        <input name={this.props.field.name} type="hidden" value={this.state.value} />
-      </Select>
+      <div className={form.touched[field.name]
+              && form.errors[field.name] ? 'error selectfield' : 'selectfield'}>
+        <Select
+          styles={colourStyles}
+          onChange={this.onChange}
+          options={options}
+          value={value || this.props.value}
+          placeholder={placeholder || 'Default'}
+          isSearchable={isSearchable === false ? false : true}
+        >
+          {form.touched[field.name]
+        && form.errors[field.name] && <span>{form.errors[field.name]}</span>}
+          <input name={field.name} type="hidden" value={value} />
+        </Select>
+        {form.touched[field.name]
+      && form.errors[field.name] && <span className="validation">{form.errors[field.name]}</span>}
+      </div>
     );
   }
 }

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import './categoryTiles.scss';
 import Link from 'next/link';
 import Carousel from 'nuka-carousel';
+import React, { Component } from 'react';
 import { getCategories } from '../../utils/rest/requests/categories';
+import './categoryTiles.scss';
 
 class CategoryTiles extends Component {
   constructor(props) {

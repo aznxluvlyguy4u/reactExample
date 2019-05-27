@@ -11,13 +11,10 @@ export default class Header extends React.Component {
   constructor() {
     super();
     this.state = {
-      // signUpModalIsOpen: false,
       navType: 'transparent',
       cartCount: 0,
     };
 
-    // this.openModal = this.openModal.bind(this);
-    // this.closeModal = this.closeModal.bind(this);
     this.menuItems = [{ id: 1, title: 'Shop', slug: 'bla' }, { id: 2, title: 'Contact', slug: 'bla' }, {
       id: 3, title: 'Cart', slug: 'cart', icon: true,
     }];
@@ -50,13 +47,6 @@ export default class Header extends React.Component {
       this.setState({ navType: 'transparent' });
     }
   };
-  // openModal() {
-  //   this.setState({ signUpModalIsOpen: true });
-  // }
-
-  // closeModal() {
-  //   this.setState({ signUpModalIsOpen: false });
-  // }
 
   render() {
     const { search, nav } = this.props;
@@ -108,14 +98,7 @@ export default class Header extends React.Component {
 
         <MenuContainer menuItems={this.menuItems}>
           {items}
-          {/* <li>
-              <button onClick={this.openModal}>Open Modal</button>
-            </li> */}
         </MenuContainer>
-        {/* <button onClick={this.showSettings} className="burger-menu" type="submit">
-        <FontAwesome.FaBars /></button> */}
-        {/* <SignUp modalIsOpen={this.state.signUpModalIsOpen} openModal={this.openModal}
-        closeModal={this.closeModal}></SignUp> */}
       </div>
     );
   }

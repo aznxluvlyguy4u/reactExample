@@ -1,22 +1,24 @@
-import { isEmpty, debounce, partial } from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import Link from 'next/link';
+import Router from 'next/router';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateSearch } from '../../actions/searchActions';
+import slugify from 'slugify';
+import { updateSearch, updateSearchObject } from '../../actions/searchActions';
 import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
+import SearchEdit from '../../components/searchedit/searchEdit';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
+import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
-import SearchEdit from '../../components/searchedit/searchEdit';
-
 
 const getHTML = products => products.map(item => (
-  <Link href="/products">
+  <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
     <a>
       <div className="result-item">
         <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
@@ -33,10 +35,11 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false, query: {},
+      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false,
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
     this.counter = 0;
+    this.mergeObj = this.mergeObj.bind(this);
   }
 
   static async getInitialProps({ query }) {
@@ -59,7 +62,12 @@ class SearchPage extends Component {
       query.collectionLocation = null;
     }
     return {
-      keyword: decodeURIComponent(query.keyword), category_id: query.category, deliveryLocation: query.deliveryLocation, collectionLocation: query.collectionLocation, deliveryDate: query.deliveryDate, collectionDate: query.collectionDate,
+      keyword: decodeURIComponent(query.keyword),
+      category_id: query.category,
+      deliveryLocation: query.deliveryLocation,
+      collectionLocation: query.collectionLocation,
+      deliveryDate: query.deliveryDate,
+      collectionDate: query.collectionDate,
     };
   }
 
@@ -112,7 +120,7 @@ class SearchPage extends Component {
     const { current_page, products } = this.state;
     try {
       this.setState({ loading: true, notFound: false });
-      const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, this.state.current_page);
+      const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, current_page);
       const responseProducts = response.data.map(i => new ProductResponse(i).returnProduct());
       this.setState({
         notFound: false,
@@ -136,15 +144,21 @@ class SearchPage extends Component {
     await this.getProducts('append');
   }
 
+  mergeObj(obj) {
+    const { dispatch } = this.props;
+    dispatch(updateSearchObject(this.props.searchReducer.search, obj));
+    const query = CreateQueryParams(this.props.searchReducer.search);
+    Router.push({ pathname: '/search', query });
+  }
+
   render() {
-    console.log(this.props.searchReducer);
     const {
       products, loading, notFound, total_page_count, current_page,
     } = this.state;
 
     return (
       <Default nav="fixed" search meta={this.meta}>
-        <SearchEdit />
+        <SearchEdit onChange={this.mergeObj} />
         <div className="page-wrapper">
           <h1>Search Results</h1>
           <div className="search-block">

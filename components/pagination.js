@@ -1,5 +1,5 @@
 import { Collapse } from 'react-collapse';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 class Pagination extends Component {
   constructor(props) {
@@ -8,7 +8,9 @@ class Pagination extends Component {
   }
 
   render() {
-    const { children, total_page_count, current_page, onClick } = this.props;
+    const {
+      children, total_page_count, current_page, onClick,
+    } = this.props;
     return (
       <div>
         <Collapse isOpened className="result-wrapper">

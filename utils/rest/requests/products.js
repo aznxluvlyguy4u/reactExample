@@ -27,3 +27,13 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
     },
   }).then(handleRestResponse);
 }
+
+export function getProductById(id) {
+  const url = `${BASE_URL}/products/${id}`;
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  }).then(handleRestResponse);
+}

@@ -6,13 +6,19 @@
  .css-bgvzuu-indicatorSeparator{
    display:none;
  }
+
  .css-16pqwjk-indicatorContainer{
-   display:none !important;
+  display:none !important;
+}
+
+ .arrow {
+  .css-16pqwjk-indicatorContainer{
+    display:inline !important;
+  }
  }
 
- .css-1wy0on6{
-   display:none !important;
- }
+
+
  .css-bgy2mi-control {
   -webkit-align-items:center;
   -webkit-box-align:center;
@@ -112,4 +118,5 @@
   -ms-flex-negative:0;
   flex-shrink:0;
   box-sizing:border-box;
+  display:none !important;
  }
