@@ -1,67 +1,6 @@
 @import "../../assets/scss/_variables";
 @import "../../assets/scss/_mixins";
 
-.header {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 100%;
-  z-index: 1;
-  li {
-    font-weight: lighter;
-  }
-
-  .cart-wrapper {
-    display: flex;
-    align-items: center;
-
-    .cart {
-      width: 60px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .cart-icon {
-      margin-right: 5px;
-      width: 27px;
-      height: 24px;
-      background-size: cover;
-    }
-
-    img {
-      margin-right: 5px;
-    }
-
-    .cart-title {
-      display: inline-block;
-
-      @include for-tablet-portrait-up {
-        display: none;
-      }
-    }
-  }
-
-  .logo-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    height: 70px;
-    width: 75%;
-
-    @include for-tablet-portrait-up {
-      width: 300px;
-    }
-
-    .logo {
-      margin-top: 5px;
-      margin-left: $nav_margin;
-    }
-  }
-}
-
 .transparent {
   position: absolute;
   color: $white;
@@ -130,5 +69,66 @@
   .cart {
     position: absolute;
     right: 50px;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  z-index: 1;
+  li {
+    font-weight: lighter;
+  }
+
+  .cart-wrapper {
+    display: flex;
+    align-items: center;
+
+    .cart {
+      width: 60px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .cart-icon {
+      margin-right: 5px;
+      width: 27px;
+      height: 24px;
+      background-size: cover;
+    }
+
+    img {
+      margin-right: 5px;
+    }
+
+    .cart-title {
+      display: inline-block;
+
+      @include for-tablet-portrait-up {
+        display: none;
+      }
+    }
+  }
+
+  .logo-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 70px;
+    width: 75%;
+
+    @include for-tablet-portrait-up {
+      width: 300px;
+    }
+
+    .logo {
+      margin-top: 5px;
+      margin-left: $nav_margin;
+    }
   }
 }
