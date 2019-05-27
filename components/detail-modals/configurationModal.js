@@ -70,7 +70,7 @@ class ConfigurationModal extends Component {
         contentLabel="Example Modal"
       >
         <div className="configuration-modal">
-          <h1>Option/Accessories Preferences</h1>
+          <h1>Options / Preferences</h1>
           <Formik
             initialValues={{
               items: [
