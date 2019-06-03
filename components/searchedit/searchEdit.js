@@ -65,6 +65,7 @@ class SearchEdit extends Component {
               deliveryDate: this.props.searchReducer.search.deliveryDate,
             }}
             onSubmit={handleSubmit || undefined}
+            onChange={this.props.handleChange || undefined}
             render={setFieldValue => (
               <Form>
                 <div>

@@ -7,6 +7,8 @@ import Default from '../../layouts/default';
 import { getProductById } from '../../utils/rest/requests/products';
 import './detail.scss';
 import Loader from '../../components/loader';
+import OrderRequest from '../../utils/mapping/products/orderRequest';
+import { connect } from 'react-redux';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -27,6 +29,7 @@ class DetailPage extends Component {
     };
     this.submitSearch = this.submitSearch.bind(this);
     this.submitAccesory = this.submitAccesory.bind(this);
+    this.addToCart = this.addToCart.bind(this);
     // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
 
@@ -102,6 +105,17 @@ class DetailPage extends Component {
     }
   }
 
+  addToCart() {
+    new OrderRequest(this.state.product, this.state.item, this.state.accessories).returnOrder();
+  }
+
+  handleChange(event) {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  }
+
   render() {
     const {
       product, active, accessories,
@@ -119,19 +133,19 @@ class DetailPage extends Component {
               </div>
               <SearchModal data={product} total={active.length} active={active[0]} handleSubmit={this.submitSearch} index={1} />
               {product.accessories ? product.accessories.map((item, index) => <OptionalAccessoiryModal daysInterval={this.state.item.daysInterval} total={active.length} index={index + 2} handleSubmit={this.submitAccesory} data={item} active={active[index + 1]} />) : null}
-              <SummaryModal item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} active={active[active.length - 1]} index={active.length} total={active.length} />
+              <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} active={active[active.length - 1]} index={active.length} total={active.length} />
             </div>
           </div>
         </Default>
       );
     }
     return (
-<Default nav="fixed" search meta={{ title: `Detail Page | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
-    <div className="page-wrapper">
-    <Loader />
-    </div>
-    </Default>
-);
+      <Default nav="fixed" search meta={{ title: 'Detail Page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
+        <div className="page-wrapper">
+          <Loader />
+        </div>
+      </Default>
+    );
   }
 }
 

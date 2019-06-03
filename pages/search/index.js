@@ -43,31 +43,32 @@ class SearchPage extends Component {
   }
 
   static async getInitialProps({ query }) {
+    const obj = query;
     if (query.keyword === undefined) {
-      query.keyword = '';
+      obj.keyword = '';
     }
     if (query.deliveryDate !== null && !moment(query.deliveryDate, moment.ISO_8601).isValid()) {
-      query.deliveryDate = null;
+      obj.deliveryDate = null;
     }
     if (query.collectionDate !== null && !moment(query.collectionDate, moment.ISO_8601).isValid()) {
-      query.collectionDate = null;
+      obj.collectionDate = null;
     }
     if (query.category !== null && !Number.isInteger(query.category)) {
-      query.category_id = null;
+      obj.category_id = null;
     }
     if (query.deliveryLocation !== null && isNaN(query.deliveryLocation)) {
-      query.deliveryLocation = null;
+      obj.deliveryLocation = null;
     }
     if (query.collectionLocation !== null && isNaN(query.collectionLocation)) {
-      query.collectionLocation = null;
+      obj.collectionLocation = null;
     }
     return {
-      keyword: decodeURIComponent(query.keyword),
-      category_id: query.category,
-      deliveryLocation: query.deliveryLocation,
-      collectionLocation: query.collectionLocation,
-      deliveryDate: query.deliveryDate,
-      collectionDate: query.collectionDate,
+      keyword: decodeURIComponent(obj.keyword),
+      category_id: obj.category,
+      deliveryLocation: obj.deliveryLocation,
+      collectionLocation: obj.collectionLocation,
+      deliveryDate: obj.deliveryDate,
+      collectionDate: obj.collectionDate,
     };
   }
 

@@ -72,7 +72,7 @@ class SummaryModal extends Component {
               <div className="second bold">{`€${totalPrice.toFixed(2)}`}</div>
             </div>
           </div>
-          <button className="search-button-full">Add to cart</button>
+          <button type="submit" onClick={this.props.handleSubmit} className="search-button-full">Add to cart</button>
         </div>
       </div>
     );

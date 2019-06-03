@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Field, Form, Formik } from 'formik';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import CustomSelect from '../customSelect';
 import ConfigurationModal from './configurationModal';
+
 
 class OptionalAccessoiryModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      price: undefined, quantity: 0, modalIsOpen: false, options: [],
+      price: undefined, quantity: 0, modalIsOpen: false, options: [], configurations: [],
     };
     const { data, index } = this.props;
     this.onChange = this.onChange.bind(this);
@@ -18,11 +19,17 @@ class OptionalAccessoiryModal extends Component {
 
   componentDidMount() {
     const { data, index } = this.props;
-    console.log(data.configurations);
+    const clonedConfigurations = cloneDeep(data.configurations);
+    clonedConfigurations.map((item) => {
+      item.value = item.values[0].name;
+      delete item.values;
+      return item;
+    });
+    this.setState({ configurations: clonedConfigurations });
     const arr = [];
     const total = parseInt(data.rates[0].quantityAvailable) + 1;
     for (let i = 0; i < total; i++) {
-      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ quantity: i, data, index }) });
+      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ quantity: i, data, index }), configurations: clonedConfigurations });
     }
     this.setState({ options: arr });
   }
@@ -48,6 +55,11 @@ class OptionalAccessoiryModal extends Component {
     this.setState({
       modalIsOpen: false,
     });
+  }
+
+  submitConfiguration(values) {
+    // this.setState({configurations: values})
+    console.log(values);
   }
 
   render() {
@@ -84,9 +96,9 @@ class OptionalAccessoiryModal extends Component {
                   </div>
                   {!isEmpty(data.configurations) && quantity > 0 ? (
                     <button type="button" onClick={this.toggleModal} className="configure">
-  <i className="icon-cog" />
+                      <i className="icon-cog" />
 Advanced Configuration
-</button>
+                    </button>
                   ) : null}
                   <button className="search-button-full" type="submit">Next</button>
                 </div>
@@ -94,7 +106,7 @@ Advanced Configuration
             </Form>
           )}
         />
-        <ConfigurationModal quantity={quantity} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
+        <ConfigurationModal submitConfiguration={this.submitConfiguration} quantity={quantity} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
       </div>
     );
   }

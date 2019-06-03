@@ -88,7 +88,7 @@ class ConfigurationModal extends Component {
                 },
               ],
             }}
-            onSubmit={this.handleSubmit}
+            onSubmit={this.props.submitConfiguration}
             render={setFieldValue => (
               <Form>
                 <div className="configuration-view">
