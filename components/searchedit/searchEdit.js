@@ -26,6 +26,8 @@ class SearchEdit extends Component {
       deliveryDate: '',
     };
     this.mergeObj = this.mergeObj.bind(this);
+    this.clickPrevious = this.clickPrevious.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async componentDidMount() {
@@ -48,11 +50,54 @@ class SearchEdit extends Component {
     Router.push({ pathname: '/search', query });
   }
 
+  clickPrevious() {
+    this.props._prev();
+  }
+
+  previousButton(currentStep) {
+    // If the current step is not 1, then render the "previous" button
+    if (currentStep !== 1) {
+      return (
+        <button
+          className="btn btn-secondary"
+          type="button"
+          onClick={this.clickPrevious}
+        >
+        Previous
+        </button>
+      );
+    }
+    // ...else return nothing
+    return null;
+  }
+
+  handleSubmit(values) {
+    this.props._next();
+  }
+
+  nextButton(currentStep, handleSubmit) {
+    if (currentStep < 3) {
+      return (
+        <button
+          className="btn btn-primary float-right"
+          type="button"
+          onClick={handleSubmit}
+        >
+        Next
+        </button>
+      );
+    }
+    // ...else render nothing
+    return null;
+  }
+
   render() {
     const {
-      validation, handleSubmit, label, onChange, submit,
+      validation, label, onChange, submit,
     } = this.props;
+    const submitForm = this.handleSubmit;
     const { locations } = this.state;
+    const currentStep = this.props.currentStep || this.props.currentStep;
     if (!isEmpty(locations)) {
       return (
         <div className="searchedit">
@@ -64,35 +109,46 @@ class SearchEdit extends Component {
               collectionDate: this.props.searchReducer.search.collectionDate,
               deliveryDate: this.props.searchReducer.search.deliveryDate,
             }}
-            onSubmit={handleSubmit || undefined}
-            onChange={this.props.handleChange || undefined}
-            render={setFieldValue => (
-              <Form>
-                <div>
-                  <div className="form-inline">
-                    <div className="edit-row">
+            onSubmit={submitForm || undefined}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              setFieldValue,
+              /* and other goodies */
+            }) => (
+        <Form>
+          <div>
+                <div className="form-inline">
+                   <div className="edit-row">
                       {label ? <label htmlFor="deliveryLocation">Delivery Location</label> : null}
                       <Field placeholder="Delivery Location" onChange={onChange || null} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" setFieldValue={setFieldValue} component={CustomSelect} />
                     </div>
-                    <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Collection Location</label> : null}
-                      <Field placeholder="Collection Location" onChange={onChange || null} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
-                    </div>
-                    <div className="other-wrapper">
+                   <div className="edit-row">
+                       {label ? <label htmlFor="deliveryLocation">Collection Location</label> : null}
+                       <Field placeholder="Collection Location" onChange={onChange || null} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
+                     </div>
+                   <div className="other-wrapper">
                       {label ? (
                         <div className="label-wrapper">
-                          <label htmlFor="collectionDateRange">Collection Date</label>
-                          <label htmlFor="collectionDateRange">Delivery Date</label>
-                        </div>
+                        <label htmlFor="collectionDateRange">Collection Date</label>
+                        <label htmlFor="collectionDateRange">Delivery Date</label>
+                      </div>
                       ) : null}
                       <Field validation={validation} placeholders={['Delivery Date', 'Collection Date']} onChange={onChange || null} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Delivery Date" setFieldValue={setFieldValue} component={DatePicker} />
                     </div>
-                    {submit ? <button className="search-button-full" type="submit">Confirm Itinerary</button> : null}
-                  </div>
-                </div>
-              </Form>
+                   {submit ? this.previousButton(this.props.currentStep) : null}
+                   {submit ? this.nextButton(this.props.currentStep, handleSubmit) : null}
+                 </div>
+              </div>
+        </Form>
             )}
-          />
+          </Formik>
         </div>
       );
     } return null;

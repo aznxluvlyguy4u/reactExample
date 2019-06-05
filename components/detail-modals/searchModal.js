@@ -24,25 +24,32 @@ class SearchModal extends Component {
     });
   }
 
+  changeItem(val) {
+    console.log(val);
+  }
+
   render() {
     const {
-      active, index, total, data, handleSubmit,
+      active, index, total, data, handleSubmit, currentStep,
     } = this.props;
     const { modalIsOpen } = this.state;
+    if (currentStep && currentStep !== 1) { // Prop: The current step
+      return null;
+    }
     return (
-      <div className={active ? 'form active' : 'form'}>
-        <div className="titlewrapper">
+      <div className={'active' ? 'form active' : 'form'}>
+        {/* <div className="titlewrapper">
           <h3>Add to cart</h3>
-          <h4>{`${index}/${total}`}</h4>
-        </div>
-        <SearchEdit label submit handleSubmit={handleSubmit} validation />
-        {!isEmpty(data.configurations) ? (
+          <h4>{`Current step: ${  this.props.currentStep}`}</h4>
+        </div> */}
+        <SearchEdit _prev={this.props._prev} _next={this.props._next} currentStep={this.props.currentStep} onChange={this.props.handleChange} label submit handleSubmit={handleSubmit} validation />
+        {/* {!isEmpty(data.configurations) ? (
           <button type="button" onClick={this.toggleModal} className="configure">
             <i className="icon-cog" />
 Advanced Configuration
           </button>
-        ) : null}
-        <ConfigurationModal quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
+        ) : null} */}
+        {/* <ConfigurationModal quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} /> */}
       </div>
     );
   }

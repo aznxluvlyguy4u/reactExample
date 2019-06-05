@@ -26,10 +26,15 @@ class DetailPage extends Component {
         daysInterval: undefined,
         pricePerDay: undefined,
       },
+      currentStep: 1,
     };
-    this.submitSearch = this.submitSearch.bind(this);
+    // this.submitSearch = this.submitSearch.bind(this);
     this.submitAccesory = this.submitAccesory.bind(this);
     this.addToCart = this.addToCart.bind(this);
+    this.changeItem = this.changeItem.bind(this);
+    this._next = this._next.bind(this);
+    this._prev = this._prev.bind(this);
+    this.changeAccesoire = this.changeAccesoire.bind(this);
     // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
 
@@ -51,39 +56,57 @@ class DetailPage extends Component {
       this.setState({ product: response.data });
       const arr = [];
       if (response.data.accessories) {
-        response.data.accessories.map(item => arr.push(false));
-        arr.push(false);
-        this.setState({ active: [...active, ...arr] });
+        response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0 }));
+        this.setState({ accessories: arr });
       }
+      console.log(arr);
     } catch (error) {
       console.log(error);
     }
   }
 
-  submitSearch(values) {
-    const { active, product } = this.state;
-    const collectionDate = moment(values.collectionDate);
-    const deliveryDate = moment(values.deliveryDate);
-    const daysInterval = deliveryDate.diff(collectionDate, 'days');
-    const index = 1;
-    if (index < active.length) {
-      const arr = active.fill(false);
-      arr[index] = true;
-      this.setState({ active: arr });
-    }
-    this.setState(prevState => ({
-      item: {
-        ...prevState.item,
-        startDate: collectionDate,
-        endDate: deliveryDate,
-        startLocation: values.collectionLocation,
-        endLocation: values.deliveryLocation,
-        totalPrice: daysInterval * product.rates[0].price,
-        daysInterval,
-        pricePerDay: product.rates[0].price,
-      },
-    }));
+  _next() {
+    let { currentStep } = this.state;
+    // If the current step is 1 or 2, then add one on "next" button click
+    currentStep = currentStep >= 2 ? 3 : currentStep + 1;
+    this.setState({
+      currentStep,
+    });
   }
+
+  _prev() {
+    let { currentStep } = this.state;
+    // If the current step is 2 or 3, then subtract one on "previous" button click
+    currentStep = currentStep <= 1 ? 1 : currentStep - 1;
+    this.setState({
+      currentStep,
+    });
+  }
+
+  // submitSearch(values) {
+  //   const { active, product } = this.state;
+  //   const collectionDate = moment(values.collectionDate);
+  //   const deliveryDate = moment(values.deliveryDate);
+  //   const daysInterval = deliveryDate.diff(collectionDate, 'days');
+  //   const index = 1;
+  //   if (index < active.length) {
+  //     const arr = active.fill(false);
+  //     arr[index] = true;
+  //     this.setState({ active: arr });
+  //   }
+  //   this.setState(prevState => ({
+  //     item: {
+  //       ...prevState.item,
+  //       startDate: collectionDate,
+  //       endDate: deliveryDate,
+  //       startLocation: values.collectionLocation,
+  //       endLocation: values.deliveryLocation,
+  //       totalPrice: daysInterval * product.rates[0].price,
+  //       daysInterval,
+  //       pricePerDay: product.rates[0].price,
+  //     },
+  //   }));
+  // }
 
   submitAccesory(values) {
     const { active, accessories } = this.state;
@@ -116,7 +139,68 @@ class DetailPage extends Component {
     });
   }
 
+  changeItem(val) {
+    console.log(val);
+    this.setState({
+      [Object.keys(val)[0]]: val[Object.keys(val)[0]],
+    });
+  }
+
+  changeAccesoire(val) {
+    const index = this.state.accessories.findIndex(item => item.id === JSON.parse(val.dropdown).id);
+    this.state.accessories[index] = JSON.parse(val.dropdown);
+    this.setState({ accessories: this.state.accessories });
+
+    // this.setState({
+    //   [Object.keys(val)[0]]: val[Object.keys(val)[0]],
+    // });
+  }
+
+  nextButton(currentStep) {
+    if (currentStep < 3) {
+      return (
+        <button
+          className="btn btn-primary float-right"
+          type="button"
+          onClick={this._next}
+        >
+        Next
+        </button>
+      );
+    }
+    // ...else render nothing
+    return null;
+  }
+
+  previousButton(currentStep) {
+    // If the current step is not 1, then render the "previous" button
+    if (currentStep !== 1) {
+      return (
+        <button
+          className="btn btn-secondary"
+          type="button"
+          onClick={this._prev}
+        >
+        Previous
+        </button>
+      );
+    }
+    // ...else return nothing
+    return null;
+  }
+
+  returnAccessoires(product) {
+    return (
+      <div>
+        {product.accessories ? product.accessories.map(item => <OptionalAccessoiryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} daysInterval={this.state.item.daysInterval} data={item} />) : null}
+        {this.previousButton(this.state.currentStep)}
+        {this.nextButton(this.state.currentStep)}
+      </div>
+    );
+  }
+
   render() {
+    console.log(this.state);
     const {
       product, active, accessories,
     } = this.state;
@@ -131,9 +215,13 @@ class DetailPage extends Component {
                 <h2>Description</h2>
                 <span>{product.description}</span>
               </div>
-              <SearchModal data={product} total={active.length} active={active[0]} handleSubmit={this.submitSearch} index={1} />
-              {product.accessories ? product.accessories.map((item, index) => <OptionalAccessoiryModal daysInterval={this.state.item.daysInterval} total={active.length} index={index + 2} handleSubmit={this.submitAccesory} data={item} active={active[index + 1]} />) : null}
-              <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} active={active[active.length - 1]} index={active.length} total={active.length} />
+              <div>
+                <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
+                <SearchModal _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
+                {this.state.currentStep && this.state.currentStep === 2 ? this.returnAccessoires(product) : null}
+              </div>
+
+              {/* <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} active={active[active.length - 1]} index={active.length} total={active.length} /> */}
             </div>
           </div>
         </Default>

@@ -11,25 +11,18 @@ class OptionalAccessoiryModal extends Component {
     this.state = {
       price: undefined, quantity: 0, modalIsOpen: false, options: [], configurations: [],
     };
-    const { data, index } = this.props;
+    const { data } = this.props;
     this.onChange = this.onChange.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
-    const { data, index } = this.props;
-    const clonedConfigurations = cloneDeep(data.configurations);
-    clonedConfigurations.map((item) => {
-      item.value = item.values[0].name;
-      delete item.values;
-      return item;
-    });
-    this.setState({ configurations: clonedConfigurations });
+    const { data } = this.props;
     const arr = [];
     const total = parseInt(data.rates[0].quantityAvailable) + 1;
     for (let i = 0; i < total; i++) {
-      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ quantity: i, data, index }), configurations: clonedConfigurations });
+      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ id: data.id, quantity: i }) });
     }
     this.setState({ options: arr });
   }
@@ -64,49 +57,51 @@ class OptionalAccessoiryModal extends Component {
 
   render() {
     const {
-      active, index, total, data, handleSubmit,
+      data, currentStep,
     } = this.props;
     const {
       price, quantity, modalIsOpen,
     } = this.state;
-    console.log(data.images);
     const fullImageUrl = !isEmpty(data.images) ? data.images[0].fullImageUrl : undefined;
     return (
-      <div className={active ? 'form active' : 'form'}>
+      <div className={'active accessories-wrapper' ? 'form active accessories-wrapper' : 'form accessories-wrapper'}>
         <div className="titlewrapper">
-          <h3>Optional Accessories</h3>
-          <h4>{`${index}/${total}`}</h4>
+          {/* <h3>Optional Accessories</h3> */}
         </div>
         <div className="thumbnailImage" style={{ backgroundImage: `url(${fullImageUrl})` }} />
         <Formik
           initialValues={{
-            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ quanitity: 0, data, index }) },
+            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ id: data.id, quantity: 0 }) },
           }}
-          onSubmit={handleSubmit || undefined}
-          render={setFieldValue => (
+          onSubmit={this.submitConfiguration || undefined}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            setFieldValue,
+            /* and other goodies */
+          }) => (
             <Form>
               <div>
                 <div className="form-inline">
-                  <div className="edit-row accessory">
-                    <div className="title-wrapper">
+                   <div className="edit-row accessory">
+                <div className="title-wrapper">
                       <label htmlFor="dropdown">{data.name}</label>
                       {price ? <span className="price-item">{`+ €${price}`}</span> : null}
                     </div>
-                    <Field placeholder="quantity" onChange={this.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
-                  </div>
-                  {!isEmpty(data.configurations) && quantity > 0 ? (
-                    <button type="button" onClick={this.toggleModal} className="configure">
-                      <i className="icon-cog" />
-Advanced Configuration
-                    </button>
-                  ) : null}
-                  <button className="search-button-full" type="submit">Next</button>
-                </div>
+                <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
+              </div>
+                 </div>
               </div>
             </Form>
           )}
-        />
-        <ConfigurationModal submitConfiguration={this.submitConfiguration} quantity={quantity} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
+        </Formik>
+        {/* <ConfigurationModal submitConfiguration={this.submitConfiguration} quantity={quantity} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} /> */}
       </div>
     );
   }
