@@ -12,7 +12,6 @@ class OptionalAccessoiryModal extends Component {
       price: undefined, quantity: 0, modalIsOpen: false, options: [], configurations: [],
     };
     const { data } = this.props;
-    this.onChange = this.onChange.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
@@ -27,16 +26,16 @@ class OptionalAccessoiryModal extends Component {
     this.setState({ options: arr });
   }
 
-  onChange(value) {
-    const { daysInterval, data } = this.props;
-    const json = JSON.parse(value.dropdown);
-    this.setState({ quantity: json.quantity });
-    console.log(daysInterval);
-    if (daysInterval) {
-      const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity));
-      this.setState({ price: price.toFixed(2) });
-    }
-  }
+  // onChange(value) {
+  //   const { daysInterval, data } = this.props;
+  //   const json = JSON.parse(value.dropdown);
+  //   this.setState({ quantity: json.quantity });
+  //   console.log(daysInterval);
+  //   if (daysInterval) {
+  //     const price = daysInterval * (parseInt(data.rates[0].price) * parseInt(json.quantity));
+  //     this.setState({ price: price.toFixed(2) });
+  //   }
+  // }
 
   toggleModal() {
     this.setState({
@@ -89,19 +88,18 @@ class OptionalAccessoiryModal extends Component {
             <Form>
               <div>
                 <div className="form-inline">
-                   <div className="edit-row accessory">
-                <div className="title-wrapper">
-                      <label htmlFor="dropdown">{data.name}</label>
-                      {price ? <span className="price-item">{`+ €${price}`}</span> : null}
-                    </div>
-                <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
-              </div>
-                 </div>
+                  <div className="edit-row accessory">
+                     <div className="title-wrapper">
+                  <label htmlFor="dropdown">{data.name}</label>
+                  {price ? <span className="price-item">{`+ €${price}`}</span> : null}
+                </div>
+                     <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
+                   </div>
+                </div>
               </div>
             </Form>
           )}
         </Formik>
-        {/* <ConfigurationModal submitConfiguration={this.submitConfiguration} quantity={quantity} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} /> */}
       </div>
     );
   }

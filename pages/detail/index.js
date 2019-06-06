@@ -9,6 +9,7 @@ import './detail.scss';
 import Loader from '../../components/loader';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -16,25 +17,22 @@ class DetailPage extends Component {
     this.state = {
       accessories: [],
       product: undefined,
-      active: [true],
-      item: {
-        startDate: undefined,
-        endDate: undefined,
-        startLocation: undefined,
-        endLocation: undefined,
-        totalPrice: undefined,
-        daysInterval: undefined,
-        pricePerDay: undefined,
-      },
       currentStep: 1,
+      configurations: [],
+      search: {
+        collectionLocation: undefined,
+        deliveryLocation: undefined,
+        collectionDate: undefined,
+        deliveryDate: undefined,
+      },
     };
-    // this.submitSearch = this.submitSearch.bind(this);
-    this.submitAccesory = this.submitAccesory.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.changeItem = this.changeItem.bind(this);
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
     this.changeAccesoire = this.changeAccesoire.bind(this);
+    this.onChangeConfiguration = this.onChangeConfiguration.bind(this);
+    this.renderSecondView = this.renderSecondView.bind(this);
     // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
 
@@ -59,7 +57,11 @@ class DetailPage extends Component {
         response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0 }));
         this.setState({ accessories: arr });
       }
-      console.log(arr);
+      if (response.data.configurations) {
+        const array = [];
+        response.data.configurations.map(item => array.push({ id: item.id, name: item.name, value: item.values[0].name }));
+        this.setState({ configurations: array });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -83,66 +85,15 @@ class DetailPage extends Component {
     });
   }
 
-  // submitSearch(values) {
-  //   const { active, product } = this.state;
-  //   const collectionDate = moment(values.collectionDate);
-  //   const deliveryDate = moment(values.deliveryDate);
-  //   const daysInterval = deliveryDate.diff(collectionDate, 'days');
-  //   const index = 1;
-  //   if (index < active.length) {
-  //     const arr = active.fill(false);
-  //     arr[index] = true;
-  //     this.setState({ active: arr });
-  //   }
-  //   this.setState(prevState => ({
-  //     item: {
-  //       ...prevState.item,
-  //       startDate: collectionDate,
-  //       endDate: deliveryDate,
-  //       startLocation: values.collectionLocation,
-  //       endLocation: values.deliveryLocation,
-  //       totalPrice: daysInterval * product.rates[0].price,
-  //       daysInterval,
-  //       pricePerDay: product.rates[0].price,
-  //     },
-  //   }));
-  // }
-
-  submitAccesory(values) {
-    const { active, accessories } = this.state;
-    const value = JSON.parse(values.dropdown.value);
-    const { index } = value;
-    if (index < active.length) {
-      const arr = active.fill(false);
-      arr[index] = true;
-      this.setState({ active: arr });
-    }
-    if (value.quantity > 0) {
-      const obj = {
-        quanitity: value.quantity,
-        data: value.data,
-      };
-      this.setState({
-        accessories: [...accessories, obj],
-      });
-    }
-  }
-
   addToCart() {
-    new OrderRequest(this.state.product, this.state.item, this.state.accessories).returnOrder();
-  }
-
-  handleChange(event) {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value,
-    });
+    const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
+    console.log(newobj);
   }
 
   changeItem(val) {
-    console.log(val);
+    this.state.search[Object.keys(val)[0]] = val[Object.keys(val)[0]];
     this.setState({
-      [Object.keys(val)[0]]: val[Object.keys(val)[0]],
+      search: this.state.search,
     });
   }
 
@@ -150,10 +101,12 @@ class DetailPage extends Component {
     const index = this.state.accessories.findIndex(item => item.id === JSON.parse(val.dropdown).id);
     this.state.accessories[index] = JSON.parse(val.dropdown);
     this.setState({ accessories: this.state.accessories });
+  }
 
-    // this.setState({
-    //   [Object.keys(val)[0]]: val[Object.keys(val)[0]],
-    // });
+  onChangeConfiguration(val) {
+    const index = this.state.configurations.findIndex(item => item.id === JSON.parse(val.configuration).id);
+    this.state.configurations[index] = JSON.parse(val.configuration);
+    this.setState({ configurations: this.state.configurations });
   }
 
   nextButton(currentStep) {
@@ -192,15 +145,28 @@ class DetailPage extends Component {
   returnAccessoires(product) {
     return (
       <div>
-        {product.accessories ? product.accessories.map(item => <OptionalAccessoiryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} daysInterval={this.state.item.daysInterval} data={item} />) : null}
+        {product.accessories ? product.accessories.map(item => <OptionalAccessoiryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
         {this.previousButton(this.state.currentStep)}
         {this.nextButton(this.state.currentStep)}
       </div>
     );
   }
 
+  renderSecondView(product) {
+    const {
+      accessories,
+    } = this.state;
+    console.log(product);
+    if (isEmpty(product.accessories)) {
+      console.log('no accessoires');
+      return this.state.currentStep === 2 ? <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
+    }
+    console.log('accessoires');
+    return this.state.currentStep === 2 ? this.returnAccessoires(product) : null;
+  }
+
+
   render() {
-    console.log(this.state);
     const {
       product, active, accessories,
     } = this.state;
@@ -217,11 +183,10 @@ class DetailPage extends Component {
               </div>
               <div>
                 <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
-                <SearchModal _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
-                {this.state.currentStep && this.state.currentStep === 2 ? this.returnAccessoires(product) : null}
+                <SearchModal onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
+                {this.renderSecondView(product)}
+                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
               </div>
-
-              {/* <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} active={active[active.length - 1]} index={active.length} total={active.length} /> */}
             </div>
           </div>
         </Default>

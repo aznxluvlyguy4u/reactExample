@@ -59,7 +59,7 @@ class SearchEdit extends Component {
     if (currentStep !== 1) {
       return (
         <button
-          className="btn btn-secondary"
+          className="search-button-full"
           type="button"
           onClick={this.clickPrevious}
         >
@@ -79,7 +79,7 @@ class SearchEdit extends Component {
     if (currentStep < 3) {
       return (
         <button
-          className="btn btn-primary float-right"
+          className="search-button-full"
           type="button"
           onClick={handleSubmit}
         >

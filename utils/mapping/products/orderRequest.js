@@ -1,41 +1,15 @@
 import { access } from 'fs';
 
 export default class OrderRequest {
-  constructor(product, state, accessories) {
-    console.log(product);
-    console.log(state);
-    console.log(accessories);
+  constructor(product, accessories, search, configurations) {
     this.id = product.id;
     this.quantity = 1;
-    this.startDate = state.startDate;
-    this.endDate = state.endDate;
-    this.startLocation = state.startLocation;
-    this.endLocation = state.endLocation;
+    this.startDate = search.collectionDate;
+    this.endDate = search.deliveryDate;
+    this.startLocation = search.collectionLocation;
+    this.endLocation = search.deliveryLocation;
     this.accessories = accessories;
-  }
-
-  returnAccesoires(accessories) {
-    const arr = [];
-    accessories.map((item) => {
-      const obj = {};
-      obj.id = item.data.id;
-      obj.quantity = item.quanitity;
-      arr.push(obj);
-    });
-    console.log(arr);
-    return arr;
-  //  const arr = [
-  //     {
-  //       id: 247,
-  //       quantity: 3,
-  //       configuration: {
-  //         color: 'Pink',
-  //         size: 'L',
-  //       },
-  //       quantityAvailable: 0,
-  //       available: false,
-  //     },
-  // ];
+    this.configurations = configurations;
   }
 
   returnOrder() {
@@ -47,14 +21,11 @@ export default class OrderRequest {
         end: this.startDate,
       },
       location: {
-        collectionId: this.startLocation.value,
-        dropOffId: this.endLocation.value,
+        collectionId: this.startLocation,
+        dropOffId: this.endLocation,
       },
-      configuration: {
-        color: 'Pink',
-        size: 'L',
-      },
-      accessoires: this.returnAccesoires(this.accessories),
+      configurations: this.configurations,
+      accessoires: this.accessories,
     };
   }
 }

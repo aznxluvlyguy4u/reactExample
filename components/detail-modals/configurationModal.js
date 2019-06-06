@@ -53,10 +53,6 @@ class ConfigurationModal extends Component {
     // references are now sync'd and can be accessed.
   }
 
-  handleSubmit(values) {
-    console.log(values);
-  }
-
   render() {
     const { quantity, closeModal, configurations } = this.props;
     const { modalIsOpen } = this.state;
@@ -89,7 +85,11 @@ class ConfigurationModal extends Component {
               ],
             }}
             onSubmit={this.props.submitConfiguration}
-            render={setFieldValue => (
+          >
+            {({
+              setFieldValue,
+              /* and other goodies */
+            }) => (
               <Form>
                 <div className="configuration-view">
                   {arr.map((item, index) => {
@@ -107,7 +107,7 @@ class ConfigurationModal extends Component {
                                   return (
                                     <div className="configuration-wrapper">
                                       <label htmlFor={`items.${quantityindex}.configuration.${configindex}.value`}>{configuration.name}</label>
-                                      <Field value={transformConfigurationData(configuration.values)[0]} name={`items.${quantityindex}.configuration.${configindex}.value`} setFieldValue={setFieldValue} options={transformConfigurationData(configuration.values)} isSearchable={false} component={CustomSelect} />
+                                      <Field onChange={this.props.onChangeConfiguration} name="configuration" value={transformConfigurationData(configuration).values[0]} setFieldValue={setFieldValue} options={transformConfigurationData(configuration).values} isSearchable={false} component={CustomSelect} />
                                     </div>
                                   );
                                 })) : null}
@@ -125,7 +125,7 @@ class ConfigurationModal extends Component {
                 </div>
               </Form>
             )}
-          />
+          </Formik>
         </div>
 
       </Modal>
