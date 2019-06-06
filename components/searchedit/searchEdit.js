@@ -83,7 +83,7 @@ class SearchEdit extends Component {
           type="button"
           onClick={handleSubmit}
         >
-        Next
+        Confirm Itinerary
         </button>
       );
     }

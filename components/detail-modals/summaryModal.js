@@ -15,6 +15,23 @@ class SummaryModal extends Component {
     return price;
   }
 
+  previousButton(currentStep) {
+    // If the current step is not 1, then render the "previous" button
+    if (currentStep !== 1) {
+      return (
+        <button
+          className="previous-button"
+          type="button"
+          onClick={this.props._prev}
+        >
+        Previous
+        </button>
+      );
+    }
+    // ...else return nothing
+    return null;
+  }
+
   render() {
     const {
       active, index, total, item, accessories, search, product
@@ -74,7 +91,10 @@ class SummaryModal extends Component {
               <div className="second bold">{`€${totalRate.toFixed(2)}`}</div>
             </div>
           </div>
-          <button type="submit" onClick={this.props.handleSubmit} className="search-button-full">Add to cart</button>
+          <div className="button-wrapper">
+          {this.previousButton(this.props.currentStep)}
+          <button type="submit" onClick={this.props.handleSubmit} className="next-button">Add to cart</button>
+        </div>
         </div>
       </div>
     );

@@ -239,3 +239,37 @@
   font-family: $font-stack;
   font-weight:bold;
 }
+
+.item-wrap{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.button-wrapper {
+  .previous-button{
+    width: 48%;
+    background-color: white;
+    border: solid $yellow 2px;
+    color: $yellow;
+    font-size: 18px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 25px;
+    margin-right:2%;
+  }
+  .next-button{
+    width: 48%;
+    background-color: $yellow;
+    border: none;
+    color: white;
+    font-size: 18px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 25px;
+    margin-left:2%;
+  }
+}

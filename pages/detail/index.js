@@ -10,6 +10,8 @@ import Loader from '../../components/loader';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
+import cartReducer from '../../reducers/cartReducer';
+import { updateCart } from '../../actions/cartActions';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -88,7 +90,16 @@ class DetailPage extends Component {
 
   addToCart() {
     const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
-    console.log(newobj);
+    this.props.dispatch(updateCart(this.props.cartReducer.count));
+    if (localStorage.getItem('cart')) {
+      const cart = JSON.parse(localStorage.getItem('cart'));
+      cart.push(newobj);
+      localStorage.setItem('cart', JSON.stringify(cart));
+    } else {
+      const arr = [];
+      arr.push(newobj);
+      localStorage.setItem('cart', JSON.stringify(arr));
+    }
   }
 
   changeItem(val) {
@@ -139,7 +150,7 @@ class DetailPage extends Component {
     if (currentStep < 3) {
       return (
         <button
-          className="btn btn-primary float-right"
+          className="next-button"
           type="button"
           onClick={this._next}
         >
@@ -156,7 +167,7 @@ class DetailPage extends Component {
     if (currentStep !== 1) {
       return (
         <button
-          className="btn btn-secondary"
+          className="previous-button"
           type="button"
           onClick={this._prev}
         >
@@ -171,9 +182,13 @@ class DetailPage extends Component {
   returnAccessoires(product) {
     return (
       <div>
-        {product.accessories ? product.accessories.map(item => <OptionalAccessoiryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
-        {this.previousButton(this.state.currentStep)}
-        {this.nextButton(this.state.currentStep)}
+        <div className="item-wrap">
+          {product.accessories ? product.accessories.map(item => <OptionalAccessoiryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
+        </div>
+        <div className="button-wrapper">
+          {this.previousButton(this.state.currentStep)}
+          {this.nextButton(this.state.currentStep)}
+        </div>
       </div>
     );
   }
@@ -182,12 +197,9 @@ class DetailPage extends Component {
     const {
       accessories, currentStep, item,
     } = this.state;
-    console.log(product);
     if (isEmpty(product.accessories)) {
-      console.log('no accessoires');
-      return currentStep === 2 ? <SummaryModal accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
+      return currentStep === 2 ? <SummaryModal currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
     }
-    console.log('accessoires');
     return currentStep === 2 ? this.returnAccessoires(product) : null;
   }
 
@@ -212,7 +224,7 @@ class DetailPage extends Component {
                 <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
                 <SearchModal onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
                 {this.renderSecondView(product)}
-                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryModal accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
+                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryModal currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
               </div>
             </div>
           </div>
@@ -229,4 +241,4 @@ class DetailPage extends Component {
   }
 }
 
-export default DetailPage;
+export default connect(cartReducer)(DetailPage);
