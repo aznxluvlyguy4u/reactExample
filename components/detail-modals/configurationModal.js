@@ -96,7 +96,6 @@ class ConfigurationModal extends Component {
                     const quantityindex = index;
                     return (
                       <div className="configuration-row">
-                        <span>{`Item ${index + 1}`}</span>
                         <FieldArray
                           name="people"
                           render={helpers => (

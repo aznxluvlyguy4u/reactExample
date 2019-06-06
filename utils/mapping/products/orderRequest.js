@@ -1,4 +1,5 @@
 import { access } from 'fs';
+import { isEmpty } from 'lodash';
 
 export default class OrderRequest {
   constructor(product, accessories, search, configurations) {
@@ -13,7 +14,7 @@ export default class OrderRequest {
   }
 
   returnOrder() {
-    return {
+    const obj = {
       id: this.id,
       quantity: this.quantity,
       period: {
@@ -24,8 +25,17 @@ export default class OrderRequest {
         collectionId: this.startLocation,
         dropOffId: this.endLocation,
       },
-      configurations: this.configurations,
-      accessoires: this.accessories,
     };
+    if (!isEmpty(this.configurations)) {
+      this.configurations.map(item => ({ id: item.id, name: item.name, value: item.value }));
+      obj.configurations = this.configurations;
+    }
+    const list = this.accessories.filter((item) => item.quantity !== 0)
+    if (!isEmpty(list)) {
+      list.map(item => ({ id: item.id, quantity: item.quantity }));
+      obj.accessories = list;
+    }
+
+    return obj;
   }
 }

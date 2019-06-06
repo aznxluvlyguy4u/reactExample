@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
 
 class SummaryModal extends Component {
   constructor(props) {
@@ -7,18 +8,20 @@ class SummaryModal extends Component {
     this.state = { };
   }
 
-  // calculateTotalAccessoires() {
-  //   const { accessories } = this.props;
-  //   let price = 0;
-  //   accessories.map(item => price += this.props.item.daysInterval * item.data.rates[0].price);
-  //   return price;
-  // }
+  calculateTotalAccessoires(list) {
+    // const { accessories } = this.props;
+    let price = 0;
+    list.map(item => price += this.props.search.dayCount * Number(item.price));
+    return price;
+  }
 
   render() {
     const {
-      active, index, total, item, accessories,
+      active, index, total, item, accessories, search, product
     } = this.props;
-    // const totalPrice = this.calculateTotalAccessoires() + item.totalPrice;
+    const list = accessories.filter((item) => item.quantity !== 0);
+    const totalPrice = Number(product.rates[0].price) * search.dayCount;
+    const totalRate = this.calculateTotalAccessoires(list) + totalPrice;
     return (
       <div className={'form active' ? 'form active' : 'form'}>
         <div className="titlewrapper">
@@ -28,16 +31,16 @@ class SummaryModal extends Component {
           <div className="paragraph">
             <h3>Rental period</h3>
             <div className="content-wrapper">
-              {/* <div className="first">{`€${item.pricePerDay} x ${item.daysInterval} days`}</div>
-              <div className="second">{`€${item.totalPrice}`}</div> */}
+              <div className="first">{`€${product.rates[0].price} x ${search.dayCount} days`}</div>
+              <div className="second">{`€${totalPrice}`}</div>
             </div>
           </div>
-          {!isEmpty(accessories) ? (
+          {!isEmpty(list) ? (
             <div className="paragraph">
               <h3>Extra Accessories</h3>
               <div className="content-wrapper">
-                {/* <div className="first">{accessories.map(e => `${e.quanitity}x ${e.data.name}`).join(', ')}</div>
-                <div className="second">{`€${this.calculateTotalAccessoires()}`}</div> */}
+                <div className="first">{list.map(e => `${e.quantity}x ${e.name}`).join(', ')}</div>
+                <div className="second">{`€${this.calculateTotalAccessoires(list)}`}</div>
               </div>
             </div>
           ) : null}
@@ -52,15 +55,15 @@ class SummaryModal extends Component {
             <div className="content-wrapper" />
             <div className="date-wrapper">
               <div className="date-element">
-                {/* <span>{item.startDate ? item.startDate.format('DD.MM.YYYY') : null}</span>
-                <span>{item.startLocation ? item.startLocation.label : null}</span> */}
+                <span>{search.deliveryDate ? moment(search.deliveryDate).format('DD.MM.YYYY') : null}</span>
+                <span>{search.deliveryLocation ? search.deliveryLocation.name : null}</span>
               </div>
               <div className="date-element">
                 <img src="/static/images/arrow.png" height="7" width="40" />
               </div>
               <div className="date-element">
-                {/* <span>{item.endDate ? item.endDate.format('DD.MM.YYYY') : null}</span>
-                <span>{item.endLocation ? item.endLocation.label : null}</span> */}
+                <span>{search.collectionDate ? moment(search.collectionDate).format('DD.MM.YYYY') : null}</span>
+                <span>{search.collectionLocation ? search.collectionLocation.name : null}</span>
               </div>
             </div>
           </div>
@@ -68,7 +71,7 @@ class SummaryModal extends Component {
             {/* <h3>Delivery fees</h3> */}
             <div className="content-wrapper">
               <div className="first bold">Total Rental Price</div>
-              {/* <div className="second bold">{`€${totalPrice.toFixed(2)}`}</div> */}
+              <div className="second bold">{`€${totalRate.toFixed(2)}`}</div>
             </div>
           </div>
           <button type="submit" onClick={this.props.handleSubmit} className="search-button-full">Add to cart</button>

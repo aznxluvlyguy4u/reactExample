@@ -21,7 +21,7 @@ class OptionalAccessoiryModal extends Component {
     const arr = [];
     const total = parseInt(data.rates[0].quantityAvailable) + 1;
     for (let i = 0; i < total; i++) {
-      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ id: data.id, quantity: i }) });
+      arr.push({ label: `${i}x ${data.name}`, value: JSON.stringify({ id: data.id, quantity: i, name: data.name, price: data.rates[0].price }) });
     }
     this.setState({ options: arr });
   }
@@ -70,7 +70,7 @@ class OptionalAccessoiryModal extends Component {
         <div className="thumbnailImage" style={{ backgroundImage: `url(${fullImageUrl})` }} />
         <Formik
           initialValues={{
-            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ id: data.id, quantity: 0 }) },
+            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ id: data.id, quantity: 0, name: data.name, price: data.rates[0].price }) },
           }}
           onSubmit={this.submitConfiguration || undefined}
         >
@@ -89,12 +89,12 @@ class OptionalAccessoiryModal extends Component {
               <div>
                 <div className="form-inline">
                   <div className="edit-row accessory">
-                     <div className="title-wrapper">
-                  <label htmlFor="dropdown">{data.name}</label>
-                  {price ? <span className="price-item">{`+ €${price}`}</span> : null}
-                </div>
-                     <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
-                   </div>
+                    <div className="title-wrapper">
+                      <label htmlFor="dropdown">{data.name}</label>
+                      {price ? <span className="price-item">{`+ €${price}`}</span> : null}
+                    </div>
+                    <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
+                  </div>
                 </div>
               </div>
             </Form>

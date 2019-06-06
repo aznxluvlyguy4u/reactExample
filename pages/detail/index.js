@@ -20,10 +20,11 @@ class DetailPage extends Component {
       currentStep: 1,
       configurations: [],
       search: {
-        collectionLocation: undefined,
-        deliveryLocation: undefined,
+        collectionLocation: { id: undefined, name: undefined },
+        deliveryLocation: { id: undefined, name: undefined },
         collectionDate: undefined,
         deliveryDate: undefined,
+        dayCount: undefined,
       },
     };
     this.addToCart = this.addToCart.bind(this);
@@ -54,7 +55,7 @@ class DetailPage extends Component {
       this.setState({ product: response.data });
       const arr = [];
       if (response.data.accessories) {
-        response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0 }));
+        response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0, name: item.name }));
         this.setState({ accessories: arr });
       }
       if (response.data.configurations) {
@@ -91,10 +92,35 @@ class DetailPage extends Component {
   }
 
   changeItem(val) {
-    this.state.search[Object.keys(val)[0]] = val[Object.keys(val)[0]];
-    this.setState({
-      search: this.state.search,
-    });
+    if (Object.keys(val)[0] === 'collectionLocation' || Object.keys(val)[0] === 'deliveryLocation') {
+      this.state.search[Object.keys(val)[0]] = JSON.parse(val[Object.keys(val)[0]]);
+      this.setState({
+        search: this.state.search,
+      });
+      return;
+    }
+    if (Object.keys(val)[0] === 'collectionDate') {
+      if (this.state.search.deliveryDate !== undefined) {
+        const collectionDate = moment(val[Object.keys(val)[0]]);
+        const deliveryDate = moment(this.state.search.deliveryDate);
+        this.state.search.dayCount = deliveryDate.diff(collectionDate, 'days');
+      }
+      this.state.search[Object.keys(val)[0]] = val[Object.keys(val)[0]];
+      this.setState({
+        search: this.state.search,
+      });
+    }
+    if (Object.keys(val)[0] === 'deliveryDate') {
+      if (this.state.search.collectionDate !== undefined) {
+        const deliveryDate = moment(val[Object.keys(val)[0]]);
+        const collectionDate = moment(this.state.search.collectionDate);
+        this.state.search.dayCount = deliveryDate.diff(collectionDate, 'days');
+      }
+      this.state.search[Object.keys(val)[0]] = val[Object.keys(val)[0]];
+      this.setState({
+        search: this.state.search,
+      });
+    }
   }
 
   changeAccesoire(val) {
@@ -154,21 +180,22 @@ class DetailPage extends Component {
 
   renderSecondView(product) {
     const {
-      accessories,
+      accessories, currentStep, item,
     } = this.state;
     console.log(product);
     if (isEmpty(product.accessories)) {
       console.log('no accessoires');
-      return this.state.currentStep === 2 ? <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
+      return currentStep === 2 ? <SummaryModal accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
     }
     console.log('accessoires');
-    return this.state.currentStep === 2 ? this.returnAccessoires(product) : null;
+    return currentStep === 2 ? this.returnAccessoires(product) : null;
   }
 
 
   render() {
+    console.log(this.state);
     const {
-      product, active, accessories,
+      product, accessories,
     } = this.state;
     if (product) {
       return (
@@ -181,11 +208,11 @@ class DetailPage extends Component {
                 <h2>Description</h2>
                 <span>{product.description}</span>
               </div>
-              <div>
+              <div className="form-wrapper">
                 <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
                 <SearchModal onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
                 {this.renderSecondView(product)}
-                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryModal handleSubmit={this.addToCart} item={this.state.item} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
+                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryModal accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
               </div>
             </div>
           </div>

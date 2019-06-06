@@ -24,10 +24,10 @@ export function NullCheckQueryParams(values) {
     queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
   }
   if (values.deliveryLocation !== '') {
-    queryParameters.deliveryLocation = values.deliveryLocation.value;
+    queryParameters.deliveryLocation = JSON.decode(values.deliveryLocation.value).id;
   }
   if (values.collectionLocation !== '') {
-    queryParameters.collectionLocation = values.collectionLocation.value;
+    queryParameters.collectionLocation = JSON.decode(values.collectionLocation.value).id;
   }
   if (values.deliveryDate !== '') {
     queryParameters.deliveryDate = values.deliveryDate;
@@ -44,13 +44,13 @@ export function NullCheckProps(values) {
     queryParameters.push({ column: 'q[product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
   }
   if (values.deliveryLocation !== null) {
-    queryParameters.push({ column: 'delivery_location_id', value: values.deliveryLocation });
+    queryParameters.push({ column: 'delivery_location_id', value: JSON.parse(values.deliveryLocation) });
   }
   if (values.category !== undefined) {
     queryParameters.push({ column: 'q[product_group_id_eq]', value: values.category });
   }
   if (values.collectionLocation !== null) {
-    queryParameters.push({ column: 'collection_location_id', value: values.collectionLocation });
+    queryParameters.push({ column: 'collection_location_id', value: JSON.parse(values.collectionLocation).id });
   }
   if (values.collectionDate !== null) {
     queryParameters.push({ column: 'starts_at', value: values.collectionDate });
@@ -67,10 +67,10 @@ export function CreateQueryParams(state) {
     queryParameters.keyword = state.keyword;
   }
   if (state.deliveryLocation !== '' && state.deliveryLocation !== undefined && state.deliveryLocation !== null) {
-    queryParameters.deliveryLocation = state.deliveryLocation;
+    queryParameters.deliveryLocation = JSON.parse(state.deliveryLocation).id;
   }
   if (state.collectionLocation !== '' && state.collectionLocation !== undefined && state.collectionLocation !== null) {
-    queryParameters.collectionLocation = state.collectionLocation;
+    queryParameters.collectionLocation = JSON.parse(state.collectionLocation).id;
   }
   if (state.deliveryDate !== '' && state.deliveryDate !== undefined && state.deliveryDate !== null) {
     queryParameters.deliveryDate = state.deliveryDate;
