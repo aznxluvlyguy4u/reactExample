@@ -148,6 +148,12 @@ class SearchPage extends Component {
 
   mergeObj(obj) {
     const { dispatch } = this.props;
+    if (obj.collectionLocation !== '' && obj.collectionLocation !== undefined && obj.collectionLocation !== null) {
+      obj.collectionLocation = JSON.parse(obj.collectionLocation).id;
+    }
+    if (obj.deliveryLocation !== '' && obj.deliveryLocation !== undefined && obj.deliveryLocation !== null) {
+      obj.deliveryLocation = JSON.parse(obj.deliveryLocation).id;
+    }
     dispatch(updateSearchObject(this.props.searchReducer.search, obj));
     const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });

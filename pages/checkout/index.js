@@ -13,6 +13,7 @@ class CheckoutPage extends Component {
     this.state = {
       cart: [], loading: true,
     };
+    this.removeItem = this.removeItem.bind(this);
   }
 
   async componentDidMount() {
@@ -24,6 +25,7 @@ class CheckoutPage extends Component {
         try {
           const response = await checkCartAvailability(newcart);
           this.setState({ cart: response.data, loading: false });
+          localStorage.setItem('cart', JSON.stringify(response.data));
         } catch (error) {
           console.log(error);
         }
@@ -31,6 +33,12 @@ class CheckoutPage extends Component {
     } else {
       this.setState({ loading: false });
     }
+  }
+
+  removeItem(id) {
+    const removedlist = this.state.cart.filter(item => item.id !== id);
+    this.setState({ cart: removedlist });
+    localStorage.setItem('cart', JSON.stringify(removedlist));
   }
 
   render() {
@@ -46,7 +54,7 @@ class CheckoutPage extends Component {
               <span>For any questions or assistance with your order please do not hesitate to contact us.</span>
             </div>
           </div>
-          <FinalCheckout cart={this.state.cart} />
+          <FinalCheckout removeItem={this.removeItem} cart={this.state.cart} />
         </div>
       </Default>
     );

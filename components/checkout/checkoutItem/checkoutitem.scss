@@ -17,6 +17,13 @@
       width: 17.28%;
       font-size:15px;
       font-weight:lighter;
+      .remove-item{
+        position:absolute;
+        left:8%;
+        font-weight:bold;
+        font-size:20px;
+        cursor:pointer;
+      }
       .column-item{
         display:flex;
         flex-direction: column;

@@ -67,10 +67,10 @@ export function CreateQueryParams(state) {
     queryParameters.keyword = state.keyword;
   }
   if (state.deliveryLocation !== '' && state.deliveryLocation !== undefined && state.deliveryLocation !== null) {
-    queryParameters.deliveryLocation = JSON.parse(state.deliveryLocation).id;
+    queryParameters.deliveryLocation = state.deliveryLocation;
   }
   if (state.collectionLocation !== '' && state.collectionLocation !== undefined && state.collectionLocation !== null) {
-    queryParameters.collectionLocation = JSON.parse(state.collectionLocation).id;
+    queryParameters.collectionLocation = state.collectionLocation;
   }
   if (state.deliveryDate !== '' && state.deliveryDate !== undefined && state.deliveryDate !== null) {
     queryParameters.deliveryDate = state.deliveryDate;

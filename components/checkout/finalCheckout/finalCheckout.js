@@ -21,9 +21,7 @@ class FinalCheckout extends Component {
           <div className="sub-item">Availability</div>
           <div className="sub-item">Details</div>
         </div>
-        <div className="body-row">
-          {this.props.cart.map(item => <CheckoutItem data={item} />)}
-        </div>
+        {this.props.cart.map(item => <CheckoutItem removeItem={this.props.removeItem} data={item} />)}
       </div>
     );
   }

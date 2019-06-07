@@ -8,8 +8,27 @@ class SelectionOverview extends Component {
   }
 
   componentDidMount() {
-    const price = 0;
+    // const price = 0;
+    // this.props.cart.map((item) => {
+    //   console.log(item.totalPrice);
+    //   price += Number(item.totalPrice);
+    //   if (item.accessories) {
+    //     item.accessories.map(item => price += Number(item.totalPrice));
+    //   }
+    // });
+    // this.setState({ totalPrice: price });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.cart !== this.props.cart) {
+      this.setPrice();
+    }
+  }
+
+  setPrice() {
+    let price = 0;
     this.props.cart.map((item) => {
+      console.log(item.totalPrice);
       price += Number(item.totalPrice);
       if (item.accessories) {
         item.accessories.map(item => price += Number(item.totalPrice));

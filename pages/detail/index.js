@@ -91,6 +91,7 @@ class DetailPage extends Component {
   addToCart() {
     const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
     this.props.dispatch(updateCart(this.props.cartReducer.count));
+    console.log(newobj);
     if (localStorage.getItem('cart')) {
       const cart = JSON.parse(localStorage.getItem('cart'));
       cart.push(newobj);
