@@ -1,0 +1,29 @@
+.final-checkout{
+  .sub-item{
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 17.28%;
+  }
+  h2{
+    font-weight: bold;
+    border-bottom: solid 0.3px grey;
+    padding-bottom:20px;
+  }
+  .header-row{
+    display:flex;
+    width:100%;
+    justify-content: space-between;
+    border-bottom: solid 0.3px grey;
+    padding-bottom:20px;
+    padding-top:20px;
+  }
+  .body-row{
+    display:flex;
+    width:100%;
+    justify-content: space-between;
+    border-bottom: solid 0.3px grey;
+    padding-bottom:20px;
+    padding-top:20px;
+  }
+}

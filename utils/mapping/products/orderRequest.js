@@ -22,15 +22,15 @@ export default class OrderRequest {
         end: this.startDate,
       },
       location: {
-        collectionId: this.startLocation,
-        dropOffId: this.endLocation,
+        delivery: this.startLocation,
+        collection: this.endLocation,
       },
     };
     if (!isEmpty(this.configurations)) {
       this.configurations.map(item => ({ id: item.id, name: item.name, value: item.value }));
       obj.configurations = this.configurations;
     }
-    const list = this.accessories.filter((item) => item.quantity !== 0)
+    const list = this.accessories.filter(item => item.quantity !== 0);
     if (!isEmpty(list)) {
       list.map(item => ({ id: item.id, quantity: item.quantity }));
       obj.accessories = list;

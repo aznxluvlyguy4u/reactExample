@@ -1,0 +1,41 @@
+.selection-overview {
+  width: 60%;
+  .paragraph{
+    border-bottom: solid 0.3px grey;
+    padding-bottom: 10px;
+  }
+  h2 {
+    font-weight: normal;
+    font-size:24px;
+  }
+  h3 {
+    font-weight:bold;
+    font-size:15px;
+    margin-bottom:10px;
+  }
+  .first {
+    font-weight:normal;
+    font-size:15px;
+    &.bold{
+      font-size:20px;
+      margin-top:20px;
+      margin-bottom:10px;
+      font-weight:bold;
+    }
+  }
+  .second {
+    font-weight:normal;
+    font-size:15px;
+    &.bold{
+      font-size:20px;
+      margin-top:20px;
+      margin-bottom:10px;
+      font-weight:bold;
+    }
+  }
+  .content-wrapper {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

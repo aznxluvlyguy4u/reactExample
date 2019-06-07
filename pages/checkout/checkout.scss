@@ -1,0 +1,22 @@
+.page-wrapper {
+  padding-top: 100px;
+  margin-left:5%;
+  margin-right:5%;
+  h2{
+    font-weight:normal;
+  }
+}
+
+.flex-row{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  min-height: 350px;
+}
+
+.support {
+  width:30%;
+  span{
+    font-size:12px;
+  }
+}

@@ -1,0 +1,39 @@
+@import '../../../assets/scss/_variables';
+@import '../../../assets/scss/_mixins';
+
+.checkoutitem{
+  width:100%;
+  .wrap-item{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+    padding-top:20px;
+    padding-bottom: 20px;
+    .sub-item{
+      display:flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 17.28%;
+      font-size:15px;
+      font-weight:lighter;
+      .column-item{
+        display:flex;
+        flex-direction: column;
+        &.date{
+          text-align:center;
+        }
+      }
+    }
+  }
+
+  .warning-message{
+    color: $yellow;
+  }
+  .collapse-view{
+    width:100%;
+    .paragraph-wrapper {
+      width:100%;
+    }
+  }
+}
