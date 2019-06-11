@@ -1,4 +1,8 @@
+@import '../../../assets/scss/_variables';
+@import '../../../assets/scss/_mixins';
+
 .final-checkout{
+  margin-top: 100px;
   .sub-item{
     display:flex;
     justify-content: space-around;
@@ -25,5 +29,20 @@
     border-bottom: solid 0.3px grey;
     padding-bottom:20px;
     padding-top:20px;
+  }
+}
+
+.checkout-row{
+  display:flex;
+  justify-content: flex-end;
+  .submit{
+    background-color: $yellow;
+    border:none;
+    font-size:12px;
+    font-family: $font-stack;
+    color:white;
+    padding: 10px 25px 10px 25px;
+    margin-top:15px;
+    cursor:pointer;
   }
 }

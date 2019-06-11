@@ -5,8 +5,8 @@ export default class OrderRequest {
   constructor(product, accessories, search, configurations) {
     this.id = product.id;
     this.quantity = 1;
-    this.startDate = search.collectionDate;
-    this.endDate = search.deliveryDate;
+    this.endDate = search.collectionDate;
+    this.startDate = search.deliveryDate;
     this.startLocation = search.collectionLocation;
     this.endLocation = search.deliveryLocation;
     this.accessories = accessories;
@@ -19,7 +19,7 @@ export default class OrderRequest {
       quantity: this.quantity,
       period: {
         start: this.startDate,
-        end: this.startDate,
+        end: this.endDate,
       },
       location: {
         delivery: this.startLocation,

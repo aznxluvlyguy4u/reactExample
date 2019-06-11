@@ -104,31 +104,40 @@ class DetailPage extends Component {
   }
 
   changeItem(val) {
-    if (Object.keys(val)[0] === 'collectionLocation' || Object.keys(val)[0] === 'deliveryLocation') {
-      this.state.search[Object.keys(val)[0]] = JSON.parse(val[Object.keys(val)[0]]);
+    if (Object.keys(val)[0] === 'collectionLocation') {
+      this.state.search.collectionLocation = JSON.parse(val[Object.keys(val)[0]]);
+      this.setState({
+        search: this.state.search,
+      });
+      return;
+    }
+    if (Object.keys(val)[0] === 'deliveryLocation') {
+      this.state.search.deliveryLocation = JSON.parse(val[Object.keys(val)[0]]);
       this.setState({
         search: this.state.search,
       });
       return;
     }
     if (Object.keys(val)[0] === 'collectionDate') {
+      console.log('collectionDate', val[Object.keys(val)[0]]);
       if (this.state.search.deliveryDate !== undefined) {
         const collectionDate = moment(val[Object.keys(val)[0]]);
         const deliveryDate = moment(this.state.search.deliveryDate);
         this.state.search.dayCount = deliveryDate.diff(collectionDate, 'days');
       }
-      this.state.search[Object.keys(val)[0]] = val[Object.keys(val)[0]];
+      this.state.search.deliveryDate = val[Object.keys(val)[0]];
       this.setState({
         search: this.state.search,
       });
     }
     if (Object.keys(val)[0] === 'deliveryDate') {
+      console.log('deliveryDate', val[Object.keys(val)[0]]);
       if (this.state.search.collectionDate !== undefined) {
         const deliveryDate = moment(val[Object.keys(val)[0]]);
         const collectionDate = moment(this.state.search.collectionDate);
         this.state.search.dayCount = deliveryDate.diff(collectionDate, 'days');
       }
-      this.state.search[Object.keys(val)[0]] = val[Object.keys(val)[0]];
+      this.state.search.collectionDate = val[Object.keys(val)[0]];
       this.setState({
         search: this.state.search,
       });

@@ -3,6 +3,9 @@
   .paragraph{
     border-bottom: solid 0.3px grey;
     padding-bottom: 10px;
+    &.no-line{
+      border:none;
+    }
   }
   h2 {
     font-weight: normal;

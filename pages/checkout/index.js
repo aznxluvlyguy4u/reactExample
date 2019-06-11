@@ -6,6 +6,7 @@ import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import './checkout.scss';
 import SelectionOverview from '../../components/checkout/selectionOverview/selectionOverview';
 import FinalCheckout from '../../components/checkout/finalCheckout/finalCheckout';
+import UnavailableItems from '../../components/checkout/unavailableItems/unavailableItems';
 
 class CheckoutPage extends Component {
   constructor(props) {
@@ -30,31 +31,35 @@ class CheckoutPage extends Component {
           console.log(error);
         }
       }
+      // localStorage.removeItem('cart');
     } else {
       this.setState({ loading: false });
     }
   }
 
-  removeItem(id) {
-    const removedlist = this.state.cart.filter(item => item.id !== id);
+  removeItem(uuid) {
+    const removedlist = this.state.cart.filter(item => item.uuid !== uuid);
     this.setState({ cart: removedlist });
     localStorage.setItem('cart', JSON.stringify(removedlist));
   }
 
   render() {
-    console.log(this.state.cart);
+    const finalCheckoutData = this.state.cart.filter(item => item.availabilityState !== 'NOT_AVAILABLE');
+    const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
+
     return (
       <Default nav="fixed" search meta={{ title: 'checkout page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
         <div className="page-wrapper">
           <h1>Checkout Process</h1>
           <div className="flex-row">
-            <SelectionOverview cart={this.state.cart} />
+            <SelectionOverview cart={finalCheckoutData} />
             <div className="support">
               <h2>Support</h2>
               <span>For any questions or assistance with your order please do not hesitate to contact us.</span>
             </div>
           </div>
-          <FinalCheckout removeItem={this.removeItem} cart={this.state.cart} />
+          {!isEmpty(unavailableData) ? <UnavailableItems removeItem={this.removeItem} cart={unavailableData} /> : null}
+          {!isEmpty(finalCheckoutData) ? <FinalCheckout removeItem={this.removeItem} cart={finalCheckoutData} /> : null}
         </div>
       </Default>
     );

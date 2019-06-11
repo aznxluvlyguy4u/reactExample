@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import './checkoutitem.scss';
 import moment from 'moment';
 import { Collapse } from 'react-collapse';
 
-class CheckoutItem extends Component {
+class UnavailableItem extends Component {
   constructor(props) {
     super(props);
     this.state = { accesoryprice: 0, collapse: false };
@@ -52,8 +51,6 @@ class CheckoutItem extends Component {
     switch (this.props.data.availabilityState) {
       case 'AVAILABLE':
         return <img height="20" width="20" src="/static/images/available.png" />;
-      case 'AVAILABLE_BUT_DELAYED':
-        return <img height="20" width="20" src="/static/images/available.png" />;
       case 'NOT_AVAILABLE':
         return <img height="20" width="20" src="/static/images/unavailable.png" />;
     }
@@ -88,7 +85,7 @@ class CheckoutItem extends Component {
               </div>
               <div className="sub-item">{this.returnAvailabilityIcon()}</div>
               <div className="sub-item">
-                <div className="toggle" onClick={this.toggleCollapse}>{this.state.collapse ? <img height="10" width="20" src="/static/images/up.png" /> : <img height="10" width="20" src="/static/images/down.png" />}</div>
+                <div />
               </div>
             </div>
             {this.returnWarningMessage()}
@@ -122,4 +119,4 @@ class CheckoutItem extends Component {
   }
 }
 
-export default CheckoutItem;
+export default UnavailableItem;

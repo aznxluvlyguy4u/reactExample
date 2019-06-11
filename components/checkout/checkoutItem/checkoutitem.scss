@@ -17,9 +17,15 @@
       width: 17.28%;
       font-size:15px;
       font-weight:lighter;
+      .toggle{
+        display: flex;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+      }
       .remove-item{
         position:absolute;
-        left:8%;
+        left: 4%;
         font-weight:bold;
         font-size:20px;
         cursor:pointer;
@@ -36,6 +42,7 @@
 
   .warning-message{
     color: $yellow;
+    font-size: 12px;
   }
   .collapse-view{
     width:100%;
