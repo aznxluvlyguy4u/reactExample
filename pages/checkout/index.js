@@ -61,6 +61,8 @@ class CheckoutPage extends Component {
     const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
     this.setState({ cart: unavailableData });
     localStorage.setItem('cart', JSON.stringify(unavailableData));
+    this.props.dispatch(setCartCount(unavailableData.length));
+    this.setState({ totalPrice: '0.00' });
   }
 
   render() {
