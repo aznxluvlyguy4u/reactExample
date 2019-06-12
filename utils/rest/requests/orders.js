@@ -1,7 +1,8 @@
 import handleRestResponse from '../requestUtil';
+import { BASE_URL } from '../requestConstants';
 
 export function orderCartItems(body) { // Throttled function
-  const url = 'https://1qie0vagy1.execute-api.eu-west-1.amazonaws.com/dev/api/v1/products/orders';
+  const url = `${BASE_URL}/products/orders`;
   return fetch(url, {
     method: 'POST',
     headers: {

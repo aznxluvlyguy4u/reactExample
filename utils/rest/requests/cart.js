@@ -1,7 +1,8 @@
 import handleRestResponse from '../requestUtil';
+import { BASE_URL } from '../requestConstants';
 
 export function checkCartAvailability(cart) { // Throttled function
-  const url = 'https://1qie0vagy1.execute-api.eu-west-1.amazonaws.com/dev/api/v1/products/availability';
+  const url = `${BASE_URL}/products/availability`;
   return fetch(url, {
     method: 'POST',
     headers: {
