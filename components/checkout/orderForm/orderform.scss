@@ -66,6 +66,22 @@
       display: inline
     }
   }
+  textarea{
+    box-sizing:border-box;
+    font-family: $font-stack;
+    width: 100%;
+    border: 2px solid $input-color;
+    color: $blue;
+    padding: 10px;
+    resize: none;
+    font-size:11px;
+    @include placeholder {
+      color: $input-color;
+    }
+    .inline{
+      display: inline
+    }
+  }
   .error {
     border: 2px solid $red;
     color: $red;

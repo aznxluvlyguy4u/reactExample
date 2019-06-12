@@ -5,6 +5,8 @@ import {
 } from 'formik';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './orderform.scss';
+import CustomTextArea from '../../customTextArea/customTextArea';
+import OrderFormSchema from './orderFormSchema';
 
 const customStyles = {
   content: {
@@ -15,6 +17,20 @@ const customStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
   },
+};
+
+const initialValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  streetName: '',
+  streetNumber: '',
+  postalCode: '',
+  addressAddition: '',
+  city: '',
+  phonePrefix: '',
+  phoneNumber: '',
+  comment: '',
 };
 
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
@@ -36,8 +52,8 @@ class OrderForm extends Component {
         <p>To proceed with checkout please fill in the information below</p>
         <Formik
           // validate={validate}
-          // validationSchema={SignupSchema}
-          // initialValues={initialValues}
+          validationSchema={OrderFormSchema}
+          initialValues={initialValues}
           onSubmit={this.handleSubmit}
           render={({
             errors, touched, validateForm, setFieldValue,
@@ -66,11 +82,11 @@ class OrderForm extends Component {
                 </div>
                 <div className="streetNumber form-block">
                   <label htmlFor="streetNumber">Street number</label>
-                  <Field name="streetNumber" placeholder="street Number" component={CustomInputComponent} />
+                  <Field name="streetNumber" placeholder="Street number" component={CustomInputComponent} />
                 </div>
                 <div className="postalCode form-block">
                   <label htmlFor="postalCode">Postal code</label>
-                  <Field name="postalCode" placeholder="postalCode" component={CustomInputComponent} />
+                  <Field name="postalCode" placeholder="Postal code" component={CustomInputComponent} />
                 </div>
               </div>
 
@@ -95,6 +111,11 @@ class OrderForm extends Component {
                   <label htmlFor="phoneNumber">Phone number</label>
                   <Field name="phoneNumber" placeholder="Phone number" component={CustomInputComponent} />
                 </div>
+              </div>
+
+              <div className="comment form-block">
+                <label htmlFor="comment">General Comment</label>
+                <Field name="comment" placeholder="General Comment" component={CustomTextArea} />
               </div>
 
               <button className="fullwidth-button" type="submit">Place Order</button>
