@@ -228,7 +228,7 @@ class DetailPage extends Component {
             <div className="detail-wrapper">
               <div className="description">
                 <h2>Description</h2>
-                <span>{product.description}</span>
+                <span>{product.description[0].custom_product_description_head_1}</span>
               </div>
               <div className="form-wrapper">
                 <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
