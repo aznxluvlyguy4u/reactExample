@@ -50,8 +50,23 @@
 }
 
 .checkout-row{
-  display:flex;
-  justify-content: flex-end;
+  width: 100%;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top:15px;
+  .total{
+    font-size:30px;
+  }
+  .price {
+    font-size:15px;
+    font-weight:bold;
+    .vat {
+      font-weight: lighter;
+      font-size:12px;
+      padding-left:5px;
+    }
+  }
   .submit{
     background-color: #FABA0C;
     border: none;
@@ -59,7 +74,6 @@
     font-family: "Tyros Pro";
     color: white;
     padding: 15px 35px 15px 35px;
-    margin-top: 15px;
     cursor: pointer;
   }
 }

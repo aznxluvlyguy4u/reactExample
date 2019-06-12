@@ -91,9 +91,9 @@ or send an
             </div>
           </div>
           {!isEmpty(unavailableData) ? <UnavailableItems removeItem={this.removeItem} cart={unavailableData} /> : null}
-          {!isEmpty(finalCheckoutData) ? <FinalCheckout emptyCart={this.emptyCart} removeItem={this.removeItem} cart={finalCheckoutData} /> : null}
+          {!isEmpty(finalCheckoutData) ? <FinalCheckout totalPrice={this.state.totalPrice} emptyCart={this.emptyCart} removeItem={this.removeItem} cart={finalCheckoutData} /> : null}
+          {this.state.loading ? <Loader /> : null}
         </div>
-        {this.state.loading ? <Loader /> : null}
       </Default>
     );
   }

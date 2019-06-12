@@ -78,6 +78,11 @@ class FinalCheckout extends Component {
         </div>
         {this.props.cart.map(item => <CheckoutItem removeItem={this.props.removeItem} data={item} />)}
         <div className="checkout-row">
+          <div className="total">Total</div>
+          <div className="price">
+            {`€${this.props.totalPrice}`}
+            <span className="vat">(excl VAT)</span>
+          </div>
           <button onClick={this.openModal} className="submit">Place order</button>
         </div>
         <Modal
