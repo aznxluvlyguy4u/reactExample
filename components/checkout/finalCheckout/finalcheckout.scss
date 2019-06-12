@@ -36,13 +36,13 @@
   display:flex;
   justify-content: flex-end;
   .submit{
-    background-color: $yellow;
-    border:none;
-    font-size:12px;
-    font-family: $font-stack;
-    color:white;
-    padding: 10px 25px 10px 25px;
-    margin-top:15px;
-    cursor:pointer;
+    background-color: #FABA0C;
+    border: none;
+    font-size: 14px;
+    font-family: "Tyros Pro";
+    color: white;
+    padding: 15px 35px 15px 35px;
+    margin-top: 15px;
+    cursor: pointer;
   }
 }

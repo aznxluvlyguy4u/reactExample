@@ -30,10 +30,11 @@ class Header extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     if (localStorage.getItem('cart')) {
-      this.props.dispatch(setCartCount(JSON.parse(localStorage.getItem('cart')).length));
+      const cart = await localStorage.getItem('cart');
+      this.props.dispatch(setCartCount(JSON.parse(cart)).length);
     }
   }
 

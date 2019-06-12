@@ -25,10 +25,20 @@ class CheckoutItem extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data) {
+      if (this.props.data.accessories) {
+        let price = 0;
+        this.props.data.accessories.map(e => price += Number(e.totalPrice));
+        this.setState({ accesoryprice: price });
+      }
+    }
+  }
+
   returnExtraAccessories() {
     if (this.props.data.accessories) {
       let price = 0;
-      this.props.data.accessories.map(e => price += Number(e.totalPrice));
+      this.props.data.accessories.map(e => price += parseFloat(e.totalPrice));
       // this.setState({ accesoryprice: price });
       return (
         <div className="paragraph">
@@ -60,6 +70,9 @@ class CheckoutItem extends Component {
   }
 
   render() {
+    // console.log(parseFloat(this.props.data.totalPrice));
+    console.log(parseFloat(this.state.accesoryprice));
+    const totalPrice = 0;
     if (this.props.data) {
       return (
         <div className="body-row">
@@ -73,7 +86,7 @@ class CheckoutItem extends Component {
                 </div>
               </div>
               <div className="sub-item">{this.props.data.quantity}</div>
-              <div className="sub-item">{`€${this.props.data.totalPrice}`}</div>
+              <div className="sub-item">{`€${totalPrice}`}</div>
               <div className="sub-item">
                 <div className="column-item date">
                   <span>{moment(this.props.data.period.start).format('DD.MM.YYYY')}</span>

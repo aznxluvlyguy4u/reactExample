@@ -31,6 +31,7 @@ const initialValues = {
   phonePrefix: '',
   phoneNumber: '',
   comment: '',
+  country: '',
 };
 
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
@@ -39,10 +40,6 @@ Modal.setAppElement('body');
 class OrderForm extends Component {
   constructor(props) {
     super(props);
-  }
-
-  handleSubmit(values) {
-    console.log(values);
   }
 
   render() {
@@ -54,7 +51,7 @@ class OrderForm extends Component {
           // validate={validate}
           validationSchema={OrderFormSchema}
           initialValues={initialValues}
-          onSubmit={this.handleSubmit}
+          onSubmit={this.props.handleSubmit}
           render={({
             errors, touched, validateForm, setFieldValue,
           }) => (
@@ -100,6 +97,10 @@ class OrderForm extends Component {
                   <label htmlFor="city">City</label>
                   <Field name="city" placeholder="City" component={CustomInputComponent} />
                 </div>
+                <div className="country form-block">
+                  <label htmlFor="country">Country</label>
+                  <Field name="country" placeholder="Country" component={CustomInputComponent} />
+                </div>
               </div>
 
               <div className="form-inline">
@@ -118,7 +119,7 @@ class OrderForm extends Component {
                 <Field name="comment" placeholder="General Comment" component={CustomTextArea} />
               </div>
 
-              <button className="fullwidth-button" type="submit">Place Order</button>
+              <button disabled={!!this.props.loading} className="fullwidth-button" type="submit">Place Order</button>
             </Form>
           )}
         />

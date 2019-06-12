@@ -34,8 +34,8 @@ const OrderFormSchema = Yup.object().shape({
   phoneNumber: Yup.number()
     .min(2, 'Too Short!')
     .required('This is a required field'),
-  comment: Yup.number()
-    .min(2, 'Too Short!')
+  comment: Yup.string(),
+  country: Yup.string()
     .required('This is a required field'),
 });
 

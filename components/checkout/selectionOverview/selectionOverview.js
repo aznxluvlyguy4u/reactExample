@@ -29,12 +29,13 @@ class SelectionOverview extends Component {
     let price = 0;
     this.props.cart.map((item) => {
       console.log(item.totalPrice);
-      price += Number(item.totalPrice);
+      price += parseFloat(item.totalPrice);
+      console.log(parseFloat(item.totalPrice));
       if (item.accessories) {
-        item.accessories.map(item => price += Number(item.totalPrice));
+        item.accessories.map(item => price += parseFloat(item.totalPrice));
       }
     });
-    this.setState({ totalPrice: price });
+    this.setState({ totalPrice: parseFloat(price).toFixed(2) });
   }
 
   render() {

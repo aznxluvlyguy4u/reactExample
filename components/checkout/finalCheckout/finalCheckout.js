@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import './finalcheckout.scss';
 import Modal from 'react-modal';
+import Router from 'next/router';
 import CheckoutItem from '../checkoutItem/checkoutItem';
 import OrderForm from '../orderForm/orderForm';
+import PlaceOrderRequest from '../../../utils/mapping/products/placeOrderRequest';
+import { orderCartItems } from '../../../utils/rest/requests/orders';
 
 const customStyles = {
   content: {
@@ -20,12 +23,13 @@ class FinalCheckout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalIsOpen: false,
+      modalIsOpen: false, loading: false,
     };
 
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   openModal() {
@@ -40,6 +44,22 @@ class FinalCheckout extends Component {
     this.setState({ modalIsOpen: false });
   }
 
+  async handleSubmit(values) {
+    const request = new PlaceOrderRequest(this.props.cart, values).returnOrder();
+    console.log(request);
+    try {
+      this.setState({ loading: true });
+      const response = await orderCartItems(request);
+      this.props.emptyCart();
+      this.closeModal();
+      this.setState({ loading: false });
+      console.log(response);
+    } catch (error) {
+      this.setState({ loading: false });
+      console.log(error);
+    }
+    // localStorage.removeItem('cart');
+  }
 
   render() {
     return (
@@ -62,7 +82,7 @@ class FinalCheckout extends Component {
           onRequestClose={this.closeModal}
           style={customStyles}
         >
-          <OrderForm />
+          <OrderForm loading={this.state.loading} handleSubmit={this.handleSubmit} />
         </Modal>
       </div>
     );

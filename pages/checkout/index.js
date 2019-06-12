@@ -15,13 +15,20 @@ class CheckoutPage extends Component {
       cart: [], loading: true,
     };
     this.removeItem = this.removeItem.bind(this);
+    this.emptyCart = this.emptyCart.bind(this);
   }
 
   async componentDidMount() {
     const cart = JSON.parse(localStorage.getItem('cart'));
     if (cart === undefined || !isEmpty(cart)) {
-      const newcart = cart.filter(item => moment(item.period.start) < moment());
-      if (newcart === undefined || !isEmpty(newcart)) {
+      const newcart = cart;
+      // const newcart = cart.map((item) => {
+      //   if (moment(item.period.start) > moment()) {
+      //     return item;
+      //   }
+      //   return null;
+      // });
+      if (cart === undefined || !isEmpty(newcart)) {
         localStorage.setItem('cart', JSON.stringify(newcart));
         try {
           const response = await checkCartAvailability(newcart);
@@ -43,6 +50,12 @@ class CheckoutPage extends Component {
     localStorage.setItem('cart', JSON.stringify(removedlist));
   }
 
+  emptyCart() {
+    const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
+    this.setState({ cart: unavailableData });
+    localStorage.setItem('cart', JSON.stringify(unavailableData));
+  }
+
   render() {
     const finalCheckoutData = this.state.cart.filter(item => item.availabilityState !== 'NOT_AVAILABLE');
     const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
@@ -59,7 +72,7 @@ class CheckoutPage extends Component {
             </div>
           </div>
           {!isEmpty(unavailableData) ? <UnavailableItems removeItem={this.removeItem} cart={unavailableData} /> : null}
-          {!isEmpty(finalCheckoutData) ? <FinalCheckout removeItem={this.removeItem} cart={finalCheckoutData} /> : null}
+          {!isEmpty(finalCheckoutData) ? <FinalCheckout emptyCart={this.emptyCart} removeItem={this.removeItem} cart={finalCheckoutData} /> : null}
         </div>
       </Default>
     );
