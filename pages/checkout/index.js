@@ -57,7 +57,9 @@ class CheckoutPage extends Component {
     localStorage.setItem('cart', JSON.stringify(removedlist));
     this.props.dispatch(setCartCount(removedlist.length));
     const obj = this.state.cart.find(item => item.uuid === uuid);
-    this.setState({ totalPrice: this.state.totalPrice - parseFloat(obj.totalPrice) });
+    if (obj.availabilityState !== 'NOT_AVAILABLE') {
+      this.setState({ totalPrice: this.state.totalPrice - parseFloat(obj.totalPrice) });
+    }
   }
 
   emptyCart() {
