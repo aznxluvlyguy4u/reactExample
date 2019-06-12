@@ -48,3 +48,7 @@ textarea, select, input, button { outline: none; }
     width:49%;
   }
 }
+
+.ReactModal__Overlay{
+  z-index:2;
+}

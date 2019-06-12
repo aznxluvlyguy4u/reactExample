@@ -55,6 +55,9 @@ class CheckoutPage extends Component {
     const removedlist = this.state.cart.filter(item => item.uuid !== uuid);
     this.setState({ cart: removedlist });
     localStorage.setItem('cart', JSON.stringify(removedlist));
+    this.props.dispatch(setCartCount(removedlist.length));
+    const obj = this.state.cart.find(item => item.uuid === uuid);
+    this.setState({ totalPrice: this.state.totalPrice - parseFloat(obj.totalPrice) });
   }
 
   emptyCart() {
