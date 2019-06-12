@@ -6,6 +6,7 @@ import CheckoutItem from '../checkoutItem/checkoutItem';
 import OrderForm from '../orderForm/orderForm';
 import PlaceOrderRequest from '../../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../../utils/rest/requests/orders';
+import Loader from '../../loader';
 
 const customStyles = {
   content: {
@@ -30,20 +31,6 @@ class FinalCheckout extends Component {
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.cart !== this.props.cart) {
-      this.setPrice();
-    }
-  }
-
-  setPrice() {
-    let price = 0;
-    this.props.cart.map((item) => {
-      price += parseFloat(item.totalPrice);
-    });
-    this.setState({ totalPrice: parseFloat(price).toFixed(2) });
   }
 
   openModal() {
@@ -100,6 +87,7 @@ class FinalCheckout extends Component {
           style={customStyles}
         >
           <OrderForm loading={this.state.loading} handleSubmit={this.handleSubmit} />
+          {this.state.loading ? <Loader /> : null}
         </Modal>
       </div>
     );
