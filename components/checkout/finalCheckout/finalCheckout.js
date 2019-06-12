@@ -32,6 +32,20 @@ class FinalCheckout extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.cart !== this.props.cart) {
+      this.setPrice();
+    }
+  }
+
+  setPrice() {
+    let price = 0;
+    this.props.cart.map((item) => {
+      price += parseFloat(item.totalPrice);
+    });
+    this.setState({ totalPrice: parseFloat(price).toFixed(2) });
+  }
+
   openModal() {
     this.setState({ modalIsOpen: true });
   }
@@ -66,16 +80,19 @@ class FinalCheckout extends Component {
       <div className="final-checkout">
         <h2>Final Checkout</h2>
         <div className="header-row">
-          <div className="sub-item">Product</div>
-          <div className="sub-item">Quantity</div>
-          <div className="sub-item">Price</div>
-          <div className="sub-item">Delivery</div>
-          <div className="sub-item">Collection</div>
-          <div className="sub-item">Availability</div>
-          <div className="sub-item">Details</div>
+          <div className="sub-item" />
+          <div className="sub-item product">Product</div>
+          <div className="sub-item quantity">Quantity</div>
+          <div className="sub-item price">Price</div>
+          <div className="sub-item delivery">Delivery</div>
+          <div className="sub-item collection">Collection</div>
+          <div className="sub-item availability">Availability</div>
+          <div className="sub-item details">Details</div>
         </div>
         {this.props.cart.map(item => <CheckoutItem removeItem={this.props.removeItem} data={item} />)}
-        <div className="checkout-row"><button onClick={this.openModal} className="submit">Place order</button></div>
+        <div className="checkout-row">
+          <button onClick={this.openModal} className="submit">Place order</button>
+        </div>
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}

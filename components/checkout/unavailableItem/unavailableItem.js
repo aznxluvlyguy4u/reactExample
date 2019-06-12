@@ -5,7 +5,7 @@ import { Collapse } from 'react-collapse';
 class UnavailableItem extends Component {
   constructor(props) {
     super(props);
-    this.state = { accesoryprice: 0, collapse: false };
+    this.state = { collapse: false };
     this.toggleCollapse = this.toggleCollapse.bind(this);
   }
 
@@ -26,15 +26,12 @@ class UnavailableItem extends Component {
 
   returnExtraAccessories() {
     if (this.props.data.accessories) {
-      let price = 0;
-      this.props.data.accessories.map(e => price += Number(e.totalPrice));
-      // this.setState({ accesoryprice: price });
       return (
         <div className="paragraph">
           <h3>Extra accessories</h3>
           <div className="content-wrapper">
             <div className="first">{this.props.data.accessories.map(e => `${e.quantity}x ${e.name}`).join(', ')}</div>
-            <div className="second">{`€${price}`}</div>
+            <div className="second">{`€${this.props.data.totalPriceAccessories}`}</div>
           </div>
         </div>
       );
@@ -64,27 +61,29 @@ class UnavailableItem extends Component {
             <div className="wrap-item">
               <div className="sub-item">
                 <div onClick={() => this.props.removeItem(this.props.data.uuid)} className="remove-item">x</div>
+              </div>
+              <div className="sub-item product">
                 <div className="column-item">
                   <span>{this.props.data.name}</span>
                   {this.props.data.images ? <img src={this.props.data.images[0].thumbnailUrl} height="50" width="80" /> : null}
                 </div>
               </div>
-              <div className="sub-item">{this.props.data.quantity}</div>
-              <div className="sub-item">{`€${this.props.data.totalPrice}`}</div>
-              <div className="sub-item">
+              <div className="sub-item quantity">{this.props.data.quantity}</div>
+              <div className="sub-item price">{`€${this.props.data.totalPrice}`}</div>
+              <div className="sub-item delivery">
                 <div className="column-item date">
                   <span>{moment(this.props.data.period.start).format('DD.MM.YYYY')}</span>
                   <span>{this.props.data.location.delivery.name}</span>
                 </div>
               </div>
-              <div className="sub-item">
+              <div className="sub-item collection">
                 <div className="column-item date">
                   <span>{moment(this.props.data.period.end).format('DD.MM.YYYY')}</span>
                   <span>{this.props.data.location.collection.name}</span>
                 </div>
               </div>
-              <div className="sub-item">{this.returnAvailabilityIcon()}</div>
-              <div className="sub-item">
+              <div className="sub-item availability">{this.returnAvailabilityIcon()}</div>
+              <div className="sub-item details">
                 <div />
               </div>
             </div>
@@ -95,10 +94,10 @@ class UnavailableItem extends Component {
                   <h3>Rental period</h3>
                   <div className="content-wrapper">
                     <div className="first">
-                      {`1 x €${this.props.data.totalPrice}`}
+                      {`1 x €${this.props.data.totalPriceProducts}`}
                     </div>
                     <div className="second">
-                      {`€${this.props.data.totalPrice}`}
+                      {`€${this.props.data.totalPriceProducts}`}
                     </div>
                   </div>
                 </div>
@@ -106,7 +105,7 @@ class UnavailableItem extends Component {
                 <div className="paragraph no-line">
                   <div className="content-wrapper">
                     <div className="first bold">Total Rental Price</div>
-                    <div className="second bold">{`€${Number(this.props.data.totalPrice)}`}</div>
+                    <div className="second bold">{`€${this.props.data.totalPrice}`}</div>
                   </div>
                 </div>
               </div>

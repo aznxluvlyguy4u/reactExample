@@ -24,10 +24,10 @@ export function NullCheckQueryParams(values) {
     queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
   }
   if (values.deliveryLocation !== '') {
-    queryParameters.deliveryLocation = JSON.decode(values.deliveryLocation.value).id;
+    queryParameters.deliveryLocation = JSON.parse(values.deliveryLocation.value).id;
   }
   if (values.collectionLocation !== '') {
-    queryParameters.collectionLocation = JSON.decode(values.collectionLocation.value).id;
+    queryParameters.collectionLocation = JSON.parse(values.collectionLocation.value).id;
   }
   if (values.deliveryDate !== '') {
     queryParameters.deliveryDate = values.deliveryDate;
@@ -44,7 +44,7 @@ export function NullCheckProps(values) {
     queryParameters.push({ column: 'q[product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
   }
   if (values.deliveryLocation !== null) {
-    queryParameters.push({ column: 'delivery_location_id', value: JSON.parse(values.deliveryLocation) });
+    queryParameters.push({ column: 'delivery_location_id', value: JSON.parse(values.deliveryLocation).id });
   }
   if (values.category !== undefined) {
     queryParameters.push({ column: 'q[product_group_id_eq]', value: values.category });

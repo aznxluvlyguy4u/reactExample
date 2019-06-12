@@ -3,11 +3,28 @@
 
 .final-checkout{
   margin-top: 100px;
+  @include for-phone-only {
+    font-size:12px;
+  }
   .sub-item{
     display:flex;
     justify-content: space-around;
     align-items: center;
     width: 17.28%;
+    &.product{
+      justify-content: flex-start;
+    }
+    @include for-phone-only {
+      &.delivery{
+        display:none;
+      }
+      &.collection{
+        display:none;
+      }
+      &.details{
+        display:none;
+      }
+    }
   }
   h2{
     font-weight: bold;
@@ -20,7 +37,7 @@
     justify-content: space-between;
     border-bottom: solid 0.3px grey;
     padding-bottom:20px;
-    padding-top:20px;
+    padding-top:50px;
   }
   .body-row{
     display:flex;

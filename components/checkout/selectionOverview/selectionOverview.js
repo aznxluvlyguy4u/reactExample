@@ -4,42 +4,10 @@ import './selectionoverview.scss';
 class SelectionOverview extends Component {
   constructor(props) {
     super(props);
-    this.state = { totalPrice: 0 };
-  }
-
-  componentDidMount() {
-    // const price = 0;
-    // this.props.cart.map((item) => {
-    //   console.log(item.totalPrice);
-    //   price += Number(item.totalPrice);
-    //   if (item.accessories) {
-    //     item.accessories.map(item => price += Number(item.totalPrice));
-    //   }
-    // });
-    // this.setState({ totalPrice: price });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.cart !== this.props.cart) {
-      this.setPrice();
-    }
-  }
-
-  setPrice() {
-    let price = 0;
-    this.props.cart.map((item) => {
-      console.log(item.totalPrice);
-      price += parseFloat(item.totalPrice);
-      console.log(parseFloat(item.totalPrice));
-      if (item.accessories) {
-        item.accessories.map(item => price += parseFloat(item.totalPrice));
-      }
-    });
-    this.setState({ totalPrice: parseFloat(price).toFixed(2) });
+    this.state = { };
   }
 
   render() {
-    console.log(this.props.cart);
     if (this.props.cart) {
       return (
         <div className="paragraph-wrapper selection-overview">
@@ -52,7 +20,7 @@ Final checkout items
             <div className="content-wrapper">
               <div className="first">{`${this.props.cart.length} items`}</div>
               <div className="second">
-                {`€${this.state.totalPrice}`}
+                {`€${this.props.totalPrice}`}
               </div>
             </div>
           </div>
@@ -67,7 +35,7 @@ Final checkout items
           <div className="paragraph no-line">
             <div className="content-wrapper">
               <div className="first bold">Total Rental Price</div>
-              <div className="second bold">{`€${this.state.totalPrice}`}</div>
+              <div className="second bold">{`€${this.props.totalPrice}`}</div>
             </div>
           </div>
         </div>

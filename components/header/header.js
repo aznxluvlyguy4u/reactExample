@@ -32,10 +32,8 @@ class Header extends React.Component {
 
   async componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
-    if (localStorage.getItem('cart')) {
-      const cart = await localStorage.getItem('cart');
-      this.props.dispatch(setCartCount(JSON.parse(cart)).length);
-    }
+    const cart = await localStorage.getItem('cart');
+    this.props.dispatch(setCartCount(JSON.parse(cart).length));
   }
 
   componentWillUnmount() {
@@ -58,8 +56,7 @@ class Header extends React.Component {
   render() {
     const { search, nav } = this.props;
     const { navType, cartCount } = this.state;
-    console.log(this.props);
-    const count = this.props.cartReducer ? this.props.cartReducer.count : 0;
+    console.log(this.props.cartReducer);
     const items = this.menuItems.map((menuItem) => {
       if (menuItem.icon === true) {
         return (
@@ -70,7 +67,7 @@ class Header extends React.Component {
                   <span className="cart-title">{menuItem.title}</span>
                   <div className="cart">
                     <div className="cart-icon" />
-                    <span>{count}</span>
+                    <span>{this.props.cartReducer ? this.props.cartReducer.count : 0}</span>
                   </div>
                 </div>
 

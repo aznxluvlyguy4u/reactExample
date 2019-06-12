@@ -64,7 +64,8 @@ class SearchForm extends Component {
         validationSchema={searchValidation}
         initialValues={initialValues}
         onSubmit={this.onSubmit.bind(this)}
-        render={setFieldValue => (
+      >
+        {({ setFieldValue }) => (
           <Form>
             <div>
               <div className="keyword form-block">
@@ -93,7 +94,7 @@ class SearchForm extends Component {
             </div>
           </Form>
         )}
-      />
+      </Formik>
     );
   }
 }

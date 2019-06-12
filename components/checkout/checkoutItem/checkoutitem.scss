@@ -17,6 +17,20 @@
       width: 17.28%;
       font-size:15px;
       font-weight:lighter;
+      &.product{
+        justify-content: flex-start;
+      }
+      @include for-phone-only {
+        &.delivery{
+          display:none;
+        }
+        &.collection{
+          display:none;
+        }
+        &.details{
+          display:none;
+        }
+      }
       .toggle{
         display: flex;
         font-size: 40px;
@@ -24,9 +38,7 @@
         cursor: pointer;
       }
       .remove-item{
-        position:absolute;
-        left: 4%;
-        font-weight:bold;
+        font-weight:normal;
         font-size:20px;
         cursor:pointer;
       }

@@ -7,12 +7,16 @@ import './checkout.scss';
 import SelectionOverview from '../../components/checkout/selectionOverview/selectionOverview';
 import FinalCheckout from '../../components/checkout/finalCheckout/finalCheckout';
 import UnavailableItems from '../../components/checkout/unavailableItems/unavailableItems';
+import Loader from '../../components/loader';
+import cartReducer from '../../reducers/cartReducer';
+import { connect } from 'react-redux';
+import { setCartCount } from '../../actions/cartActions';
 
 class CheckoutPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cart: [], loading: true,
+      cart: [], loading: false, totalPrice: 0,
     };
     this.removeItem = this.removeItem.bind(this);
     this.emptyCart = this.emptyCart.bind(this);
@@ -31,10 +35,13 @@ class CheckoutPage extends Component {
       if (cart === undefined || !isEmpty(newcart)) {
         localStorage.setItem('cart', JSON.stringify(newcart));
         try {
+          this.setState({ loading: true });
           const response = await checkCartAvailability(newcart);
-          this.setState({ cart: response.data, loading: false });
-          localStorage.setItem('cart', JSON.stringify(response.data));
+          this.setState({ cart: response.data.products, loading: false, totalPrice: response.data.totalPrice });
+          localStorage.setItem('cart', JSON.stringify(response.data.products));
+          this.props.dispatch(setCartCount(response.data.products.length));
         } catch (error) {
+          this.setState({ loading: false });
           console.log(error);
         }
       }
@@ -62,21 +69,27 @@ class CheckoutPage extends Component {
 
     return (
       <Default nav="fixed" search meta={{ title: 'checkout page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
-        <div className="page-wrapper">
+        <div className="page-wrapper checkout">
           <h1>Checkout Process</h1>
           <div className="flex-row">
-            <SelectionOverview cart={finalCheckoutData} />
+            <SelectionOverview totalPrice={this.state.totalPrice} cart={finalCheckoutData} />
             <div className="support">
               <h2>Support</h2>
-              <span>For any questions or assistance with your order please do not hesitate to contact us.</span>
+              <span>
+For any questions or assistance with your order please do not hesitate to contact us. You can give us a
+                <a href="tel:+6494461709"> call </a>
+or send an
+                <a href="mailto:someone@example.com"> email </a>
+              </span>
             </div>
           </div>
           {!isEmpty(unavailableData) ? <UnavailableItems removeItem={this.removeItem} cart={unavailableData} /> : null}
           {!isEmpty(finalCheckoutData) ? <FinalCheckout emptyCart={this.emptyCart} removeItem={this.removeItem} cart={finalCheckoutData} /> : null}
         </div>
+        {this.state.loading ? <Loader /> : null}
       </Default>
     );
   }
 }
 
-export default CheckoutPage;
+export default connect(cartReducer)(CheckoutPage);
