@@ -19,6 +19,7 @@ export function NullCheckFrontendQueryParam(values) {
 }
 
 export function NullCheckQueryParams(values) {
+  console.log(values);
   const queryParameters = {};
   if (values.keyword !== '') {
     queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
@@ -39,18 +40,19 @@ export function NullCheckQueryParams(values) {
 }
 
 export function NullCheckProps(values) {
+  console.log(values);
   const queryParameters = [];
   if (values.keyword !== '') {
     queryParameters.push({ column: 'q[product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
   }
   if (values.deliveryLocation !== null) {
-    queryParameters.push({ column: 'delivery_location_id', value: JSON.parse(values.deliveryLocation).id });
+    queryParameters.push({ column: 'delivery_location_id', value: values.deliveryLocation });
   }
   if (values.category !== undefined) {
     queryParameters.push({ column: 'q[product_group_id_eq]', value: values.category });
   }
   if (values.collectionLocation !== null) {
-    queryParameters.push({ column: 'collection_location_id', value: JSON.parse(values.collectionLocation).id });
+    queryParameters.push({ column: 'collection_location_id', value: values.collectionLocation });
   }
   if (values.collectionDate !== null) {
     queryParameters.push({ column: 'starts_at', value: values.collectionDate });
@@ -62,6 +64,7 @@ export function NullCheckProps(values) {
 }
 
 export function CreateQueryParams(state) {
+  console.log(state);
   const queryParameters = {};
   if (state.keyword !== '' && state.keyword !== undefined && state.keyword !== null) {
     queryParameters.keyword = state.keyword;
