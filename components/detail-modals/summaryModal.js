@@ -1,17 +1,26 @@
 import React, { Component } from 'react';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
+import { connect } from 'react-redux';
+import rootReducer from '../../reducers/rootReducer';
 
 class SummaryModal extends Component {
   constructor(props) {
     super(props);
-    this.state = { };
+    this.state = { dayCount: 0 };
+  }
+
+  componentDidMount() {
+    const collectionDate = moment(this.props.search.collectionDate);
+    const deliveryDate = moment(this.props.search.deliveryDate);
+    const daycount = deliveryDate.diff(collectionDate, 'days');
+    this.setState({ dayCount: daycount });
   }
 
   calculateTotalAccessoires(list) {
     // const { accessories } = this.props;
     let price = 0;
-    list.map(item => price += this.props.search.dayCount * Number(item.price));
+    list.map(item => price += this.state.dayCount * Number(item.price));
     return price;
   }
 
@@ -33,11 +42,12 @@ class SummaryModal extends Component {
   }
 
   render() {
+    console.log(this.props.search);
     const {
       accessories, search, product,
     } = this.props;
     const list = accessories.filter(item => item.quantity !== 0);
-    const totalPrice = Number(product.rates[0].price) * search.dayCount;
+    const totalPrice = Number(product.rates[0].price) * this.state.dayCount;
     const totalRate = this.calculateTotalAccessoires(list) + totalPrice;
     return (
       <div className={'form active' ? 'form active' : 'form'}>
@@ -48,7 +58,7 @@ class SummaryModal extends Component {
           <div className="paragraph">
             <h3>Rental period</h3>
             <div className="content-wrapper">
-              <div className="first">{`€${product.rates[0].price} x ${search.dayCount} days`}</div>
+              <div className="first">{`€${product.rates[0].price} x ${this.state.dayCount} days`}</div>
               <div className="second">{`€${totalPrice}`}</div>
             </div>
           </div>
@@ -101,4 +111,4 @@ class SummaryModal extends Component {
   }
 }
 
-export default SummaryModal;
+export default connect(rootReducer)(SummaryModal);

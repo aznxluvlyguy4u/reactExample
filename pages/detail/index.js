@@ -16,7 +16,6 @@ import searchReducer from '../../reducers/searchReducer';
 import { updateSearchObject } from '../../actions/searchActions';
 import rootReducer from '../../reducers/rootReducer';
 
-
 class DetailPage extends Component {
   constructor(props) {
     super(props);
@@ -51,6 +50,15 @@ class DetailPage extends Component {
 
   async componentDidMount() {
     await this.getProduct();
+    const clonedSearch = cloneDeep(this.props.searchReducer.search);
+    if (this.props.searchReducer.collectionDate && this.props.searchReducer.deliveryDate) {
+      const collectionDate = moment(clonedSearch.collectionDate);
+      const deliveryDate = moment(clonedSearch.deliveryDate);
+      const dayCount = deliveryDate.diff(collectionDate, 'days');
+      clonedSearch.dayCount = dayCount;
+    }
+    this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
+    this.setState({ search: clonedSearch });
   }
 
   async getProduct() {
