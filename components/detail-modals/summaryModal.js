@@ -34,9 +34,9 @@ class SummaryModal extends Component {
 
   render() {
     const {
-      active, index, total, item, accessories, search, product
+      active, index, total, item, accessories, search, product,
     } = this.props;
-    const list = accessories.filter((item) => item.quantity !== 0);
+    const list = accessories.filter(item => item.quantity !== 0);
     const totalPrice = Number(product.rates[0].price) * search.dayCount;
     const totalRate = this.calculateTotalAccessoires(list) + totalPrice;
     return (
@@ -92,9 +92,9 @@ class SummaryModal extends Component {
             </div>
           </div>
           <div className="button-wrapper">
-          {this.previousButton(this.props.currentStep)}
-          <button type="submit" onClick={this.props.handleSubmit} className="next-button">Add to cart</button>
-        </div>
+            {this.previousButton(this.props.currentStep)}
+            <button type="submit" onClick={this.props.handleSubmit} className="next-button">Add to cart</button>
+          </div>
         </div>
       </div>
     );

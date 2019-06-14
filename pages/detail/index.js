@@ -9,9 +9,10 @@ import './detail.scss';
 import Loader from '../../components/loader';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import cartReducer from '../../reducers/cartReducer';
 import { updateCart } from '../../actions/cartActions';
+
 
 class DetailPage extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class DetailPage extends Component {
         deliveryLocation: { id: undefined, name: undefined },
         collectionDate: undefined,
         deliveryDate: undefined,
-        dayCount: undefined,
+        dayCount: 0,
       },
     };
     this.addToCart = this.addToCart.bind(this);
@@ -104,44 +105,28 @@ class DetailPage extends Component {
   }
 
   changeItem(val) {
+    const clonedSearch = cloneDeep(this.state.search);
     if (Object.keys(val)[0] === 'collectionLocation') {
-      this.state.search.collectionLocation = JSON.parse(val[Object.keys(val)[0]]);
-      this.setState({
-        search: this.state.search,
-      });
-      return;
+      clonedSearch.collectionLocation = JSON.parse(val[Object.keys(val)[0]]);
     }
     if (Object.keys(val)[0] === 'deliveryLocation') {
-      this.state.search.deliveryLocation = JSON.parse(val[Object.keys(val)[0]]);
-      this.setState({
-        search: this.state.search,
-      });
-      return;
+      clonedSearch.deliveryLocation = JSON.parse(val[Object.keys(val)[0]]);
     }
     if (Object.keys(val)[0] === 'collectionDate') {
-      console.log('collectionDate', val[Object.keys(val)[0]]);
-      if (this.state.search.deliveryDate !== undefined) {
-        const collectionDate = moment(val[Object.keys(val)[0]]);
-        const deliveryDate = moment(this.state.search.deliveryDate);
-        this.state.search.dayCount = deliveryDate.diff(collectionDate, 'days');
-      }
-      this.state.search.deliveryDate = val[Object.keys(val)[0]];
-      this.setState({
-        search: this.state.search,
-      });
+      const collectionDate = moment(val[Object.keys(val)[0]]);
+      const deliveryDate = moment(clonedSearch.collectionDate);
+      clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
+      clonedSearch.deliveryDate = val[Object.keys(val)[0]];
     }
     if (Object.keys(val)[0] === 'deliveryDate') {
-      console.log('deliveryDate', val[Object.keys(val)[0]]);
-      if (this.state.search.collectionDate !== undefined) {
-        const deliveryDate = moment(val[Object.keys(val)[0]]);
-        const collectionDate = moment(this.state.search.collectionDate);
-        this.state.search.dayCount = deliveryDate.diff(collectionDate, 'days');
-      }
-      this.state.search.collectionDate = val[Object.keys(val)[0]];
-      this.setState({
-        search: this.state.search,
-      });
+      const deliveryDate = moment(val[Object.keys(val)[0]]);
+      const collectionDate = moment(clonedSearch.deliveryDate);
+      clonedSearch.dayCount = deliveryDate.diff(collectionDate, 'days');
+      clonedSearch.collectionDate = val[Object.keys(val)[0]];
     }
+    this.setState({
+      search: clonedSearch,
+    });
   }
 
   changeAccesoire(val) {
@@ -215,7 +200,7 @@ class DetailPage extends Component {
 
 
   render() {
-    console.log(this.state);
+    console.log(this.state.search);
     const {
       product, accessories,
     } = this.state;
