@@ -8,7 +8,7 @@
   }
   width: 60%;
   .paragraph{
-    border-bottom: solid 0.3px grey;
+    border-bottom: solid 0.3px $input-color;
     padding-bottom: 10px;
     &.no-line{
       border:none;

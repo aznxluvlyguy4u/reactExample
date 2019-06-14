@@ -19,6 +19,12 @@ class CheckoutItem extends Component {
           Items are available but might not reach selected Delivery location on time. Please contact/call the office to arrange a dedicated delivery on-board’
             </div>
           );
+        case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
+          return (
+            <div className="warning-message">
+          Items are available but not all accesories are available. Please contact/call the office to arrange a solution’
+            </div>
+          );
         default:
           return null;
       }

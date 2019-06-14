@@ -45,6 +45,7 @@ class SearchEdit extends Component {
 
   mergeObj(obj) {
     const { dispatch } = this.props;
+    console.log(obj);
     dispatch(updateSearchObject(this.props.searchReducer.search, obj));
     const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });
@@ -72,6 +73,7 @@ class SearchEdit extends Component {
   }
 
   handleSubmit(values) {
+    this.props.dispatch(updateSearchObject(values, values));
     this.props._next();
   }
 
@@ -104,8 +106,8 @@ class SearchEdit extends Component {
           <Formik
             validationSchema={validation ? searchEditValidation : undefined}
             initialValues={{
-              deliveryLocation: locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation)),
-              collectionLocation: locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation)),
+              deliveryLocation: locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.deliveryLocation)),
+              collectionLocation: locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.collectionLocation)),
               collectionDate: this.props.searchReducer.search.collectionDate,
               deliveryDate: this.props.searchReducer.search.deliveryDate,
             }}
@@ -122,31 +124,31 @@ class SearchEdit extends Component {
               setFieldValue,
               /* and other goodies */
             }) => (
-        <Form>
-          <div>
-                <div className="form-inline">
-                   <div className="edit-row">
+              <Form>
+                <div>
+                  <div className="form-inline">
+                    <div className="edit-row">
                       {label ? <label htmlFor="deliveryLocation">Delivery Location</label> : null}
-                      <Field placeholder="Delivery Location" onChange={onChange || null} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" setFieldValue={setFieldValue} component={CustomSelect} />
+                      <Field placeholder="Delivery Location" onChange={onChange || null} value={locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" setFieldValue={setFieldValue} component={CustomSelect} />
                     </div>
-                   <div className="edit-row">
-                       {label ? <label htmlFor="deliveryLocation">Collection Location</label> : null}
-                       <Field placeholder="Collection Location" onChange={onChange || null} value={locations.find(x => x.value === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
-                     </div>
-                   <div className="other-wrapper">
+                    <div className="edit-row">
+                      {label ? <label htmlFor="deliveryLocation">Collection Location</label> : null}
+                      <Field placeholder="Collection Location" onChange={onChange || null} value={locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
+                    </div>
+                    <div className="other-wrapper">
                       {label ? (
                         <div className="label-wrapper">
-                        <label htmlFor="collectionDateRange">Collection Date</label>
-                        <label htmlFor="collectionDateRange">Delivery Date</label>
-                      </div>
+                          <label htmlFor="collectionDateRange">Collection Date</label>
+                          <label htmlFor="collectionDateRange">Delivery Date</label>
+                        </div>
                       ) : null}
                       <Field validation={validation} placeholders={['Delivery Date', 'Collection Date']} onChange={onChange || null} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Delivery Date" setFieldValue={setFieldValue} component={DatePicker} />
                     </div>
-                   {submit ? this.previousButton(this.props.currentStep) : null}
-                   {submit ? this.nextButton(this.props.currentStep, handleSubmit) : null}
-                 </div>
-              </div>
-        </Form>
+                    {submit ? this.previousButton(this.props.currentStep) : null}
+                    {submit ? this.nextButton(this.props.currentStep, handleSubmit) : null}
+                  </div>
+                </div>
+              </Form>
             )}
           </Formik>
         </div>
