@@ -12,6 +12,9 @@ import { connect } from 'react-redux';
 import { isEmpty, cloneDeep } from 'lodash';
 import cartReducer from '../../reducers/cartReducer';
 import { updateCart } from '../../actions/cartActions';
+import searchReducer from '../../reducers/searchReducer';
+import { updateSearchObject } from '../../actions/searchActions';
+import rootReducer from '../../reducers/rootReducer';
 
 
 class DetailPage extends Component {
@@ -124,6 +127,7 @@ class DetailPage extends Component {
       clonedSearch.dayCount = deliveryDate.diff(collectionDate, 'days');
       clonedSearch.collectionDate = val[Object.keys(val)[0]];
     }
+    this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
     this.setState({
       search: clonedSearch,
     });
@@ -236,4 +240,4 @@ class DetailPage extends Component {
   }
 }
 
-export default connect(cartReducer)(DetailPage);
+export default connect(rootReducer)(DetailPage);

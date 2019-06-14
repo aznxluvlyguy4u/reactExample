@@ -34,11 +34,10 @@ class SearchForm extends Component {
   }
 
   onSubmit(values) {
+    console.log(values);
     const { dispatch } = this.props;
     const params = NullCheckQueryParams(values);
-    dispatch(updateSearch({
-      keyword: values.keyword,
-    }));
+    // dispatch(updateSearch(values, values));
 
     CreateQueryParams(values);
     if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {

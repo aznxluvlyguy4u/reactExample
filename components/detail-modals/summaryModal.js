@@ -34,10 +34,9 @@ class SummaryModal extends Component {
 
   render() {
     const {
-      active, index, total, item, accessories, search, product,
+      accessories, search, product,
     } = this.props;
     const list = accessories.filter(item => item.quantity !== 0);
-    console.log(search);
     const totalPrice = Number(product.rates[0].price) * search.dayCount;
     const totalRate = this.calculateTotalAccessoires(list) + totalPrice;
     return (

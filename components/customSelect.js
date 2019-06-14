@@ -39,7 +39,7 @@ class CustomSelect extends Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = { value: undefined };
+    this.state = { value: this.props.value };
     this.onChange = this.onChange.bind(this);
   }
 
@@ -62,7 +62,6 @@ class CustomSelect extends Component {
     const {
       form, field, options, placeholder, isSearchable, arrow,
     } = this.props;
-    console.log(options);
     const { value } = this.state;
     return (
       <div className={form.touched[field.name]
@@ -72,7 +71,7 @@ class CustomSelect extends Component {
           styles={colourStyles}
           onChange={this.onChange}
           options={options}
-          value={value || this.props.value}
+          value={value}
           placeholder={placeholder || 'Default'}
           isSearchable={isSearchable !== false}
         >

@@ -46,7 +46,7 @@ class SearchEdit extends Component {
   mergeObj(obj) {
     const { dispatch } = this.props;
     console.log(obj);
-    dispatch(updateSearchObject(this.props.searchReducer.search, obj));
+    // dispatch(updateSearchObject(this.props.searchReducer.search, obj));
     const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });
   }
@@ -73,7 +73,7 @@ class SearchEdit extends Component {
   }
 
   handleSubmit(values) {
-    this.props.dispatch(updateSearchObject(values, values));
+    // this.props.dispatch(updateSearchObject(values, values));
     this.props._next();
   }
 
