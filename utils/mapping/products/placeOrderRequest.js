@@ -3,8 +3,6 @@ import { isEmpty } from 'lodash';
 
 export default class PlaceOrderRequest {
   constructor(cart, form) {
-    console.log(cart);
-    console.log(form);
     this.cart = cart;
     this.firstName = form.firstName;
     this.lastName = form.lastName;

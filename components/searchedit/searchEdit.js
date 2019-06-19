@@ -45,7 +45,6 @@ class SearchEdit extends Component {
 
   mergeObj(obj) {
     const { dispatch } = this.props;
-    console.log(obj);
     // dispatch(updateSearchObject(this.props.searchReducer.search, obj));
     const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });
@@ -138,11 +137,11 @@ class SearchEdit extends Component {
                     <div className="other-wrapper">
                       {label ? (
                         <div className="label-wrapper">
+                         <label htmlFor="collectionDateRange">Delivery Date</label>
                           <label htmlFor="collectionDateRange">Collection Date</label>
-                          <label htmlFor="collectionDateRange">Delivery Date</label>
                         </div>
                       ) : null}
-                      <Field validation={validation} placeholders={['Delivery Date', 'Collection Date']} onChange={onChange || null} startDate={this.props.searchReducer.search.collectionDate} endDate={this.props.searchReducer.search.deliveryDate} name="collectionDate" placeholder="Delivery Date" setFieldValue={setFieldValue} component={DatePicker} />
+                      <Field validation={validation} placeholders={['Delivery Date', 'Collection Date']} onChange={onChange || null} startDate={this.props.searchReducer.search.deliveryDate} endDate={this.props.searchReducer.search.collectionDate} name="collectionDate" placeholder="Delivery Date" setFieldValue={setFieldValue} component={DatePicker} />
                     </div>
                     {submit ? this.previousButton(this.props.currentStep) : null}
                     {submit ? this.nextButton(this.props.currentStep, handleSubmit) : null}

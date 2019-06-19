@@ -13,7 +13,8 @@ class SummaryModal extends Component {
   componentDidMount() {
     const collectionDate = moment(this.props.search.collectionDate);
     const deliveryDate = moment(this.props.search.deliveryDate);
-    const daycount = deliveryDate.diff(collectionDate, 'days');
+    console.log(collectionDate, deliveryDate);
+    const daycount = collectionDate.diff(deliveryDate, 'days');
     this.setState({ dayCount: daycount });
   }
 

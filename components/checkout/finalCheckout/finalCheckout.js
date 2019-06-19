@@ -47,14 +47,12 @@ class FinalCheckout extends Component {
 
   async handleSubmit(values) {
     const request = new PlaceOrderRequest(this.props.cart, values).returnOrder();
-    console.log(request);
     try {
       this.setState({ loading: true });
       const response = await orderCartItems(request);
       this.props.emptyCart();
       this.closeModal();
       this.setState({ loading: false });
-      console.log(response);
     } catch (error) {
       this.setState({ loading: false });
       console.log(error);

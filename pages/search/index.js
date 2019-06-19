@@ -163,8 +163,6 @@ class SearchPage extends Component {
     const {
       products, loading, notFound, total_page_count, current_page,
     } = this.state;
-    console.log(`current page: ${current_page}`);
-    console.log(`total pages: ${total_page_count}`);
     return (
       <Default nav="fixed" search meta={this.meta}>
         <SearchEdit onChange={this.mergeObj} />

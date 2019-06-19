@@ -18,7 +18,6 @@ class SearchModal extends Component {
   }
 
   closeModal() {
-    console.log('close');
     this.setState({
       modalIsOpen: false,
     });

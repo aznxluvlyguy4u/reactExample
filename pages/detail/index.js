@@ -15,6 +15,7 @@ import { updateCart } from '../../actions/cartActions';
 import searchReducer from '../../reducers/searchReducer';
 import { updateSearchObject } from '../../actions/searchActions';
 import rootReducer from '../../reducers/rootReducer';
+import { getLocations } from '../../utils/rest/requests/locations';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class DetailPage extends Component {
         deliveryDate: undefined,
         dayCount: 0,
       },
+      locations: [],
     };
     this.addToCart = this.addToCart.bind(this);
     this.changeItem = this.changeItem.bind(this);
@@ -49,13 +51,21 @@ class DetailPage extends Component {
   }
 
   async componentDidMount() {
+    // localStorage.removeItem('cart');
     await this.getProduct();
     const clonedSearch = cloneDeep(this.props.searchReducer.search);
     if (this.props.searchReducer.collectionDate && this.props.searchReducer.deliveryDate) {
       const collectionDate = moment(clonedSearch.collectionDate);
       const deliveryDate = moment(clonedSearch.deliveryDate);
+      console.log(deliveryDate.toString(), collectionDate.toString())
       const dayCount = deliveryDate.diff(collectionDate, 'days');
       clonedSearch.dayCount = dayCount;
+    }
+    try {
+      const response = await getLocations();
+      this.setState({ locations: response.data });
+    } catch (error) {
+      console.log(error);
     }
     this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
     this.setState({ search: clonedSearch });
@@ -101,7 +111,7 @@ class DetailPage extends Component {
   }
 
   addToCart() {
-    const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
+    const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations, this.state.locations).returnOrder();
     this.props.dispatch(updateCart(this.props.cartReducer.count));
     console.log(newobj);
     if (localStorage.getItem('cart')) {
@@ -125,15 +135,17 @@ class DetailPage extends Component {
     }
     if (Object.keys(val)[0] === 'collectionDate') {
       const collectionDate = moment(val[Object.keys(val)[0]]);
-      const deliveryDate = moment(clonedSearch.collectionDate);
+      const deliveryDate = moment(clonedSearch.deliveryDate);
+      console.log(deliveryDate.toString(), collectionDate.toString())
       clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
-      clonedSearch.deliveryDate = val[Object.keys(val)[0]];
+      clonedSearch.collectionDate = val[Object.keys(val)[0]];
     }
     if (Object.keys(val)[0] === 'deliveryDate') {
       const deliveryDate = moment(val[Object.keys(val)[0]]);
-      const collectionDate = moment(clonedSearch.deliveryDate);
-      clonedSearch.dayCount = deliveryDate.diff(collectionDate, 'days');
-      clonedSearch.collectionDate = val[Object.keys(val)[0]];
+      const collectionDate = moment(clonedSearch.collectionDate);
+      console.log(deliveryDate.toString(), collectionDate.toString())
+      clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
+      clonedSearch.deliveryDate = val[Object.keys(val)[0]];
     }
     this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
     this.setState({
@@ -212,7 +224,6 @@ class DetailPage extends Component {
 
 
   render() {
-    console.log(this.state.search);
     const {
       product, accessories,
     } = this.state;

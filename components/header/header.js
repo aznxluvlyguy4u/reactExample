@@ -56,7 +56,6 @@ class Header extends React.Component {
   render() {
     const { search, nav } = this.props;
     const { navType, cartCount } = this.state;
-    console.log(this.props.cartReducer);
     const items = this.menuItems.map((menuItem) => {
       if (menuItem.icon === true) {
         return (

@@ -34,7 +34,6 @@ class SearchForm extends Component {
   }
 
   onSubmit(values) {
-    console.log(values);
     const { dispatch } = this.props;
     const params = NullCheckQueryParams(values);
     // dispatch(updateSearch(values, values));
@@ -83,8 +82,8 @@ class SearchForm extends Component {
               </div>
               <div className="date form-block">
                 <div className="label-wrapper">
+                  <label htmlFor="collectionDateRange">Delivery Date</label>
                   <label htmlFor="collectionDateRange">Collection Date</label>
-                  <label htmlFor="collectionDateRange">Pickup Date</label>
                 </div>
 
                 <Field placeholders={['Date', 'Date']} onChange={() => console.log('test')} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />

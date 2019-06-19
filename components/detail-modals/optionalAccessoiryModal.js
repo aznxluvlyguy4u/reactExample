@@ -51,7 +51,6 @@ class OptionalAccessoiryModal extends Component {
 
   submitConfiguration(values) {
     // this.setState({configurations: values})
-    console.log(values);
   }
 
   render() {
