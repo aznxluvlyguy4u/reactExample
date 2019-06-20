@@ -1,8 +1,8 @@
 import moment from 'moment';
 import React, { Component } from 'react';
-import OptionalAccessoiryModal from '../../components/detail-modals/optionalAccessoiryModal';
-import SearchModal from '../../components/detail-modals/searchModal';
-import SummaryModal from '../../components/detail-modals/summaryModal';
+import OptionalAccessoryModal from '../../components/detailSubViews/optionalAccessoryModal';
+import SearchView from '../../components/detailSubViews/searchView';
+import SummaryView from '../../components/detailSubViews/summaryView';
 import Default from '../../layouts/default';
 import { getProductById } from '../../utils/rest/requests/products';
 import './detail.scss';
@@ -202,7 +202,7 @@ class DetailPage extends Component {
     return (
       <div>
         <div className="item-wrap">
-          {product.accessories ? product.accessories.map(item => <OptionalAccessoiryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
+          {product.accessories ? product.accessories.map(item => <OptionalAccessoryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
         </div>
         <div className="button-wrapper">
           {this.previousButton(this.state.currentStep)}
@@ -217,7 +217,7 @@ class DetailPage extends Component {
       accessories, currentStep, item,
     } = this.state;
     if (isEmpty(product.accessories)) {
-      return currentStep === 2 ? <SummaryModal currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
+      return currentStep === 2 ? <SummaryView currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
     }
     return currentStep === 2 ? this.returnAccessoires(product) : null;
   }
@@ -240,9 +240,9 @@ class DetailPage extends Component {
               </div>
               <div className="form-wrapper">
                 <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
-                <SearchModal onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
+                <SearchView onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
                 {this.renderSecondView(product)}
-                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryModal currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
+                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryView currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
               </div>
             </div>
           </div>

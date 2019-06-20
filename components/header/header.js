@@ -33,7 +33,11 @@ class Header extends React.Component {
   async componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
     const cart = await localStorage.getItem('cart');
-    this.props.dispatch(setCartCount(JSON.parse(cart).length));
+    if (cart){
+      this.props.dispatch(setCartCount(JSON.parse(cart).length));
+    } else {
+      this.props.dispatch(setCartCount(0));
+    }
   }
 
   componentWillUnmount() {

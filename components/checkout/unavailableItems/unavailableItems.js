@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UnavailableItem from '../unavailableItem/unavailableItem';
+import UnavailableItem from './unavailableItem/unavailableItem';
 
 class UnavailableItems extends Component {
   constructor(props) {

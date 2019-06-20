@@ -5,7 +5,7 @@ import {
 } from 'formik';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './orderform.scss';
-import CustomTextArea from '../../customTextArea/customTextArea';
+import CustomTextArea from '../../formComponents/customTextArea/customTextArea';
 import OrderFormSchema from './orderFormSchema';
 
 const customStyles = {

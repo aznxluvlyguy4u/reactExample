@@ -8,7 +8,7 @@ import slugify from 'slugify';
 import { updateSearch, updateSearchObject } from '../../actions/searchActions';
 import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
-import SearchEdit from '../../components/searchedit/searchEdit';
+import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';

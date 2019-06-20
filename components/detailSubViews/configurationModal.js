@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import { transformConfigurationData } from '../../utils/data/configurationDataUtil';
-import CustomSelect from '../customSelect';
+import CustomSelect from '../formComponents/select/customSelect';
 import './modal.scss';
 
 const customStyles = {

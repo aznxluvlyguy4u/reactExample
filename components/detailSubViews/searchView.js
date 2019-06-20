@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { isEmpty } from 'lodash';
-import SearchEdit from '../searchedit/searchEdit';
+import SearchEdit from '../searchComponents/searchedit/searchEdit';
 import ConfigurationModal from './configurationModal';
 
-class SearchModal extends Component {
+class SearchView extends Component {
   constructor(props) {
     super(props);
     this.state = { modalIsOpen: false };
@@ -46,4 +46,4 @@ class SearchModal extends Component {
   }
 }
 
-export default SearchModal;
+export default SearchView;

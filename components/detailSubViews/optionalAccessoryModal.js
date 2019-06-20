@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { isEmpty, cloneDeep } from 'lodash';
-import CustomSelect from '../customSelect';
+import CustomSelect from '../formComponents/select/customSelect';
 import ConfigurationModal from './configurationModal';
 
 
-class OptionalAccessoiryModal extends Component {
+class OptionalAccessoryModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -104,4 +104,4 @@ class OptionalAccessoiryModal extends Component {
   }
 }
 
-export default OptionalAccessoiryModal;
+export default OptionalAccessoryModal;

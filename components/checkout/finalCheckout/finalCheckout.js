@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './finalcheckout.scss';
 import Modal from 'react-modal';
 import Router from 'next/router';
-import CheckoutItem from '../checkoutItem/checkoutItem';
+import CheckoutItem from './checkoutItem/checkoutItem';
 import OrderForm from '../orderForm/orderForm';
 import PlaceOrderRequest from '../../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../../utils/rest/requests/orders';

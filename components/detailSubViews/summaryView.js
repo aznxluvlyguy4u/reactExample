@@ -4,7 +4,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import rootReducer from '../../reducers/rootReducer';
 
-class SummaryModal extends Component {
+class SummaryView extends Component {
   constructor(props) {
     super(props);
     this.state = { dayCount: 0 };
@@ -112,4 +112,4 @@ class SummaryModal extends Component {
   }
 }
 
-export default connect(rootReducer)(SummaryModal);
+export default connect(rootReducer)(SummaryView);
