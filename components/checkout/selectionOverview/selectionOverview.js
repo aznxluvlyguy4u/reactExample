@@ -20,7 +20,7 @@ Final checkout items
             <div className="content-wrapper">
               <div className="first">{`${this.props.cart.length} items`}</div>
               <div className="second">
-                {`€${this.props.totalPrice}`}
+                {`€${this.props.totalPrice ? this.props.totalPrice : 0.00}`}
               </div>
             </div>
           </div>
@@ -35,7 +35,7 @@ Final checkout items
           <div className="paragraph no-line">
             <div className="content-wrapper">
               <div className="first bold">Total Rental Price</div>
-              <div className="second bold">{`€${this.props.totalPrice}`}</div>
+              <div className="second bold">{`€${this.props.totalPrice ? this.props.totalPrice : 0.00}`}</div>
             </div>
           </div>
         </div>

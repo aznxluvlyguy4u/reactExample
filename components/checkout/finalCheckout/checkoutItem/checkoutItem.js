@@ -57,6 +57,8 @@ class CheckoutItem extends Component {
         return <img height="20" width="20" src="/static/images/available.png" />;
       case 'AVAILABLE_BUT_DELAYED':
         return <img height="20" width="20" src="/static/images/available.png" />;
+      case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
+          return <img height="20" width="20" src="/static/images/available.png" />;
       case 'NOT_AVAILABLE':
         return <img height="20" width="20" src="/static/images/unavailable.png" />;
     }

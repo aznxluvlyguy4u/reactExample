@@ -17,7 +17,7 @@ export function transformLocationData(locations) {
     valueobj.id = locations[key].id;
     valueobj.name = locations[key].name;
 
-    obj.value = JSON.stringify(valueobj);
+    obj.value = valueobj;
     obj.label = `${locations[key].name}`;
     return obj;
   });

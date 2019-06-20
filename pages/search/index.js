@@ -16,6 +16,7 @@ import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
+import { getLocations } from '../../utils/rest/requests/locations';
 
 const getHTML = products => products.map(item => (
   <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
@@ -35,7 +36,7 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false,
+      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false, locations: [],
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
     this.counter = 0;
@@ -80,9 +81,24 @@ class SearchPage extends Component {
     if (keyword !== '') {
       this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
     }
-    dispatch(updateSearch({
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-    }));
+
+    try {
+      const response = await getLocations();
+      this.setState({locations: response.data})
+
+      const deliveryLocationNew = response.data.find((item) => item.id === Number(deliveryLocation));
+      const collectionLocationNew = response.data.find((item) => item.id === Number(collectionLocation));
+      
+      dispatch(updateSearch({
+        keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
+      }));
+    } catch (error){
+      console.log(error);
+    }
+
+      // dispatch(updateSearch({
+      //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+      // }));
 
     if (keyword === '' && category_id) {
       this.setState({ notFound: false });
@@ -102,9 +118,25 @@ class SearchPage extends Component {
 
     if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
-      dispatch(updateSearch({
-        keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-      }));
+      
+      if (!isEmpty(this.state.locations)){
+        const deliveryLocationNew = this.state.locations.find((item) => item.id === Number(deliveryLocation));
+        const collectionLocationNew = this.state.locations.find((item) => item.id === Number(collectionLocation));
+      
+        dispatch(updateSearch({
+          keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
+        }));
+      } else {
+        const response = await getLocations();
+        this.setState({locations: response.data});
+
+        const deliveryLocationNew = response.data.find((item) => item.id === Number(deliveryLocation));
+        const collectionLocationNew = response.data.find((item) => item.id === Number(collectionLocation));
+      
+        dispatch(updateSearch({
+          keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
+        }));
+      }
       if (keyword === '' || category_id === '') {
         this.setState({ notFound: true, loading: false });
       } else {
@@ -148,12 +180,13 @@ class SearchPage extends Component {
 
   mergeObj(obj) {
     const { dispatch } = this.props;
-    if (obj.collectionLocation !== '' && obj.collectionLocation !== undefined && obj.collectionLocation !== null) {
-      obj.collectionLocation = JSON.parse(obj.collectionLocation).id;
-    }
-    if (obj.deliveryLocation !== '' && obj.deliveryLocation !== undefined && obj.deliveryLocation !== null) {
-      obj.deliveryLocation = JSON.parse(obj.deliveryLocation).id;
-    }
+    // if (obj.collectionLocation !== '' && obj.collectionLocation !== undefined && obj.collectionLocation !== null) {
+    //   obj.collectionLocation = JSON.parse(obj.collectionLocation).id;
+    // }
+    // if (obj.deliveryLocation !== '' && obj.deliveryLocation !== undefined && obj.deliveryLocation !== null) {
+    //   obj.deliveryLocation = JSON.parse(obj.deliveryLocation).id;
+    // }
+    console.log(obj);
     dispatch(updateSearchObject(this.props.searchReducer.search, obj));
     const query = CreateQueryParams(this.props.searchReducer.search);
     Router.push({ pathname: '/search', query });

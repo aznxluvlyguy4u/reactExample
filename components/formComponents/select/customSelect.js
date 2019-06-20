@@ -48,7 +48,7 @@ class CustomSelect extends Component {
     setFieldValue(field.name, value);
     this.setDropdownValue(value);
     const obj = {};
-    obj[field.name] = value.value.toString();
+    obj[field.name] = value.value;
     if (onChange) {
       onChange(obj);
     }

@@ -34,6 +34,7 @@ class SearchForm extends Component {
   }
 
   onSubmit(values) {
+    console.log(values);
     const { dispatch } = this.props;
     const params = NullCheckQueryParams(values);
     // dispatch(updateSearch(values, values));

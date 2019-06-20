@@ -99,14 +99,14 @@ class SearchEdit extends Component {
     const submitForm = this.handleSubmit;
     const { locations } = this.state;
     const currentStep = this.props.currentStep || this.props.currentStep;
-    if (!isEmpty(locations)) {
+    if (!isEmpty(locations) && this.props.searchReducer.search) {
       return (
         <div className="searchedit">
           <Formik
             validationSchema={validation ? searchEditValidation : undefined}
             initialValues={{
-              deliveryLocation: locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.deliveryLocation)),
-              collectionLocation: locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.collectionLocation)),
+              deliveryLocation: this.props.searchReducer.search.deliveryLocation ? {label: this.props.searchReducer.search.deliveryLocation.name, value: this.props.searchReducer.search.deliveryLocation} : '',
+              collectionLocation:this.props.searchReducer.search.collectionLocation ? {label: this.props.searchReducer.search.collectionLocation.name, value: this.props.searchReducer.search.collectionLocation} : '',
               collectionDate: this.props.searchReducer.search.collectionDate,
               deliveryDate: this.props.searchReducer.search.deliveryDate,
             }}
@@ -128,11 +128,11 @@ class SearchEdit extends Component {
                   <div className="form-inline">
                     <div className="edit-row">
                       {label ? <label htmlFor="deliveryLocation">Delivery Location</label> : null}
-                      <Field placeholder="Delivery Location" onChange={onChange || null} value={locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.deliveryLocation))} options={locations} name="deliveryLocation" setFieldValue={setFieldValue} component={CustomSelect} />
+                      <Field placeholder="Delivery Location" onChange={onChange || null} value={this.props.searchReducer.search.deliveryLocation ? {label: this.props.searchReducer.search.deliveryLocation.name, value: this.props.searchReducer.search.deliveryLocation} : null} options={locations} name="deliveryLocation" setFieldValue={setFieldValue} component={CustomSelect} />
                     </div>
                     <div className="edit-row">
                       {label ? <label htmlFor="deliveryLocation">Collection Location</label> : null}
-                      <Field placeholder="Collection Location" onChange={onChange || null} value={locations.find(x => JSON.parse(x.value).id === parseInt(this.props.searchReducer.search.collectionLocation))} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
+                      <Field placeholder="Collection Location" onChange={onChange || null} value={this.props.searchReducer.search.collectionLocation ? {label: this.props.searchReducer.search.collectionLocation.name, value: this.props.searchReducer.search.collectionLocation} : null} options={locations} name="collectionLocation" setFieldValue={setFieldValue} component={CustomSelect} />
                     </div>
                     <div className="other-wrapper">
                       {label ? (
