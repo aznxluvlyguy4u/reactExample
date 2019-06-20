@@ -61,12 +61,12 @@ class DetailPage extends Component {
       const dayCount = deliveryDate.diff(collectionDate, 'days');
       clonedSearch.dayCount = dayCount;
     }
-    try {
-      const response = await getLocations();
-      this.setState({ locations: response.data });
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await getLocations();
+    //   this.setState({ locations: response.data });
+    // } catch (error) {
+    //   console.log(error);
+    // }
     this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
     this.setState({ search: clonedSearch });
   }
@@ -111,7 +111,7 @@ class DetailPage extends Component {
   }
 
   addToCart() {
-    const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations, this.state.locations).returnOrder();
+    const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
     this.props.dispatch(updateCart(this.props.cartReducer.count));
     console.log(newobj);
     if (localStorage.getItem('cart')) {
