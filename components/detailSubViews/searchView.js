@@ -33,6 +33,10 @@ class SearchView extends Component {
     }
     return (
       <div className={'active' ? 'form active' : 'form'}>
+         <div className="titlewrapper">
+            <h3>Add to cart</h3>
+            <span>{this.props.currentStep+'/'+this.props.total}</span>
+         </div>
         <SearchEdit _prev={this.props._prev} _next={this.props._next} currentStep={this.props.currentStep} onChange={this.props.handleChange} label submit handleSubmit={handleSubmit} validation />
         {!isEmpty(data.configurations) ? (
           <button type="button" onClick={this.toggleModal} className="configure">

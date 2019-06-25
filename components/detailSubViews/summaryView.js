@@ -53,14 +53,15 @@ class SummaryView extends Component {
     return (
       <div className={'form active' ? 'form active' : 'form'}>
         <div className="titlewrapper">
-          <h3>Add to cart</h3>
+          <h3>{`Add to cart`}</h3>
+          <span>{this.props.currentStep+'/'+this.props.total}</span>
         </div>
         <div className="paragraph-wrapper">
           <div className="paragraph">
             <h3>Rental period</h3>
             <div className="content-wrapper">
-              <div className="first">{`€${product.rates[0].price} x ${this.state.dayCount} days`}</div>
-              <div className="second">{`€${totalPrice}`}</div>
+              <div className="first">{`€${parseFloat(product.rates[0].price).toFixed(2)} x ${this.state.dayCount} days`}</div>
+              <div className="second">{`€${parseFloat(totalPrice).toFixed(2)}`}</div>
             </div>
           </div>
           {!isEmpty(list) ? (
@@ -96,7 +97,6 @@ class SummaryView extends Component {
             </div>
           </div>
           <div className="paragraph no-line">
-            {/* <h3>Delivery fees</h3> */}
             <div className="content-wrapper">
               <div className="first bold">Total Rental Price</div>
               <div className="second bold">{`€${totalRate.toFixed(2)}`}</div>

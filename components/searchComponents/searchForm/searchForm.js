@@ -12,6 +12,7 @@ import CustomSelect from '../../formComponents/select/customSelect';
 import CustomInputComponent from '../../signup/customInputComponent';
 import './searchForm.scss';
 import searchValidation from './searchValidation';
+import { handleGeneralError } from '../../../utils/rest/error/toastHandler';
 
 const initialValues = {
   keyword: '',
@@ -52,6 +53,7 @@ class SearchForm extends Component {
       const response = await getLocations();
       this.setState({ locations: transformLocationData(response.data) });
     } catch (error) {
+      handleGeneralError();
       console.log(error);
     }
   }

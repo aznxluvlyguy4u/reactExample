@@ -12,6 +12,7 @@ import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
 import './searchedit.scss';
 import searchEditValidation from './searchEditValidation';
+import { handleGeneralError } from '../../../utils/rest/error/toastHandler';
 
 class SearchEdit extends Component {
   constructor(props) {
@@ -39,6 +40,7 @@ class SearchEdit extends Component {
       const response = await getLocations();
       this.setState({ locations: transformLocationData(response.data) });
     } catch (error) {
+      handleGeneralError();
       console.log(error);
     }
   }

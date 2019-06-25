@@ -31,6 +31,7 @@ class DetailPage extends Component {
         dayCount: 0,
       },
       locations: [],
+      total: undefined,
     };
     this.addToCart = this.addToCart.bind(this);
     this.changeItem = this.changeItem.bind(this);
@@ -70,8 +71,12 @@ class DetailPage extends Component {
       this.setState({ product: response.data });
       const arr = [];
       if (response.data.accessories) {
+        this.setState({total: 3});
         response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0, name: item.name }));
         this.setState({ accessories: arr });
+      }
+      if (isEmpty(response.data.accessories)) {
+        this.setState({total: 2});
       }
       if (response.data.configurations) {
         const array = [];
@@ -128,14 +133,12 @@ class DetailPage extends Component {
     if (Object.keys(val)[0] === 'collectionDate') {
       const collectionDate = moment(val[Object.keys(val)[0]]);
       const deliveryDate = moment(clonedSearch.deliveryDate);
-      console.log(deliveryDate.toString(), collectionDate.toString());
       clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
       clonedSearch.collectionDate = val[Object.keys(val)[0]];
     }
     if (Object.keys(val)[0] === 'deliveryDate') {
       const deliveryDate = moment(val[Object.keys(val)[0]]);
       const collectionDate = moment(clonedSearch.collectionDate);
-      console.log(deliveryDate.toString(), collectionDate.toString());
       clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
       clonedSearch.deliveryDate = val[Object.keys(val)[0]];
     }
@@ -193,6 +196,10 @@ class DetailPage extends Component {
   returnAccessoires(product) {
     return (
       <div>
+      <div className="titlewrapper">
+            <h3>Select Optional Accessories</h3>
+            <span>{this.state.currentStep+'/'+this.state.total}</span>
+         </div>
         <div className="item-wrap">
           {product.accessories ? product.accessories.map(item => <OptionalAccessoryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
         </div>
@@ -209,7 +216,7 @@ class DetailPage extends Component {
       accessories, currentStep, item,
     } = this.state;
     if (isEmpty(product.accessories)) {
-      return currentStep === 2 ? <SummaryView currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
+      return currentStep === 2 ? <SummaryView total={this.state.total} currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
     }
     return currentStep === 2 ? this.returnAccessoires(product) : null;
   }
@@ -220,7 +227,6 @@ class DetailPage extends Component {
       product, accessories,
     } = this.state;
     if (product) {
-      console.log(product.description);
       return (
         <Default nav="fixed" search meta={{ title: `${product.name} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
           <div className="page-wrapper">
@@ -232,10 +238,9 @@ class DetailPage extends Component {
                 <span>{product.description[0].custom_product_description_paragraph_1}</span>
               </div>
               <div className="form-wrapper">
-                <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
-                <SearchView configurationsstate={this.state.configurations} onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
+                <SearchView total={this.state.total} configurationsstate={this.state.configurations} onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
                 {this.renderSecondView(product)}
-                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryView currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
+                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryView total={this.state.total} currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
               </div>
             </div>
           </div>

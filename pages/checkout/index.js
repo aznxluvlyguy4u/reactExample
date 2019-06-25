@@ -11,6 +11,7 @@ import Loader from '../../components/loader';
 import cartReducer from '../../reducers/cartReducer';
 import { connect } from 'react-redux';
 import { setCartCount } from '../../actions/cartActions';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 class CheckoutPage extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class CheckoutPage extends Component {
           this.props.dispatch(setCartCount(response.data.products.length));
         } catch (error) {
           this.setState({ loading: false });
+          handleGeneralError();
           console.log(error);
         }
       }

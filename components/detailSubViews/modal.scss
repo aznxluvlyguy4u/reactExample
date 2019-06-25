@@ -1,5 +1,18 @@
 @import '../../assets/scss/_variables';
 @import '../../assets/scss/_mixins';
+.title-wrapper {
+  min-height: 50px;
+}
+.titlewrapper{
+  display: flex;
+width: 100%;
+justify-content: space-between;
+align-items: center;
+span{
+  color: $yellow;
+  font-weight: lighter;
+}
+}
 
 .configuration-wrapper{
   .selectfield{
