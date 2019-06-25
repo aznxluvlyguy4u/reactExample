@@ -40,7 +40,7 @@ class SearchView extends Component {
                 Advanced Configuration
           </button>
         ) : null}
-        <ConfigurationModal onChangeConfiguration={this.props.onChangeConfiguration} quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
+        <ConfigurationModal configurationsstate={this.props.configurationsstate} onChangeConfiguration={this.props.onChangeConfiguration} quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
       </div>
     );
   }

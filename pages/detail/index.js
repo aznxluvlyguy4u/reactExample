@@ -120,10 +120,10 @@ class DetailPage extends Component {
   changeItem(val) {
     const clonedSearch = cloneDeep(this.state.search);
     if (Object.keys(val)[0] === 'collectionLocation') {
-      clonedSearch.collectionLocation = JSON.parse(val[Object.keys(val)[0]]);
+      clonedSearch.collectionLocation = val[Object.keys(val)[0]];
     }
     if (Object.keys(val)[0] === 'deliveryLocation') {
-      clonedSearch.deliveryLocation = JSON.parse(val[Object.keys(val)[0]]);
+      clonedSearch.deliveryLocation = val[Object.keys(val)[0]];
     }
     if (Object.keys(val)[0] === 'collectionDate') {
       const collectionDate = moment(val[Object.keys(val)[0]]);
@@ -228,12 +228,12 @@ class DetailPage extends Component {
             <h1>{product.name}</h1>
             <div className="detail-wrapper">
               <div className="description">
-                <h2>Description</h2>
-                <span>{product.description[0].custom_product_description_head_1}</span>
+                <h2>{product.description[0].custom_product_description_head_1}</h2>
+                <span>{product.description[0].custom_product_description_paragraph_1}</span>
               </div>
               <div className="form-wrapper">
                 <h3>{`Currentstep: ${this.state.currentStep}`}</h3>
-                <SearchView onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
+                <SearchView configurationsstate={this.state.configurations} onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
                 {this.renderSecondView(product)}
                 {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryView currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
               </div>

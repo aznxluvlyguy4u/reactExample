@@ -3,10 +3,6 @@ import { isEmpty } from 'lodash';
 
 export default class OrderRequest {
   constructor(product, accessories, search, configurations) {
-    console.log(product);
-    console.log(accessories);
-    console.log(search);
-    console.log(configurations);
     this.id = product.id;
     this.quantity = 1;
     this.endDate = search.collectionDate;
@@ -15,7 +11,6 @@ export default class OrderRequest {
     this.endLocation = search.deliveryLocation;
     this.accessories = accessories;
     this.configurations = configurations;
-    this.locations = locations;
   }
 
   returnOrder() {

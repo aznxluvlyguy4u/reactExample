@@ -53,10 +53,18 @@ class ConfigurationModal extends Component {
     // references are now sync'd and can be accessed.
   }
 
+  transformValue(value){
+    const obj = {};
+    obj.value = value.value;
+    obj.label = value.value;
+    return obj
+  }
+
   render() {
     const { quantity, closeModal, configurations } = this.props;
     const { modalIsOpen } = this.state;
     const arr = new Array(quantity).fill(0);
+    console.log(this.props.configurationsstate);
     return (
       <Modal
         isOpen={modalIsOpen}
@@ -106,7 +114,7 @@ class ConfigurationModal extends Component {
                                   return (
                                     <div className="configuration-wrapper">
                                       <label htmlFor={`items.${quantityindex}.configuration.${configindex}.value`}>{configuration.name}</label>
-                                      <Field onChange={this.props.onChangeConfiguration} name="configuration" value={transformConfigurationData(configuration).values[0]} setFieldValue={setFieldValue} options={transformConfigurationData(configuration).values} isSearchable={false} component={CustomSelect} />
+                                      <Field onChange={this.props.onChangeConfiguration} name="configuration" value={this.transformValue(this.props.configurationsstate[index])} setFieldValue={setFieldValue} options={transformConfigurationData(configuration).values} isSearchable={false} component={CustomSelect} />
                                     </div>
                                   );
                                 })) : null}
@@ -120,7 +128,7 @@ class ConfigurationModal extends Component {
                 {/* <span>We can't guarantee that the selected options is available</span> */}
                 <div className="button-wrapper">
                   <button className="cancel" type="button" onClick={closeModal}>Cancel</button>
-                  <button className="save" type="submit">Save</button>
+                  <button className="save" type="submit" onClick={closeModal}>Save</button>
                 </div>
               </Form>
             )}
