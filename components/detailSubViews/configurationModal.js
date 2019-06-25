@@ -64,7 +64,6 @@ class ConfigurationModal extends Component {
     const { quantity, closeModal, configurations } = this.props;
     const { modalIsOpen } = this.state;
     const arr = new Array(quantity).fill(0);
-    console.log(this.props.configurationsstate);
     return (
       <Modal
         isOpen={modalIsOpen}

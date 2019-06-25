@@ -61,46 +61,49 @@ class OptionalAccessoryModal extends Component {
       price, quantity, modalIsOpen,
     } = this.state;
     const fullImageUrl = !isEmpty(data.images) ? data.images[0].fullImageUrl : undefined;
-    return (
-      <div className={'active accessories-wrapper' ? 'form active accessories-wrapper' : 'form accessories-wrapper'}>
-        <div className="titlewrapper">
-          {/* <h3>Optional Accessories</h3> */}
-        </div>
-        <div className="thumbnailImage" style={{ backgroundImage: `url(${fullImageUrl})` }} />
-        <Formik
-          initialValues={{
-            dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ id: data.id, quantity: 0, name: data.name, price: data.rates[0].price }) },
-          }}
-          onSubmit={this.submitConfiguration || undefined}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            setFieldValue,
-            /* and other goodies */
-          }) => (
-            <Form>
-              <div>
-                <div className="form-inline">
-                  <div className="edit-row accessory">
-                    <div className="title-wrapper">
-                      <label htmlFor="dropdown">{data.name}</label>
-                      {price ? <span className="price-item">{`+ €${price}`}</span> : null}
+    if (!isEmpty(this.state.options)){
+      return (
+        <div className={'active accessories-wrapper' ? 'form active accessories-wrapper' : 'form accessories-wrapper'}>
+          <div className="titlewrapper">
+            {/* <h3>Optional Accessories</h3> */}
+          </div>
+          <div className="thumbnailImage" style={{ backgroundImage: `url(${fullImageUrl})` }} />
+          <Formik
+            initialValues={{
+              dropdown: { label: '0x Quick Charger for Seabob F5 S', value: JSON.stringify({ id: data.id, quantity: 0, name: data.name, price: data.rates[0].price }) },
+            }}
+            onSubmit={this.submitConfiguration || undefined}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              setFieldValue,
+              /* and other goodies */
+            }) => (
+              <Form>
+                <div>
+                  <div className="form-inline">
+                    <div className="edit-row accessory">
+                      <div className="title-wrapper">
+                        <label htmlFor="dropdown">{data.name}</label>
+                        {price ? <span className="price-item">{`+ €${price}`}</span> : null}
+                      </div>
+                      <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                     </div>
-                    <Field placeholder="quantity" onChange={this.props.onChange} value={this.state.options[0]} options={this.state.options} name="dropdown" setFieldValue={setFieldValue} isSearchable={false} component={CustomSelect} />
                   </div>
                 </div>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    );
+              </Form>
+            )}
+          </Formik>
+        </div>
+      );
+    }
+    return null;
   }
 }
 
