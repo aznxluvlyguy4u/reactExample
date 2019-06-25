@@ -17,6 +17,7 @@ import { getProducts } from '../../utils/rest/requests/products';
 import '../index/index.scss';
 import './search.scss';
 import { getLocations } from '../../utils/rest/requests/locations';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 const getHTML = products => products.map(item => (
   <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
@@ -84,21 +85,22 @@ class SearchPage extends Component {
 
     try {
       const response = await getLocations();
-      this.setState({locations: response.data})
+      this.setState({ locations: response.data });
 
-      const deliveryLocationNew = response.data.find((item) => item.id === Number(deliveryLocation));
-      const collectionLocationNew = response.data.find((item) => item.id === Number(collectionLocation));
-      
+      const deliveryLocationNew = response.data.find(item => item.id === Number(deliveryLocation));
+      const collectionLocationNew = response.data.find(item => item.id === Number(collectionLocation));
+
       dispatch(updateSearch({
         keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
       }));
-    } catch (error){
+    } catch (error) {
+      handleGeneralError();
       console.log(error);
     }
 
-      // dispatch(updateSearch({
-      //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-      // }));
+    // dispatch(updateSearch({
+    //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+    // }));
 
     if (keyword === '' && category_id) {
       this.setState({ notFound: false });
@@ -118,21 +120,21 @@ class SearchPage extends Component {
 
     if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
-      
-      if (!isEmpty(this.state.locations)){
-        const deliveryLocationNew = this.state.locations.find((item) => item.id === Number(deliveryLocation));
-        const collectionLocationNew = this.state.locations.find((item) => item.id === Number(collectionLocation));
-      
+
+      if (!isEmpty(this.state.locations)) {
+        const deliveryLocationNew = this.state.locations.find(item => item.id === Number(deliveryLocation));
+        const collectionLocationNew = this.state.locations.find(item => item.id === Number(collectionLocation));
+
         dispatch(updateSearch({
           keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
         }));
       } else {
         const response = await getLocations();
-        this.setState({locations: response.data});
+        this.setState({ locations: response.data });
 
-        const deliveryLocationNew = response.data.find((item) => item.id === Number(deliveryLocation));
-        const collectionLocationNew = response.data.find((item) => item.id === Number(collectionLocation));
-      
+        const deliveryLocationNew = response.data.find(item => item.id === Number(deliveryLocation));
+        const collectionLocationNew = response.data.find(item => item.id === Number(collectionLocation));
+
         dispatch(updateSearch({
           keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
         }));
@@ -169,7 +171,9 @@ class SearchPage extends Component {
       this.setState({ loading: false });
       if (error.code === 404) {
         this.setState({ notFound: true });
+        return;
       }
+      handleGeneralError();
       console.log(error);
     }
   }

@@ -11,6 +11,7 @@ import validate from './signupValidation';
 import SignupSchema from './signupSchema';
 import { registerUser } from '../../utils/rest/requests/authRest';
 import RegisterError from '../../utils/mapping/RegisterError';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 const customStyles = {
   content: {
@@ -71,10 +72,13 @@ function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
       bag.setSubmitting(false);
       if (error.statusCode === 403) {
         bag.setErrors({ email: error.status });
+        return;
       }
       if (error.statusCode === 400) {
         bag.setErrors(new RegisterError(error.message).returnResponsePayload());
+        return;
       }
+      handleGeneralError();
     }
   }
   return (

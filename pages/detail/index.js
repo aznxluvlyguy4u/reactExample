@@ -1,21 +1,19 @@
+import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { updateCart } from '../../actions/cartActions';
+import { updateSearchObject } from '../../actions/searchActions';
 import OptionalAccessoryModal from '../../components/detailSubViews/optionalAccessoryModal';
 import SearchView from '../../components/detailSubViews/searchView';
 import SummaryView from '../../components/detailSubViews/summaryView';
+import Loader from '../../components/loader';
 import Default from '../../layouts/default';
+import rootReducer from '../../reducers/rootReducer';
+import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { getProductById } from '../../utils/rest/requests/products';
 import './detail.scss';
-import Loader from '../../components/loader';
-import OrderRequest from '../../utils/mapping/products/orderRequest';
-import { connect } from 'react-redux';
-import { isEmpty, cloneDeep } from 'lodash';
-import cartReducer from '../../reducers/cartReducer';
-import { updateCart } from '../../actions/cartActions';
-import searchReducer from '../../reducers/searchReducer';
-import { updateSearchObject } from '../../actions/searchActions';
-import rootReducer from '../../reducers/rootReducer';
-import { getLocations } from '../../utils/rest/requests/locations';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -57,16 +55,9 @@ class DetailPage extends Component {
     if (this.props.searchReducer.collectionDate && this.props.searchReducer.deliveryDate) {
       const collectionDate = moment(clonedSearch.collectionDate);
       const deliveryDate = moment(clonedSearch.deliveryDate);
-      console.log(deliveryDate.toString(), collectionDate.toString())
       const dayCount = deliveryDate.diff(collectionDate, 'days');
       clonedSearch.dayCount = dayCount;
     }
-    // try {
-    //   const response = await getLocations();
-    //   this.setState({ locations: response.data });
-    // } catch (error) {
-    //   console.log(error);
-    // }
     this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
     this.setState({ search: clonedSearch });
   }
@@ -88,6 +79,7 @@ class DetailPage extends Component {
         this.setState({ configurations: array });
       }
     } catch (error) {
+      handleGeneralError();
       console.log(error);
     }
   }
@@ -136,14 +128,14 @@ class DetailPage extends Component {
     if (Object.keys(val)[0] === 'collectionDate') {
       const collectionDate = moment(val[Object.keys(val)[0]]);
       const deliveryDate = moment(clonedSearch.deliveryDate);
-      console.log(deliveryDate.toString(), collectionDate.toString())
+      console.log(deliveryDate.toString(), collectionDate.toString());
       clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
       clonedSearch.collectionDate = val[Object.keys(val)[0]];
     }
     if (Object.keys(val)[0] === 'deliveryDate') {
       const deliveryDate = moment(val[Object.keys(val)[0]]);
       const collectionDate = moment(clonedSearch.collectionDate);
-      console.log(deliveryDate.toString(), collectionDate.toString())
+      console.log(deliveryDate.toString(), collectionDate.toString());
       clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
       clonedSearch.deliveryDate = val[Object.keys(val)[0]];
     }
@@ -228,6 +220,7 @@ class DetailPage extends Component {
       product, accessories,
     } = this.state;
     if (product) {
+      console.log(product.description);
       return (
         <Default nav="fixed" search meta={{ title: `${product.name} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
           <div className="page-wrapper">

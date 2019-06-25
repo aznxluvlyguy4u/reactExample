@@ -3,6 +3,7 @@ import Carousel from 'nuka-carousel';
 import React, { Component } from 'react';
 import { getCategories } from '../../utils/rest/requests/categories';
 import './categoryTiles.scss';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 class CategoryTiles extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class CategoryTiles extends Component {
         )),
       });
     } catch (error) {
+      handleGeneralError();
       console.log(error);
     }
   }

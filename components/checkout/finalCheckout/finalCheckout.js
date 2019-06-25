@@ -7,6 +7,7 @@ import OrderForm from '../orderForm/orderForm';
 import PlaceOrderRequest from '../../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../../utils/rest/requests/orders';
 import Loader from '../../loader';
+import { handleGeneralError } from '../../../utils/rest/error/toastHandler';
 
 const customStyles = {
   content: {
@@ -55,6 +56,7 @@ class FinalCheckout extends Component {
       this.setState({ loading: false });
     } catch (error) {
       this.setState({ loading: false });
+      handleGeneralError();
       console.log(error);
     }
     // localStorage.removeItem('cart');
