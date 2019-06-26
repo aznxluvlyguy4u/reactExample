@@ -28,6 +28,7 @@
 
 .description {
   width:60%;
+  font-weight:lighter;
   @include for-phone-only {
     width:100%;
   }
@@ -52,7 +53,7 @@
   display:flex;
   flex-wrap: wrap;
   width:35%;
-  h3{
+  h3 {
     font-weight: normal;
   }
   @include for-phone-only {

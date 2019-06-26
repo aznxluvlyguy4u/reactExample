@@ -14,6 +14,7 @@ import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { getProductById } from '../../utils/rest/requests/products';
 import './detail.scss';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -71,12 +72,12 @@ class DetailPage extends Component {
       this.setState({ product: response.data });
       const arr = [];
       if (response.data.accessories) {
-        this.setState({total: 3});
+        this.setState({ total: 3 });
         response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0, name: item.name }));
         this.setState({ accessories: arr });
       }
       if (isEmpty(response.data.accessories)) {
-        this.setState({total: 2});
+        this.setState({ total: 2 });
       }
       if (response.data.configurations) {
         const array = [];
@@ -196,10 +197,10 @@ class DetailPage extends Component {
   returnAccessoires(product) {
     return (
       <div>
-      <div className="titlewrapper">
-            <h3>Select Optional Accessories</h3>
-            <span>{this.state.currentStep+'/'+this.state.total}</span>
-         </div>
+        <div className="titlewrapper">
+          <h3>Select Optional Accessories</h3>
+          <span>{`${this.state.currentStep}/${this.state.total}`}</span>
+        </div>
         <div className="item-wrap">
           {product.accessories ? product.accessories.map(item => <OptionalAccessoryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
         </div>
@@ -234,8 +235,24 @@ class DetailPage extends Component {
             <h1>{product.name}</h1>
             <div className="detail-wrapper">
               <div className="description">
-                <h2>{product.description[0].custom_product_description_head_1}</h2>
-                <span>{product.description[0].custom_product_description_paragraph_1}</span>
+                {product.description.section1 && product.description.section1.head ? <h2>{product.description.section1.head}</h2> : null}
+                {product.description.section1 && product.description.section1.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section1.paragraph }} /> : null}
+                {product.description.section2 && product.description.section2.head ? <h2>{product.description.section2.head}</h2> : null}
+                {product.description.section2 && product.description.section2.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section2.paragraph }} /> : null}
+                {product.description.section3 && product.description.section3.head ? <h2>{product.description.section3.head}</h2> : null}
+                {product.description.section3 && product.description.section3.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section3.paragraph }} /> : null}
+                {product.description.section4 && product.description.section4.head ? <h2>{product.description.section4.head}</h2> : null}
+                {product.description.section4 && product.description.section4.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section4.paragraph }} /> : null}
+                {product.description.section5 && product.description.section5.head ? <h2>{product.description.section5.head}</h2> : null}
+                {product.description.section5 && product.description.section5.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section5.paragraph }} /> : null}
+                {product.description.section6 && product.description.section6.head ? <h2>{product.description.section6.head}</h2> : null}
+                {product.description.section6 && product.description.section6.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section6.paragraph }} /> : null}
+                {product.description.section7 && product.description.section7.head ? <h2>{product.description.section7.head}</h2> : null}
+                {product.description.section7 && product.description.section7.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section7.paragraph }} /> : null}
+                {product.description.section8 && product.description.section8.head ? <h2>{product.description.section8.head}</h2> : null}
+                {product.description.section8 && product.description.section8.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section8.paragraph }} /> : null}
+                {product.description.section9 && product.description.section9.head ? <h2>{product.description.section9.head}</h2> : null}
+                {product.description.section9 && product.description.section9.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section9.paragraph }} /> : null}
               </div>
               <div className="form-wrapper">
                 <SearchView total={this.state.total} configurationsstate={this.state.configurations} onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
