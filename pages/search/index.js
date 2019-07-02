@@ -102,7 +102,7 @@ class SearchPage extends Component {
     //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     // }));
 
-    if (keyword === '' && category_id) {
+    if ((keyword === '' && category_id) || (keyword === '' && deliveryLocation)) {
       this.setState({ notFound: false });
       await this.getProducts('update');
     } else if (keyword === '') {
