@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import rootReducer from '../reducers/rootReducer';
+import moment from 'moment';
 
 /**
 * @param {object} initialState
@@ -22,6 +23,18 @@ class MyApp extends App {
   //     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
   //     return {pageProps};
   // }
+  componentDidMount() {
+    let itemsInCart = JSON.parse(localStorage.getItem('cart'));
+    let filteredItemsInCart = [];
+    if (itemsInCart) {
+      filteredItemsInCart = itemsInCart.filter(item => {
+        if (!moment(item.period.start).isBefore(Date().toString(), 'day')) {
+          return item;
+        }
+      })
+    }
+    localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
+  }
 
   render() {
     const { Component, pageProps, store } = this.props;
