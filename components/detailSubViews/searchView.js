@@ -38,13 +38,13 @@ class SearchView extends Component {
             <span>{this.props.currentStep+'/'+this.props.total}</span>
          </div>
         <SearchEdit _prev={this.props._prev} _next={this.props._next} currentStep={this.props.currentStep} onChange={this.props.handleChange} label submit handleSubmit={handleSubmit} validation />
-        {!isEmpty(data.configurations) ? (
+        {/* {!isEmpty(data.configurations) ? (
           <button type="button" onClick={this.toggleModal} className="configure">
             <i className="icon-cog" />
                 Advanced Configuration
           </button>
-        ) : null}
-        <ConfigurationModal configurationsstate={this.props.configurationsstate} onChangeConfiguration={this.props.onChangeConfiguration} quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} />
+        ) : null} */}
+        {/* <ConfigurationModal configurationsstate={this.props.configurationsstate} onChangeConfiguration={this.props.onChangeConfiguration} quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} /> */}
       </div>
     );
   }
