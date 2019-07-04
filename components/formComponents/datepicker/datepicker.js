@@ -95,6 +95,7 @@ class DatePicker extends Component {
     return (
       <div>
         <DateRangePicker
+          readOnly
           startDatePlaceholderText={placeholders[0]}
           endDatePlaceholderText={placeholders[1]}
           hideKeyboardShortcutsPanel
