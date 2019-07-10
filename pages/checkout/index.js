@@ -43,8 +43,7 @@ class CheckoutPage extends Component {
           this.props.dispatch(setCartCount(response.data.products.length));
         } catch (error) {
           this.setState({ loading: false });
-          handleGeneralError();
-          console.log(error);
+          handleGeneralError(error);
         }
       }
       // localStorage.removeItem('cart');

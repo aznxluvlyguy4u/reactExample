@@ -45,8 +45,7 @@ class CategoryTiles extends Component {
         )),
       });
     } catch (error) {
-      handleGeneralError();
-      console.log(error);
+      handleGeneralError(error);
     }
   }
 

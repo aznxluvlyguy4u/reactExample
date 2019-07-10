@@ -85,8 +85,7 @@ class DetailPage extends Component {
         this.setState({ configurations: array });
       }
     } catch (error) {
-      handleGeneralError();
-      console.log(error);
+      handleGeneralError(error);
     }
   }
 

@@ -94,8 +94,7 @@ class SearchPage extends Component {
         keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
       }));
     } catch (error) {
-      handleGeneralError();
-      console.log(error);
+      handleGeneralError(error);
     }
 
     // dispatch(updateSearch({
@@ -173,8 +172,7 @@ class SearchPage extends Component {
         this.setState({ notFound: true });
         return;
       }
-      handleGeneralError();
-      console.log(error);
+      handleGeneralError(error);
     }
   }
 

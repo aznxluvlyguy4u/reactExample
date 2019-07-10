@@ -56,8 +56,7 @@ class FinalCheckout extends Component {
       this.setState({ loading: false });
     } catch (error) {
       this.setState({ loading: false });
-      handleGeneralError();
-      console.log(error);
+      handleGeneralError(error);
     }
     // localStorage.removeItem('cart');
   }

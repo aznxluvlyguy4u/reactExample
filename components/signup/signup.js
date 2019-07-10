@@ -78,7 +78,7 @@ function SignUp({ modalIsOpen, afterOpenModal, closeModal }) {
         bag.setErrors(new RegisterError(error.message).returnResponsePayload());
         return;
       }
-      handleGeneralError();
+      handleGeneralError(error);
     }
   }
   return (
