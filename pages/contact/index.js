@@ -17,7 +17,9 @@ class AboutPage extends Component {
     return (
       <Default nav="fixed" search meta={{ title: 'Detail Page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
         <div className="page-wrapper">
-          <div className="fullWidthImage" style={{ backgroundImage: `url('static/images/about.png')` }} />
+        <iframe src="https://www.google.com/maps/d/embed?mid=1uqybh4Cedy9BeWZxfU9_B606fnY" width="100%" height="600"></iframe>
+            <div className="fullWidthImage">
+          </div>
           <div className="contact-wrapper">
             <h1>Contact</h1>
              <div className="col-left">
