@@ -1,15 +1,13 @@
 import handleRestResponse from '../requestUtil';
-import { BASE_URL } from '../requestConstants';
-import contact from '../../../pages/contact';
+import { OFFICES_ENDPOINT_BASE_URL } from '../requestConstants';
 
 export function postContactMessage(contactRequest) {
-  const url ='https://s7cnld7i7c.execute-api.eu-west-1.amazonaws.com/dev/api/v1/offices/1/enquiries';
-  // const url = `${BASE_URL}/offices/${contactRequest.office.value}/enquiries`;
+  const url = `${OFFICES_ENDPOINT_BASE_URL}/offices/1/enquiries`;
 
   let request = contactRequest;
   request.office = {
-    id: 1, //contactRequest.office.value.id,
-    name: '', //contactRequest.office.value.name
+    id: 1,
+    name: '',
   }
   return fetch(url, {
     method: 'POST',

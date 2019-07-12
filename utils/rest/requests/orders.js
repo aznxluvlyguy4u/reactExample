@@ -1,8 +1,8 @@
 import handleRestResponse from '../requestUtil';
-import { BASE_URL } from '../requestConstants';
+import { PRODUCTS_ENDPOINT_BASE_URL } from '../requestConstants';
 
 export function orderCartItems(body) { // Throttled function
-  const url = `${BASE_URL}/products/orders`;
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/orders`;
   return fetch(url, {
     method: 'POST',
     headers: {

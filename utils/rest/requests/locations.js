@@ -1,8 +1,9 @@
-import { BASE_URL } from '../requestConstants';
+import { LOCATIONS_ENDPOINT_BASE_URL } from '../requestConstants';
 import handleRestResponse from '../requestUtil';
 
 export function getLocations() {
-  const url = 'https://7s2c5akwy2.execute-api.eu-west-1.amazonaws.com/staging/api/v1/locations';
+  const url = `${LOCATIONS_ENDPOINT_BASE_URL}/locations`;
+
   return fetch(url, {
     method: 'GET',
     headers: {
