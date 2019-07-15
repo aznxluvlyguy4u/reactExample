@@ -6,6 +6,9 @@
 // defaults
 @import '_defaults';
 
+// External libs
+@import '~react-dates/lib/css/_datepicker.css';
+
 // Modules
 @import 'modules/components/datepicker';
 @import 'modules/components/categoryTiles';
