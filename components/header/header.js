@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
-import './header.scss';
 import { connect } from 'react-redux';
 import MenuContainer from './menuContainer/menuContainer';
 import SearchInput from './searchInput/searchInput';

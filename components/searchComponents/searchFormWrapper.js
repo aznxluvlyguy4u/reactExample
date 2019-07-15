@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './searchFormWrapper.scss';
 import SearchForm from './searchForm/searchForm';
 
 export default class SearchFormWrapper extends Component {

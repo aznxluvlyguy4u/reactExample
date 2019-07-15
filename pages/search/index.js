@@ -14,8 +14,6 @@ import searchReducer from '../../reducers/searchReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
-import '../index/index.scss';
-import './search.scss';
 import { getLocations } from '../../utils/rest/requests/locations';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 

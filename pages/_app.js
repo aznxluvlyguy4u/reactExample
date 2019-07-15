@@ -9,6 +9,7 @@ import { setLocations } from '../actions/locationActions';
 import { getLocations } from '../utils/rest/requests/locations';
 import { handleGeneralError } from '../utils/rest/error/toastHandler';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import '../assets/scss/styles.scss';
 
 /**
 * @param {object} initialState

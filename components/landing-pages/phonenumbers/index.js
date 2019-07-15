@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './phonenumbers.scss';
 
 class PhoneNumbers extends Component {
   constructor(props) {

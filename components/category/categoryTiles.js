@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Carousel from 'nuka-carousel';
 import React, { Component } from 'react';
 import { getCategories } from '../../utils/rest/requests/categories';
-import './categoryTiles.scss';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 class CategoryTiles extends Component {

@@ -10,7 +10,6 @@ import { CreateQueryParams } from '../../../utils/queryparams';
 import { getLocations } from '../../../utils/rest/requests/locations';
 import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
-import './searchedit.scss';
 import searchEditValidation from './searchEditValidation';
 import { handleGeneralError } from '../../../utils/rest/error/toastHandler';
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { slide as Menu } from 'react-burger-menu';
-import './menuContainer.scss';
 import PropTypes from 'prop-types';
 
 export default class MenuContainer extends React.Component {

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { isEmpty } from 'lodash';
 import Default from '../../layouts/default';
 import { checkCartAvailability } from '../../utils/rest/requests/cart';
-import './checkout.scss';
 import SelectionOverview from '../../components/checkout/selectionOverview/selectionOverview';
 import FinalCheckout from '../../components/checkout/finalCheckout/finalCheckout';
 import UnavailableItems from '../../components/checkout/unavailableItems/unavailableItems';

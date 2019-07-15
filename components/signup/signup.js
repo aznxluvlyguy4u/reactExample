@@ -3,7 +3,6 @@ import {
   Formik, Field, Form, ErrorMessage,
 } from 'formik';
 import { Component } from 'react';
-import './signup.scss';
 import { toast } from 'react-toastify';
 import CustomInputComponent from './customInputComponent';
 import countrySelectComponent from './countrySelectComponent';

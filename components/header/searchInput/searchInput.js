@@ -7,7 +7,6 @@ import { updateSearchObject } from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
 import { CreateQueryParams } from '../../../utils/queryparams';
 import CustomInputComponent from '../../signup/customInputComponent';
-import './searchInput.scss';
 
 const initialValues = {
   keyword: '',

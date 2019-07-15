@@ -12,7 +12,6 @@ import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { getProductById } from '../../utils/rest/requests/products';
-import './detail.scss';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 

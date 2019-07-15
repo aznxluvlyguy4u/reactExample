@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './checkoutitem.scss';
 import moment from 'moment';
 import { Collapse } from 'react-collapse';
 

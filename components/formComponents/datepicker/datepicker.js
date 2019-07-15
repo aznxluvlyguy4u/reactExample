@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import './datepicker.scss';
+
 // import ThemedStyleSheet from 'react-with-styles/lib/ThemedStyleSheet';
 // import aphroditeInterface from 'react-with-styles-interface-aphrodite';
 // import DefaultTheme from 'react-dates/lib/theme/DefaultTheme';

@@ -10,7 +10,6 @@ import { getLocations } from '../../../utils/rest/requests/locations';
 import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
 import CustomInputComponent from '../../signup/customInputComponent';
-import './searchForm.scss';
 import searchValidation from './searchValidation';
 import { handleGeneralError } from '../../../utils/rest/error/toastHandler';
 
