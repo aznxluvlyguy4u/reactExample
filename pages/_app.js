@@ -1,14 +1,12 @@
 import React from 'react';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
-import rootReducer from '../reducers/rootReducer';
 import moment from 'moment';
 import { setLocations } from '../actions/locationActions';
 import { getLocations } from '../utils/rest/requests/locations';
 import { handleGeneralError } from '../utils/rest/error/toastHandler';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import store from '../store';
 import '../assets/scss/styles.scss';
 
 /**
@@ -19,7 +17,8 @@ import '../assets/scss/styles.scss';
 * @param {boolean} options.debug User-defined debug mode param
 * @param {string} options.storeKey This key will be used to preserve store in global namespace for safe HMR
 */
-const makeStore = (initialState, options) => createStore(rootReducer, initialState, composeWithDevTools());
+
+// const makeStore = (initialState, options) => createStore(rootReducer, initialState, composeWithDevTools());
 
 class MyApp extends App {
 
@@ -45,7 +44,8 @@ class MyApp extends App {
     try {
       const response = await getLocations();
       if (response.data) {
-        this.props.store.dispatch(setLocations(response.data));
+        // this.props.store.dispatch(setLocations(response.data));
+        store.dispatch(setLocations(response.data));
       }
     } catch (error) {
       handleGeneralError(error);
@@ -53,7 +53,7 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps } = this.props;
     return (
       <Container>
         <Provider store={store}>
@@ -64,4 +64,5 @@ class MyApp extends App {
   }
 }
 
-export default withRedux(makeStore)(MyApp);
+// export default withRedux(makeStore)(MyApp);
+export default MyApp;
