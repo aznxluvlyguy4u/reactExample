@@ -52,6 +52,6 @@ const mapStateToProps = ({ searchReducer }) => {
 
 export default connect(mapStateToProps, { updateSearchKeyword })(SearchInput);
 
-SearchInput.propTypes = {
-  searchReducer: PropTypes.element.isRequired,
-};
+// SearchInput.propTypes = {
+//   searchReducer: PropTypes.element.isRequired,
+// };
