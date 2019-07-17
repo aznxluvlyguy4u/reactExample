@@ -1,3 +1,6 @@
+import store from '../store';
+
+
 export function NullCheckFrontendQueryParam(values) {
   const queryParameters = {};
   if (values.keyword !== null) {
@@ -18,28 +21,28 @@ export function NullCheckFrontendQueryParam(values) {
   return queryParameters;
 }
 
-export function NullCheckQueryParams(values) {
+export function generateSearchQueryParameterString() {
+  const state = store.getState();
   const queryParameters = {};
-  if (values.keyword !== '') {
-    queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
+  if (state.searchReducer.search.keyword && state.searchReducer.search.keyword !== '' && state.searchReducer.search.keyword !== null) {
+    queryParameters.keyword = state.searchReducer.search.keyword ? encodeURIComponent(state.searchReducer.search.keyword) : undefined; //values.keyword ? encodeURIComponent(values.keyword) : undefined;
   }
-  if (values.deliveryLocation !== '') {
-    queryParameters.deliveryLocation = values.deliveryLocation.value.id;
+  if (state.searchReducer.search.deliveryLocation && state.searchReducer.search.deliveryLocation !== null && state.searchReducer.search.deliveryLocation !== '') {
+    queryParameters.deliveryLocation = state.searchReducer.search.deliveryLocation.value.id; //values.deliveryLocation.value.id;
   }
-  if (values.collectionLocation !== '') {
-    queryParameters.collectionLocation = values.collectionLocation.value.id;
+  if (state.searchReducer.search.collectionLocation && state.searchReducer.search.collectionLocation !== null && state.searchReducer.search.collectionLocation !== '') {
+    queryParameters.collectionLocation = state.searchReducer.search.collectionLocation.value.id; //values.collectionLocation.value.id;
   }
-  if (values.deliveryDate !== '') {
-    queryParameters.deliveryDate = values.deliveryDate;
+  if (state.searchReducer.search.deliveryDate && state.searchReducer.search.deliveryDate !== null && state.searchReducer.search.deliveryDate !== '') {
+    queryParameters.deliveryDate = state.searchReducer.search.deliveryDate; //values.deliveryDate;
   }
-  if (values.collectionDate !== '') {
-    queryParameters.collectionDate = values.collectionDate;
+  if (state.searchReducer.search.collectionDate && state.searchReducer.search.collectionDate !== null && state.searchReducer.search.collectionDate !== '') {
+    queryParameters.collectionDate = state.searchReducer.search.collectionDate; //values.collectionDate;
   }
   return queryParameters;
 }
 
 export function NullCheckProps(values) {
-  console.log(values);
   const queryParameters = [];
   if (values.keyword !== '') {
     queryParameters.push({ column: 'q[product_tags_name_cont]', value: encodeURIComponent(values.keyword) });
@@ -63,7 +66,7 @@ export function NullCheckProps(values) {
 }
 
 export function CreateQueryParams(state) {
-  console.log(state);
+
   const queryParameters = {};
   if (state.keyword !== '' && state.keyword !== undefined && state.keyword !== null) {
     queryParameters.keyword = state.keyword;

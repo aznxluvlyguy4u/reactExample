@@ -4,65 +4,56 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateSearch } from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
+import locationReducer from '../../../reducers/locationReducer';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
-import { NullCheckQueryParams, CreateQueryParams } from '../../../utils/queryparams';
-import { getLocations } from '../../../utils/rest/requests/locations';
+import { generateSearchQueryParameterString } from '../../../utils/queryparams';
 import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
 import CustomInputComponent from '../../signup/customInputComponent';
 import searchValidation from './searchValidation';
-import { handleGeneralError } from '../../../utils/rest/error/toastHandler';
-
-const initialValues = {
-  keyword: '',
-  deliveryLocation: '',
-  collectionLocation: '',
-  collectionDate: '',
-  deliveryDate: '',
-};
 
 class SearchForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { locations: [] };
+    this.state = {
+      locations: [],
+      initialValues: {}
+    };
   }
 
-  async componentDidMount() {
-    await this.retrieveLocations();
-    // const options = transformCountryData(countries);
-    // console.log(options);
+  componentDidMount() {
+    this.setState({
+      locations: transformLocationData(this.props.locationReducer.locations),
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.locationReducer.locations !== this.props.locationReducer.locations) {
+      this.setState({
+        locations: transformLocationData(this.props.locationReducer.locations)
+      })
+    }
   }
 
   onSubmit(values) {
-    console.log(values);
-    const { dispatch } = this.props;
-    const params = NullCheckQueryParams(values);
-    // dispatch(updateSearch(values, values));
-
-    CreateQueryParams(values);
-    if (values.keyword === '' && values.collectionLocation === '' && values.deliveryLocation === '' && values.collectionDate === '' && values.deliveryDate === '') {
-      Router.push('/search');
-      return;
-    }
+    this.props.updateSearch(values);
+    const params = generateSearchQueryParameterString();
     Router.push({ pathname: '/search', query: params });
   }
 
-  async retrieveLocations() {
-    try {
-      const response = await getLocations();
-      this.setState({ locations: transformLocationData(response.data) });
-    } catch (error) {
-      handleGeneralError();
-      console.log(error);
-    }
-  }
-
   render() {
-    const { locations } = this.state;
     return (
+      <div>
       <Formik
         validationSchema={searchValidation}
-        initialValues={initialValues}
+        enableReinitialize
+        initialValues={{
+          keyword: this.props.searchReducer.search.keyword,
+          deliveryLocation: this.props.searchReducer.search.deliveryLocation,
+          collectionLocation: this.props.searchReducer.search.collectionLocation,
+          collectionDate: this.props.searchReducer.search.collectionDate,
+          deliveryDate: this.props.searchReducer.search.deliveryDate
+        }}
         onSubmit={this.onSubmit.bind(this)}
       >
         {({ setFieldValue }) => (
@@ -70,16 +61,31 @@ class SearchForm extends Component {
             <div>
               <div className="keyword form-block">
                 <label htmlFor="keyword">I am looking for</label>
-                <Field name="keyword" placeholder="Anything, anywhere..." component={CustomInputComponent} />
+                <Field
+                  name="keyword"
+                  placeholder="Anything, anywhere..."
+                  component={CustomInputComponent} />
               </div>
               <div className="form-inline">
                 <div className="location form-block">
                   <label htmlFor="deliveryLocation">Delivery Location</label>
-                  <Field onChange={() => console.log('test')} options={locations} name="deliveryLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  <Field
+                    options={transformLocationData(this.props.locationReducer.locations)}
+                    name="deliveryLocation"
+                    placeholder="Location"
+                    value={this.props.searchReducer.search.deliveryLocation}
+                    setFieldValue={setFieldValue}
+                    component={CustomSelect} />
                 </div>
                 <div className="location form-block">
                   <label htmlFor="collectionLocation">Collection Location</label>
-                  <Field onChange={() => console.log('test')} options={locations} name="collectionLocation" placeholder="Location" setFieldValue={setFieldValue} component={CustomSelect} />
+                  <Field
+                    options={transformLocationData(this.props.locationReducer.locations)}
+                    name="collectionLocation"
+                    placeholder="Location"
+                    value={this.props.searchReducer.search.collectionLocation}
+                    setFieldValue={setFieldValue}
+                    component={CustomSelect} />
                 </div>
               </div>
               <div className="date form-block">
@@ -87,16 +93,34 @@ class SearchForm extends Component {
                   <label htmlFor="collectionDateRange">Delivery Date</label>
                   <label htmlFor="collectionDateRange">Collection Date</label>
                 </div>
-
-                <Field placeholders={['Date', 'Date']} onChange={() => console.log('test')} name="collectionDate" placeholder="Date" setFieldValue={setFieldValue} component={DatePicker} />
+                <Field
+                  placeholders={['Date', 'Date']}
+                  name="collectionDate" placeholder="Date"
+                  setFieldValue={setFieldValue}
+                  startDate={this.props.searchReducer.search.deliveryDate}
+                  endDate={this.props.searchReducer.search.collectionDate}
+                  component={DatePicker} />
               </div>
-              <button className="search-button-full" type="submit">Search</button>
+              <button
+                className="search-button-full"
+                type="submit"
+              >
+                Search
+              </button>
             </div>
           </Form>
         )}
       </Formik>
+      </div>
     );
   }
 }
 
-export default connect(searchReducer)(SearchForm);
+const mapStateToProps = ({ searchReducer, locationReducer }) => {
+  return {
+    searchReducer,
+    locationReducer
+  };
+};
+
+export default connect(mapStateToProps, { updateSearch })(SearchForm);
