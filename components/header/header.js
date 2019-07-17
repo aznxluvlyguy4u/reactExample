@@ -17,7 +17,7 @@ class Header extends React.Component {
       cartCount: 0,
     };
 
-    this.menuItems = [{ id: 1, title: 'Shop', slug: 'bla' }, { id: 2, title: 'Contact', slug: 'bla' }, {
+    this.menuItems = [{ id: 1, title: 'Shop', slug: 'bla' }, { id: 2, title: 'Contact', slug: 'contact' }, {
       id: 3, title: 'Cart', slug: 'checkout', icon: true,
     }];
   }
