@@ -2,11 +2,10 @@ import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateCart } from '../../actions/cartActions';
-import { updateSearchObject } from '../../actions/searchActions';
-import OptionalAccessoryModal from '../../components/detailSubViews/optionalAccessoryModal';
-import SearchView from '../../components/detailSubViews/searchView';
+import OptionalAccessoryView from '../../components/detailSubViews/optionalAccessoryView';
 import SummaryView from '../../components/detailSubViews/summaryView';
+import SearchView from '../../components/detailSubViews/searchView';
+import Steps from '../../components/detailSubViews/steps'
 import Loader from '../../components/loader';
 import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
@@ -14,6 +13,21 @@ import OrderRequest from '../../utils/mapping/products/orderRequest';
 import { getProductById } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
+import {
+  updateLocalSearch,
+  updateLocalSearchProductQuantity,
+  setSelectedProduct,
+  setProductAccessories,
+  setProductMandatoryAccessories,
+  setProductOptionalAccessories,
+  setProductConfigurations,
+  setTotalSteps,
+  setCurrentStep
+} from '../../actions/localSearchActions';
+import {
+  updateCart,
+  addToCart
+} from '../../actions/cartActions';
 
 class DetailPage extends Component {
   constructor(props) {
@@ -21,25 +35,16 @@ class DetailPage extends Component {
     this.state = {
       accessories: [],
       product: undefined,
-      currentStep: 1,
       configurations: [],
-      search: {
-        collectionLocation: { id: undefined, name: undefined },
-        deliveryLocation: { id: undefined, name: undefined },
-        collectionDate: undefined,
-        deliveryDate: undefined,
-        dayCount: 0,
-      },
-      locations: [],
       total: undefined,
     };
+
     this.addToCart = this.addToCart.bind(this);
-    this.changeItem = this.changeItem.bind(this);
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
     this.changeAccesoire = this.changeAccesoire.bind(this);
     this.onChangeConfiguration = this.onChangeConfiguration.bind(this);
-    this.renderSecondView = this.renderSecondView.bind(this);
+    // this.renderThirdView = this.renderThirdView.bind(this);
     // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
 
@@ -50,38 +55,44 @@ class DetailPage extends Component {
   }
 
   async componentDidMount() {
-    // localStorage.removeItem('cart');
     await this.getProduct();
-    const clonedSearch = cloneDeep(this.props.searchReducer.search);
-    if (this.props.searchReducer.collectionDate && this.props.searchReducer.deliveryDate) {
-      const collectionDate = moment(clonedSearch.collectionDate);
-      const deliveryDate = moment(clonedSearch.deliveryDate);
-      const dayCount = deliveryDate.diff(collectionDate, 'days');
-      clonedSearch.dayCount = dayCount;
-    }
-    this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
-    this.setState({ search: clonedSearch });
+    const search = Object.assign({}, this.props.searchReducer.search);
+    this.props.updateLocalSearch(search);
   }
 
   async getProduct() {
     const { id } = this.props;
-    const { active } = this.state;
     try {
       const response = await getProductById(id);
       this.setState({ product: response.data });
-      const arr = [];
+      this.props.setSelectedProduct(response.data);
+
       if (response.data.accessories) {
-        this.setState({ total: 3 });
-        response.data.accessories.map(item => arr.push({ id: item.id, quantity: 0, name: item.name }));
-        this.setState({ accessories: arr });
+
+        this.props.setTotalSteps(4);
+
+        const accessories = [];
+        response.data.accessories.map(item => {
+          item.quantity = 0;
+          accessories.push(item)
+        });
+
+        const optional = accessories.filter(val => val.type !== 'mandatory');
+        const mandatory = accessories.filter(val => val.type === 'mandatory');
+
+        this.props.setProductAccessories(accessories);
+        this.props.setProductOptionalAccessories(optional);
+        this.props.setProductMandatoryAccessories(mandatory);
       }
+
       if (isEmpty(response.data.accessories)) {
-        this.setState({ total: 2 });
+        this.props.setTotalSteps(3);
       }
+
       if (response.data.configurations) {
         const array = [];
         response.data.configurations.map(item => array.push({ id: item.id, name: item.name, value: item.values[0].name }));
-        this.setState({ configurations: array });
+        this.props.setProductConfigurations(array)
       }
     } catch (error) {
       handleGeneralError(error);
@@ -89,27 +100,19 @@ class DetailPage extends Component {
   }
 
   _next() {
-    let { currentStep } = this.state;
     // If the current step is 1 or 2, then add one on "next" button click
-    currentStep = currentStep >= 2 ? 3 : currentStep + 1;
-    this.setState({
-      currentStep,
-    });
+    const currentStep = this.props.localSearchReducer.currentStep >= this.props.localSearchReducer.totalSteps ? this.props.localSearchReducer.totalSteps : this.props.localSearchReducer.currentStep + 1;
+    this.props.setCurrentStep(currentStep);
   }
 
   _prev() {
-    let { currentStep } = this.state;
     // If the current step is 2 or 3, then subtract one on "previous" button click
-    currentStep = currentStep <= 1 ? 1 : currentStep - 1;
-    this.setState({
-      currentStep,
-    });
+    const currentStep = this.props.localSearchReducer.currentStep <= 1 ? 1 : this.props.localSearchReducer.currentStep - 1;
+    this.props.setCurrentStep(currentStep);
   }
 
   addToCart() {
     const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
-    this.props.dispatch(updateCart(this.props.cartReducer.count));
-    console.log(newobj);
     if (localStorage.getItem('cart')) {
       const cart = JSON.parse(localStorage.getItem('cart'));
       cart.push(newobj);
@@ -119,32 +122,6 @@ class DetailPage extends Component {
       arr.push(newobj);
       localStorage.setItem('cart', JSON.stringify(arr));
     }
-  }
-
-  changeItem(val) {
-    const clonedSearch = cloneDeep(this.state.search);
-    if (Object.keys(val)[0] === 'collectionLocation') {
-      clonedSearch.collectionLocation = val[Object.keys(val)[0]];
-    }
-    if (Object.keys(val)[0] === 'deliveryLocation') {
-      clonedSearch.deliveryLocation = val[Object.keys(val)[0]];
-    }
-    if (Object.keys(val)[0] === 'collectionDate') {
-      const collectionDate = moment(val[Object.keys(val)[0]]);
-      const deliveryDate = moment(clonedSearch.deliveryDate);
-      clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
-      clonedSearch.collectionDate = val[Object.keys(val)[0]];
-    }
-    if (Object.keys(val)[0] === 'deliveryDate') {
-      const deliveryDate = moment(val[Object.keys(val)[0]]);
-      const collectionDate = moment(clonedSearch.collectionDate);
-      clonedSearch.dayCount = collectionDate.diff(deliveryDate, 'days');
-      clonedSearch.deliveryDate = val[Object.keys(val)[0]];
-    }
-    this.props.dispatch(updateSearchObject(clonedSearch, clonedSearch));
-    this.setState({
-      search: clonedSearch,
-    });
   }
 
   changeAccesoire(val) {
@@ -159,8 +136,8 @@ class DetailPage extends Component {
     this.setState({ configurations: this.state.configurations });
   }
 
-  nextButton(currentStep) {
-    if (currentStep < 3) {
+  nextButton() {
+    if (this.props.localSearchReducer.currentStep < this.props.localSearchReducer.totalSteps) {
       return (
         <button
           className="next-button"
@@ -175,9 +152,9 @@ class DetailPage extends Component {
     return null;
   }
 
-  previousButton(currentStep) {
+  previousButton() {
     // If the current step is not 1, then render the "previous" button
-    if (currentStep !== 1) {
+    if (this.props.localSearchReducer.currentStep !== 1) {
       return (
         <button
           className="previous-button"
@@ -191,35 +168,6 @@ class DetailPage extends Component {
     // ...else return nothing
     return null;
   }
-
-  returnAccessoires(product) {
-    return (
-      <div>
-        <div className="titlewrapper">
-          <h3>Select Optional Accessories</h3>
-          <span>{`${this.state.currentStep}/${this.state.total}`}</span>
-        </div>
-        <div className="item-wrap">
-          {product.accessories ? product.accessories.map(item => <OptionalAccessoryModal onChange={this.changeAccesoire} currentStep={this.state.currentStep} data={item} />) : null}
-        </div>
-        <div className="button-wrapper">
-          {this.previousButton(this.state.currentStep)}
-          {this.nextButton(this.state.currentStep)}
-        </div>
-      </div>
-    );
-  }
-
-  renderSecondView(product) {
-    const {
-      accessories, currentStep, item,
-    } = this.state;
-    if (isEmpty(product.accessories)) {
-      return currentStep === 2 ? <SummaryView total={this.state.total} currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null;
-    }
-    return currentStep === 2 ? this.returnAccessoires(product) : null;
-  }
-
 
   render() {
     const {
@@ -253,9 +201,91 @@ class DetailPage extends Component {
                 {product.description.section9 && product.description.section9.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section9.paragraph }} /> : null}
               </div>
               <div className="form-wrapper">
-                <SearchView total={this.state.total} configurationsstate={this.state.configurations} onChangeConfiguration={this.onChangeConfiguration} _prev={this._prev} _next={this._next} currentStep={this.state.currentStep} handleChange={this.changeItem} data={product} />
-                {this.renderSecondView(product)}
-                {!isEmpty(product.accessories) && this.state.currentStep === 3 ? <SummaryView total={this.state.total} currentStep={this.state.currentStep} _prev={this._prev} accessories={this.state.accessories} search={this.state.search} product={product} handleSubmit={this.addToCart} accessories={accessories.filter(val => val.type !== 'mandatory')} /> : null}
+
+              {/* STEP SEARCH / ITINERARY */}
+              {this.props.localSearchReducer.currentStep === 1 ?
+                <SearchView
+                  configurationsstate={this.state.configurations}
+                  onChangeConfiguration={this.onChangeConfiguration}
+                  _prev={this._prev}
+                  _next={this._next}
+                  data={product}
+                />
+                : null }
+
+                {/* STEP SELECT QUANTITY */}
+                {this.props.localSearchReducer.currentStep === 2 ?
+                  <div className={'form active quantity-wrapper'}>
+                    <div className="titlewrapper">
+                      <h3>Optional Accessories</h3>
+                      <Steps />
+                    </div>
+                    <div className="item-wrap">
+                      <div>
+                        <button className="subtract-button"
+                          onClick={(e) => {
+                            if (this.props.localSearchReducer.productQuantity > 0) {
+                              this.props.updateLocalSearchProductQuantity(this.props.localSearchReducer.productQuantity - 1)
+                            }
+                          }}
+                        >
+                          -
+                        </button>
+                        <span className="center">
+                          <span className="quantity">
+                            {this.props.localSearchReducer.productQuantity}
+                          </span>
+                          <br />
+                          €{this.props.localSearchReducer.selectedProduct.rates[0].price}
+                        </span>
+
+                        <button className="add-button"
+                          onClick={(e) => {
+                            this.props.updateLocalSearchProductQuantity(this.props.localSearchReducer.productQuantity + 1)
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div className="button-wrapper">
+                      {this.previousButton(this.state.currentStep)}
+                      {this.nextButton(this.state.currentStep)}
+                    </div>
+                  </div>
+                  : null
+                }
+
+                {/* STEP OPTIONAL ACCESSORIES */}
+                {this.props.localSearchReducer.currentStep === 3 && this.props.localSearchReducer.totalSteps === 4 ?
+                  <div className={'form active accessories-wrapper'}>
+                    <div className="titlewrapper">
+                      <h3>Optional Accessories</h3>
+                      <Steps />
+                    </div>
+                    <div className="item-wrap">
+                      <OptionalAccessoryView
+                        onChange={this.changeAccesoire}
+                      />
+                    </div>
+                    <div className="button-wrapper">
+                      {this.previousButton()}
+                      {this.nextButton()}
+                    </div>
+                  </div>
+                  : null
+                }
+
+                {/* STEP SUMMARY */}
+                {(this.props.localSearchReducer.currentStep === 3 && this.props.localSearchReducer.totalSteps === 3) || this.props.localSearchReducer.currentStep === 4 ?
+                  <SummaryView
+                    total={this.state.total}
+                    _prev={this._prev}
+                    accessories={this.state.accessories}
+                    handleSubmit={this.addToCart}
+                    accessories={accessories.filter(val => val.type !== 'mandatory')}
+                  /> : null
+                }
               </div>
             </div>
           </div>
@@ -272,4 +302,27 @@ class DetailPage extends Component {
   }
 }
 
-export default connect(rootReducer)(DetailPage);
+const mapStateToProps = ({ rootReducer, searchReducer, locationReducer, localSearchReducer }) => {
+  return {
+    searchReducer,
+    locationReducer,
+    localSearchReducer,
+    rootReducer
+  };
+};
+
+export default connect(
+  mapStateToProps, {
+    updateLocalSearch,
+    updateLocalSearchProductQuantity,
+    updateCart,
+    addToCart,
+    setSelectedProduct,
+    setProductAccessories,
+    setProductMandatoryAccessories,
+    setProductOptionalAccessories,
+    setProductConfigurations,
+    setTotalSteps,
+    setCurrentStep
+  }
+)(DetailPage);
