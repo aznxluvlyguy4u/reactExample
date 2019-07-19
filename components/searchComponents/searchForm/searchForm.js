@@ -2,7 +2,14 @@ import { Field, Form, Formik } from 'formik';
 import Router from 'next/router';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateSearch } from '../../../actions/searchActions';
+import {
+  updateSearch,
+  updateSearchKeyword,
+  updateSearchDeliveryLocation,
+  updateSearchCollectionLocation,
+  updateSearchDeliveryDate,
+  updateSearchCollectionDate
+ } from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
 import locationReducer from '../../../reducers/locationReducer';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
@@ -36,7 +43,7 @@ class SearchForm extends Component {
   }
 
   onSubmit(values) {
-    this.props.updateSearch(values);
+    // this.props.updateSearch(values);
     const params = generateSearchQueryParameterString();
     Router.push({ pathname: '/search', query: params });
   }
@@ -56,21 +63,40 @@ class SearchForm extends Component {
         }}
         onSubmit={this.onSubmit.bind(this)}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, values }) => (
           <Form>
             <div>
               <div className="keyword form-block">
                 <label htmlFor="keyword">I am looking for</label>
                 <Field
                   name="keyword"
+                  onChange={
+                    (e) =>{
+                      this.props.updateSearchKeyword(e.target.value)
+                    }
+                  }
                   placeholder="Anything, anywhere..."
                   component={CustomInputComponent} />
               </div>
               <div className="form-inline">
                 <div className="location form-block">
-                  <label htmlFor="deliveryLocation">Delivery Location</label>
+                  <label htmlFor="deliveryLocation">Pick up Location</label>
                   <Field
                     options={transformLocationData(this.props.locationReducer.locations)}
+                    onChange={
+                      (e) =>{
+                        this.props.updateSearchDeliveryLocation({
+                          label: e.deliveryLocation.name,
+                          value: e.deliveryLocation
+                        })
+                        if (values.collectionLocation === "") {
+                          this.props.updateSearchCollectionLocation({
+                            label: e.deliveryLocation.name,
+                            value: e.deliveryLocation
+                          })
+                        }
+                      }
+                    }
                     name="deliveryLocation"
                     placeholder="Location"
                     value={this.props.searchReducer.search.deliveryLocation}
@@ -78,9 +104,17 @@ class SearchForm extends Component {
                     component={CustomSelect} />
                 </div>
                 <div className="location form-block">
-                  <label htmlFor="collectionLocation">Collection Location</label>
+                  <label htmlFor="collectionLocation">Drop off Location</label>
                   <Field
                     options={transformLocationData(this.props.locationReducer.locations)}
+                    onChange={
+                      (e) =>{
+                        this.props.updateSearchCollectionLocation({
+                          label: e.collectionLocation.name,
+                          value: e.collectionLocation
+                        })
+                      }
+                    }
                     name="collectionLocation"
                     placeholder="Location"
                     value={this.props.searchReducer.search.collectionLocation}
@@ -90,11 +124,21 @@ class SearchForm extends Component {
               </div>
               <div className="date form-block">
                 <div className="label-wrapper">
-                  <label htmlFor="collectionDateRange">Delivery Date</label>
-                  <label htmlFor="collectionDateRange">Collection Date</label>
+                  <label htmlFor="collectionDateRange">Pick up Date</label>
+                  <label htmlFor="collectionDateRange">Drop off Date</label>
                 </div>
                 <Field
                   placeholders={['Date', 'Date']}
+                  onChange={
+                    (e) =>{
+                      if (e.hasOwnProperty('deliveryDate')) {
+                        this.props.updateSearchDeliveryDate(e.deliveryDate);
+                      }
+                      if (e.hasOwnProperty('collectionDate')) {
+                        this.props.updateSearchCollectionDate(e.collectionDate);
+                      }
+                    }
+                  }
                   name="collectionDate" placeholder="Date"
                   setFieldValue={setFieldValue}
                   startDate={this.props.searchReducer.search.deliveryDate}
@@ -123,4 +167,11 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
   };
 };
 
-export default connect(mapStateToProps, { updateSearch })(SearchForm);
+export default connect(mapStateToProps, {
+  // updateSearch,
+  updateSearchKeyword,
+  updateSearchDeliveryLocation,
+  updateSearchCollectionLocation,
+  updateSearchDeliveryDate,
+  updateSearchCollectionDate
+})(SearchForm);

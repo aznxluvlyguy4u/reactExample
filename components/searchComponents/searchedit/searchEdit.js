@@ -1,19 +1,10 @@
 import { Field, Form, Formik } from 'formik';
 import { isEmpty } from 'lodash';
-import Router from 'next/router';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-   updateSearch,
-   updateSearchDeliveryLocation,
-   updateSearchCollectionLocation,
-   updateSearchDeliveryDate,
-   updateSearchCollectionDate
-} from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
 import locationReducer from '../../../reducers/locationReducer';
 import { transformLocationData } from '../../../utils/data/countryDataUtil';
-import { CreateQueryParams } from '../../../utils/queryparams';
 import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
 import searchEditValidation from './searchEditValidation';
@@ -25,9 +16,6 @@ class SearchEdit extends Component {
       locations: [],
       initialValues: {}
     };
-
-    this.clickPrevious = this.clickPrevious.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -44,55 +32,13 @@ class SearchEdit extends Component {
     }
   }
 
-  clickPrevious() {
-    this.props._prev();
-  }
-
-  previousButton(currentStep) {
-    // If the current step is not 1, then render the "previous" button
-    if (currentStep !== 1) {
-      return (
-        <button
-          className="search-button-full"
-          type="button"
-          onClick={this.clickPrevious}
-        >
-        Previous
-        </button>
-      );
-    }
-    // ...else return nothing
-    return null;
-  }
-
-  handleSubmit(values) {
-    // this.props.dispatch(updateSearchObject(values, values));
-    // this.props.updateSearch(values);
-    // this.props._next();
-  }
-
-  nextButton(currentStep, handleSubmit) {
-    if (currentStep < 3) {
-      return (
-        <button
-          className="search-button-full"
-          type="button"
-          onClick={handleSubmit}
-        >
-        Confirm Itinerary
-        </button>
-      );
-    }
-    // ...else render nothing
-    return null;
-  }
+  handleSubmit() { }
 
   render() {
     const {
       validation, label, onChange,
     } = this.props;
     const submitForm = this.handleSubmit;
-    const currentStep = this.props.currentStep || this.props.currentStep;
     if (!isEmpty(this.state.locations) && this.props.searchReducer.search) {
       return (
         <div className="searchedit">
@@ -122,7 +68,7 @@ class SearchEdit extends Component {
                 <div>
                   <div className="form-inline">
                     <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Delivery Location</label> : null}
+                      {label ? <label htmlFor="deliveryLocation">Pick up Location</label> : null}
                       <Field
                         placeholder="Delivery Location"
                         onChange={
@@ -135,7 +81,7 @@ class SearchEdit extends Component {
                         component={CustomSelect} />
                     </div>
                     <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Collection Location</label> : null}
+                      {label ? <label htmlFor="deliveryLocation">Drop off Location</label> : null}
                       <Field
                         placeholder="Collection Location"
                         onChange={
@@ -150,8 +96,8 @@ class SearchEdit extends Component {
                     <div className="other-wrapper">
                       {label ? (
                         <div className="label-wrapper">
-                         <label htmlFor="collectionDateRange">Delivery Date</label>
-                          <label htmlFor="collectionDateRange">Collection Date</label>
+                         <label htmlFor="collectionDateRange">Pick up Date</label>
+                          <label htmlFor="collectionDateRange">Drop off Date</label>
                         </div>
                       ) : null}
                       <Field
@@ -167,8 +113,6 @@ class SearchEdit extends Component {
                         setFieldValue={setFieldValue}
                         component={DatePicker} />
                     </div>
-                    {/* {submit ? this.previousButton(this.props.currentStep) : null} */}
-                    {/* {submit ? this.nextButton(this.props.currentStep, handleSubmit) : null} */}
                   </div>
                 </div>
               </Form>
@@ -188,10 +132,5 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
 };
 
 export default connect(
-  mapStateToProps, {
-  updateSearch,
-  updateSearchDeliveryLocation,
-  updateSearchCollectionLocation,
-  updateSearchDeliveryDate,
-  updateSearchCollectionDate
- })(SearchEdit);
+  mapStateToProps, { }
+)(SearchEdit);
