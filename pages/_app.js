@@ -4,6 +4,7 @@ import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import moment from 'moment';
 import { setLocations } from '../actions/locationActions';
+import { emptyCart, addToCart } from '../actions/cartActions';
 import { getLocations } from '../utils/rest/requests/locations';
 import { handleGeneralError } from '../utils/rest/error/toastHandler';
 import store from '../store';
@@ -28,11 +29,16 @@ class MyApp extends App {
 
   componentDidMount() {
     this.retrieveLocations();
+
+    // Empty cart in store
+    store.dispatch(emptyCart({}));
+
     let itemsInCart = JSON.parse(localStorage.getItem('cart'));
     let filteredItemsInCart = [];
     if (itemsInCart) {
       filteredItemsInCart = itemsInCart.filter(item => {
-        if (!moment(item.period.start).isBefore(Date().toString(), 'day')) {
+        if (!moment(item.deliveryDate).isBefore(Date().toString(), 'day')) {
+          store.dispatch(addToCart(item));
           return item;
         }
       })

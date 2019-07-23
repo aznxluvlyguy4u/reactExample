@@ -59,3 +59,8 @@ export function updateLocalSearchProductQuantity(quantity) {
 export function updateAccessoryQuantityById({id, quantity}) {
   return { type: 'UPDATE_ACCESSORY_QUANTITY_BY_ID', payload: {id: id, quantity: quantity} };
 }
+
+
+export function resetLocalSearch() {
+  return { type: 'RESET_LOCAL_SEARCH'};
+}

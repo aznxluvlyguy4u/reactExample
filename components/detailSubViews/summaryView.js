@@ -8,7 +8,7 @@ import Steps from './steps';
 class SummaryView extends Component {
   constructor(props) {
     super(props);
-    this.state = { dayCount: 10 };
+    this.state = { dayCount: 0 };
   }
 
   componentDidMount() {
@@ -61,20 +61,20 @@ class SummaryView extends Component {
           <div className="paragraph">
             <h3>Rental period</h3>
             <div className="content-wrapper" />
-            <div className="date-wrapper">
-              <div className="date-element">
-                <span>{this.props.localSearchReducer.search.deliveryDate ? moment(this.props.localSearchReducer.search.deliveryDate).format('DD.MM.YYYY') : null}</span>
-                <span>{this.props.localSearchReducer.search.deliveryLocation.label ? this.props.localSearchReducer.search.deliveryLocation.value.name : null}</span>
-              </div>
-              <div className="date-element">
-                <img src="/static/images/arrow.png" height="7" width="40" />
-              </div>
-              <div className="date-element">
-                <span>{this.props.localSearchReducer.search.collectionDate ? moment(this.props.localSearchReducer.search.collectionDate).format('DD.MM.YYYY') : null}</span>
-                <span>{this.props.localSearchReducer.search.collectionLocation.label ? this.props.localSearchReducer.search.collectionLocation.value.name : null}</span>
+              <div className="date-wrapper">
+                <div className="date-element">
+                  <span>{this.props.localSearchReducer.search.deliveryDate ? moment(this.props.localSearchReducer.search.deliveryDate).format('DD.MM.YYYY') : null}</span>
+                  <span>{this.props.localSearchReducer.search.deliveryLocation.label ? this.props.localSearchReducer.search.deliveryLocation.value.name : null}</span>
+                </div>
+                <div className="date-element">
+                  <img src="/static/images/arrow.png" height="7" width="40" />
+                </div>
+                <div className="date-element">
+                  <span>{this.props.localSearchReducer.search.collectionDate ? moment(this.props.localSearchReducer.search.collectionDate).format('DD.MM.YYYY') : null}</span>
+                  <span>{this.props.localSearchReducer.search.collectionLocation.label ? this.props.localSearchReducer.search.collectionLocation.value.name : null}</span>
+                </div>
               </div>
             </div>
-          </div>
           <div className="paragraph">
             <div className="content-wrapper">
               <div className="first"><h3>Chargeble period</h3></div>

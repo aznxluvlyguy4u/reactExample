@@ -12,7 +12,12 @@ function cartReducer(state = initialState, action) {
 
     case 'ADD_TO_CART':
       return Object.assign({}, state, {
-        items: [...items, action.payload],
+        items: [...state.items, action.payload],
+      });
+
+    case 'EMPTY_CART':
+      return Object.assign({}, state, {
+        items: [],
       });
 
     case 'REMOVE_FROM_CART':

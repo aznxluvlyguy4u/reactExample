@@ -110,6 +110,26 @@ function localSearchReducer(state = initialState, action) {
         return Object.assign({}, state, {
           productOptionalAccessories: productOptionalAccessories
         });
+
+    case 'RESET_LOCAL_SEARCH':
+      return Object.assign({}, state, {
+        productQuantity: 1,
+        currentStep: 1,
+        totalSteps: 0,
+        productAccessories: [],
+        productOptionalAccessories: [],
+        productMandatoryAccessories: [],
+        productConfigurations: [],
+        selectedProduct: null,
+        search: {
+          keyword: '',
+          deliveryLocation: '',
+          collectionLocation: '',
+          deliveryDate: moment().toISOString(),
+          collectionDate: moment(new Date()).add(1, 'days').toISOString(),
+        }
+      });
+
     default:
       return state;
   }

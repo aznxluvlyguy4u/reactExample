@@ -1,6 +1,7 @@
 import { cloneDeep, isEmpty } from 'lodash';
-import moment from 'moment';
+import Router from 'next/router';
 import React, { Component } from 'react';
+import Link from 'next/link';
 import { connect } from 'react-redux';
 import OptionalAccessoryView from '../../components/detailSubViews/optionalAccessoryView';
 import SummaryView from '../../components/detailSubViews/summaryView';
@@ -9,7 +10,12 @@ import Steps from '../../components/detailSubViews/steps'
 import Loader from '../../components/loader';
 import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
-import OrderRequest from '../../utils/mapping/products/orderRequest';
+import {
+  resetLocalSearch
+} from '../../actions/localSearchActions';
+import { generateSearchQueryParameterString } from '../../utils/queryparams';
+
+import Order from '../../utils/mapping/products/order';
 import { getProductById } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
@@ -44,6 +50,7 @@ class DetailPage extends Component {
     this._prev = this._prev.bind(this);
     this.changeAccesoire = this.changeAccesoire.bind(this);
     this.onChangeConfiguration = this.onChangeConfiguration.bind(this);
+    this.continueShopping = this.continueShopping.bind(this);
     // this.renderThirdView = this.renderThirdView.bind(this);
     // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
@@ -58,6 +65,20 @@ class DetailPage extends Component {
     await this.getProduct();
     const search = Object.assign({}, this.props.searchReducer.search);
     this.props.updateLocalSearch(search);
+  }
+
+  continueShopping() {
+    this.props.resetLocalSearch();
+    // check if previous search exists...
+    // If so continue to search.
+    // Else continue to home page so user can start a fresh search')
+    alert('check if previous search exists');
+    if(this.props.searchReducer.search.deliveryLocation) {
+      const params = generateSearchQueryParameterString(this.props.searchReducer.search);
+      Router.push({ pathname: '/search', query: params });
+    } else {
+      Router.push({ pathname: '/' });
+    }
   }
 
   async getProduct() {
@@ -112,16 +133,18 @@ class DetailPage extends Component {
   }
 
   addToCart() {
-    const newobj = new OrderRequest(this.state.product, this.state.accessories, this.state.search, this.state.configurations).returnOrder();
+    const order = new Order().returnOrder();
     if (localStorage.getItem('cart')) {
       const cart = JSON.parse(localStorage.getItem('cart'));
-      cart.push(newobj);
+      cart.push(order);
       localStorage.setItem('cart', JSON.stringify(cart));
     } else {
       const arr = [];
-      arr.push(newobj);
+      arr.push(order);
       localStorage.setItem('cart', JSON.stringify(arr));
     }
+    this.props.addToCart(order);
+    this.props.setCurrentStep(5);
   }
 
   changeAccesoire(val) {
@@ -236,7 +259,7 @@ class DetailPage extends Component {
                             {this.props.localSearchReducer.productQuantity}
                           </span>
                           <br />
-                          €{this.props.localSearchReducer.selectedProduct.rates[0].price}
+                          € {parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price * this.props.localSearchReducer.productQuantity).toFixed(2)}
                         </span>
 
                         <button className="add-button"
@@ -286,6 +309,31 @@ class DetailPage extends Component {
                     accessories={accessories.filter(val => val.type !== 'mandatory')}
                   /> : null
                 }
+
+                {/* STEP CONTINUE SHOPPING? */}
+                {this.props.localSearchReducer.currentStep === 5 ?
+                  <div className="form active confirmationview">
+                    <div className="titlewrapper">
+                      {" "}
+                    </div>
+                    <div className="subview">
+                      <img src="/static/images/success.png" height="100" width="100" />
+                      <button
+                        className="search-button-full"
+                        type="button"
+                        onClick={(e) => {
+                          this.continueShopping()
+                        }}
+                      >
+                        Continue Shopping
+                      </button>
+                      <span>or</span>
+                      <Link href="/checkout"><a className="search-button-border">Go To Cart</a></Link>
+                    </div>
+                  </div>
+                  :
+                  null
+                }
               </div>
             </div>
           </div>
@@ -323,6 +371,7 @@ export default connect(
     setProductOptionalAccessories,
     setProductConfigurations,
     setTotalSteps,
-    setCurrentStep
+    setCurrentStep,
+    resetLocalSearch
   }
 )(DetailPage);
