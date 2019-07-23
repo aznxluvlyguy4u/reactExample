@@ -1,24 +1,20 @@
-// components/navbar.js
-
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import React from 'react';
-import './header.scss';
 import { connect } from 'react-redux';
 import MenuContainer from './menuContainer/menuContainer';
 import SearchInput from './searchInput/searchInput';
-import cartReducer from '../../reducers/cartReducer';
-import { setCartCount } from '../../actions/cartActions';
+import { cartReducer } from '../../reducers/cartReducer';
+import { addToCart } from '../../actions/cartActions';
 
 class Header extends React.Component {
   constructor() {
     super();
     this.state = {
       navType: 'transparent',
-      cartCount: 0,
     };
 
-    this.menuItems = [{ id: 1, title: 'Shop', slug: 'bla' }, { id: 2, title: 'Contact', slug: 'bla' }, {
+    this.menuItems = [{ id: 1, title: 'Shop', slug: 'https://www.oceanpremium.com/shop/' }, { id: 2, title: 'Contact', slug: 'contact' }, {
       id: 3, title: 'Cart', slug: 'checkout', icon: true,
     }];
   }
@@ -32,12 +28,6 @@ class Header extends React.Component {
 
   async componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
-    const cart = await localStorage.getItem('cart');
-    if (cart){
-      this.props.dispatch(setCartCount(JSON.parse(cart).length));
-    } else {
-      this.props.dispatch(setCartCount(0));
-    }
   }
 
   componentWillUnmount() {
@@ -59,7 +49,7 @@ class Header extends React.Component {
 
   render() {
     const { search, nav } = this.props;
-    const { navType, cartCount } = this.state;
+    const { navType } = this.state;
     const items = this.menuItems.map((menuItem) => {
       if (menuItem.icon === true) {
         return (
@@ -70,7 +60,7 @@ class Header extends React.Component {
                   <span className="cart-title">{menuItem.title}</span>
                   <div className="cart">
                     <div className="cart-icon" />
-                    <span>{this.props.cartReducer ? this.props.cartReducer.count : 0}</span>
+                    <span>{this.props.cartReducer.items.length ? this.props.cartReducer.items.length : 0}</span>
                   </div>
                 </div>
 
@@ -120,4 +110,14 @@ Header.propTypes = {
 
 Header.defaultProps = { search: false };
 
-export default connect(cartReducer)(Header);
+const mapStateToProps = ({ cartReducer }) => {
+  return {
+    cartReducer,
+  };
+};
+
+export default connect(
+  mapStateToProps, {
+    addToCart
+   }
+)(Header);

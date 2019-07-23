@@ -1,10 +1,14 @@
 import React from 'react';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
-import rootReducer from '../reducers/rootReducer';
 import moment from 'moment';
+import { setLocations } from '../actions/locationActions';
+import { emptyCart, addToCart } from '../actions/cartActions';
+import { getLocations } from '../utils/rest/requests/locations';
+import { handleGeneralError } from '../utils/rest/error/toastHandler';
+import store from '../store';
+import '../assets/scss/styles.scss';
 
 /**
 * @param {object} initialState
@@ -14,21 +18,27 @@ import moment from 'moment';
 * @param {boolean} options.debug User-defined debug mode param
 * @param {string} options.storeKey This key will be used to preserve store in global namespace for safe HMR
 */
-const makeStore = (initialState, options) => createStore(rootReducer, initialState);
+
+// const makeStore = (initialState, options) => createStore(rootReducer, initialState, composeWithDevTools());
 
 class MyApp extends App {
-  // static async getInitialProps({Component, ctx}) {
-  //     // we can dispatch from here too
-  //     ctx.store.dispatch({type: 'FOO', payload: 'foo'});
-  //     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-  //     return {pageProps};
-  // }
+
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
+    this.retrieveLocations();
+
+    // Empty cart in store
+    store.dispatch(emptyCart({}));
+
     let itemsInCart = JSON.parse(localStorage.getItem('cart'));
     let filteredItemsInCart = [];
     if (itemsInCart) {
       filteredItemsInCart = itemsInCart.filter(item => {
-        if (!moment(item.period.start).isBefore(Date().toString(), 'day')) {
+        if (!moment(item.deliveryDate).isBefore(Date().toString(), 'day')) {
+          store.dispatch(addToCart(item));
           return item;
         }
       })
@@ -36,8 +46,20 @@ class MyApp extends App {
     localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
   }
 
+  async retrieveLocations() {
+    try {
+      const response = await getLocations();
+      if (response.data) {
+        // this.props.store.dispatch(setLocations(response.data));
+        store.dispatch(setLocations(response.data));
+      }
+    } catch (error) {
+      handleGeneralError(error);
+    }
+  }
+
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps } = this.props;
     return (
       <Container>
         <Provider store={store}>
@@ -48,4 +70,5 @@ class MyApp extends App {
   }
 }
 
-export default withRedux(makeStore)(MyApp);
+// export default withRedux(makeStore)(MyApp);
+export default MyApp;

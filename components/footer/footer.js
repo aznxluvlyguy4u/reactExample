@@ -1,7 +1,6 @@
 // components/navbar.js
 
 import React from 'react';
-import './footer.scss';
 import Link from 'next/link';
 
 const Footer = () => (

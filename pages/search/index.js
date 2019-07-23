@@ -11,16 +11,14 @@ import Pagination from '../../components/pagination';
 import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
+import locationReducer from '../../reducers/locationReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
-import '../index/index.scss';
-import './search.scss';
-import { getLocations } from '../../utils/rest/requests/locations';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
-const getHTML = products => products.map(item => (
-  <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
+const getHTML = products => products.map((item, index) => (
+  <Link key={index} href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
     <a>
       <div className="result-item">
         <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
@@ -37,7 +35,13 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false, locations: [],
+      products: [],
+      total_page_count: 0,
+      current_page: 0,
+      loading: true,
+      notFound: false,
+      locations: [],
+      searchUpdated: false
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
     this.counter = 0;
@@ -76,69 +80,76 @@ class SearchPage extends Component {
 
   async componentDidMount() {
     const {
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch, category_id,
+      keyword,
+      deliveryLocation,
+      collectionLocation,
+      collectionDate,
+      deliveryDate,
+      category_id,
     } = this.props;
 
     if (keyword !== '') {
       this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
     }
 
-    try {
-      const response = await getLocations();
-      this.setState({ locations: response.data });
-
-      const deliveryLocationNew = response.data.find(item => item.id === Number(deliveryLocation));
-      const collectionLocationNew = response.data.find(item => item.id === Number(collectionLocation));
-
-      dispatch(updateSearch({
-        keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
-      }));
-    } catch (error) {
-      handleGeneralError(error);
-    }
-
-    // dispatch(updateSearch({
-    //   keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-    // }));
-
-    if ((keyword === '' && category_id) || (keyword === '' && deliveryLocation)) {
+    // if query parameters have been modified by user
+    // (keyword === '' && category_id) || (keyword === '' && deliveryLocation) &&
+    if (deliveryLocation !== '' && collectionLocation !== '') {
       this.setState({ notFound: false });
       await this.getProducts('update');
-    } else if (keyword === '') {
-      this.setState({ notFound: true, loading: false });
     } else {
-      this.setState({ notFound: false });
-      await this.getProducts('update');
+      this.setState({ notFound: true, loading: false });
     }
   }
 
   async componentDidUpdate(prevProps) {
+
     const {
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch, category_id,
+      keyword,
+      deliveryLocation,
+      collectionLocation,
+      collectionDate,
+      deliveryDate,
+      category_id,
     } = this.props;
+
+    // if locations are in memory retrieve the locations by
+    // id and put the search query in store
+    if(this.props.locationReducer.locations.length > 0 && !this.state.searchUpdated && deliveryLocation !== '' && collectionLocation !== '') {
+      try {
+
+        let search = {
+          keyword,
+          collectionDate,
+          deliveryDate
+        }
+
+        if (deliveryLocation !== '' && deliveryLocation !== null) {
+          const dlNew = this.props.locationReducer.locations.find(item => item.id === Number(deliveryLocation));
+          const deliveryLocationNew = {label: dlNew.name, value: dlNew}
+          search.deliveryLocation = deliveryLocationNew
+        }
+
+        if (collectionLocation !== '' && collectionLocation !== null) {
+          const clNew = this.props.locationReducer.locations.find(item => item.id === Number(collectionLocation));
+          const collectionLocationNew = {label: clNew.name, value: clNew}
+          search.collectionLocation = collectionLocationNew;
+        }
+
+        this.props.updateSearch(search);
+        this.setState({
+          searchUpdated: true
+        })
+      } catch (error) {
+        handleGeneralError(error);
+      }
+    }
 
     if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
+      // if query parameters have been modified by user
 
-      if (!isEmpty(this.state.locations)) {
-        const deliveryLocationNew = this.state.locations.find(item => item.id === Number(deliveryLocation));
-        const collectionLocationNew = this.state.locations.find(item => item.id === Number(collectionLocation));
-
-        dispatch(updateSearch({
-          keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
-        }));
-      } else {
-        const response = await getLocations();
-        this.setState({ locations: response.data });
-
-        const deliveryLocationNew = response.data.find(item => item.id === Number(deliveryLocation));
-        const collectionLocationNew = response.data.find(item => item.id === Number(collectionLocation));
-
-        dispatch(updateSearch({
-          keyword, deliveryLocation: deliveryLocationNew, collectionLocation: collectionLocationNew, collectionDate, deliveryDate,
-        }));
-      }
-      if (keyword === '' || category_id === '') {
+      if (keyword === '' || category_id === '', deliveryLocation === '' || collectionLocation === '') {
         this.setState({ notFound: true, loading: false });
       } else {
         this.setState({ notFound: false });
@@ -171,8 +182,9 @@ class SearchPage extends Component {
       if (error.code === 404) {
         this.setState({ notFound: true });
         return;
+      } else {
+        handleGeneralError(error);
       }
-      handleGeneralError(error);
     }
   }
 
@@ -181,17 +193,9 @@ class SearchPage extends Component {
   }
 
   mergeObj(obj) {
-    const { dispatch } = this.props;
-    // if (obj.collectionLocation !== '' && obj.collectionLocation !== undefined && obj.collectionLocation !== null) {
-    //   obj.collectionLocation = JSON.parse(obj.collectionLocation).id;
-    // }
-    // if (obj.deliveryLocation !== '' && obj.deliveryLocation !== undefined && obj.deliveryLocation !== null) {
-    //   obj.deliveryLocation = JSON.parse(obj.deliveryLocation).id;
-    // }
-    console.log(obj);
-    dispatch(updateSearchObject(this.props.searchReducer.search, obj));
-    const query = CreateQueryParams(this.props.searchReducer.search);
-    Router.push({ pathname: '/search', query });
+    this.props.updateSearchObject(this.props.searchReducer.search, obj);
+    const params = CreateQueryParams(this.props.searchReducer.search);
+    Router.push({ pathname: '/search', query: params });
   }
 
   render() {
@@ -226,4 +230,15 @@ class SearchPage extends Component {
   }
 }
 
-export default connect(searchReducer)(SearchPage);
+const mapStateToProps = ({ searchReducer, locationReducer }) => {
+  return {
+    searchReducer,
+    locationReducer
+  };
+};
+
+export default connect(
+  mapStateToProps,{
+    updateSearch,
+    updateSearchObject
+  })(SearchPage);

@@ -4,8 +4,6 @@ import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
 import PhoneNumbers from '../../components/landing-pages/phonenumbers/';
 
-import './about.scss';
-
 class AboutPage extends Component {
   constructor(props) {
     super(props);

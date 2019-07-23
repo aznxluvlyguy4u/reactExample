@@ -1,14 +1,7 @@
-@import '../../../assets/scss/_variables';
-@import '../../../assets/scss/_mixins';
-
 .signup{
   max-width: 450px;
   padding:10px;
   margin-bottom: 50px;
-  max-height: 80vh;
-  form {
-    padding-bottom: 70px;
-  }
 }
 
 .form-inline{
@@ -62,22 +55,6 @@
     border: 2px solid $input-color;
     color: $blue;
     padding: 10px;
-    @include placeholder {
-      color: $input-color;
-    }
-    .inline{
-      display: inline
-    }
-  }
-  textarea{
-    box-sizing:border-box;
-    font-family: $font-stack;
-    width: 100%;
-    border: 2px solid $input-color;
-    color: $blue;
-    padding: 10px;
-    resize: none;
-    font-size:11px;
     @include placeholder {
       color: $input-color;
     }

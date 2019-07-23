@@ -4,7 +4,6 @@ import {
   Formik, Field, Form, ErrorMessage,
 } from 'formik';
 import CustomInputComponent from '../../signup/customInputComponent';
-import './orderform.scss';
 import CustomTextArea from '../../formComponents/customTextArea/customTextArea';
 import OrderFormSchema from './orderFormSchema';
 

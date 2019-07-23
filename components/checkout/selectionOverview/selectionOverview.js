@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './selectionoverview.scss';
 
 class SelectionOverview extends Component {
   constructor(props) {

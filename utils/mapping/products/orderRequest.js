@@ -1,36 +1,31 @@
 import { access } from 'fs';
 import { isEmpty } from 'lodash';
+import store from '../../../store';
 
 export default class OrderRequest {
   constructor(product, accessories, search, configurations) {
-    this.id = product.id;
-    this.quantity = 1;
-    this.endDate = search.collectionDate;
-    this.startDate = search.deliveryDate;
-    this.startLocation = search.collectionLocation;
-    this.endLocation = search.deliveryLocation;
-    this.accessories = accessories;
-    this.configurations = configurations;
   }
 
-  returnOrder() {
+  returnOrderRequest() {
+    const state = store.getState();
+
     const obj = {
-      id: this.id,
-      quantity: this.quantity,
+      id: state.localSearchReducer.selectedProduct.id,
+      quantity: state.localSearchReducer.selectedProduct.productQuantity, // this.quantity,
       period: {
-        start: this.startDate,
-        end: this.endDate,
+        start: state.localSearchReducer.search.deliveryDate, //this.startDate,
+        end: state.localSearchReducer.search.collectionDate, // this.endDate,
       },
       location: {
-        delivery: this.startLocation,
-        collection: this.endLocation,
+        delivery: state.localSearchReducer.search.deliveryLocation, //this.startLocation,
+        collection: state.localSearchReducer.search.collectionLocation , //this.endLocation,
       },
     };
-    if (!isEmpty(this.configurations)) {
+    if (!isEmpty(state.localSearchReducer.productConfigurations)) {
       this.configurations.map(item => ({ id: item.id, name: item.name, value: item.value }));
       obj.configurations = this.configurations;
     }
-    const list = this.accessories.filter(item => item.quantity !== 0);
+    const list = state.localSearchReducer.productOptionalAccessories.filter(item => item.quantity !== 0);
     if (!isEmpty(list)) {
       list.map(item => ({ id: item.id, quantity: item.quantity }));
       obj.accessories = list;
