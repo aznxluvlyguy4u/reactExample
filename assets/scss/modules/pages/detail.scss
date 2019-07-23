@@ -215,18 +215,30 @@
   }
   .content-wrapper {
     display:flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     width:100%;
     .first {
-      width:80%;
+      width:40%;
       &.bold{
         font-weight:bold;
       }
     }
     .second{
+      width:40%;
       &.bold{
         font-weight:bold;
       }
+    }
+    .third{
+      width:20%;
+      text-align:right;
+      &.bold{
+        font-weight:bold;
+      }
+    }
+    .last {
+      text-align:right;
+      width:60%;
     }
     div{
       font-size:12px;
@@ -280,3 +292,178 @@
     margin-left:2%;
   }
 }
+
+
+.subtract-button {
+  box-sizing: border-box;
+  background: #fff;
+  border: none;
+  color: $grey;
+}
+.add-button {
+  box-sizing: border-box;
+  background: #fff;
+  border: none;
+  color: $grey;
+}
+.center {
+  box-sizing: border-box;
+  display:inline-block;
+  color: $grey;
+}
+.quantity {
+  box-sizing: border-box;
+  color: $yellow;
+}
+
+.quantity-wrapper {
+  .item-wrap {
+    text-align:center;
+    display: block;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  .subtract-button {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+  }
+  .add-button {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+    color: $grey;
+  }
+
+  .quantity {
+    font-size: 60px;
+    color: $yellow;
+  }
+}
+
+
+.accessories-wrapper {
+  width:100%;
+  ul.accessories {
+    list-style: none;
+    width:100%;
+    margin:0px;
+    padding:0px;
+
+    li {
+      // height:100px;
+      span {
+        display: inline-block;
+        box-sizing: border-box;
+        height:100%;
+        line-height:100%;
+      }
+      width:100%;
+      display: block;
+      img {
+        width: 25%;
+      }
+      .description {
+        width: 40%;
+        padding:1em;
+      }
+      .counter {
+        display:inline-block;
+        text-align:center;
+        width: 32%;
+        height:100%;
+        line-height:100%;
+        .subtract-button {
+          font-size: 25px;
+          // background:#ff00ff;
+          height:100%;
+          line-height:100%;
+          padding: 0px;
+          margin:0px;
+          display:inline-block;
+          width:30%;
+        }
+        .add-button {
+          font-size: 25px;
+          // background:#ff00ff;
+          height:100%;
+          line-height:100%;
+          padding: 0px;
+          margin: 0px;
+          display:inline-block;
+          width:30%;
+        }
+        // .center {
+        //   background:#00ff00;
+        //   display:inline-block;
+        //   margin:0px;
+        //   padding:0px;
+        //   width:40%;
+        //   height:100%;
+        //   line-height:100%;
+        //   text-align: center;
+        // }
+        .quantity {
+          text-align: center;
+          font-size: 25px;
+          height:100%;
+          line-height:100%;
+          padding:0;
+          margin:0;
+          width:100%;
+          display:inline-block;
+        }
+      }
+    }
+  }
+}
+
+
+.confirmationview {
+  span{
+    font-size: 20px;
+  }
+  .subview{
+    margin-right:10%;
+    margin-left:10%;
+    display:flex;
+    justify-content: center;
+    flex-direction:column;
+    align-items:center;
+    span{
+      font-size: 16px;
+      padding-top:10px;
+      padding-bottom:10px;
+    }
+    img {
+      padding-top:20px;
+      padding-bottom:20px;
+    }
+  }
+  .search-button-full {
+    background-color: $yellow;
+    color: white;
+    width:100%;
+    display:block;
+    margin:auto;
+    border: solid 1px $yellow;
+    font-size:17px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-family: $font-stack;
+    font-weight:normal;
+    cursor:pointer;
+  }
+
+  .search-button-border {
+    background-color: white;
+    color: $yellow;
+    width:100%;
+    display:block;
+    text-align:center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: solid 2px $yellow;
+  }
+}
+
