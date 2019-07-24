@@ -15,7 +15,7 @@ class SummaryView extends Component {
     const collectionDate = moment(this.props.localSearchReducer.search.collectionDate);
     const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate);
     const daycount = collectionDate.diff(deliveryDate, 'days');
-    // this.setState({ dayCount: daycount });
+    this.setState({ dayCount: daycount });
   }
 
   calculateTotalAccessoires(accessories) {
@@ -24,6 +24,7 @@ class SummaryView extends Component {
     accessories.map(item => price += this.state.dayCount * Number(item.rates[0].price) * item.quantity);
     return price;
   }
+
 
   previousButton() {
     // If the current step is not 1, then render the "previous" button

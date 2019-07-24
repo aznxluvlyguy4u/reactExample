@@ -10,17 +10,15 @@ class OptionalAccessoryView extends Component {
     super(props);
     this.state = {
       productOptionalAccessories: [],
-      dayCount: 0
     }
   }
 
   componentDidMount() {
+
+
     this.setState({
-      productOptionalAccessories: this.props.localSearchReducer.productOptionalAccessories
-    })
-    const collectionDate = moment(this.props.localSearchReducer.search.collectionDate);
-    const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate);
-    const daycount = collectionDate.diff(deliveryDate, 'days');
+      productOptionalAccessories: this.props.localSearchReducer.productOptionalAccessories,
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -30,12 +28,19 @@ class OptionalAccessoryView extends Component {
       })
     }
   }
+
+  dayCount() {
+    const collectionDate = moment(this.props.localSearchReducer.search.collectionDate);
+    const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate);
+    return collectionDate.diff(deliveryDate, 'days');
+  }
+
   render() {
     return (
       <ul className="accessories">
         {this.state.productOptionalAccessories.length > 0 ? this.state.productOptionalAccessories.map((item, index) =>
           (
-            <li>
+            <li key={index}>
               {/* <div className="thumbnailImage" style={{ backgroundImage: `url(${item.images[0].thumbnailUrl})` }} /> */}
               {/* <img src={item.images[0].thumbnailUrl} /> */}
               {/* <div style={{
@@ -57,9 +62,9 @@ class OptionalAccessoryView extends Component {
                   -
                 </button>
                 <span className="center">
-                  <span class="quantity">{item.quantity}</span>
+                  <span className="quantity">{item.quantity}</span>
                   <br />
-                  €{parseFloat(item.quantity * item.rates[0].price * this.state.daycount).toFixed(2)}
+                  €{parseFloat(item.quantity * Number(item.rates[0].price) * this.dayCount()).toFixed(2)}
                 </span>
                 <button
                   className="add-button"
