@@ -72,7 +72,6 @@ class DetailPage extends Component {
     // check if previous search exists...
     // If so continue to search.
     // Else continue to home page so user can start a fresh search')
-    alert('check if previous search exists');
     if(this.props.searchReducer.search.deliveryLocation) {
       const params = generateSearchQueryParameterString(this.props.searchReducer.search);
       Router.push({ pathname: '/search', query: params });
@@ -98,8 +97,8 @@ class DetailPage extends Component {
           accessories.push(item)
         });
 
-        const optional = accessories.filter(val => val.type !== 'mandatory');
-        const mandatory = accessories.filter(val => val.type === 'mandatory');
+        const optional = accessories.filter(val => val.type !== 'MANDATORY');
+        const mandatory = accessories.filter(val => val.type === 'MANDATORY');
 
         this.props.setProductAccessories(accessories);
         this.props.setProductOptionalAccessories(optional);
@@ -328,7 +327,11 @@ class DetailPage extends Component {
                         Continue Shopping
                       </button>
                       <span>or</span>
-                      <Link href="/checkout"><a className="search-button-border">Go To Cart</a></Link>
+                      <Link
+                        onClick={(e) => {
+                          this.props.resetLocalSearch()
+                        }}
+                        href="/checkout"><a className="search-button-border">Go To Cart</a></Link>
                     </div>
                   </div>
                   :
