@@ -36,14 +36,17 @@ import {
 class CheckoutPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      products: []
+    };
     this.updateProductQuantity = this.updateProductQuantity.bind(this);
     this.updateAccessoryQuantity = this.updateAccessoryQuantity.bind(this);
+    this.returnWarningMessage = this.returnWarningMessage.bind(this);
   }
 
   dayCount(item) {
-    const collectionDate = moment(item.collectionDate);
-    const deliveryDate = moment(item.deliveryDate);
+    const collectionDate = moment(item.period.end);
+    const deliveryDate = moment(item.period.start);
     return collectionDate.diff(deliveryDate, 'days');
   }
 
@@ -56,16 +59,46 @@ class CheckoutPage extends Component {
     this.forceUpdate();
   }
 
-  async componentDidMount() {
-    const cart = await this.props.cartReducer.items.map(item => { item = item.orderRequest; return item});
-    console.log('orderRequests = ', cart);
+  async getOrderRequsts() {
+    console.log('called');
+    console.log('this.props.cartReducer.items = ', this.props.cartReducer.items);
+    return Promise.all(this.props.cartReducer.items.map(item => { item = item.orderRequest; return item}));
+  }
 
-    setTimeout(() => {
+  async componentDidUpdate(prevProps) {
+    // const cart = await this.getOrderRequsts();
+    // console.log('orderRequests = ', cart);
+
+    if (prevProps.cartReducer.items !== this.props.cartReducer.items) {
+      const cart = await this.props.cartReducer.items.map(item => { item = item.orderRequest; return item});
+      console.log('orderRequests = ', cart);
       if (cart.length > 0) {
-        let response = checkCartAvailability(cart);
+        let response = await checkCartAvailability(cart);
+
         console.log('response = ', response);
+        this.setState({
+          products: response.data.products
+        })
       }
-    }, 500 )
+    }
+
+  }
+
+  async componentDidMount() {
+    // const cart = await this.props.cartReducer.items.map(item => { item = item.orderRequest; return item});
+    // const cart = await this.getOrderRequsts();
+    // console.log('orderRequests = ', cart);
+
+    // // setTimeout(() => {
+    //   if (cart.length > 0) {
+    //     let response = await checkCartAvailability(cart);
+
+    //     console.log('response = ', response);
+    //     this.setState({
+    //       products: response.data.products
+    //     })
+    //   }
+    // // }, 500 )
 
     // do api call to availability check
 
@@ -97,6 +130,46 @@ class CheckoutPage extends Component {
     // }
   }
 
+  returnWarningMessage(item) {
+    if (item) {
+      switch (item.availabilityState) {
+        case 'AVAILABLE_BUT_DELAYED':
+          return (
+            <div className="warning-message">
+          Items are available but might not reach selected Delivery location on time. Please contact/call the office to arrange a dedicated delivery on-board’
+            </div>
+          );
+        case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
+          return (
+            <div className="warning-message">
+          Items are available but not all accesories are available. Please contact/call the office to arrange a solution’
+            </div>
+          );
+          case 'NOT_AVAILABLE':
+            return (
+              <div className="warning-message">
+                This item is unfortunately no longer available at your chosen time frame
+              </div>
+            )
+        default:
+          return null;
+      }
+    }
+  }
+
+  returnAvailabilityIcon(item) {
+    switch (item.availabilityState) {
+      case 'AVAILABLE':
+        return <img height="20" width="20" src="/static/images/available.png" />;
+      case 'AVAILABLE_BUT_DELAYED':
+        return <img height="20" width="20" src="/static/images/available.png" />;
+      case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
+          return <img height="20" width="20" src="/static/images/available.png" />;
+      case 'NOT_AVAILABLE':
+        return <img height="20" width="20" src="/static/images/unavailable.png" />;
+    }
+  }
+
   removeItem(uuid) {
     // const removedlist = this.state.cart.filter(item => item.uuid !== uuid);
     // this.setState({ cart: removedlist });
@@ -119,7 +192,7 @@ class CheckoutPage extends Component {
   }
 
   updateProductQuantity(result) {
-    result.item.productQuantity = result.quantity;
+    result.item.quantity = result.quantity;
     this.setState({ state: this.state });
   }
 
@@ -131,7 +204,6 @@ class CheckoutPage extends Component {
   removeProductFromCart(item) {
     this.props.removeFromCart(item);
   }
-
 
   removeAccessoryFromCart(accessory) {
     // this.props.removeFromCart()
@@ -181,8 +253,8 @@ class CheckoutPage extends Component {
             </div>
 
 
-            {this.props.cartReducer.items.map(item => (
-              <div className="cart-item">
+            {this.state.products.map((item, index) => (
+              <div className="cart-item" key={index}>
                 <div className="product">
                   <div className="row">
                     <div className="column">
@@ -191,11 +263,11 @@ class CheckoutPage extends Component {
                       </button>
                     </div>
                     <div className="column">
-                      <small>{item.selectedProduct.name}</small>
+                      <small>{item.name}</small>
                       <br />
                       <div
                         style={{
-                          backgroundImage: `url(${item.selectedProduct.images[0].thumbnailUrl})`,
+                          backgroundImage: `url(${item.images[0].thumbnailUrl})`,
                           backgroundSize: 'cover',
                           width: '100px',
                           height: '70px'
@@ -203,32 +275,35 @@ class CheckoutPage extends Component {
                       />
                     </div>
                     <div className="column">
-                      <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.productQuantity}/>
+                      <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity}/>
                     </div>
                     <div className="column">
-                      {parseFloat(item.selectedProduct.rates[0].price * item.productQuantity * this. dayCount(item)).toFixed(2)}
+                      {parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
                     </div>
                     <div className="column">
                       <div className="date-wrapper">
                         <div className="date-element">
-                          <span>{moment(item.deliveryDate).format('DD.MM.YYYY')}</span>
-                          <span>{item.deliveryLocation.label}</span>
+                          <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
+                          <span>{item.location.delivery.name}</span>
                         </div>
                         <div className="date-element">
                           <img src="/static/images/arrow.png" height="7" width="40" />
                         </div>
                         <div className="date-element">
-                          <span>{moment(item.collectionDate).format('DD.MM.YYYY')}</span>
-                          <span>{item.collectionLocation.label}</span>
+                          <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
+                          <span>{item.location.collection.name}</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="column">
-                      icon availability
+                      {/* icon availability */}
+                      {this.returnAvailabilityIcon(item)}
                     </div>
                     <div className="column">
-                      <small>small text about availability</small>
+                      <small>
+                        {this.returnWarningMessage(item)}
+                      </small>
                     </div>
                     <div className="column">
                       <button className="yellow-chevron" onClick={(e) => {
@@ -247,8 +322,8 @@ class CheckoutPage extends Component {
                   'accessories': true,
                   'open': item.collapsed && item.collapsed === true
                  })}>
-                  {item.productOptionalAccessories.map(accessory => (
-                    <div className="row">
+                  {item.accessories.map((accessory, index) => (
+                    <div className="row" key={index}>
                       <div className="column">
                         <div className="column">
                           <button onClick={(e) => {}}>
@@ -261,19 +336,18 @@ class CheckoutPage extends Component {
                       </div>
                       <div className="column">
                         <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
-
                       </div>
                       <div className="column">
-                        {parseFloat(accessory.rates[0].price * accessory.quantity * this. dayCount(item)).toFixed(2)}
-                      </div>
-                      <div className="column">
-
+                        {parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
                       </div>
                       <div className="column">
 
                       </div>
                       <div className="column">
-                        icon availability
+                        {this.returnAvailabilityIcon(item)}
+                      </div>
+                      <div className="column">
+                        {this.returnWarningMessage(accessory)}
                       </div>
                       <div className="column">
                         <small>Optional Accessory</small>
@@ -283,6 +357,51 @@ class CheckoutPage extends Component {
                 </div>
               </div>
             ))}
+
+            <div className="cost-extras">
+              <div className="row">
+                <div className="column">
+                  <h3>Total Rental Fee (excl. VAT)</h3>
+                </div>
+                <div className="column">
+                  <h3>$ PRICE</h3>
+                </div>
+              </div>
+              <div className="row">
+                <div className="column">
+                  <p>Delivery Costs</p>
+                </div>
+                <div className="column">
+                  to be determined at final booking
+                </div>
+              </div>
+              <div className="row">
+                <div className="column">
+                  <p>A security deposit is going te be charged by credit card</p>
+                </div>
+                <div className="column">
+                  $ PRICE
+                </div>
+              </div>
+            </div>
+            <div className="cost-total">
+              <div className="row">
+                <div className="column">
+                  <h3>Total Fee (excl. VAT)</h3>
+                </div>
+                <div className="column">
+                  <h3>$ PRICE</h3>
+                </div>
+              </div>
+              <div className="row">
+                <div className="column">
+
+                </div>
+                <div className="column">
+                  BUTTON
+                </div>
+              </div>
+            </div>
           </div>
 
       </Default>
