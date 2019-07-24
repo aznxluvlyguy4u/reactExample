@@ -3,22 +3,27 @@ import { isEmpty } from 'lodash';
 import store from '../../../store';
 
 export default class OrderRequest {
-  constructor(product, accessories, search, configurations) {
-  }
+  constructor() {}
 
   returnOrderRequest() {
     const state = store.getState();
 
     const obj = {
       id: state.localSearchReducer.selectedProduct.id,
-      quantity: state.localSearchReducer.selectedProduct.productQuantity, // this.quantity,
+      quantity: state.localSearchReducer.productQuantity,
       period: {
-        start: state.localSearchReducer.search.deliveryDate, //this.startDate,
-        end: state.localSearchReducer.search.collectionDate, // this.endDate,
+        start: state.localSearchReducer.search.deliveryDate,
+        end: state.localSearchReducer.search.collectionDate,
       },
       location: {
-        delivery: state.localSearchReducer.search.deliveryLocation, //this.startLocation,
-        collection: state.localSearchReducer.search.collectionLocation , //this.endLocation,
+        delivery: {
+          id: state.localSearchReducer.search.deliveryLocation.value.id,
+          name: state.localSearchReducer.search.deliveryLocation.value.name
+        },
+        collection: {
+          id: state.localSearchReducer.search.collectionLocation.value.id,
+          name: state.localSearchReducer.search.collectionLocation.value.name
+        }
       },
     };
     if (!isEmpty(state.localSearchReducer.productConfigurations)) {
