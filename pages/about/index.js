@@ -26,7 +26,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/slip-and-slide.png" />
+                <img src="static/images/about/WaterToys.png" />
               </div>
             </section>
 
@@ -38,7 +38,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/WeSpecialise.png" />
               </div>
             </section>
 
@@ -50,7 +50,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/Availability.png" />
               </div>
             </section>
 
@@ -62,7 +62,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/ShortNotice.png" />
               </div>
             </section>
 
@@ -74,7 +74,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/FastResponse.png" />
               </div>
             </section>
 
@@ -88,7 +88,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/AnytimeAnywhere.png" />
               </div>
             </section>
 
@@ -100,7 +100,7 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/One-Way.png" />
               </div>
             </section>
 
@@ -112,21 +112,29 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="image">
-                <img src="static/images/captain.png" />
+                <img src="static/images/about/NoCompromise.png" />
               </div>
             </section>
 
 
-            <section className="full">
+            {/* <section className="full">
               <div className="text">
                 <h2>Bookings</h2>
                 <p>
                   As always please send your enquiries to Barbara in Monaco or call any of our offices 24/7.
                 </p>
               </div>
-            </section>
+            </section> */}
 
-            <PhoneNumbers />
+            <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
+              <h2>Bookings</h2>
+              <p>
+                As always please send your enquiries to Barbara in Monaco or call any of our offices 24/7.
+              </p>
+              <PhoneNumbers />
+            </div>
+
+            {/* <PhoneNumbers /> */}
 
           </div>
         </div>
