@@ -13,8 +13,10 @@ const initialState = {
     keyword: '',
     deliveryLocation: '',
     collectionLocation: '',
-    deliveryDate: moment().toISOString(),
-    collectionDate: moment(new Date()).add(1, 'days').toISOString(),
+    deliveryDate: moment().format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString(),
+    // deliveryDate: moment().toISOString(),
+    collectionDate: moment(new Date()).add(1, 'days').format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString()
+    // collectionDate: moment(new Date()).add(1, 'days').toISOString()
   },
 };
 
@@ -125,8 +127,8 @@ function localSearchReducer(state = initialState, action) {
           keyword: '',
           deliveryLocation: '',
           collectionLocation: '',
-          deliveryDate: moment().toISOString(),
-          collectionDate: moment(new Date()).add(1, 'days').toISOString(),
+          deliveryDate: moment().format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString(),
+          collectionDate: moment(new Date()).add(1, 'days').format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString()
         }
       });
 

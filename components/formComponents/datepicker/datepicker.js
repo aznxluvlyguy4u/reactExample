@@ -58,12 +58,12 @@ class DatePicker extends Component {
 
     this.setState({ startDate, endDate });
     if (startDate !== null) {
-      onChange ? onChange({ deliveryDate: startDate.toISOString() }) : null;
-      setFieldValue('deliveryDate', startDate.toDate().toISOString());
+      onChange ? onChange({ deliveryDate: startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null; //.toISOString() }) : null;
+      setFieldValue('deliveryDate', startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ')); //.toISOString());
     }
     if (endDate !== null) {
-      onChange ? onChange({ collectionDate: endDate.toISOString() }) : null;
-      setFieldValue('collectionDate', endDate.toDate().toISOString());
+      onChange ? onChange({ collectionDate: endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null; // toISOString() }) : null;
+      setFieldValue('collectionDate', endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ')); //.toISOString());
     }
   }
 

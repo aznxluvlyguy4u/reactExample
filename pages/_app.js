@@ -37,7 +37,8 @@ class MyApp extends App {
     let filteredItemsInCart = [];
     if (itemsInCart) {
       filteredItemsInCart = itemsInCart.filter(item => {
-        if (!moment(item.deliveryDate).isBefore(Date().toString(), 'day')) {
+        const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
+        if (!moment(item.deliveryDate).isBefore(now, 'day')) {
           store.dispatch(addToCart(item));
           return item;
         }
