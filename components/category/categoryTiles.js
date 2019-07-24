@@ -31,7 +31,8 @@ class CategoryTiles extends Component {
       const response = await getCategories();
       this.setState({
         categories: response.data.map((item, index) => (
-          <Link key={index} href={`/search?category=${item.id}`}>
+          <span key={index}>
+          <Link href={`/search?category=${item.id}`}>
             <a draggable="false">
               <div
                 style={{ backgroundImage: 'url(/static/images/flyboard.png)' }}
@@ -41,6 +42,7 @@ class CategoryTiles extends Component {
               </div>
             </a>
           </Link>
+          </span>
         )),
       });
     } catch (error) {
