@@ -25,7 +25,7 @@ class Counter extends Component {
           -
         </button>
         <span className="center">
-          <span class="quantity">{this.props.quantity}</span>
+          <span className="quantity">{this.props.quantity}</span>
           <br />
         </span>
         <button
