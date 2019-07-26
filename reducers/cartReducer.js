@@ -1,6 +1,9 @@
+import moment from 'moment';
+
 const initialState = {
   count: 0,
-  items: []
+  items: [],
+  realtimeItems: [],
 };
 
 function cartReducer(state = initialState, action) {
@@ -11,9 +14,9 @@ function cartReducer(state = initialState, action) {
       });
 
     case 'ADD_TO_CART':
-      return Object.assign({}, state, {
-        items: [...state.items, action.payload],
-      });
+        return Object.assign({}, state, {
+          items: [...state.items, action.payload],
+        });
 
     case 'EMPTY_CART':
       return Object.assign({}, state, {
@@ -29,6 +32,10 @@ function cartReducer(state = initialState, action) {
         items: list,
       });
 
+    case 'SET_CART':
+      return Object.assign({}, state, {
+        items: action.payload,
+      });
     default:
       return state;
   }

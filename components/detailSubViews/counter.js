@@ -31,7 +31,9 @@ class Counter extends Component {
         <button
           className="add-button"
           onClick={(e) => {
-            this.props.updateQuantity({item: this.props.item, quantity: this.props.quantity + 1})
+            if (this.props.quantity < this.props.item.quantityAvailable) {
+              this.props.updateQuantity({item: this.props.item, quantity: this.props.quantity + 1})
+            }
           }}
         >
           +

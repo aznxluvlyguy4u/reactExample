@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 // import { isEmpty } from 'lodash';
 import classnames from 'classnames';
 
@@ -15,6 +15,7 @@ import SelectionOverview from '../../components/checkout/selectionOverview/selec
 // import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 import { LocalStorageUtil } from '../../utils/LocalStorageUtil';
 import Counter from '../../components/detailSubViews/counter';
+import OrderRequest from '../../utils/mapping/products/orderRequest';
 
 import {
   // updateLocalSearch,
@@ -36,6 +37,7 @@ import {
 class CheckoutPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       products: []
     };
@@ -60,31 +62,34 @@ class CheckoutPage extends Component {
   }
 
   async getOrderRequsts() {
-    console.log('called');
-    console.log('this.props.cartReducer.items = ', this.props.cartReducer.items);
     return Promise.all(this.props.cartReducer.items.map(item => { item = item.orderRequest; return item}));
   }
 
   async componentDidUpdate(prevProps) {
     // const cart = await this.getOrderRequsts();
-    // console.log('orderRequests = ', cart);
+    // if (prevProps.cartReducer.items !== this.props.cartReducer.items) {
+    //   const orderRequest = new OrderRequest().returnOrderRequest();
+    //   if (orderRequest.length > 0) {
+    //     let response = await checkCartAvailability(orderRequest);
+    //     this.setState({
+    //       products: response.data.products
+    //     })
+    //   }
+    // }
+  }
 
-    if (prevProps.cartReducer.items !== this.props.cartReducer.items) {
-      const cart = await this.props.cartReducer.items.map(item => { item = item.orderRequest; return item});
-      console.log('orderRequests = ', cart);
-      if (cart.length > 0) {
-        let response = await checkCartAvailability(cart);
+  async componentDidMount() {
 
-        console.log('response = ', response);
+    if(this.props.cartReducer.items.length > 0) {
+      const orderRequest = new OrderRequest().returnOrderRequest();
+      if (orderRequest.length > 0) {
+        let response = await checkCartAvailability(orderRequest);
         this.setState({
           products: response.data.products
         })
       }
     }
 
-  }
-
-  async componentDidMount() {
     // const cart = await this.props.cartReducer.items.map(item => { item = item.orderRequest; return item});
     // const cart = await this.getOrderRequsts();
     // console.log('orderRequests = ', cart);
@@ -158,16 +163,48 @@ class CheckoutPage extends Component {
   }
 
   returnAvailabilityIcon(item) {
-    switch (item.availabilityState) {
-      case 'AVAILABLE':
-        return <img height="20" width="20" src="/static/images/available.png" />;
-      case 'AVAILABLE_BUT_DELAYED':
-        return <img height="20" width="20" src="/static/images/available.png" />;
-      case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
-          return <img height="20" width="20" src="/static/images/available.png" />;
-      case 'NOT_AVAILABLE':
-        return <img height="20" width="20" src="/static/images/unavailable.png" />;
+    // switch (item.availabilityState) {
+    //   case 'AVAILABLE':
+    //     return <img height="20" width="20" src="/static/images/available.png" />;
+    //   case 'AVAILABLE_BUT_DELAYED':
+    //     return <img height="20" width="20" src="/static/images/available.png" />;
+    //   case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
+    //       return <img height="20" width="20" src="/static/images/available.png" />;
+    //   case 'NOT_AVAILABLE':
+    //     return <img height="20" width="20" src="/static/images/unavailable.png" />;
+    // }
+  }
+
+  returnAvailabilityIcon(item) {
+    if (item.quantityAvailable === 0) {
+      return <img height="20" width="20" src="/static/images/unavailable.png" />
     }
+
+    if (item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
+      return 'WARNING.'
+    }
+
+    if (item.quantityAvailable !== 0 && item.quantity <= item.quantityAvailable) {
+      return <img height="20" width="20" src="/static/images/available.png" />
+    }
+  }
+
+  calculateTotalAccessoires(accessories) {
+    // const { accessories } = this.props;
+    let price = 0;
+    accessories.map(item => price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity);
+    return price;
+  }
+
+  calculateTotalPrice() {
+    let productPrice = 0;
+    let accessoryPrice = 0;
+    this.state.products.map(product => {
+      productPrice += this.dayCount(product) * Number(product.rates[0].price) * product.quantity
+      accessoryPrice += this.calculateTotalAccessoires(product.accessories)
+    });
+    // alert(productPrice);
+    return productPrice + accessoryPrice;
   }
 
   removeItem(uuid) {
@@ -209,6 +246,49 @@ class CheckoutPage extends Component {
     // this.props.removeFromCart()
   }
 
+  quantityText(item) {
+    if(item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
+      return (
+        `Only ${item.quantityAvailable} are available! Would you like to change the Selected Quantity? <br />`
+      )
+    }
+  }
+
+  checkStoreText(item) {
+    if (item.stock.stores.alternative.length > 0 && item.stock.stores.alternative.length === item.quantityAvailable) {
+      // alleen available in alternative store dus extra fee
+      return '<br />Items need to be shipped from further away. An extra transport fee will apply'
+    }
+    if (item.stock.stores.gray.length > 0 && item.stock.stores.gray.length === item.quantityAvailable) {
+      // alleen available in grey store dus extra fee
+      return '<br />Items need to be shipped from further away. An extra transport fee will apply'
+    }
+    if (item.stock.stores.native.length > 0 && item.stock.stores.gray.length === item.quantityAvailable) {
+      // alleen available in native store dus goed
+    }
+    if (item.stock.stores.newItems.length > 0 && item.stock.stores.newItems.length === item.quantityAvailable) {
+      // alleen available in newItems store dus mogelijk extra fee
+      return 'Items need to be shipped from further away. An extra transport fee will apply'
+    }
+  }
+
+  setQuantityToAvailableQuantity(item) {
+    item.quantity = item.quantityAvailable;
+    this.setState({
+      state: this.state
+    });
+  }
+
+  resetQuantityButton(item) {
+    if(item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
+      return (
+        <button onClick={(e) => {this.setQuantityToAvailableQuantity(item)}}>Yes</button>
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     // const finalCheckoutData = this.state.cart.filter(item => item.availabilityState !== 'NOT_AVAILABLE');
     // const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
@@ -217,6 +297,8 @@ class CheckoutPage extends Component {
       <Default nav="fixed" search meta={{ title: 'checkout page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
         <div className="page-wrapper checkout">
           <h1>Final Checkout</h1>
+          {this.props.cartReducer.items.length > 0 ?
+          <Fragment>
             <div className="cart-item heading">
               <div className="row">
                 <div className="column heading">
@@ -278,7 +360,7 @@ class CheckoutPage extends Component {
                       <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity}/>
                     </div>
                     <div className="column">
-                      {parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
+                      €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
                     </div>
                     <div className="column">
                       <div className="date-wrapper">
@@ -296,13 +378,15 @@ class CheckoutPage extends Component {
                       </div>
                     </div>
 
-                    <div className="column">
-                      {/* icon availability */}
+                    <div className="column center">
                       {this.returnAvailabilityIcon(item)}
                     </div>
                     <div className="column">
                       <small>
                         {this.returnWarningMessage(item)}
+                        <span dangerouslySetInnerHTML={{ __html: this.quantityText(item) }} />
+                        {this.resetQuantityButton(item)}
+                        <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
                       </small>
                     </div>
                     <div className="column">
@@ -310,8 +394,8 @@ class CheckoutPage extends Component {
                         this.collapse(item)
                       }}>
                         <i className={classnames({
-                          'icon-down-open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false,
-                          'icon-up-open': item.collapsed && item.collapsed === true
+                          'icon-down-open': item.collapsed && item.collapsed === true,
+                          'icon-up-open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
                         })}></i>
                       </button>
                     </div>
@@ -320,10 +404,12 @@ class CheckoutPage extends Component {
 
                 <div className={classnames({
                   'accessories': true,
-                  'open': item.collapsed && item.collapsed === true
+                  'open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
                  })}>
                   {item.accessories.map((accessory, index) => (
-                    <div className="row" key={index}>
+                    <div className="row" key={index} style={
+                      accessory.quantityAvailable === 0 ? {background: '#eee', color: '#bbb'} : null
+                    }>
                       <div className="column">
                         <div className="column">
                           <button onClick={(e) => {}}>
@@ -338,17 +424,23 @@ class CheckoutPage extends Component {
                         <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
                       </div>
                       <div className="column">
-                        {parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
+                        €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
                       </div>
                       <div className="column">
 
                       </div>
-                      <div className="column">
-                        {this.returnAvailabilityIcon(item)}
+                      <div className="column center">
+                        {this.returnAvailabilityIcon(accessory)}
                       </div>
                       <div className="column">
-                        {this.returnWarningMessage(accessory)}
+                        <small>
+                          {this.returnWarningMessage(accessory)}
+                          <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
+                          {this.resetQuantityButton(accessory)}
+                          <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
+                        </small>
                       </div>
+
                       <div className="column">
                         <small>Optional Accessory</small>
                       </div>
@@ -358,16 +450,16 @@ class CheckoutPage extends Component {
               </div>
             ))}
 
-            <div className="cost-extras">
+           {/* <div className="cost-extras">
               <div className="row">
                 <div className="column">
                   <h3>Total Rental Fee (excl. VAT)</h3>
                 </div>
                 <div className="column">
-                  <h3>$ PRICE</h3>
+                  <h3>€ PRICE</h3>
                 </div>
               </div>
-              <div className="row">
+              <div c lassName="row">
                 <div className="column">
                   <p>Delivery Costs</p>
                 </div>
@@ -380,17 +472,17 @@ class CheckoutPage extends Component {
                   <p>A security deposit is going te be charged by credit card</p>
                 </div>
                 <div className="column">
-                  $ PRICE
+                  € PRICE
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="cost-total">
               <div className="row">
                 <div className="column">
                   <h3>Total Fee (excl. VAT)</h3>
                 </div>
                 <div className="column">
-                  <h3>$ PRICE</h3>
+                  <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
                 </div>
               </div>
               <div className="row">
@@ -402,6 +494,7 @@ class CheckoutPage extends Component {
                 </div>
               </div>
             </div>
+            </Fragment> : null}
           </div>
 
       </Default>

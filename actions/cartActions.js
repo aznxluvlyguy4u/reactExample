@@ -19,3 +19,8 @@ export function updateCart(state) {
 export function setCartCount(count) {
   return { type: 'UPDATE_CART', count };
 }
+
+
+export function setCart(cart) {
+  return { type: 'SET_CART', payload: cart };
+}
