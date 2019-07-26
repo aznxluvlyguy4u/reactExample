@@ -20,14 +20,14 @@ class SearchEdit extends Component {
 
   componentDidMount() {
     this.setState({
-      locations: transformLocationData(this.props.locationReducer.locations),
+      locations: this.props.locationReducer.selectboxLocations,
     })
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.locationReducer.locations !== this.props.locationReducer.locations) {
+    if (prevProps.locationReducer.selectboxLocations !== this.props.locationReducer.selectboxLocations) {
       this.setState({
-        locations: transformLocationData(this.props.locationReducer.locations)
+        locations: this.props.locationReducer.selectboxLocations
       })
     }
   }

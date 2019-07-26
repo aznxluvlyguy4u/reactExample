@@ -3,7 +3,6 @@ import Router from 'next/router';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  updateSearch,
   updateSearchKeyword,
   updateSearchDeliveryLocation,
   updateSearchCollectionLocation,
@@ -30,14 +29,14 @@ class SearchForm extends Component {
 
   componentDidMount() {
     this.setState({
-      locations: transformLocationData(this.props.locationReducer.locations),
+      locations: this.props.locationReducer.selectboxLocations,
     })
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.locationReducer.locations !== this.props.locationReducer.locations) {
+    if (prevProps.locationReducer.selectboxLocations !== this.props.locationReducer.selectboxLocations) {
       this.setState({
-        locations: transformLocationData(this.props.locationReducer.locations)
+        locations: this.props.locationReducer.selectboxLocations
       })
     }
   }
@@ -82,7 +81,7 @@ class SearchForm extends Component {
                 <div className="location form-block">
                   <label htmlFor="deliveryLocation">Pick up Location</label>
                   <Field
-                    options={transformLocationData(this.props.locationReducer.locations)}
+                    options={this.props.locationReducer.selectboxLocations}
                     onChange={
                       (e) =>{
                         this.props.updateSearchDeliveryLocation({
@@ -106,7 +105,7 @@ class SearchForm extends Component {
                 <div className="location form-block">
                   <label htmlFor="collectionLocation">Drop off Location</label>
                   <Field
-                    options={transformLocationData(this.props.locationReducer.locations)}
+                    options={this.props.locationReducer.selectboxLocations}
                     onChange={
                       (e) =>{
                         this.props.updateSearchCollectionLocation({
@@ -168,7 +167,6 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
 };
 
 export default connect(mapStateToProps, {
-  // updateSearch,
   updateSearchKeyword,
   updateSearchDeliveryLocation,
   updateSearchCollectionLocation,

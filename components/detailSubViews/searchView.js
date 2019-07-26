@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import searchReducer from '../../reducers/searchReducer';
 import locationReducer from '../../reducers/locationReducer';
 import localSearchReducer from '../../reducers/localSearchReducer';
-import { transformLocationData } from '../../utils/data/countryDataUtil';
 import DatePicker from '../formComponents/datepicker/datepicker';
 import CustomSelect from '../formComponents/select/customSelect';
 import localSearchValidation from './searchViewValidation';
@@ -22,9 +21,19 @@ import Steps from './steps';
 class SearchView extends Component {
   constructor(props) {
     super(props);
+
+    const search = Object.assign({}, this.props.searchReducer.search);
+    this.props.updateLocalSearch(search);
+
     this.state = {
       locations: [],
-      modalIsOpen: false
+      modalIsOpen: false,
+      initialValues: {
+        deliveryLocation: this.props.localSearchReducer.search.deliveryLocation,
+        collectionLocation: this.props.localSearchReducer.search.collectionLocation,
+        collectionDate: this.props.localSearchReducer.search.collectionDate,
+        deliveryDate: this.props.localSearchReducer.search.deliveryDate
+      }
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -33,14 +42,14 @@ class SearchView extends Component {
 
   componentDidMount() {
     this.setState({
-      locations: transformLocationData(this.props.locationReducer.locations),
+      locations: this.props.locationReducer.selectboxLocations,
     });
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.locationReducer.locations !== this.props.locationReducer.locations) {
+    if (prevProps.locationReducer.selectboxLocations !== this.props.locationReducer.selectboxLocations) {
       this.setState({
-        locations: transformLocationData(this.props.locationReducer.locations)
+        locations: this.props.locationReducer.selectboxLocations
       })
     }
   }
@@ -63,15 +72,13 @@ class SearchView extends Component {
 
   render() {
     const { modalIsOpen } = this.state;
-
-
     if (this.props.localSearchReducer.currentStep && this.props.localSearchReducer.currentStep !== 1) { // Prop: The current step
       return null;
     }
 
 
     const submitForm = this.handleSubmit;
-    if (!isEmpty(this.state.locations) && this.props.localSearchReducer.search) {
+    if (!isEmpty(this.state.locations) && this.props.localSearchReducer.search ) {
       return (
         <div className={'active' ? 'form active' : 'form'}>
           <div className="titlewrapper">
@@ -83,22 +90,11 @@ class SearchView extends Component {
             <Formik
               validationSchema={localSearchValidation}
               enableReinitialize
-              initialValues={{
-                deliveryLocation: this.props.localSearchReducer.search.deliveryLocation,
-                collectionLocation: this.props.localSearchReducer.search.collectionLocation,
-                collectionDate: this.props.localSearchReducer.search.collectionDate,
-                deliveryDate: this.props.localSearchReducer.search.deliveryDate
-              }}
+              initialValues={{...this.props.localSearchReducer.search }}
               onSubmit={submitForm || undefined}
             >
               {({
                 values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                handleSubmit,
-                isSubmitting,
                 setFieldValue,
                 /* and other goodies */
               }) => (
@@ -179,12 +175,12 @@ class SearchView extends Component {
           </div>
 
           {/* {!isEmpty(data.configurations) ? (
-          <button type="button" onClick={this.toggleModal} className="configure">
-            <i className="icon-cog" />
-                Advanced Configuration
-          </button>
-        ) : null} */}
-        {/* <ConfigurationModal configurationsstate={this.props.configurationsstate} onChangeConfiguration={this.props.onChangeConfiguration} quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} /> */}
+            <button type="button" onClick={this.toggleModal} className="configure">
+              <i className="icon-cog" />
+                  Advanced Configuration
+            </button>
+          ) : null} */}
+          {/* <ConfigurationModal configurationsstate={this.props.configurationsstate} onChangeConfiguration={this.props.onChangeConfiguration} quantity={1} configurations={data.configurations} closeModal={this.closeModal} modalIsOpen={modalIsOpen} /> */}
 
         </div>
       );

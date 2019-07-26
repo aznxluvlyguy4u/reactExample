@@ -1,5 +1,6 @@
 const initialState = {
   locations: [],
+  selectboxLocations: [],
   locationsLoading: false
 };
 
@@ -12,6 +13,11 @@ function locationReducer(state = initialState, action) {
     case 'SET_LOCATIONS':
       return Object.assign({}, state, {
         locations: action.payload,
+        locationsLoading: false,
+      });
+    case 'SET_SELECT_LOCATIONS':
+      return Object.assign({}, state, {
+        selectboxLocations: action.payload,
         locationsLoading: false,
       });
 

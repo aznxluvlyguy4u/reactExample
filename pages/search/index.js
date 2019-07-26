@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { updateSearch, updateSearchObject } from '../../actions/searchActions';
+import { updateLocalSearch } from '../../actions/localSearchActions';
 import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
 import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
@@ -18,7 +19,11 @@ import { getProducts } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 const getHTML = products => products.map((item, index) => (
-  <Link key={index} href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
+  <Link
+    key={index}
+    href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+    as={`/detail/${item.id}/${slugify(item.name)}`}
+  >
     <a>
       <div className="result-item">
         <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
@@ -115,7 +120,7 @@ class SearchPage extends Component {
 
     // if locations are in memory retrieve the locations by
     // id and put the search query in store
-    if(this.props.locationReducer.locations.length > 0 && !this.state.searchUpdated && deliveryLocation !== '' && collectionLocation !== '') {
+    if(this.props.locationReducer.selectboxLocations.length > 0 && !this.state.searchUpdated && deliveryLocation !== '' && collectionLocation !== '') {
       try {
 
         let search = {
@@ -125,15 +130,11 @@ class SearchPage extends Component {
         }
 
         if (deliveryLocation !== '' && deliveryLocation !== null) {
-          const dlNew = this.props.locationReducer.locations.find(item => item.id === Number(deliveryLocation));
-          const deliveryLocationNew = {label: dlNew.name, value: dlNew}
-          search.deliveryLocation = deliveryLocationNew
+          search.deliveryLocation = this.props.locationReducer.selectboxLocations.find(item => item.id === Number(deliveryLocation));
         }
 
         if (collectionLocation !== '' && collectionLocation !== null) {
-          const clNew = this.props.locationReducer.locations.find(item => item.id === Number(collectionLocation));
-          const collectionLocationNew = {label: clNew.name, value: clNew}
-          search.collectionLocation = collectionLocationNew;
+          search.collectionLocation = this.props.locationReducer.selectboxLocations.find(item => item.id === Number(collectionLocation));
         }
 
         this.props.updateSearch(search);
@@ -240,5 +241,6 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
 export default connect(
   mapStateToProps,{
     updateSearch,
-    updateSearchObject
+    updateSearchObject,
+    updateLocalSearch
   })(SearchPage);
