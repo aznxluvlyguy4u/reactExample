@@ -3,12 +3,13 @@ import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import moment from 'moment';
-import { setLocations } from '../actions/locationActions';
+import { setLocations, setSelectLocations } from '../actions/locationActions';
 import { emptyCart, addToCart } from '../actions/cartActions';
 import { getLocations } from '../utils/rest/requests/locations';
 import { handleGeneralError } from '../utils/rest/error/toastHandler';
 import store from '../store';
 import '../assets/scss/styles.scss';
+import SelectboxLocation from '../utils/mapping/locations/SelectboxLocation';
 
 /**
 * @param {object} initialState
@@ -36,23 +37,27 @@ class MyApp extends App {
     let itemsInCart = JSON.parse(localStorage.getItem('cart'));
     let filteredItemsInCart = [];
     if (itemsInCart) {
-      filteredItemsInCart = itemsInCart.filter(item => {
+      filteredItemsInCart = itemsInCart.map(item => {
         const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
-        if (!moment(item.deliveryDate).isBefore(now, 'day')) {
+        if (item && item !== null && item !== undefined && !moment(item.deliveryDate).isBefore(now, 'day')) {
           store.dispatch(addToCart(item));
           return item;
         }
       })
+      localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
     }
-    localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
   }
 
   async retrieveLocations() {
     try {
       const response = await getLocations();
       if (response.data) {
-        // this.props.store.dispatch(setLocations(response.data));
         store.dispatch(setLocations(response.data));
+        const selectboxLocations = response.data.map(selectboxLocation => {
+          const selectLocation = new SelectboxLocation(selectboxLocation);
+          return selectLocation;
+        })
+        store.dispatch(setSelectLocations(selectboxLocations));
       }
     } catch (error) {
       handleGeneralError(error);
