@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Field, Form, Formik } from 'formik';
-
+import moment from 'moment';
 import { connect } from 'react-redux';
 import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
@@ -13,13 +13,14 @@ class AboutPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      thankYou: false,
       offices: [
-        {label: 'Monaco | France', value: 1},
-        {label: 'Spain', value: 2},
-        {label: 'Greece', value: 3},
-        {label: 'Italy', value: 4},
-        {label: 'ADRIATIC', value: 5},
-        {label: 'Caribbean', value: 6},
+        {label: 'Monaco | France', value: {id: 1, name: 'Monaco | France'}},
+        {label: 'Spain', value: {id: 1, name: 'Spain'}},
+        {label: 'Greece', value: {id: 1, name: 'Greece'}},
+        {label: 'Italy', value: {id: 1, name: 'Italy'}},
+        {label: 'ADRIATIC', value: {id: 1, name: 'ADRIATIC'}},
+        {label: 'Caribbean', value: {id: 1, name: 'Caribbean'}},
       ]
     };
 
@@ -27,8 +28,14 @@ class AboutPage extends Component {
   }
 
   submitForm(values) {
-    // console.log('values = ', values);
-    postContactMessage(values);
+    postContactMessage(values)
+      .then(response => {
+        if(response.code === 201) {
+          this.setState({
+            thankYou: true,
+          });
+        }
+      });
   }
 
   render() {
@@ -55,6 +62,12 @@ class AboutPage extends Component {
               </div>
             </div>
             <div className="col-right">
+              {this.state.thankYou  === true ?
+                <div>
+                  <h3>Thank you</h3>
+                  <p>We will answer your message as soon as possible</p>
+                </div>
+              :
               <Formik
                 // validationSchema={{}}
                 onSubmit={this.submitForm || undefined}
@@ -62,7 +75,7 @@ class AboutPage extends Component {
                 initialValues={{
                   name: '',
                   office: '',
-                  email: '',
+                  emailAddress: '',
                   phoneNumber: '',
                   message: '',
                 }}
@@ -91,9 +104,9 @@ class AboutPage extends Component {
 
                       <div style={{width: '50%', float: 'left'}} className="form-left">
                         <div className="keyword form-block">
-                          <label htmlFor="email">Email</label>
+                          <label htmlFor="emailAddress">Email</label>
                           <Field
-                            name="email"
+                            name="emailAddress"
                             component={CustomInputComponent} />
                         </div>
                       </div>
@@ -117,7 +130,7 @@ class AboutPage extends Component {
                     </div>
                   </Form>
                 )}
-              </Formik>
+              </Formik>}
             </div>
 
             <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
