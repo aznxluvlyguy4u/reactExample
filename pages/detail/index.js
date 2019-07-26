@@ -32,7 +32,8 @@ import {
 } from '../../actions/localSearchActions';
 import {
   updateCart,
-  addToCart
+  addToCart,
+  setCart
 } from '../../actions/cartActions';
 
 class DetailPage extends Component {
@@ -63,8 +64,6 @@ class DetailPage extends Component {
 
   async componentDidMount() {
     await this.getProduct();
-    const search = Object.assign({}, this.props.searchReducer.search);
-    this.props.updateLocalSearch(search);
   }
 
   continueShopping() {
@@ -133,16 +132,51 @@ class DetailPage extends Component {
 
   addToCart() {
     const order = new Order().returnOrder();
-    if (localStorage.getItem('cart')) {
-      const cart = JSON.parse(localStorage.getItem('cart'));
-      cart.push(order);
-      localStorage.setItem('cart', JSON.stringify(cart));
-    } else {
-      const arr = [];
-      arr.push(order);
-      localStorage.setItem('cart', JSON.stringify(arr));
+
+    // this.props.addToCart(order);
+    const items = this.props.cartReducer.items;
+
+    let existingItems = this.props.cartReducer.items;
+    let mergedItems = [];
+    if(existingItems.some((someItem) => {
+      return (someItem.selectedProduct.id === order.selectedProduct.id &&
+      moment(someItem.deliveryDate).isSame(moment(order.deliveryDate), 'day') &&
+      moment(someItem.collectionDate).isSame(moment(order.collectionDate), 'day') &&
+      someItem.collectionLocation.label === order.collectionLocation.label &&
+      someItem.deliveryLocation.label === order.deliveryLocation.label)
+    })) {
+      mergedItems = existingItems.map(item => {
+        if (
+          item.selectedProduct.id === order.selectedProduct.id &&
+            moment(item.deliveryDate).isSame(moment(order.deliveryDate), 'day') &&
+            moment(item.collectionDate).isSame(moment(order.collectionDate), 'day') &&
+            item.collectionLocation.label === order.collectionLocation.label &&
+            item.deliveryLocation.label === order.deliveryLocation.label
+          ) {
+            item.productQuantity = item.productQuantity + order.productQuantity;
+            item.productOptionalAccessories.map(existingAccessory => {
+              order.productOptionalAccessories.map(newAccessory => {
+                if (existingAccessory.id === newAccessory.id) {
+                  existingAccessory.quantity = existingAccessory.quantity + newAccessory.quantity;
+                }
+              });
+            });
+          return item;
+        } else {
+          return item0
+        }
+      });
     }
-    this.props.addToCart(order);
+
+
+    if (mergedItems.length === 0)  {
+      existingItems = [...existingItems, order]
+    } else {
+      existingItems = mergedItems
+    }
+
+    this.props.setCart(existingItems);
+    localStorage.setItem('cart', JSON.stringify(existingItems));
     this.props.setCurrentStep(5);
   }
 
@@ -353,12 +387,13 @@ class DetailPage extends Component {
   }
 }
 
-const mapStateToProps = ({ rootReducer, searchReducer, locationReducer, localSearchReducer }) => {
+const mapStateToProps = ({ rootReducer, searchReducer, locationReducer, localSearchReducer, cartReducer }) => {
   return {
     searchReducer,
     locationReducer,
     localSearchReducer,
-    rootReducer
+    rootReducer,
+    cartReducer
   };
 };
 
@@ -375,6 +410,7 @@ export default connect(
     setProductConfigurations,
     setTotalSteps,
     setCurrentStep,
-    resetLocalSearch
+    resetLocalSearch,
+    setCart
   }
 )(DetailPage);
