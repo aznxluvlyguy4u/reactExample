@@ -12,21 +12,6 @@ const OrderFormSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
     .required('This is a required field'),
-  streetName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('This is a required field'),
-  streetNumber: Yup.number()
-    .required('This is a required field'),
-  postalCode: Yup.string()
-    .min(2, 'Too Short!')
-    .max(6, 'Too Long!')
-    .required('This is a required field'),
-  addressAddition: Yup.string(),
-  city: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('This is a required field'),
   phonePrefix: Yup.string()
     .min(2, 'Too Short!')
     .max(5, 'Too Long!')
@@ -34,9 +19,8 @@ const OrderFormSchema = Yup.object().shape({
   phoneNumber: Yup.number()
     .min(2, 'Too Short!')
     .required('This is a required field'),
-  comment: Yup.string(),
-  country: Yup.string()
-    .required('This is a required field'),
+  affiliation: Yup.string()
+    .required(),
 });
 
 export default OrderFormSchema;
