@@ -34,17 +34,20 @@ class MyApp extends App {
     // Empty cart in store
     store.dispatch(emptyCart({}));
 
-    let itemsInCart = JSON.parse(localStorage.getItem('cart'));
-    let filteredItemsInCart = [];
-    if (itemsInCart) {
-      filteredItemsInCart = itemsInCart.map(item => {
-        const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
-        if (item && item !== null && item !== undefined && !moment(item.deliveryDate).isBefore(now, 'day')) {
-          store.dispatch(addToCart(item));
-          return item;
-        }
-      })
-      localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
+    const cart = localStorage.getItem('cart');
+    if (cart && cart !== "" && cart !== undefined && cart !== null) {
+        let itemsInCart = JSON.parse(cart);
+      let filteredItemsInCart = [];
+      if (itemsInCart) {
+        filteredItemsInCart = itemsInCart.map(item => {
+          const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
+          if (item && item !== null && item !== undefined && !moment(item.deliveryDate).isBefore(now, 'day')) {
+            store.dispatch(addToCart(item));
+            return item;
+          }
+        })
+        localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
+      }
     }
   }
 
