@@ -126,13 +126,13 @@ class AboutPage extends Component {
               </div>
             </section> */}
 
-            <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
+            {/* <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
               <h2>Bookings</h2>
               <p>
                 As always please send your enquiries to Barbara in Monaco or call any of our offices 24/7.
               </p>
               <PhoneNumbers />
-            </div>
+            </div> */}
 
             {/* <PhoneNumbers /> */}
 

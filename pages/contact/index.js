@@ -58,7 +58,7 @@ class AboutPage extends Component {
                   <br />
                   We are available to help 24/7.
                 </p>
-                <a href="tel:+33 640 62 95 99" className="search-button-border">+33 640 62 95 99</a>
+                <a href="tel:+33 640 62 95 99" className="button-border">+33 640 62 95 99</a>
               </div>
             </div>
             <div className="col-right">
@@ -92,15 +92,15 @@ class AboutPage extends Component {
                           name="name"
                           component={CustomInputComponent} />
                       </div>
-                      <div className="keyword form-block">
+                      {/* <div className="keyword form-block">
                         <label htmlFor="office">Office</label>
                         <Field
-                          placeholder=""
+                          placeholder="Select Office"
                           options={this.state.offices}
                           name="office"
                           setFieldValue={setFieldValue}
                           component={CustomSelect} />
-                      </div>
+                      </div> */}
 
                       <div style={{width: '50%', float: 'left'}} className="form-left">
                         <div className="keyword form-block">
@@ -133,10 +133,10 @@ class AboutPage extends Component {
               </Formik>}
             </div>
 
-            <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
+            {/* <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
               <h1>Regional Help Centers</h1>
               <PhoneNumbers />
-            </div>
+            </div> */}
           </div>
         </div>
       </Default>
