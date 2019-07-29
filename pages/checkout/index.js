@@ -1,35 +1,36 @@
 import moment from 'moment';
 import React, { Component, Fragment } from 'react';
-// import { isEmpty } from 'lodash';
+import Router from 'next/router';
+
 import classnames from 'classnames';
+import Modal from 'react-modal';
+import OrderForm from '../../components/checkout/orderForm/orderForm';
+import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
+import { orderCartItems } from '../../utils/rest/requests/orders';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 import { connect } from 'react-redux';
 import Default from '../../layouts/default';
 import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import SelectionOverview from '../../components/checkout/selectionOverview/selectionOverview';
-// import FinalCheckout from '../../components/checkout/finalCheckout/finalCheckout';
-// import UnavailableItems from '../../components/checkout/unavailableItems/unavailableItems';
-// import Loader from '../../components/loader';
-// import cartReducer from '../../reducers/cartReducer';
-// import { setCartCount } from '../../actions/cartActions';
-// import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+import Loader from '../../components/loader';
+import { emptyCart } from '../../actions/cartActions';
 import { LocalStorageUtil } from '../../utils/LocalStorageUtil';
 import Counter from '../../components/detailSubViews/counter';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
 import {
-  // updateLocalSearch,
-  updateLocalSearchProductQuantity,
-  // setSelectedProduct,
-  // setProductAccessories,
-  // setProductMandatoryAccessories,
-  // setProductOptionalAccessories,
-  // setProductConfigurations,
-  // setTotalSteps,
-  // setCurrentStep
-} from '../../actions/localSearchActions';
-import {
-  // updateCart,
   addToCart,
   removeFromCart
 } from '../../actions/cartActions';
@@ -39,8 +40,13 @@ class CheckoutPage extends Component {
     super(props);
 
     this.state = {
-      products: []
+      products: [],
+      modalIsOpen: false,
+      loading: false,
+      orderFailed: false,
+      orderSuccess: false
     };
+
     this.updateProductQuantity = this.updateProductQuantity.bind(this);
     this.updateAccessoryQuantity = this.updateAccessoryQuantity.bind(this);
     this.returnWarningMessage = this.returnWarningMessage.bind(this);
@@ -66,26 +72,19 @@ class CheckoutPage extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    // const cart = await this.getOrderRequsts();
-    // if (prevProps.cartReducer.items !== this.props.cartReducer.items) {
-    //   const orderRequest = new OrderRequest().returnOrderRequest();
-    //   if (orderRequest.length > 0) {
-    //     let response = await checkCartAvailability(orderRequest);
-    //     this.setState({
-    //       products: response.data.products
-    //     })
-    //   }
-    // }
+
   }
 
   async componentDidMount() {
-
     if(this.props.cartReducer.items.length > 0) {
+      this.setState({ loading: true });
+
       const orderRequest = new OrderRequest().returnOrderRequest();
       if (orderRequest.length > 0) {
         let response = await checkCartAvailability(orderRequest);
         this.setState({
-          products: response.data.products
+          products: response.data.products,
+          loading: false
         })
       }
     }
@@ -220,12 +219,24 @@ class CheckoutPage extends Component {
     // LocalStorageUtil.addToCart(uuid);
   }
 
-  emptyCart() {
-    // const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
-    // this.setState({ cart: unavailableData });
-    // localStorage.setItem('cart', JSON.stringify(unavailableData));
-    // this.props.dispatch(setCartCount(unavailableData.length));
-    // this.setState({ totalPrice: '0.00' });
+  // emptyCart() {
+  //   // const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
+  //   // this.setState({ cart: unavailableData });
+  //   // localStorage.setItem('cart', JSON.stringify(unavailableData));
+  //   // this.props.dispatch(setCartCount(unavailableData.length));
+  //   // this.setState({ totalPrice: '0.00' });
+  // }
+
+  openModal() {
+    this.setState({ modalIsOpen: true });
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+  }
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
   }
 
   updateProductQuantity(result) {
@@ -244,6 +255,28 @@ class CheckoutPage extends Component {
 
   removeAccessoryFromCart(accessory) {
     // this.props.removeFromCart()
+  }
+
+  requestReservation = (values) => {
+    const request = new PlaceOrderRequest(this.state.products, values).returnOrder();
+    try {
+      this.setState({ loading: true });
+      const response = orderCartItems(request);
+      this.props.emptyCart();
+      localStorage.setItem('cart', []);
+
+      this.closeModal();
+      this.setState({ loading: false });
+      this.setState({
+        orderSuccess: true
+      })
+    } catch (error) {
+      this.setState({ loading: false });
+      this.setState({
+        orderFailure: true
+      })
+      handleGeneralError(error);
+    }
   }
 
   quantityText(item) {
@@ -282,22 +315,37 @@ class CheckoutPage extends Component {
   resetQuantityButton(item) {
     if(item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
       return (
-        <button onClick={(e) => {this.setQuantityToAvailableQuantity(item)}}>Yes</button>
+        <a
+          href="#"
+          className="button-border"
+          onClick={(e) => {this.setQuantityToAvailableQuantity(item)}}>
+          Yes
+        </a>
       )
     } else {
       return null
     }
   }
 
-  render() {
-    // const finalCheckoutData = this.state.cart.filter(item => item.availabilityState !== 'NOT_AVAILABLE');
-    // const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
+  closeSuccessModal = () => {
+    this.setState({
+      orderSuccess: false
+    });
+    Router.push({ pathname: '/' });
+  }
 
+  closeFailedModal = () => {
+    this.setState({
+      orderFailed: false
+    })
+  }
+
+  render() {
     return (
       <Default nav="fixed" search meta={{ title: 'checkout page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
         <div className="page-wrapper checkout">
           <h1>Final Checkout</h1>
-          {this.props.cartReducer.items.length > 0 ?
+          {!this.state.loading && this.props.cartReducer.items.length > 0 ?
           <Fragment>
             <div className="cart-item heading">
               <div className="row">
@@ -334,13 +382,13 @@ class CheckoutPage extends Component {
               </div>
             </div>
 
-
             {this.state.products.map((item, index) => (
               <div className="cart-item" key={index}>
                 <div className="product">
                   <div className="row">
                     <div className="column">
-                      <button onClick={(e) => {this.removeProductFromCart(item)}}>
+                      <button
+                        onClick={(e) => {this.removeProductFromCart(item)}}>
                         <i className="icon-x"></i>
                       </button>
                     </div>
@@ -490,12 +538,74 @@ class CheckoutPage extends Component {
 
                 </div>
                 <div className="column">
-                  BUTTON
+                  <a
+                    className="button-border right"
+                    onClick={(e) => {
+                      this.openModal()
+                    }}
+                  >
+                    Request Reservation
+                  </a>
                 </div>
               </div>
             </div>
             </Fragment> : null}
+            {this.state.loading ? <Loader /> : null}
           </div>
+
+          {this.state.orderSuccess &&
+            <Modal
+              isOpen={this.state.orderSuccess}
+              shouldCloseOnOverlayClick={false}
+              onAfterOpen={this.afterOpenModal}
+              onRequestClose={this.closeSuccessModal}
+              style={customStyles}
+            >
+              <h1>Reservation Request Sent</h1>
+              <p>Thanks for your inquiry! We will get back to you as quickly as possible±!</p>
+              <p>Please check your Email inbox for the details</p>
+              <a
+                className="button-border fullwidth"
+                onClick={(e) => {
+                  this.closeSuccessModal()
+                }}>Done
+              </a>
+              {this.state.loading ? <Loader /> : null}
+            </Modal>
+          }
+
+          {this.state.orderFailed &&
+            <Modal
+              isOpen={this.state.orderFailed}
+              shouldCloseOnOverlayClick={false}
+              onAfterOpen={this.afterOpenModal}
+              onRequestClose={this.closeFailureModal}
+              style={customStyles}
+            >
+              <h1>Reservation Request Sent</h1>
+              <p>This may be due to slow internet! Please retry the reservation</p>
+              <a
+                className="button-border fullwidth"
+                onClick={(e) => {
+                this.closeFailedModal();
+              }}>Retry</a>
+            </Modal>
+          }
+
+          {this.state.modalIsOpen &&
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            shouldCloseOnOverlayClick={false}
+            onAfterOpen={this.afterOpenModal}
+            onRequestClose={this.closeModal}
+            style={customStyles}
+          >
+            <OrderForm
+              closeModal={this.closeModal}
+              loading={this.state.loading}
+              handleSubmit={this.requestReservation}
+            />
+          </Modal>}
 
       </Default>
     );
@@ -511,8 +621,8 @@ const mapStateToProps = ({ localSearchReducer, cartReducer }) => {
 
 export default connect(
   mapStateToProps, {
-    updateLocalSearchProductQuantity,
     addToCart,
-    removeFromCart
+    removeFromCart,
+    emptyCart
   }
 )(CheckoutPage);
