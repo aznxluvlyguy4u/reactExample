@@ -10,7 +10,7 @@ const Footer = () => (
         <h2>Site</h2>
         <ul>
           <li>
-            <Link href="/explore"><a>Explore</a></Link>
+            <Link href="/"><a>Explore</a></Link>
           </li>
         </ul>
       </div>
