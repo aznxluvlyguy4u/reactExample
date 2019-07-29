@@ -14,8 +14,10 @@ class Header extends React.Component {
       navType: 'transparent',
     };
 
-    this.menuItems = [{ id: 1, title: 'Shop', slug: 'https://www.oceanpremium.com/shop/' }, { id: 2, title: 'Contact', slug: 'contact' }, {
-      id: 3, title: 'Cart', slug: 'checkout', icon: true,
+    this.menuItems = [
+      { id: 1, title: 'Shop',  isExternal: true, slug: 'https://www.oceanpremium.com/shop/' },
+      { id: 2, title: 'Contact',  isExternal: false, slug: 'contact' },
+      { id: 3, title: 'Cart',  isExternal: false, slug: 'checkout', icon: true,
     }];
   }
 
@@ -54,6 +56,7 @@ class Header extends React.Component {
       if (menuItem.icon === true) {
         return (
           <li key={menuItem.id}>
+
             <Link href={`/${menuItem.slug}`}>
               <a>
                 <div className="cart-wrapper">
@@ -63,18 +66,22 @@ class Header extends React.Component {
                     <span>{this.props.cartReducer.items.length ? this.props.cartReducer.items.length : 0}</span>
                   </div>
                 </div>
-
               </a>
-
             </Link>
           </li>
         );
       }
       return (
         <li key={menuItem.id}>
-          <Link key={menuItem.title} href={`/${menuItem.slug}`}>
-            <a>{menuItem.title}</a>
-          </Link>
+           {menuItem.isExternal ?
+              <a target="_blank" href={`${menuItem.slug}`}> {menuItem.title}</a>
+            :
+              <Link
+                key={menuItem.title}
+                href={`/${menuItem.slug}`}>
+                <a>{menuItem.title}</a>
+              </Link>
+            }
         </li>
       );
     });
