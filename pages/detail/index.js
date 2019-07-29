@@ -3,6 +3,7 @@ import Router from 'next/router';
 import React, { Component } from 'react';
 import Link from 'next/link';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import OptionalAccessoryView from '../../components/detailSubViews/optionalAccessoryView';
 import SummaryView from '../../components/detailSubViews/summaryView';
 import SearchView from '../../components/detailSubViews/searchView';
@@ -167,7 +168,6 @@ class DetailPage extends Component {
         }
       });
     }
-
 
     if (mergedItems.length === 0)  {
       existingItems = [...existingItems, order]
