@@ -1,23 +1,22 @@
 import moment from 'moment';
 import React, { Component, Fragment } from 'react';
 import Router from 'next/router';
-
 import classnames from 'classnames';
 import Modal from 'react-modal';
+import { connect } from 'react-redux';
+
 import OrderForm from '../../components/checkout/orderForm/orderForm';
+import Counter from '../../components/detailSubViews/counter';
+import Loader from '../../components/loader';
+import Default from '../../layouts/default';
+import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../utils/rest/requests/orders';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
-
-import { connect } from 'react-redux';
-import Default from '../../layouts/default';
-import { checkCartAvailability } from '../../utils/rest/requests/cart';
-import SelectionOverview from '../../components/checkout/selectionOverview/selectionOverview';
-import Loader from '../../components/loader';
-import { emptyCart } from '../../actions/cartActions';
 import { LocalStorageUtil } from '../../utils/LocalStorageUtil';
-import Counter from '../../components/detailSubViews/counter';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
+
+import { emptyCart } from '../../actions/cartActions';
 
 const customStyles = {
   content: {
@@ -79,59 +78,16 @@ class CheckoutPage extends Component {
     if(this.props.cartReducer.items.length > 0) {
       this.setState({ loading: true });
 
-      const orderRequest = new OrderRequest().returnOrderRequest();
+      const orderRequest = new OrderRequest().returnOrderRequests();
       if (orderRequest.length > 0) {
         let response = await checkCartAvailability(orderRequest);
+        localStorage.setItem('products', JSON.stringify(response.data.products));
         this.setState({
           products: response.data.products,
           loading: false
         })
       }
     }
-
-    // const cart = await this.props.cartReducer.items.map(item => { item = item.orderRequest; return item});
-    // const cart = await this.getOrderRequsts();
-    // console.log('orderRequests = ', cart);
-
-    // // setTimeout(() => {
-    //   if (cart.length > 0) {
-    //     let response = await checkCartAvailability(cart);
-
-    //     console.log('response = ', response);
-    //     this.setState({
-    //       products: response.data.products
-    //     })
-    //   }
-    // // }, 500 )
-
-    // do api call to availability check
-
-    // const cart = JSON.parse(localStorage.getItem('cart'));
-    // if (cart === undefined || !isEmpty(cart)) {
-    //   const newcart = cart;
-    //   // const newcart = cart.map((item) => {
-    //   //   if (moment(item.period.start) > moment()) {
-    //   //     return item;
-    //   //   }
-    //   //   return null;
-    //   // });
-    //   if (cart === undefined || !isEmpty(newcart)) {
-    //     localStorage.setItem('cart', JSON.stringify(newcart));
-    //     try {
-    //       this.setState({ loading: true });
-    //       const response = await checkCartAvailability(newcart);
-    //       this.setState({ cart: response.data.products, loading: false, totalPrice: response.data.totalPrice });
-    //       localStorage.setItem('cart', JSON.stringify(response.data.products));
-    //       this.props.dispatch(setCartCount(response.data.products.length));
-    //     } catch (error) {
-    //       this.setState({ loading: false });
-    //       handleGeneralError(error);
-    //     }
-    //   }
-    //   // localStorage.removeItem('cart');
-    // } else {
-    //   this.setState({ loading: false });
-    // }
   }
 
   returnWarningMessage(item) {
@@ -140,38 +96,25 @@ class CheckoutPage extends Component {
         case 'AVAILABLE_BUT_DELAYED':
           return (
             <div className="warning-message">
-          Items are available but might not reach selected Delivery location on time. Please contact/call the office to arrange a dedicated delivery on-board’
+              Items are available but might not reach selected Delivery location on time. Please contact/call the office to arrange a dedicated delivery on-board’
             </div>
           );
         case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
           return (
             <div className="warning-message">
-          Items are available but not all accesories are available. Please contact/call the office to arrange a solution’
+              Items are available but not all accesories are available. Please contact/call the office to arrange a solution’
             </div>
           );
-          case 'NOT_AVAILABLE':
-            return (
-              <div className="warning-message">
-                This item is unfortunately no longer available at your chosen time frame
-              </div>
-            )
+        case 'NOT_AVAILABLE':
+          return (
+            <div className="warning-message">
+              This item is unfortunately no longer available at your chosen time frame
+            </div>
+          )
         default:
           return null;
       }
     }
-  }
-
-  returnAvailabilityIcon(item) {
-    // switch (item.availabilityState) {
-    //   case 'AVAILABLE':
-    //     return <img height="20" width="20" src="/static/images/available.png" />;
-    //   case 'AVAILABLE_BUT_DELAYED':
-    //     return <img height="20" width="20" src="/static/images/available.png" />;
-    //   case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
-    //       return <img height="20" width="20" src="/static/images/available.png" />;
-    //   case 'NOT_AVAILABLE':
-    //     return <img height="20" width="20" src="/static/images/unavailable.png" />;
-    // }
   }
 
   returnAvailabilityIcon(item) {
@@ -180,7 +123,7 @@ class CheckoutPage extends Component {
     }
 
     if (item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
-      return 'WARNING.'
+      return <img height="20" width="20" src="/static/images/unavailable.png" />
     }
 
     if (item.quantityAvailable !== 0 && item.quantity <= item.quantityAvailable) {
@@ -189,7 +132,6 @@ class CheckoutPage extends Component {
   }
 
   calculateTotalAccessoires(accessories) {
-    // const { accessories } = this.props;
     let price = 0;
     accessories.map(item => price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity);
     return price;
@@ -202,30 +144,8 @@ class CheckoutPage extends Component {
       productPrice += this.dayCount(product) * Number(product.rates[0].price) * product.quantity
       accessoryPrice += this.calculateTotalAccessoires(product.accessories)
     });
-    // alert(productPrice);
     return productPrice + accessoryPrice;
   }
-
-  removeItem(uuid) {
-    // const removedlist = this.state.cart.filter(item => item.uuid !== uuid);
-    // this.setState({ cart: removedlist });
-    // localStorage.setItem('cart', JSON.stringify(removedlist));
-    // this.props.dispatch(setCartCount(removedlist.length));
-    // const obj = this.state.cart.find(item => item.uuid === uuid);
-    // if (obj.availabilityState !== 'NOT_AVAILABLE') {
-    //   this.setState({ totalPrice: this.state.totalPrice - parseFloat(obj.totalPrice) });
-    // }
-
-    // LocalStorageUtil.addToCart(uuid);
-  }
-
-  // emptyCart() {
-  //   // const unavailableData = this.state.cart.filter(item => item.availabilityState === 'NOT_AVAILABLE');
-  //   // this.setState({ cart: unavailableData });
-  //   // localStorage.setItem('cart', JSON.stringify(unavailableData));
-  //   // this.props.dispatch(setCartCount(unavailableData.length));
-  //   // this.setState({ totalPrice: '0.00' });
-  // }
 
   openModal() {
     this.setState({ modalIsOpen: true });
@@ -242,19 +162,72 @@ class CheckoutPage extends Component {
   updateProductQuantity(result) {
     result.item.quantity = result.quantity;
     this.setState({ state: this.state });
+    localStorage.setItem('products', JSON.stringify(this.state.products));
   }
 
   updateAccessoryQuantity(result) {
     result.item.quantity = result.quantity;
     this.setState({ state: this.state });
+    localStorage.setItem('products', JSON.stringify(this.state.products));
   }
 
-  removeProductFromCart(item) {
-    this.props.removeFromCart(item);
+  removeProductFromCart(product) {
+    const index = this.state.products.findIndex(item => {
+      if (
+        item.id === product.id &&
+        moment(item.period.start).isSame(moment(product.period.start), 'day') &&
+        moment(item.period.end).isSame(moment(product.period.end), 'day') &&
+        item.location.collection.label === product.location.collection.label &&
+        item.location.delivery.label === product.location.delivery.label
+        ) {
+          return item
+        }
+    });
+
+    const products = [
+      ...this.state.products.slice(0, index),
+      ...this.state.products.slice(index + 1)
+    ]
+
+    this.setState({
+      products: products
+    });
+
+    localStorage.setItem('products', JSON.stringify(products));
   }
 
-  removeAccessoryFromCart(accessory) {
-    // this.props.removeFromCart()
+  removeAccessoryFromCart(product, accessory) {
+    const products = this.state.products.map(item => {
+      if (
+        item.id === product.id &&
+        moment(item.period.start).isSame(moment(product.period.start), 'day') &&
+        moment(item.period.end).isSame(moment(product.period.end), 'day') &&
+        item.location.collection.label === product.location.collection.label &&
+        item.location.delivery.label === product.location.delivery.label
+      ) {
+        const index = item.accessories.findIndex(acc => {
+          if (
+            acc.id === accessory.id
+          ) {
+            return acc
+          }
+        });
+        const newAccessories = [
+          ...item.accessories.slice(0, index),
+          ...item.accessories.slice(index + 1)
+        ]
+        item.accesories = [];
+        item.accessories = newAccessories;
+        return item;
+      } else {
+        return item
+      }
+    });
+
+    this.setState({
+      products: products
+    })
+    localStorage.setItem('products', JSON.stringify(products));
   }
 
   requestReservation = (values) => {
@@ -264,6 +237,7 @@ class CheckoutPage extends Component {
       const response = orderCartItems(request);
       this.props.emptyCart();
       localStorage.setItem('cart', []);
+      localStorage.setItem('products', []);
 
       this.closeModal();
       this.setState({ loading: false });
@@ -460,7 +434,7 @@ class CheckoutPage extends Component {
                     }>
                       <div className="column">
                         <div className="column">
-                          <button onClick={(e) => {}}>
+                          <button onClick={(e) => {this.removeAccessoryFromCart(item, accessory)}}>
                             <i className="icon-x"></i>
                           </button>
                         </div>
@@ -538,6 +512,7 @@ class CheckoutPage extends Component {
 
                 </div>
                 <div className="column">
+                  {this.state.products.length > 0 &&
                   <a
                     className="button-border right"
                     onClick={(e) => {
@@ -545,7 +520,7 @@ class CheckoutPage extends Component {
                     }}
                   >
                     Request Reservation
-                  </a>
+                  </a>}
                 </div>
               </div>
             </div>
