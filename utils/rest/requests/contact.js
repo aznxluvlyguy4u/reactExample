@@ -8,8 +8,8 @@ export function postContactMessage(contactRequest) {
 
   let request = contactRequest;
   request.office = {
-    id: contactRequest.office.value.id,
-    name: contactRequest.office.value.name
+    id: 1, //contactRequest.office.value.id,
+    name: '', //contactRequest.office.value.name
   }
   return fetch(url, {
     method: 'POST',

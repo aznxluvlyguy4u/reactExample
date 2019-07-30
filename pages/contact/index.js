@@ -8,6 +8,25 @@ import PhoneNumbers from '../../components/landing-pages/phonenumbers';
 import CustomSelect from '../../components/formComponents/select/customSelect';
 import CustomInputComponent from '../../components/signup/customInputComponent';
 import { postContactMessage } from '../../utils/rest/requests/contact';
+import * as Yup from 'yup';
+import Loader from '../../components/loader';
+
+const ContactFormSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, 'Too Short!')
+    .max(50, 'Too Long!')
+    .required('This is a required field'),
+  emailAddress: Yup.string()
+    .email('Invalid email')
+    .required('This is a required field'),
+  phoneNumber: Yup.number()
+    .min(2, 'Too Short!')
+    .required('This is a required field'),
+  message: Yup.string()
+    .min(2, 'Too short!')
+    .required('This is a required field'),
+
+});
 
 class AboutPage extends Component {
   constructor(props) {
@@ -21,18 +40,24 @@ class AboutPage extends Component {
         {label: 'Italy', value: {id: 1, name: 'Italy'}},
         {label: 'ADRIATIC', value: {id: 1, name: 'ADRIATIC'}},
         {label: 'Caribbean', value: {id: 1, name: 'Caribbean'}},
-      ]
+      ],
+      loading: false,
+
     };
 
     this.submitForm = this.submitForm.bind(this)
   }
 
   submitForm(values) {
+    this.setState({
+      loading: true
+    })
     postContactMessage(values)
       .then(response => {
         if(response.code === 201) {
           this.setState({
             thankYou: true,
+            loading: false
           });
         }
       });
@@ -69,7 +94,7 @@ class AboutPage extends Component {
                 </div>
               :
               <Formik
-                // validationSchema={{}}
+                validationSchema={ContactFormSchema}
                 onSubmit={this.submitForm || undefined}
                 enableReinitialize
                 initialValues={{
@@ -126,11 +151,14 @@ class AboutPage extends Component {
                           setFieldValue={setFieldValue}
                           component="textarea" />
                         </div>
-                        <button className="search-button-full" type="submit">Submit</button>
+                        <button disabled={this.state.loading === true} className="search-button-full" type="submit">Submit</button>
                     </div>
                   </Form>
                 )}
               </Formik>}
+
+              {this.state.loading ? <Loader /> : null}
+
             </div>
             {/* <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
               <h1>Regional Help Centers</h1>
