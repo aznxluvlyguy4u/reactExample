@@ -242,8 +242,8 @@ class CheckoutPage extends Component {
       this.setState({ loading: true });
       const response = orderCartItems(request);
       this.props.emptyCart();
-      localStorageUtil.emptyCart();
-      this,props.emptyCart();
+      LocalStorageUtil.emptyCart();
+      this.props.emptyCart();
 
       this.closeModal();
       this.setState({ loading: false });
