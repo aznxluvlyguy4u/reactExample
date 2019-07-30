@@ -134,7 +134,6 @@ class DetailPage extends Component {
   addToCart() {
     const order = new Order().returnOrder();
 
-    // this.props.addToCart(order);
     const items = this.props.cartReducer.items;
 
     let existingItems = this.props.cartReducer.items;
@@ -164,7 +163,7 @@ class DetailPage extends Component {
             });
           return item;
         } else {
-          return item0
+          return item;
         }
       });
     }
