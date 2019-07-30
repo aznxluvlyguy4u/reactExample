@@ -132,7 +132,6 @@ class AboutPage extends Component {
                 )}
               </Formik>}
             </div>
-
             {/* <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
               <h1>Regional Help Centers</h1>
               <PhoneNumbers />
