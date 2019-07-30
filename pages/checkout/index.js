@@ -52,9 +52,9 @@ class CheckoutPage extends Component {
   }
 
   dayCount(item) {
-    const collectionDate = moment(item.period.end);
-    const deliveryDate = moment(item.period.start);
-    return collectionDate.diff(deliveryDate, 'days');
+    const collectionDate = moment(item.period.end).endOf('day');;
+    const deliveryDate = moment(item.period.start).startOf('day');
+    return collectionDate.diff(deliveryDate, 'days') + 1;
   }
 
   collapse(item) {

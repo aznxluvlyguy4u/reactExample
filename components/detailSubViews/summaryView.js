@@ -8,13 +8,13 @@ import Steps from './steps';
 class SummaryView extends Component {
   constructor(props) {
     super(props);
-    this.state = { dayCount: 0 };
+    this.state = { dayCount: 1 };
   }
 
   componentDidMount() {
-    const collectionDate = moment(this.props.localSearchReducer.search.collectionDate);
-    const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate);
-    const daycount = collectionDate.diff(deliveryDate, 'days');
+    const collectionDate = moment(this.props.localSearchReducer.search.collectionDate).endOf('day');
+    const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate).startOf('day');
+    const daycount = collectionDate.diff(deliveryDate, 'days') + 1;
     this.setState({ dayCount: daycount });
   }
 
