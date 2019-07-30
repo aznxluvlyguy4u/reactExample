@@ -13,10 +13,10 @@ import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../utils/rest/requests/orders';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
-import { LocalStorageUtil } from '../../utils/LocalStorageUtil';
+import LocalStorageUtil from '../../utils/LocalStorageUtil';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 
-import { emptyCart } from '../../actions/cartActions';
+import { emptyCart, setCart } from '../../actions/cartActions';
 
 const customStyles = {
   content: {
@@ -78,10 +78,11 @@ class CheckoutPage extends Component {
     if(this.props.cartReducer.items.length > 0) {
       this.setState({ loading: true });
 
-      const orderRequest = new OrderRequest().returnOrderRequests();
+      const orderRequest = this.props.cartReducer.items;
       if (orderRequest.length > 0) {
         let response = await checkCartAvailability(orderRequest);
-        localStorage.setItem('products', JSON.stringify(response.data.products));
+        LocalStorageUtil.setCart(response.data.products);
+        this.props.setCart(response.data.products);
         this.setState({
           products: response.data.products,
           loading: false
@@ -162,13 +163,16 @@ class CheckoutPage extends Component {
   updateProductQuantity(result) {
     result.item.quantity = result.quantity;
     this.setState({ state: this.state });
-    localStorage.setItem('products', JSON.stringify(this.state.products));
+    LocalStorageUtil.setCart(this.state.products);
+    this.props.setCart(this.state.products);
+
   }
 
   updateAccessoryQuantity(result) {
     result.item.quantity = result.quantity;
     this.setState({ state: this.state });
-    localStorage.setItem('products', JSON.stringify(this.state.products));
+    LocalStorageUtil.setCart(this.state.products);
+    this.props.setCart(this.state.products);
   }
 
   removeProductFromCart(product) {
@@ -193,7 +197,8 @@ class CheckoutPage extends Component {
       products: products
     });
 
-    localStorage.setItem('products', JSON.stringify(products));
+    LocalStorageUtil.setCart(products);
+    this.props.setCart(products);
   }
 
   removeAccessoryFromCart(product, accessory) {
@@ -227,7 +232,8 @@ class CheckoutPage extends Component {
     this.setState({
       products: products
     })
-    localStorage.setItem('products', JSON.stringify(products));
+    LocalStorageUtil.setCart(products);
+    this.props.setCart(products);
   }
 
   requestReservation = (values) => {
@@ -236,8 +242,8 @@ class CheckoutPage extends Component {
       this.setState({ loading: true });
       const response = orderCartItems(request);
       this.props.emptyCart();
-      localStorage.setItem('cart', []);
-      localStorage.setItem('products', []);
+      localStorageUtil.emptyCart();
+      this,props.emptyCart();
 
       this.closeModal();
       this.setState({ loading: false });
@@ -598,6 +604,7 @@ export default connect(
   mapStateToProps, {
     addToCart,
     removeFromCart,
-    emptyCart
+    emptyCart,
+    setCart
   }
 )(CheckoutPage);

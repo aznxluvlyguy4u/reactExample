@@ -17,6 +17,7 @@ import {
 import { generateSearchQueryParameterString } from '../../utils/queryparams';
 
 import Order from '../../utils/mapping/products/order';
+import OrderRequest from   '../../utils/mapping/products/orderRequest' ;//'../../utils/mapping/products/orderRequest';
 import { getProductById } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
@@ -134,33 +135,33 @@ class DetailPage extends Component {
   addToCart() {
     const order = new Order().returnOrder();
 
-    const items = this.props.cartReducer.items;
-
     let existingItems = this.props.cartReducer.items;
     let mergedItems = [];
     if(existingItems.some((someItem) => {
-      return (someItem.selectedProduct.id === order.selectedProduct.id &&
-      moment(someItem.deliveryDate).isSame(moment(order.deliveryDate), 'day') &&
-      moment(someItem.collectionDate).isSame(moment(order.collectionDate), 'day') &&
-      someItem.collectionLocation.label === order.collectionLocation.label &&
-      someItem.deliveryLocation.label === order.deliveryLocation.label)
+      return (someItem.id === order.selectedProduct.id &&
+      moment(someItem.period.start).isSame(moment(order.deliveryDate), 'day') &&
+      moment(someItem.period.end).isSame(moment(order.collectionDate), 'day') &&
+      someItem.location.collection.name === order.collectionLocation.label &&
+      someItem.location.delivery.name === order.deliveryLocation.label)
     })) {
       mergedItems = existingItems.map(item => {
         if (
-          item.selectedProduct.id === order.selectedProduct.id &&
-            moment(item.deliveryDate).isSame(moment(order.deliveryDate), 'day') &&
-            moment(item.collectionDate).isSame(moment(order.collectionDate), 'day') &&
-            item.collectionLocation.label === order.collectionLocation.label &&
-            item.deliveryLocation.label === order.deliveryLocation.label
+          item.id === order.selectedProduct.id &&
+            moment(item.period.start).isSame(moment(order.deliveryDate), 'day') &&
+            moment(item.period.end).isSame(moment(order.collectionDate), 'day') &&
+            item.location.collection.name === order.collectionLocation.label &&
+            item.location.delivery.name === order.deliveryLocation.label
           ) {
-            item.productQuantity = item.productQuantity + order.productQuantity;
-            item.productOptionalAccessories.map(existingAccessory => {
-              order.productOptionalAccessories.map(newAccessory => {
-                if (existingAccessory.id === newAccessory.id) {
-                  existingAccessory.quantity = existingAccessory.quantity + newAccessory.quantity;
-                }
+            item.quantity = item.quantity + order.productQuantity;
+            if(item.accessories) {
+              item.accessories.map(existingAccessory => {
+                order.productOptionalAccessories.map(newAccessory => {
+                  if (existingAccessory.id === newAccessory.id) {
+                    existingAccessory.quantity = existingAccessory.quantity + newAccessory.quantity;
+                  }
+                });
               });
-            });
+            }
           return item;
         } else {
           return item;
@@ -169,7 +170,7 @@ class DetailPage extends Component {
     }
 
     if (mergedItems.length === 0)  {
-      existingItems = [...existingItems, order]
+      existingItems = [...existingItems, order.orderRequest]
     } else {
       existingItems = mergedItems
     }

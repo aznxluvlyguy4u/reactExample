@@ -16,8 +16,8 @@ export default class Order {
       collectionLocation: state.localSearchReducer.search.collectionLocation,
       productOptionalAccessories: state.localSearchReducer.productOptionalAccessories,
       productConfigurations: state.localSearchReducer.productConfigurations,
-      orderRequest: new OrderRequest().returnOrderRequest()
     }
+    order.orderRequest = new OrderRequest(order);
     return order;
   }
 }
