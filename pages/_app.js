@@ -10,7 +10,7 @@ import { handleGeneralError } from '../utils/rest/error/toastHandler';
 import store from '../store';
 import '../assets/scss/styles.scss';
 import SelectboxLocation from '../utils/mapping/locations/SelectboxLocation';
-
+import LocalStorageUtil from '../utils/localStorageUtil';
 /**
 * @param {object} initialState
 * @param {boolean} options.isServer indicates whether it is a server side or client side
@@ -34,19 +34,18 @@ class MyApp extends App {
     // Empty cart in store
     store.dispatch(emptyCart({}));
 
-    const cart = localStorage.getItem('cart');
+    const cart =  LocalStorageUtil.getCart()
     if (cart && cart !== "" && cart !== undefined && cart !== null) {
-        let itemsInCart = JSON.parse(cart);
       let filteredItemsInCart = [];
-      if (itemsInCart) {
-        filteredItemsInCart = itemsInCart.map(item => {
+      if (cart) {
+        filteredItemsInCart = cart.map(item => {
           const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
           if (item && item !== null && item !== undefined && !moment(item.deliveryDate).isBefore(now, 'day')) {
             store.dispatch(addToCart(item));
             return item;
           }
         })
-        localStorage.setItem('cart', JSON.stringify(filteredItemsInCart));
+        LocalStorageUtil.setCart(filteredItemsInCart);
       }
     }
   }
