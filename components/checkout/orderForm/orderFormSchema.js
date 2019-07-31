@@ -12,15 +12,11 @@ const OrderFormSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email')
     .required('This is a required field'),
-  phonePrefix: Yup.string()
-    .min(2, 'Too Short!')
-    .max(5, 'Too Long!')
-    .required('This is a required field'),
   phoneNumber: Yup.number()
     .min(2, 'Too Short!')
     .required('This is a required field'),
   affiliation: Yup.string()
-    .required(),
+    .required()
 });
 
 export default OrderFormSchema;
