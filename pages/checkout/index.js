@@ -238,25 +238,28 @@ class CheckoutPage extends Component {
 
   requestReservation = (values) => {
     const request = new PlaceOrderRequest(this.state.products, values).returnOrder();
-    try {
-      this.setState({ loading: true });
-      const response = orderCartItems(request);
-      this.props.emptyCart();
-      LocalStorageUtil.emptyCart();
-      this.props.emptyCart();
+    this.setState({ loading: true });
+    const response = orderCartItems(request)
+      .then((res) => {
+        if(res.code === 201) {
+          this.props.emptyCart();
+          this.props.emptyCart();
+          LocalStorageUtil.emptyCart();
+          this.closeModal();
+          this.setState({ loading: false });
+          this.setState({
+            orderSuccess: true
+          })
+        }
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          orderFailed: true
+        })
+        // handleGeneralError(error);
+      });
 
-      this.closeModal();
-      this.setState({ loading: false });
-      this.setState({
-        orderSuccess: true
-      })
-    } catch (error) {
-      this.setState({ loading: false });
-      this.setState({
-        orderFailure: true
-      })
-      handleGeneralError(error);
-    }
   }
 
   quantityText(item) {
@@ -563,7 +566,7 @@ class CheckoutPage extends Component {
               onRequestClose={this.closeFailureModal}
               style={customStyles}
             >
-              <h1>Reservation Request Sent</h1>
+              <h1>Reservation Request Failed</h1>
               <p>This may be due to slow internet! Please retry the reservation</p>
               <a
                 className="button-border fullwidth"
