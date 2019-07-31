@@ -18,7 +18,7 @@ const Footer = () => (
         <h2>Legal</h2>
         <ul>
           <li>
-            <Link href="/terms"><a>Terms and conditions</a></Link>
+            <Link target="_blank" href="https://www.oceanpremium.com/general-terms-conditions/"><a>Terms and conditions</a></Link>
           </li>
           <li>
             <Link href="/privacy_policy"><a>Privacy Policy</a></Link>
