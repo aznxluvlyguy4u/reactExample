@@ -9,7 +9,7 @@ const IndexPage = () => (
   <Default meta={meta}>
     <div className="background-wrapper" />
     <SearchFormWrapper />
-    <CategoryTiles />
+    {/* <CategoryTiles /> */}
   </Default>
 );
 
