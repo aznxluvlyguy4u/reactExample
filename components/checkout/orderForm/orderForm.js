@@ -49,17 +49,17 @@ class OrderForm extends Component {
         <h1>Place Order</h1>
         <p>To proceed with checkout please fill in the information below</p>
         <Formik
-          validate={true}
+          validate
           enableReinitialize
           validationSchema={OrderFormSchema}
           initialValues={{
             firstName: '',
             lastName: '',
             email: '',
-            phonePrefix: '',
             phoneNumber: '',
             comment: '',
-            affiliation: ''
+            affiliation: '',
+            yachtname: ''
           }}
           onSubmit={this.props.handleSubmit}
         >
