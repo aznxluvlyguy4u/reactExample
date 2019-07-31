@@ -7,6 +7,7 @@ import CustomInputComponent from '../../signup/customInputComponent';
 import CustomTextArea from '../../formComponents/customTextArea/customTextArea';
 import OrderFormSchema from './orderFormSchema';
 import CustomSelect from '../../formComponents/select/customSelect';
+import Loader from '../../loader';
 
 const customStyles = {
   content: {
@@ -49,7 +50,6 @@ class OrderForm extends Component {
         <h1>Place Order</h1>
         <p>To proceed with checkout please fill in the information below</p>
         <Formik
-          validate
           enableReinitialize
           validationSchema={OrderFormSchema}
           initialValues={{
@@ -128,16 +128,22 @@ class OrderForm extends Component {
                   placeholder="Comment"
                   component={CustomTextArea} />
               </div>
-
-              <a
-                className="button-border fullwidth"
-                onClick={(e) => {
-                  this.props.closeModal()
-                }}
-              >
-                Cancel
-              </a>
-              <button disabled={!!this.props.loading} className="fullwidth-button" type="submit">Place Order</button>
+              {this.props.loading === false ?
+                <span>
+                  <a
+                    disabled={!!this.props.loading}
+                    className="button-border fullwidth"
+                    onClick={(e) => {
+                      this.props.closeModal()
+                    }}
+                    >
+                    Cancel
+                  </a>
+                  <button disabled={!!this.props.loading} className="fullwidth-button" type="submit">Place Order</button>
+                </span>
+                :
+                <Loader />
+              }
             </Form>
           )}
         </Formik>
