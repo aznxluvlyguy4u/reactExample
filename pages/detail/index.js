@@ -273,7 +273,7 @@ class DetailPage extends Component {
                 {this.props.localSearchReducer.currentStep === 2 ?
                   <div className={'form active quantity-wrapper'}>
                     <div className="titlewrapper">
-                      <h3>Optional Accessories</h3>
+                      <h3>Product Quantity</h3>
                       <Steps />
                     </div>
                     <div className="item-wrap">
@@ -320,7 +320,7 @@ class DetailPage extends Component {
                 {this.props.localSearchReducer.currentStep === 3 && this.props.localSearchReducer.totalSteps === 4 ?
                   <div className={'form active accessories-wrapper'}>
                     <div className="titlewrapper">
-                      <h3>Product Quantity</h3>
+                      <h3>Optional Accessories</h3>
                       <Steps />
                     </div>
                     <div className="item-wrap">

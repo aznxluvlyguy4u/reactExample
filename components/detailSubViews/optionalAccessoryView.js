@@ -44,19 +44,18 @@ class OptionalAccessoryView extends Component {
             <li key={index}>
               {/* <div className="thumbnailImage" style={{ backgroundImage: `url(${item.images[0].thumbnailUrl})` }} /> */}
               {/* <img src={item.images[0].thumbnailUrl} /> */}
-              {/* {item.selectedProduct.images ?
-                <div style={{
-                  backgroundImage: `url(${item.selectedProduct.images[0].thumbnailUrl})`,
+              {item.images &&
+                <Fragment>
+                  <div style={{
+                  float:' left',
+                  backgroundImage: `url(${item.images[0].thumbnailUrl})`,
                   backgroundSize: 'cover',
                   width: '70px',
                   height: '50px'
                 }} />
-                :
-                <div style={{
-                  width: '70px',
-                  height: '50px'
-                }} />
-              } */}
+                </Fragment>
+              }
+
               <span className="description">{item.name}</span>
               <span className="counter">
                 <button
