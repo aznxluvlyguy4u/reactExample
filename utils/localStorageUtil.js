@@ -8,7 +8,11 @@ class LocalStorageUtil {
 
   getCart() {
     const cart = localStorage.getItem('cart');
-    return  JSON.parse(cart);
+    if(cart) {
+      return JSON.parse(cart);
+    } else {
+      return null;
+    }
   }
 
   emptyCart() {

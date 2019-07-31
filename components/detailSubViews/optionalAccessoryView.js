@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Steps from './steps';
@@ -33,6 +33,7 @@ class OptionalAccessoryView extends Component {
     const collectionDate = moment(this.props.localSearchReducer.search.collectionDate).endOf('day');
     const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate).startOf('day');
     const daycount = collectionDate.diff(deliveryDate, 'days') + 1;
+    return daycount;
   }
 
   render() {
@@ -43,12 +44,19 @@ class OptionalAccessoryView extends Component {
             <li key={index}>
               {/* <div className="thumbnailImage" style={{ backgroundImage: `url(${item.images[0].thumbnailUrl})` }} /> */}
               {/* <img src={item.images[0].thumbnailUrl} /> */}
-              {/* <div style={{
-                backgroundImage: `url(${item.selectedProduct.images[0].thumbnailUrl})`,
-                backgroundSize: 'cover',
-                width: '70px',
-                height: '50px'
-              }} /> */}
+              {/* {item.selectedProduct.images ?
+                <div style={{
+                  backgroundImage: `url(${item.selectedProduct.images[0].thumbnailUrl})`,
+                  backgroundSize: 'cover',
+                  width: '70px',
+                  height: '50px'
+                }} />
+                :
+                <div style={{
+                  width: '70px',
+                  height: '50px'
+                }} />
+              } */}
               <span className="description">{item.name}</span>
               <span className="counter">
                 <button
@@ -64,7 +72,11 @@ class OptionalAccessoryView extends Component {
                 <span className="center">
                   <span className="quantity">{item.quantity}</span>
                   <br />
-                  €{parseFloat(item.quantity * Number(item.rates[0].price) * this.dayCount()).toFixed(2)}
+                  {item.rates &&
+                    <Fragment>
+                      €{parseFloat(item.quantity * Number(item.rates[0].price) * this.dayCount()).toFixed(2)}
+                    </Fragment>
+                  }
                 </span>
                 <button
                   className="add-button"

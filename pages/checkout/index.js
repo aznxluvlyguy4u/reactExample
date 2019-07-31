@@ -134,7 +134,12 @@ class CheckoutPage extends Component {
 
   calculateTotalAccessoires(accessories) {
     let price = 0;
-    accessories.map(item => price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity);
+
+    accessories.map(item => {
+      if (item.rates) {
+        price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity
+      }
+    });
     return price;
   }
 
@@ -142,7 +147,9 @@ class CheckoutPage extends Component {
     let productPrice = 0;
     let accessoryPrice = 0;
     this.state.products.map(product => {
-      productPrice += this.dayCount(product) * Number(product.rates[0].price) * product.quantity
+      if (product.rates) {
+        productPrice += this.dayCount(product) * Number(product.rates[0].price) * product.quantity
+      }
       accessoryPrice += this.calculateTotalAccessoires(product.accessories)
     });
     return productPrice + accessoryPrice;
@@ -378,20 +385,27 @@ class CheckoutPage extends Component {
                     <div className="column">
                       <small>{item.name}</small>
                       <br />
-                      <div
-                        style={{
-                          backgroundImage: `url(${item.images[0].thumbnailUrl})`,
-                          backgroundSize: 'cover',
-                          width: '100px',
-                          height: '70px'
-                        }}
-                      />
+                      {item.images && item.images.length > 0 ?
+                        <div
+                          style={{
+                            backgroundImage: `url(${item.images[0].thumbnailUrl})`,
+                            backgroundSize: 'cover',
+                            width: '100px',
+                            height: '70px'
+                          }}
+                        />
+                      : null}
+
                     </div>
                     <div className="column">
                       <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity}/>
                     </div>
                     <div className="column">
-                      €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
+                      {item.rates &&
+                        <Fragment>
+                          €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
+                        </Fragment>
+                      }
                     </div>
                     <div className="column">
                       <div className="date-wrapper">
@@ -455,7 +469,11 @@ class CheckoutPage extends Component {
                         <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
                       </div>
                       <div className="column">
-                        €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
+                      {accessory.rates &&
+                        <Fragment>
+                          €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
+                        </Fragment>
+                      }
                       </div>
                       <div className="column">
 

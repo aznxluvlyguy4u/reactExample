@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -21,7 +21,11 @@ class SummaryView extends Component {
   calculateTotalAccessoires(accessories) {
     // const { accessories } = this.props;
     let price = 0;
-    accessories.map(item => price += this.state.dayCount * Number(item.rates[0].price) * item.quantity);
+    accessories.map(item => {
+      if(item.rates) {
+        price += this.state.dayCount * Number(item.rates[0].price) * item.quantity
+      }
+    });
     return price;
   }
 
@@ -44,13 +48,19 @@ class SummaryView extends Component {
   }
 
   accessorySubTotal(accessory) {
-    const accessorySubTotal = Number(accessory.rates[0].price) * this.state.dayCount * accessory.quantity;
+    let accessorySubTotal = 0;
+    if(accessory.rates) {
+      accessorySubTotal = Number(accessory.rates[0].price) * this.state.dayCount * accessory.quantity;
+    }
     return accessorySubTotal;
   }
 
   render() {
     const accessories = this.props.localSearchReducer.productOptionalAccessories.filter(item => item.quantity !== 0);
-    const totalPrice = Number(this.props.localSearchReducer.selectedProduct.rates[0].price) * this.state.dayCount * this.props.localSearchReducer.productQuantity;
+    let totalPrice = 0;
+    if(this.props.localSearchReducer.selectedProduct.rates) {
+      totalPrice = Number(this.props.localSearchReducer.selectedProduct.rates[0].price) * this.state.dayCount * this.props.localSearchReducer.productQuantity;
+    }
     const totalRate = this.calculateTotalAccessoires(accessories) + totalPrice;
     return (
       <div className={'form active' ? 'form active' : 'form'}>
@@ -93,7 +103,7 @@ class SummaryView extends Component {
             </div>
             <div className="content-wrapper">
               <div className="first">{this.props.localSearchReducer.productQuantity} x {this.props.localSearchReducer.selectedProduct.name}</div>
-              <div className="second">{`${this.props.localSearchReducer.productQuantity} x €${parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price).toFixed(2)} x ${this.state.dayCount} days`}</div>
+    <div className="second">{this.props.localSearchReducer.productQuantity} x {this.props.localSearchReducer.selectedProduct.rates && <Fragment>€{parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price).toFixed(2)}</Fragment>} x {this.state.dayCount} days}</div>
               <div className="third">{`€${parseFloat(totalPrice).toFixed(2)}`}</div>
             </div>
           </div>
@@ -107,7 +117,7 @@ class SummaryView extends Component {
               {accessories.map(accessory => (
                 <div className="content-wrapper">
                   <div className="first">{accessory.quantity} x {accessory.name}</div>
-                  <div className="second">{accessory.quantity} x €{parseFloat(accessory.rates[0].price).toFixed(2)} X {this.state.dayCount} days</div>
+                <div className="second">{accessory.quantity} x {accessory.rates && <Fragment>€{parseFloat(accessory.rates[0].price).toFixed(2)}</Fragment>} X {this.state.dayCount} days</div>
                   <div className="third">€{parseFloat(this.accessorySubTotal(accessory)).toFixed(2)}</div>
                 </div>
               ))}

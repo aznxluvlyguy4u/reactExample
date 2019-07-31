@@ -1,6 +1,6 @@
 import { cloneDeep, isEmpty } from 'lodash';
 import Router from 'next/router';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -292,7 +292,11 @@ class DetailPage extends Component {
                             {this.props.localSearchReducer.productQuantity}
                           </span>
                           <br />
-                          € {parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price * this.props.localSearchReducer.productQuantity).toFixed(2)}
+                          {this.props.localSearchReducer.selectedProduct.rates &&
+                            <Fragment>
+                              € {parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price * this.props.localSearchReducer.productQuantity).toFixed(2)}
+                            </Fragment>
+                          }
                         </span>
 
                         <button className="add-button"
