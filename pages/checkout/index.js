@@ -13,7 +13,7 @@ import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../utils/rest/requests/orders';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
-import LocalStorageUtil from '../../utils/LocalStorageUtil';
+import LocalStorageUtil from '../../utils/localStorageUtil';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 
 import { emptyCart, setCart } from '../../actions/cartActions';
