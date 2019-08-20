@@ -1,0 +1,76 @@
+.final-checkout{
+  margin-top: 100px;
+  @include for-phone-only {
+    font-size:12px;
+  }
+  .sub-item{
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 17.28%;
+    &.product{
+      justify-content: flex-start;
+    }
+    @include for-phone-only {
+      &.delivery{
+        display:none;
+      }
+      &.collection{
+        display:none;
+      }
+      &.details{
+        display:none;
+      }
+    }
+  }
+  h2{
+    font-weight: bold;
+    border-bottom: solid 0.3px $input-color;
+    padding-bottom:20px;
+  }
+  .header-row{
+    display:flex;
+    width:100%;
+    justify-content: space-between;
+    border-bottom: solid 0.3px  $input-color;
+    padding-bottom:20px;
+    padding-top:50px;
+  }
+  .body-row{
+    display:flex;
+    width:100%;
+    justify-content: space-between;
+    border-bottom: solid 0.3px $input-color;
+    padding-bottom:20px;
+    padding-top:20px;
+  }
+}
+
+.checkout-row{
+  width: 100%;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top:15px;
+  .total{
+    font-size:30px;
+  }
+  .price {
+    font-size:15px;
+    font-weight:bold;
+    .vat {
+      font-weight: lighter;
+      font-size:12px;
+      padding-left:5px;
+    }
+  }
+  .submit{
+    background-color: #FABA0C;
+    border: none;
+    font-size: 14px;
+    font-family: "Tyros Pro";
+    color: white;
+    padding: 15px 35px 15px 35px;
+    cursor: pointer;
+  }
+}

@@ -1,10 +1,10 @@
-import { BASE_URL } from '../requestConstants';
+import { AUTH_ENDPOINT_BASE_URL } from '../requestConstants';
 import RegisterRequest from '../../mapping/register/RegisterRequest';
 import handleRestResponse from '../requestUtil';
 
 export function registerUser(json) {
   const payload = new RegisterRequest(json).returnPostPayload();
-  const url = `${BASE_URL}/users/register`;
+  const url = `${AUTH_ENDPOINT_BASE_URL}/users/register`;
   return fetch(url, {
     method: 'POST',
     body: JSON.stringify(payload),

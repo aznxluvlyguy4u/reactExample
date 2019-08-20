@@ -1,3 +1,6 @@
+import store from '../store';
+
+
 export function NullCheckFrontendQueryParam(values) {
   const queryParameters = {};
   if (values.keyword !== null) {
@@ -18,22 +21,23 @@ export function NullCheckFrontendQueryParam(values) {
   return queryParameters;
 }
 
-export function NullCheckQueryParams(values) {
+export function generateSearchQueryParameterString() {
+  const state = store.getState();
   const queryParameters = {};
-  if (values.keyword !== '') {
-    queryParameters.keyword = values.keyword ? encodeURIComponent(values.keyword) : undefined;
+  if (state.searchReducer.search.keyword && state.searchReducer.search.keyword !== '' && state.searchReducer.search.keyword !== null) {
+    queryParameters.keyword = state.searchReducer.search.keyword ? encodeURIComponent(state.searchReducer.search.keyword) : undefined; //values.keyword ? encodeURIComponent(values.keyword) : undefined;
   }
-  if (values.deliveryLocation !== '') {
-    queryParameters.deliveryLocation = values.deliveryLocation.value;
+  if (state.searchReducer.search.deliveryLocation && state.searchReducer.search.deliveryLocation !== null && state.searchReducer.search.deliveryLocation !== '') {
+    queryParameters.deliveryLocation = state.searchReducer.search.deliveryLocation.value.id; //values.deliveryLocation.value.id;
   }
-  if (values.collectionLocation !== '') {
-    queryParameters.collectionLocation = values.collectionLocation.value;
+  if (state.searchReducer.search.collectionLocation && state.searchReducer.search.collectionLocation !== null && state.searchReducer.search.collectionLocation !== '') {
+    queryParameters.collectionLocation = state.searchReducer.search.collectionLocation.value.id; //values.collectionLocation.value.id;
   }
-  if (values.deliveryDate !== '') {
-    queryParameters.deliveryDate = values.deliveryDate;
+  if (state.searchReducer.search.deliveryDate && state.searchReducer.search.deliveryDate !== null && state.searchReducer.search.deliveryDate !== '') {
+    queryParameters.deliveryDate = state.searchReducer.search.deliveryDate; //values.deliveryDate;
   }
-  if (values.collectionDate !== '') {
-    queryParameters.collectionDate = values.collectionDate;
+  if (state.searchReducer.search.collectionDate && state.searchReducer.search.collectionDate !== null && state.searchReducer.search.collectionDate !== '') {
+    queryParameters.collectionDate = state.searchReducer.search.collectionDate; //values.collectionDate;
   }
   return queryParameters;
 }
@@ -53,24 +57,25 @@ export function NullCheckProps(values) {
     queryParameters.push({ column: 'collection_location_id', value: values.collectionLocation });
   }
   if (values.collectionDate !== null) {
-    queryParameters.push({ column: 'starts_at', value: values.collectionDate });
+    queryParameters.push({ column: 'ends_at', value: values.collectionDate });
   }
   if (values.deliveryDate !== null) {
-    queryParameters.push({ column: 'ends_at', value: values.deliveryDate });
+    queryParameters.push({ column: 'starts_at', value: values.deliveryDate });
   }
   return queryParameters;
 }
 
 export function CreateQueryParams(state) {
+
   const queryParameters = {};
   if (state.keyword !== '' && state.keyword !== undefined && state.keyword !== null) {
     queryParameters.keyword = state.keyword;
   }
   if (state.deliveryLocation !== '' && state.deliveryLocation !== undefined && state.deliveryLocation !== null) {
-    queryParameters.deliveryLocation = state.deliveryLocation;
+    queryParameters.deliveryLocation = state.deliveryLocation.id;
   }
   if (state.collectionLocation !== '' && state.collectionLocation !== undefined && state.collectionLocation !== null) {
-    queryParameters.collectionLocation = state.collectionLocation;
+    queryParameters.collectionLocation = state.collectionLocation.id;
   }
   if (state.deliveryDate !== '' && state.deliveryDate !== undefined && state.deliveryDate !== null) {
     queryParameters.deliveryDate = state.deliveryDate;

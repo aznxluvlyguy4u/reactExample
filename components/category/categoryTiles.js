@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Carousel from 'nuka-carousel';
 import React, { Component } from 'react';
 import { getCategories } from '../../utils/rest/requests/categories';
-import './categoryTiles.scss';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
 class CategoryTiles extends Component {
   constructor(props) {
@@ -30,21 +30,23 @@ class CategoryTiles extends Component {
     try {
       const response = await getCategories();
       this.setState({
-        categories: response.data.map(i => (
-          <Link href={`/search?category=${i.id}`}>
+        categories: response.data.map((item, index) => (
+          <span key={index}>
+          <Link href={`/search?category=${item.id}`}>
             <a draggable="false">
               <div
                 style={{ backgroundImage: 'url(/static/images/flyboard.png)' }}
                 className="category-tile"
               >
-                <span>{i.name}</span>
+                <span>{item.name}</span>
               </div>
             </a>
           </Link>
+          </span>
         )),
       });
     } catch (error) {
-      console.log(error);
+      handleGeneralError(error);
     }
   }
 

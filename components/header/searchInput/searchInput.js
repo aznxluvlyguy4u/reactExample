@@ -3,53 +3,37 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateSearchObject } from '../../../actions/searchActions';
+import { updateSearchKeyword } from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
-import { CreateQueryParams } from '../../../utils/queryparams';
+import { generateSearchQueryParameterString } from '../../../utils/queryparams';
 import CustomInputComponent from '../../signup/customInputComponent';
-import './searchInput.scss';
-
-const initialValues = {
-  keyword: '',
-};
 
 class SearchInput extends Component {
-  state = { search: '' }
 
-  async componentDidMount() {
-    this.setState({
-      search: await this.props.searchReducer.search.keyword,
-    });
-  }
-
-  onSubmit() {
-    const { search } = this.state;
-    const { dispatch } = this.props;
-    if (search === '') {
-      Router.push('/search');
-      return;
-    }
-    const queryparam = { keyword: search };
-    dispatch(updateSearchObject(this.props.searchReducer.search, queryparam));
-    const query = CreateQueryParams(this.props.searchReducer.search);
-    Router.push({ pathname: '/search', query });
-  }
-
-  onChangeValue(value) {
-    this.setState({ search: value });
+  onSubmit(values) {
+    this.props.updateSearchKeyword(values.keyword)
+    const params = generateSearchQueryParameterString();
+    Router.push({ pathname: '/search', query: params });
   }
 
   render() {
-    const { search } = this.state;
     return (
       <Formik
-        initialValues={initialValues}
         onSubmit={this.onSubmit.bind(this)}
+        enableReinitialize
+        initialValues={{
+          keyword: this.props.searchReducer.search.keyword,
+        }}
+
         render={() => (
           <Form>
             <div className="search-wrapper">
               <div className="search form-block">
-                <Field onChange={e => this.onChangeValue(e.target.value)} name="keyword" value={search} placeholder="Anything, anytime, any place" component={CustomInputComponent} />
+                <Field
+                  name="keyword"
+                  placeholder="Anything, anytime, any place"
+                  component={CustomInputComponent}
+                />
               </div>
               <button className="search-button" type="submit"><i className="icon-search" /></button>
             </div>
@@ -60,8 +44,14 @@ class SearchInput extends Component {
   }
 }
 
-export default connect(searchReducer)(SearchInput);
-
-SearchInput.propTypes = {
-  searchReducer: PropTypes.element.isRequired,
+const mapStateToProps = ({ searchReducer }) => {
+  return {
+    searchReducer
+  };
 };
+
+export default connect(mapStateToProps, { updateSearchKeyword })(SearchInput);
+
+// SearchInput.propTypes = {
+//   searchReducer: PropTypes.element.isRequired,
+// };

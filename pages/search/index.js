@@ -6,19 +6,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { updateSearch, updateSearchObject } from '../../actions/searchActions';
+import { updateLocalSearch } from '../../actions/localSearchActions';
 import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
-import SearchEdit from '../../components/searchedit/searchEdit';
+import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
 import Default from '../../layouts/default';
 import searchReducer from '../../reducers/searchReducer';
+import locationReducer from '../../reducers/locationReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
-import '../index/index.scss';
-import './search.scss';
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
-const getHTML = products => products.map(item => (
-  <Link href={`/detail?id=${item.id}&slug=${slugify(item.name)}`} as={`/detail/${item.id}/${slugify(item.name)}`}>
+const getHTML = products => products.map((item, index) => (
+  <Link
+    key={index}
+    href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+    as={`/detail/${item.id}/${slugify(item.name)}`}
+  >
     <a>
       <div className="result-item">
         <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
@@ -35,7 +40,13 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [], total_page_count: 0, current_page: 0, loading: true, notFound: false,
+      products: [],
+      total_page_count: 0,
+      current_page: 0,
+      loading: true,
+      notFound: false,
+      locations: [],
+      searchUpdated: false
     };
     this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
     this.counter = 0;
@@ -43,68 +54,103 @@ class SearchPage extends Component {
   }
 
   static async getInitialProps({ query }) {
+    const obj = query;
     if (query.keyword === undefined) {
-      query.keyword = '';
+      obj.keyword = '';
     }
     if (query.deliveryDate !== null && !moment(query.deliveryDate, moment.ISO_8601).isValid()) {
-      query.deliveryDate = null;
+      obj.deliveryDate = null;
     }
     if (query.collectionDate !== null && !moment(query.collectionDate, moment.ISO_8601).isValid()) {
-      query.collectionDate = null;
+      obj.collectionDate = null;
     }
     if (query.category !== null && !Number.isInteger(query.category)) {
-      query.category_id = null;
+      obj.category_id = null;
     }
     if (query.deliveryLocation !== null && isNaN(query.deliveryLocation)) {
-      query.deliveryLocation = null;
+      obj.deliveryLocation = null;
     }
     if (query.collectionLocation !== null && isNaN(query.collectionLocation)) {
-      query.collectionLocation = null;
+      obj.collectionLocation = null;
     }
     return {
-      keyword: decodeURIComponent(query.keyword),
-      category_id: query.category,
-      deliveryLocation: query.deliveryLocation,
-      collectionLocation: query.collectionLocation,
-      deliveryDate: query.deliveryDate,
-      collectionDate: query.collectionDate,
+      keyword: decodeURIComponent(obj.keyword),
+      category_id: obj.category,
+      deliveryLocation: obj.deliveryLocation,
+      collectionLocation: obj.collectionLocation,
+      deliveryDate: obj.deliveryDate,
+      collectionDate: obj.collectionDate,
     };
   }
 
   async componentDidMount() {
     const {
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch, category_id,
+      keyword,
+      deliveryLocation,
+      collectionLocation,
+      collectionDate,
+      deliveryDate,
+      category_id,
     } = this.props;
 
     if (keyword !== '') {
       this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
     }
-    dispatch(updateSearch({
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-    }));
 
-    if (keyword === '' && category_id) {
+    // if query parameters have been modified by user
+    // (keyword === '' && category_id) || (keyword === '' && deliveryLocation) &&
+    if (deliveryLocation !== '' && collectionLocation !== '') {
       this.setState({ notFound: false });
       await this.getProducts('update');
-    } else if (keyword === '') {
-      this.setState({ notFound: true, loading: false });
     } else {
-      this.setState({ notFound: false });
-      await this.getProducts('update');
+      this.setState({ notFound: true, loading: false });
     }
   }
 
   async componentDidUpdate(prevProps) {
+
     const {
-      keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate, dispatch, category_id,
+      keyword,
+      deliveryLocation,
+      collectionLocation,
+      collectionDate,
+      deliveryDate,
+      category_id,
     } = this.props;
+
+    // if locations are in memory retrieve the locations by
+    // id and put the search query in store
+    if(this.props.locationReducer.selectboxLocations.length > 0 && !this.state.searchUpdated && deliveryLocation !== '' && collectionLocation !== '') {
+      try {
+
+        let search = {
+          keyword,
+          collectionDate,
+          deliveryDate
+        }
+
+        if (deliveryLocation !== '' && deliveryLocation !== null) {
+          search.deliveryLocation = this.props.locationReducer.selectboxLocations.find(item => item.id === Number(deliveryLocation));
+        }
+
+        if (collectionLocation !== '' && collectionLocation !== null) {
+          search.collectionLocation = this.props.locationReducer.selectboxLocations.find(item => item.id === Number(collectionLocation));
+        }
+
+        this.props.updateSearch(search);
+        this.setState({
+          searchUpdated: true
+        })
+      } catch (error) {
+        handleGeneralError(error);
+      }
+    }
 
     if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
-      dispatch(updateSearch({
-        keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
-      }));
-      if (keyword === '' || category_id === '') {
+      // if query parameters have been modified by user
+
+      if (keyword === '' || category_id === '', deliveryLocation === '' || collectionLocation === '') {
         this.setState({ notFound: true, loading: false });
       } else {
         this.setState({ notFound: false });
@@ -136,8 +182,10 @@ class SearchPage extends Component {
       this.setState({ loading: false });
       if (error.code === 404) {
         this.setState({ notFound: true });
+        return;
+      } else {
+        handleGeneralError(error);
       }
-      console.log(error);
     }
   }
 
@@ -146,18 +194,15 @@ class SearchPage extends Component {
   }
 
   mergeObj(obj) {
-    const { dispatch } = this.props;
-    dispatch(updateSearchObject(this.props.searchReducer.search, obj));
-    const query = CreateQueryParams(this.props.searchReducer.search);
-    Router.push({ pathname: '/search', query });
+    this.props.updateSearchObject(this.props.searchReducer.search, obj);
+    const params = CreateQueryParams(this.props.searchReducer.search);
+    Router.push({ pathname: '/search', query: params });
   }
 
   render() {
     const {
       products, loading, notFound, total_page_count, current_page,
     } = this.state;
-    console.log(`current page: ${current_page}`);
-    console.log(`total pages: ${total_page_count}`);
     return (
       <Default nav="fixed" search meta={this.meta}>
         <SearchEdit onChange={this.mergeObj} />
@@ -186,4 +231,16 @@ class SearchPage extends Component {
   }
 }
 
-export default connect(searchReducer)(SearchPage);
+const mapStateToProps = ({ searchReducer, locationReducer }) => {
+  return {
+    searchReducer,
+    locationReducer
+  };
+};
+
+export default connect(
+  mapStateToProps,{
+    updateSearch,
+    updateSearchObject,
+    updateLocalSearch
+  })(SearchPage);

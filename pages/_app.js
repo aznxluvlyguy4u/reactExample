@@ -1,10 +1,16 @@
 import React from 'react';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
-import rootReducer from '../reducers/rootReducer';
-
+import moment from 'moment';
+import { setLocations, setSelectLocations } from '../actions/locationActions';
+import { emptyCart, addToCart } from '../actions/cartActions';
+import { getLocations } from '../utils/rest/requests/locations';
+import { handleGeneralError } from '../utils/rest/error/toastHandler';
+import store from '../store';
+import '../assets/scss/styles.scss';
+import SelectboxLocation from '../utils/mapping/locations/SelectboxLocation';
+import LocalStorageUtil from '../utils/localStorageUtil';
 /**
 * @param {object} initialState
 * @param {boolean} options.isServer indicates whether it is a server side or client side
@@ -13,18 +19,55 @@ import rootReducer from '../reducers/rootReducer';
 * @param {boolean} options.debug User-defined debug mode param
 * @param {string} options.storeKey This key will be used to preserve store in global namespace for safe HMR
 */
-const makeStore = (initialState, options) => createStore(rootReducer, initialState);
+
+// const makeStore = (initialState, options) => createStore(rootReducer, initialState, composeWithDevTools());
 
 class MyApp extends App {
-  // static async getInitialProps({Component, ctx}) {
-  //     // we can dispatch from here too
-  //     ctx.store.dispatch({type: 'FOO', payload: 'foo'});
-  //     const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-  //     return {pageProps};
-  // }
+
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.retrieveLocations();
+
+    // Empty cart in store
+    store.dispatch(emptyCart({}));
+
+    const cart =  LocalStorageUtil.getCart()
+    if (cart && cart !== "" && cart !== undefined && cart !== null) {
+      let filteredItemsInCart = [];
+      if (cart) {
+        filteredItemsInCart = cart.map(item => {
+          const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
+          if (item && item !== null && item !== undefined && !moment(item.deliveryDate).isBefore(now, 'day')) {
+            store.dispatch(addToCart(item));
+            return item;
+          }
+        })
+        LocalStorageUtil.setCart(filteredItemsInCart);
+      }
+    }
+  }
+
+  async retrieveLocations() {
+    try {
+      const response = await getLocations();
+      if (response.data) {
+        store.dispatch(setLocations(response.data));
+        const selectboxLocations = response.data.map(selectboxLocation => {
+          const selectLocation = new SelectboxLocation(selectboxLocation);
+          return selectLocation;
+        })
+        store.dispatch(setSelectLocations(selectboxLocations));
+      }
+    } catch (error) {
+      handleGeneralError(error);
+    }
+  }
 
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps } = this.props;
     return (
       <Container>
         <Provider store={store}>
@@ -35,4 +78,5 @@ class MyApp extends App {
   }
 }
 
-export default withRedux(makeStore)(MyApp);
+// export default withRedux(makeStore)(MyApp);
+export default MyApp;
