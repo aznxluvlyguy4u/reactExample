@@ -46,13 +46,13 @@ class OptionalAccessoryView extends Component {
               {/* <img src={item.images[0].thumbnailUrl} /> */}
               {item.images &&
                 <Fragment>
-                  <div style={{
-                  float:' left',
-                  backgroundImage: `url(${item.images[0].thumbnailUrl})`,
-                  backgroundSize: 'cover',
-                  width: '70px',
-                  height: '50px'
-                }} />
+                  <div
+                    className="extraAccessoryImage"
+                    style={{
+                    float:' left',
+                    backgroundImage: `url(${item.images[0].thumbnailUrl})`,
+                    backgroundSize: 'cover',
+                  }} />
                 </Fragment>
               }
 
