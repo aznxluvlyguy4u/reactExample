@@ -219,6 +219,9 @@
     width:100%;
     .first {
       width:40%;
+      @include for-phone-only {
+        padding-right: 4px;
+      }
       &.bold{
         font-weight:bold;
       }
@@ -227,11 +230,13 @@
       width:40%;
       &.bold{
         font-weight:bold;
+
       }
     }
     .third{
       width:20%;
       text-align:right;
+
       &.bold{
         font-weight:bold;
       }
@@ -292,7 +297,11 @@
     margin-left:2%;
   }
 }
-
+.big-counter {
+  display:flex;
+  align-items:center;
+  justify-content: center;
+}
 
 .subtract-button {
   box-sizing: border-box;
@@ -362,17 +371,44 @@
       display: block;
       img {
         width: 25%;
+        @include for-phone-only {
+          width: 24%;
+        }
+      }
+      .extraAccessoryImage {
+        width: 70px;
+        height:50px;
+        @include for-phone-only {
+          width: 60px;
+          height:50px;
+        }
       }
       .description {
+
         width: 40%;
         padding:1em;
+        @include for-phone-only {
+          width: 28%;
+          padding:1em;
+          padding-right: 0px;
+          font-size: 0.8rem;
+        }
       }
+
       .counter {
-        display:inline-block;
+        display:flex;
+        align-items:center;
+        justify-content: center;
         text-align:center;
-        width: 35%;
+        float: right;
+        width: 40%;
         height:100%;
         line-height:100%;
+        @include for-phone-only {
+          width: 52%;
+          padding: 0px;
+        }
+
         .subtract-button {
           font-size: 25px;
           // background:#ff00ff;
@@ -464,6 +500,13 @@
     padding-top: 5px;
     padding-bottom: 5px;
     border: solid 2px $yellow;
+  }
+}
+
+
+.titlewrapper {
+  h3 {
+    width: 60%;
   }
 }
 
