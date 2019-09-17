@@ -82,7 +82,7 @@ class SearchView extends Component {
       return (
         <div className={'active' ? 'form active' : 'form'}>
           <div className="titlewrapper">
-            <h3>Select Dates & Locations</h3>
+            <h3 className="localSearchTitle">Select Dates & Locations</h3>
             <Steps />
           </div>
 
@@ -100,7 +100,7 @@ class SearchView extends Component {
               }) => (
                 <Form>
                   <div>
-                    <div className="form-inline">
+                    <div className="form-inline local-search-form">
                       <div className="edit-row">
                         <label htmlFor="deliveryLocation">Pick up Location</label>
                         <Field
