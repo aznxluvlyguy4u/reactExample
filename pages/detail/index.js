@@ -287,7 +287,7 @@ class DetailPage extends Component {
                             }
                           }}
                         >
-                          -
+                          &minus;
                         </button>
                         <span className="center">
                           <span className="quantity">
