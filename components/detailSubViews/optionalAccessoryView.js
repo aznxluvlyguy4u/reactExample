@@ -32,7 +32,7 @@ class OptionalAccessoryView extends Component {
   dayCount() {
     const collectionDate = moment(this.props.localSearchReducer.search.collectionDate).endOf('day');
     const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate).startOf('day');
-    const daycount = collectionDate.diff(deliveryDate, 'days') + 1;
+    const daycount = collectionDate.diff(deliveryDate, 'days');
     return daycount;
   }
 
