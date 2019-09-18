@@ -55,7 +55,7 @@ class CheckoutPage extends Component {
   dayCount(item) {
     const collectionDate = moment(item.period.end).endOf('day');;
     const deliveryDate = moment(item.period.start).startOf('day');
-    return collectionDate.diff(deliveryDate, 'days') + 1;
+    return collectionDate.diff(deliveryDate, 'days');
   }
 
   collapse(item) {
