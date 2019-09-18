@@ -100,7 +100,8 @@ class DetailPage extends Component {
           accessories.push(item)
         });
 
-        const optional = accessories.filter(val => val.type !== 'MANDATORY');
+        // Only show accessories that are labeled as OPTIONAL as  optional accessories
+        const optional = accessories.filter(val => val.type === 'OPTIONAL');
         const mandatory = accessories.filter(val => val.type === 'MANDATORY');
 
         this.props.setProductAccessories(accessories);
