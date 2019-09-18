@@ -15,9 +15,8 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
   const params = toQueryParameterString(NullCheckProps({
     keyword, category, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
   }));
-  const per_page = 4;
+  const per_page = 15;
   const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?page=${page + 1}&per_page=${per_page}${params}`;
-  console.log(url);
   return fetch(url, {
     method: 'GET',
     headers: {

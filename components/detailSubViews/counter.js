@@ -21,9 +21,7 @@ class Counter extends Component {
               this.props.updateQuantity({item: this.props.item, quantity: this.props.quantity - 1})
             }
           }}
-        >
-          -
-        </button>
+        >&minus;</button>
         <span className="center">
           <span className="quantity">{this.props.quantity}</span>
           <br />
@@ -35,9 +33,7 @@ class Counter extends Component {
               this.props.updateQuantity({item: this.props.item, quantity: this.props.quantity + 1})
             }
           }}
-        >
-          +
-        </button>
+        >+</button>
       </span>
     )
   }

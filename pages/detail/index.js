@@ -65,6 +65,8 @@ class DetailPage extends Component {
   }
 
   async componentDidMount() {
+    this.props.resetLocalSearch();
+
     await this.getProduct();
   }
 
@@ -273,11 +275,11 @@ class DetailPage extends Component {
                 {this.props.localSearchReducer.currentStep === 2 ?
                   <div className={'form active quantity-wrapper'}>
                     <div className="titlewrapper">
-                      <h3>Product Quantity</h3>
+                      <h3 className="localSearchTitle">Product Quantity</h3>
                       <Steps />
                     </div>
                     <div className="item-wrap">
-                      <div>
+                      <div className="big-counter">
                         <button className="subtract-button"
                           onClick={(e) => {
                             if (this.props.localSearchReducer.productQuantity > 0) {
@@ -285,7 +287,7 @@ class DetailPage extends Component {
                             }
                           }}
                         >
-                          -
+                          &minus;
                         </button>
                         <span className="center">
                           <span className="quantity">
@@ -320,7 +322,7 @@ class DetailPage extends Component {
                 {this.props.localSearchReducer.currentStep === 3 && this.props.localSearchReducer.totalSteps === 4 ?
                   <div className={'form active accessories-wrapper'}>
                     <div className="titlewrapper">
-                      <h3>Optional Accessories</h3>
+                      <h3 className="localSearchTitle">Optional Accessories</h3>
                       <Steps />
                     </div>
                     <div className="item-wrap">

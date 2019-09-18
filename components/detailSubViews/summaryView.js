@@ -14,7 +14,7 @@ class SummaryView extends Component {
   componentDidMount() {
     const collectionDate = moment(this.props.localSearchReducer.search.collectionDate).endOf('day');
     const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate).startOf('day');
-    const daycount = collectionDate.diff(deliveryDate, 'days') + 1;
+    const daycount = collectionDate.diff(deliveryDate, 'days');
     this.setState({ dayCount: daycount });
   }
 
@@ -103,7 +103,7 @@ class SummaryView extends Component {
             </div>
             <div className="content-wrapper">
               <div className="first">{this.props.localSearchReducer.productQuantity} x {this.props.localSearchReducer.selectedProduct.name}</div>
-    <div className="second">{this.props.localSearchReducer.productQuantity} x {this.props.localSearchReducer.selectedProduct.rates && <Fragment>€{parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price).toFixed(2)}</Fragment>} x {this.state.dayCount} days}</div>
+    <div className="second">{this.props.localSearchReducer.productQuantity} x {this.props.localSearchReducer.selectedProduct.rates && <Fragment>€{parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price).toFixed(2)}</Fragment>} x {this.state.dayCount} days</div>
               <div className="third">{`€${parseFloat(totalPrice).toFixed(2)}`}</div>
             </div>
           </div>

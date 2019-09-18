@@ -43,7 +43,8 @@ class CheckoutPage extends Component {
       modalIsOpen: false,
       loading: false,
       orderFailed: false,
-      orderSuccess: false
+      orderSuccess: false,
+      isMobile: false
     };
 
     this.updateProductQuantity = this.updateProductQuantity.bind(this);
@@ -54,7 +55,7 @@ class CheckoutPage extends Component {
   dayCount(item) {
     const collectionDate = moment(item.period.end).endOf('day');;
     const deliveryDate = moment(item.period.start).startOf('day');
-    return collectionDate.diff(deliveryDate, 'days') + 1;
+    return collectionDate.diff(deliveryDate, 'days');
   }
 
   collapse(item) {
@@ -66,6 +67,18 @@ class CheckoutPage extends Component {
     this.forceUpdate();
   }
 
+  collapseMobile = (item) => {
+    if(item.mobileCollapsed) {
+      item.mobileCollapsed = !item.mobileCollapsed;
+    } else {
+      item.mobileCollapsed = true;
+    }
+    this.setState({
+      state: this.state
+    })
+    this.forceUpdate();
+  }
+
   async getOrderRequsts() {
     return Promise.all(this.props.cartReducer.items.map(item => { item = item.orderRequest; return item}));
   }
@@ -74,19 +87,30 @@ class CheckoutPage extends Component {
 
   }
 
+  resize() {
+    this.setState({isMobile: window.innerWidth <= 760});
+  }
+
+
   async componentDidMount() {
-    if(this.props.cartReducer.items.length > 0) {
+    window.addEventListener("resize", this.resize.bind(this));
+    this.resize();
+
+    const items = LocalStorageUtil.getCart();
+    if(items && items.length > 0) {
       this.setState({ loading: true });
 
-      const orderRequest = this.props.cartReducer.items;
+      const orderRequest = items;
       if (orderRequest.length > 0) {
-        let response = await checkCartAvailability(orderRequest);
-        LocalStorageUtil.setCart(response.data.products);
-        this.props.setCart(response.data.products);
-        this.setState({
-          products: response.data.products,
-          loading: false
-        })
+        let response = await checkCartAvailability(orderRequest)
+          .then(response => {
+            LocalStorageUtil.setCart(response.data.products);
+            this.props.setCart(response.data.products);
+            this.setState({
+              products: response.data.products,
+              loading: false
+            })
+          });
       }
     }
   }
@@ -120,15 +144,15 @@ class CheckoutPage extends Component {
 
   returnAvailabilityIcon(item) {
     if (item.quantityAvailable === 0) {
-      return <img height="20" width="20" src="/static/images/unavailable.png" />
+      return <img className="availabilityImage" src="/static/images/unavailable.png" />
     }
 
     if (item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
-      return <img height="20" width="20" src="/static/images/unavailable.png" />
+      return <img className="availabilityImage" src="/static/images/unavailable.png" />
     }
 
     if (item.quantityAvailable !== 0 && item.quantity <= item.quantityAvailable) {
-      return <img height="20" width="20" src="/static/images/available.png" />
+      return <img className="availabilityImage" src="/static/images/available.png" />
     }
   }
 
@@ -168,18 +192,21 @@ class CheckoutPage extends Component {
   }
 
   updateProductQuantity(result) {
-    result.item.quantity = result.quantity;
-    this.setState({ state: this.state });
-    LocalStorageUtil.setCart(this.state.products);
-    this.props.setCart(this.state.products);
-
+    if (result.quantity > 0) {
+      result.item.quantity = result.quantity;
+      this.setState({ state: this.state });
+      LocalStorageUtil.setCart(this.state.products);
+      this.props.setCart(this.state.products);
+    }
   }
 
   updateAccessoryQuantity(result) {
-    result.item.quantity = result.quantity;
-    this.setState({ state: this.state });
-    LocalStorageUtil.setCart(this.state.products);
-    this.props.setCart(this.state.products);
+    if (result.quantity > 0) {
+      result.item.quantity = result.quantity;
+      this.setState({ state: this.state });
+      LocalStorageUtil.setCart(this.state.products);
+      this.props.setCart(this.state.products);
+    }
   }
 
   removeProductFromCart(product) {
@@ -266,7 +293,6 @@ class CheckoutPage extends Component {
         })
         // handleGeneralError(error);
       });
-
   }
 
   quantityText(item) {
@@ -340,6 +366,7 @@ class CheckoutPage extends Component {
             <div className="cart-item heading">
               <div className="row">
                 <div className="column heading">
+                  &nbsp;
                 </div>
                 <div className="column heading">
                   product
@@ -351,23 +378,20 @@ class CheckoutPage extends Component {
                   Price
                 </div>
                 <div className="column heading">
-                  <div className="date-wrapper">
-                    <div className="date-element">
-                      <span>Pick up</span>
-                    </div>
-                    <div className="date-element">
-                      {/* <img src="/static/images/arrow.png" height="7" width="40" /> */}
-                    </div>
-                    <div className="date-element">
-                      <span>Drop off</span>
-                    </div>
-                  </div>
+                  Pick up
+                </div>
+                <div className="column heading">
+                  Drop off
                 </div>
 
                 <div className="column heading">
                   Availability
                 </div>
                 <div className="column heading">
+                  &nbsp;
+                </div>
+                <div className="column heading">
+                &nbsp;
                 </div>
               </div>
             </div>
@@ -383,19 +407,22 @@ class CheckoutPage extends Component {
                       </button>
                     </div>
                     <div className="column">
-                      <small>{item.name}</small>
-                      <br />
-                      {item.images && item.images.length > 0 ?
-                        <div
-                          style={{
-                            backgroundImage: `url(${item.images[0].thumbnailUrl})`,
-                            backgroundSize: 'cover',
-                            width: '100px',
-                            height: '70px'
-                          }}
-                        />
-                      : null}
-
+                      {this.state.isMobile ?
+                        <Fragment>
+                            <a onClick={e => {this.collapseMobile(item)}}>
+                              <small>{item.name}</small>
+                              {item.images && item.images.length > 0 ?
+                              <img className="checkoutProductImage" src={item.images[0].thumbnailUrl} />
+                              : null}
+                            </a>
+                        </Fragment>
+                      :
+                        <Fragment>
+                          {item.images && item.images.length > 0 ?
+                            <img className="checkoutProductImage" src={item.images[0].thumbnailUrl} />
+                          : null}
+                        </Fragment>
+                      }
                     </div>
                     <div className="column">
                       <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity}/>
@@ -408,24 +435,20 @@ class CheckoutPage extends Component {
                       }
                     </div>
                     <div className="column">
-                      <div className="date-wrapper">
-                        <div className="date-element">
-                          <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
-                          <span>{item.location.delivery.name}</span>
-                        </div>
-                        <div className="date-element">
-                          <img src="/static/images/arrow.png" height="7" width="40" />
-                        </div>
-                        <div className="date-element">
-                          <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
-                          <span>{item.location.collection.name}</span>
-                        </div>
-                      </div>
+                      <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
+                      <br />
+                      <span>{item.location.delivery.name}</span>
+                    </div>
+                    <div className="column">
+                      <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
+                      <br />
+                      <span>{item.location.collection.name}</span>
                     </div>
 
                     <div className="column center">
                       {this.returnAvailabilityIcon(item)}
                     </div>
+                    {/* warning */}
                     <div className="column">
                       <small>
                         {this.returnWarningMessage(item)}
@@ -433,18 +456,87 @@ class CheckoutPage extends Component {
                         {this.resetQuantityButton(item)}
                         <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
                       </small>
+                      &nbsp;
                     </div>
+                    {/* drop dopdown */}
                     <div className="column">
-                      <button className="yellow-chevron" onClick={(e) => {
-                        this.collapse(item)
-                      }}>
-                        <i className={classnames({
-                          'icon-down-open': item.collapsed && item.collapsed === true,
-                          'icon-up-open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
-                        })}></i>
-                      </button>
+                      {item.accessories.length > 0 &&
+                        <button className="yellow-chevron" onClick={(e) => {
+                          this.collapse(item)
+                        }}>
+                          <i className={classnames({
+                            'icon-down-open': item.collapsed && item.collapsed === true,
+                            'icon-up-open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
+                          })}></i>
+                        </button>
+                      }
                     </div>
                   </div>
+                </div>
+
+                <div className={classnames({
+                  'mobileExtra': true,
+                  'mobileExtraOpen': item.mobileCollapsed !== null && item.mobileCollapsed !== undefined && item.mobileCollapsed === true
+                 })}>
+                   <small>
+                      {this.returnWarningMessage(item)}
+                      <span dangerouslySetInnerHTML={{ __html: this.quantityText(item) }} />
+                      {this.resetQuantityButton(item)}
+                      <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
+                    </small>
+
+                    {item.accessories.map((accessory, index) => (
+                    <div className="row" key={index} style={
+                      accessory.quantityAvailable === 0 ? {background: '#eee', color: '#bbb'} : null
+                    }>
+                      <div className="column">
+                        <div className="column">
+                          <button onClick={(e) => {this.removeAccessoryFromCart(item, accessory)}}>
+                            <i className="icon-x"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="column">
+                          <small><strong>Optional Accessory</strong></small>
+                          <br />
+                          <small>{accessory.name}</small>
+                          {accessory.images && accessory.images.length > 0 ?
+                            <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
+                          : null}
+                      </div>
+                      <div className="column">
+                        <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
+                      </div>
+                      <div className="column">
+                      {accessory.rates &&
+                        <Fragment>
+                          €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
+                        </Fragment>
+                      }
+                      </div>
+                      <div className="column">
+                        &nbsp;
+                      </div>
+                      <div className="column">
+                        &nbsp;
+                      </div>
+
+                      <div className="column center">
+                        {this.returnAvailabilityIcon(accessory)}
+                      </div>
+                      <div className="column">
+                        <small>Optional Accessory</small>
+                        <br />
+                        <small>
+                          {this.returnWarningMessage(accessory)}
+                          <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
+                          {this.resetQuantityButton(accessory)}
+                          <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
+                        </small>
+                        &nbsp;
+                      </div>
+                    </div>)
+                  )}
                 </div>
 
                 <div className={classnames({
@@ -463,7 +555,10 @@ class CheckoutPage extends Component {
                         </div>
                       </div>
                       <div className="column">
-                        {accessory.name}
+                          <small>{accessory.name}</small>
+                          {accessory.images && accessory.images.length > 0 ?
+                            <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
+                          : null}
                       </div>
                       <div className="column">
                         <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
@@ -476,22 +571,25 @@ class CheckoutPage extends Component {
                       }
                       </div>
                       <div className="column">
-
+                        &nbsp;
                       </div>
+                      <div className="column">
+                        &nbsp;
+                      </div>
+
                       <div className="column center">
                         {this.returnAvailabilityIcon(accessory)}
                       </div>
                       <div className="column">
+                        <small>Optional Accessory</small>
+                        <br />
                         <small>
                           {this.returnWarningMessage(accessory)}
                           <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
                           {this.resetQuantityButton(accessory)}
                           <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
                         </small>
-                      </div>
-
-                      <div className="column">
-                        <small>Optional Accessory</small>
+                        &nbsp;
                       </div>
                     </div>)
                   )}
@@ -536,12 +634,12 @@ class CheckoutPage extends Component {
               </div>
               <div className="row">
                 <div className="column">
-
+                  &nbsp;
                 </div>
                 <div className="column">
                   {this.state.products.length > 0 &&
                   <a
-                    className="button-border right"
+                    className="button-full right"
                     onClick={(e) => {
                       this.openModal()
                     }}
@@ -551,7 +649,11 @@ class CheckoutPage extends Component {
                 </div>
               </div>
             </div>
-            </Fragment> : null}
+            </Fragment> :
+              <Fragment>
+                {!this.state.loading && <span style={{textAlign: 'center'}}>Your cart is empty</span>}
+              </Fragment>
+              }
             {this.state.loading ? <Loader /> : null}
           </div>
 

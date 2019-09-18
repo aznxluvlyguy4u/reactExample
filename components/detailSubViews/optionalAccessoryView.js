@@ -32,7 +32,7 @@ class OptionalAccessoryView extends Component {
   dayCount() {
     const collectionDate = moment(this.props.localSearchReducer.search.collectionDate).endOf('day');
     const deliveryDate = moment(this.props.localSearchReducer.search.deliveryDate).startOf('day');
-    const daycount = collectionDate.diff(deliveryDate, 'days') + 1;
+    const daycount = collectionDate.diff(deliveryDate, 'days');
     return daycount;
   }
 
@@ -46,13 +46,13 @@ class OptionalAccessoryView extends Component {
               {/* <img src={item.images[0].thumbnailUrl} /> */}
               {item.images &&
                 <Fragment>
-                  <div style={{
-                  float:' left',
-                  backgroundImage: `url(${item.images[0].thumbnailUrl})`,
-                  backgroundSize: 'cover',
-                  width: '70px',
-                  height: '50px'
-                }} />
+                  <div
+                    className="extraAccessoryImage"
+                    style={{
+                    float:' left',
+                    backgroundImage: `url(${item.images[0].thumbnailUrl})`,
+                    backgroundSize: 'cover',
+                  }} />
                 </Fragment>
               }
 

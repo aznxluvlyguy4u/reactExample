@@ -35,7 +35,7 @@ class CategoryTiles extends Component {
           <Link href={`/search?category=${item.id}`}>
             <a draggable="false">
               <div
-                style={{ backgroundImage: 'url(/static/images/flyboard.png)' }}
+                style={{ backgroundImage: `url(${item.customFields.publicIconThumbUrl})` }}
                 className="category-tile"
               >
                 <span>{item.name}</span>
