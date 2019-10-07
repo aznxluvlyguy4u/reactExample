@@ -180,7 +180,6 @@ class CheckoutPage extends Component {
         price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity
       }
     });
-    console.log(price);
     return price;
   }
 
@@ -299,7 +298,6 @@ class CheckoutPage extends Component {
   }
 
   handleContracterInformationForm = (values) => {
-    // alert('handle contracter form send data to API and receive orderID + Client secret');
     this.setState({
       orderFormStep: 3,
       contracterInformation: values
@@ -330,21 +328,13 @@ class CheckoutPage extends Component {
   }
 
   handleStripePayment = (e) => {
-    // e.preventDefault();
     this.setState({
       loading: true,
     })
 
-    // console.log(this.state);
-    // return;
 
     // const splitSecret = this.state.paymentIntent.clientSecret.split('_secret_')[0];
     if (this.state.stripe && this.state.paymentIntent !== null) {
-      console.log('stripe = ', this.state.stripe);
-      console.log('clientSecret = ', this.state.paymentIntent.clientSecret);
-      // alert('go');
-
-
 
 
       this.state.stripe
@@ -357,7 +347,6 @@ class CheckoutPage extends Component {
         })
         .then((payload) => {
           if (payload.error) {
-            console.log('error = ', payload.error)
             this.setState({
               loading: false,
               orderFailed: true,
@@ -365,7 +354,6 @@ class CheckoutPage extends Component {
               paymentIntent: null
             })
           } else {
-            // alert('success');
             this.setState({
               loading: false,
               orderSuccess: true,
@@ -373,11 +361,9 @@ class CheckoutPage extends Component {
               paymentIntent: null
             })
             // Clear and reset all;
-            // this.closeModal();
-            // this.props.emptyCart();
-            // LocalStorageUtil.emptyCart();
+            this.props.emptyCart();
+            LocalStorageUtil.emptyCart();
           }
-          console.log('payload = ', payload);
         })
     } else {
       this.setState({
