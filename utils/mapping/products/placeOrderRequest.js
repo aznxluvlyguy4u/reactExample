@@ -1,26 +1,44 @@
 export default class PlaceOrderRequest {
-  constructor(cart, form) {
+  constructor(cart, contactInformation, contracterInformation) {
     this.cart = cart;
-    this.firstName = form.firstName;
-    this.lastName = form.lastName;
-    this.emailAddress = form.email;
-    this.phoneNumber = form.phonePrefix + form.phoneNumber;
-    this.comment = form.comment;
-    this.affiliation = form.affiliation.value;
-    this.yachtName = form.yachtname;
+
+    this.contactDetails = {
+      firstName: contactInformation.firstName,
+      surName: contactInformation.surName,
+      emailAddress: contactInformation.emailAddress,
+      phoneNumber: contactInformation.phoneNumber, //contactInformation.phonePrefix +
+      type: contactInformation.affiliation.value
+
+    }
+    this.contracterDetails = {
+      firstName: contracterInformation.firstName,
+      surName: contracterInformation.surName,
+      emailAddress: contracterInformation.emailAddress,
+      billing: {
+        companyName: contracterInformation.company,
+        vatNumber: contracterInformation.vatNumber,
+        address: {
+          streetName: contracterInformation.streetName,
+          streetNumber: contracterInformation.streetNumber,
+          streetNumberBlock: contracterInformation.streetNumberBlock,
+          postalCode: contracterInformation.postalCode,
+          country: contracterInformation.country
+        }
+      }
+    }
+    this.affiliation = contactInformation.affiliation.value;
+    this.comment = contactInformation.comment;
+    this.yachtName = contactInformation.yachtname;
   }
 
   returnOrder() {
     const obj = {
+      paymentMethod: "CARD",
       products: this.cart,
       yachtName: this.yachtName,
-      contactDetails: {
-        firstName: this.firstName,
-        surName: this.lastName,
-        emailAddress: this.emailAddress,
-        phoneNumber: this.phoneNumber,
-        type: this.affiliation,
-      },
+
+      contactDetails: this.contactDetails,
+      contractorDetails: this.contracterDetails,
       message: this.comment,
     };
 

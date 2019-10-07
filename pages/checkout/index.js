@@ -5,7 +5,8 @@ import classnames from 'classnames';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
 
-import OrderForm from '../../components/checkout/orderForm/orderForm';
+import ContactInformationForm from '../../components/checkout/orderForm/contactInformationForm';
+import ContracterInformationForm from '../../components/checkout/orderForm/ContracterInformationForm';
 import Counter from '../../components/detailSubViews/counter';
 import Loader from '../../components/loader';
 import Default from '../../layouts/default';
@@ -15,8 +16,11 @@ import { orderCartItems } from '../../utils/rest/requests/orders';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 import LocalStorageUtil from '../../utils/localStorageUtil';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
+import {Elements, StripeProvider} from 'react-stripe-elements';
+import StripeForm from '../../components/checkout/StripeForm';
 
 import { emptyCart, setCart } from '../../actions/cartActions';
+import Script from 'react-load-script';
 
 const customStyles = {
   content: {
@@ -44,12 +48,25 @@ class CheckoutPage extends Component {
       loading: false,
       orderFailed: false,
       orderSuccess: false,
-      isMobile: false
+      isMobile: false,
+      orderFormStep: 1,
+      cartUuid: null,
+      contactInformation: null,
+      contracterInformation: null,
+      paymentIntent: null
     };
 
     this.updateProductQuantity = this.updateProductQuantity.bind(this);
     this.updateAccessoryQuantity = this.updateAccessoryQuantity.bind(this);
     this.returnWarningMessage = this.returnWarningMessage.bind(this);
+  }
+
+  onStripeLoad() {
+    if (window.Stripe) {
+      this.setState({
+        stripe: window.Stripe('pk_test_AOFhYRn5ibpkET6D6wghnmpj00AmrMn2js')
+      });
+    }
   }
 
   dayCount(item) {
@@ -88,13 +105,12 @@ class CheckoutPage extends Component {
   }
 
   resize() {
-    this.setState({isMobile: window.innerWidth <= 760});
+    // this.setState({isMobile: window.innerWidth <= 760});
   }
 
-
   async componentDidMount() {
-    window.addEventListener("resize", this.resize.bind(this));
-    this.resize();
+    // window.addEventListener("resize", this.resize.bind(this));
+    // this.resize();
 
     const items = LocalStorageUtil.getCart();
     if(items && items.length > 0) {
@@ -160,10 +176,11 @@ class CheckoutPage extends Component {
     let price = 0;
 
     accessories.map(item => {
-      if (item.rates) {
+      if (item.rates && item.rates.length > 0) {
         price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity
       }
     });
+    console.log(price);
     return price;
   }
 
@@ -171,11 +188,14 @@ class CheckoutPage extends Component {
     let productPrice = 0;
     let accessoryPrice = 0;
     this.state.products.map(product => {
-      if (product.rates) {
-        productPrice += this.dayCount(product) * Number(product.rates[0].price) * product.quantity
+      if (product.rates && product.rates.length > 0) {
+        productPrice = this.dayCount(product) * Number(product.rates[0].price) * product.quantity
       }
       accessoryPrice += this.calculateTotalAccessoires(product.accessories)
+      product.totalCostAccessories  = accessoryPrice;
+      product.totalCostProducts = productPrice;
     });
+
     return productPrice + accessoryPrice;
   }
 
@@ -270,29 +290,100 @@ class CheckoutPage extends Component {
     this.props.setCart(products);
   }
 
-  requestReservation = (values) => {
-    const request = new PlaceOrderRequest(this.state.products, values).returnOrder();
+  handleContactInformationForm = (values) => {
+    this.setState({
+      orderFormStep: 2,
+      contactInformation: values
+    })
+    return;
+  }
+
+  handleContracterInformationForm = (values) => {
+    // alert('handle contracter form send data to API and receive orderID + Client secret');
+    this.setState({
+      orderFormStep: 3,
+      contracterInformation: values
+    })
+
+    const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation).returnOrder();
     this.setState({ loading: true });
     const response = orderCartItems(request)
       .then((res) => {
         if(res.code === 201) {
-          this.props.emptyCart();
-          this.props.emptyCart();
-          LocalStorageUtil.emptyCart();
-          this.closeModal();
-          this.setState({ loading: false });
           this.setState({
-            orderSuccess: true
+            orderFormStep: 3,
+            loading: false,
+            paymentIntent: res.data.paymentIntent
           })
         }
       })
       .catch(err => {
         this.setState({
           loading: false,
-          orderFailed: true
+          orderFormStep: 2
         })
-        // handleGeneralError(error);
       });
+  }
+
+  handleReady = (element) => {
+    this.element = element;
+  }
+
+  handleStripePayment = (e) => {
+    // e.preventDefault();
+    this.setState({
+      loading: true,
+    })
+
+    // console.log(this.state);
+    // return;
+
+    // const splitSecret = this.state.paymentIntent.clientSecret.split('_secret_')[0];
+    if (this.state.stripe && this.state.paymentIntent !== null) {
+      console.log('stripe = ', this.state.stripe);
+      console.log('clientSecret = ', this.state.paymentIntent.clientSecret);
+      // alert('go');
+
+
+
+
+      this.state.stripe
+        .handleCardPayment(this.state.paymentIntent.clientSecret, this.element, {
+          payment_method_data: {
+            billing_details: {
+              name: 'Jenny Rosen'
+            }
+          }
+        })
+        .then((payload) => {
+          if (payload.error) {
+            console.log('error = ', payload.error)
+            this.setState({
+              loading: false,
+              orderFailed: true,
+              orderFormStep: 2,
+              paymentIntent: null
+            })
+          } else {
+            // alert('success');
+            this.setState({
+              loading: false,
+              orderSuccess: true,
+              orderFormStep: 1,
+              paymentIntent: null
+            })
+            // Clear and reset all;
+            // this.closeModal();
+            // this.props.emptyCart();
+            // LocalStorageUtil.emptyCart();
+          }
+          console.log('payload = ', payload);
+        })
+    } else {
+      this.setState({
+        loading: false,
+      })
+    }
   }
 
   quantityText(item) {
@@ -428,7 +519,7 @@ class CheckoutPage extends Component {
                       <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity}/>
                     </div>
                     <div className="column">
-                      {item.rates &&
+                      {item.rates && item.rates.length > 0 &&
                         <Fragment>
                           €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
                         </Fragment>
@@ -497,18 +588,18 @@ class CheckoutPage extends Component {
                         </div>
                       </div>
                       <div className="column">
-                          <small><strong>Optional Accessory</strong></small>
-                          <br />
-                          <small>{accessory.name}</small>
-                          {accessory.images && accessory.images.length > 0 ?
-                            <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
-                          : null}
+                        <small><strong>Optional Accessory</strong></small>
+                        <br />
+                        <small>{accessory.name}</small>
+                        {accessory.images && accessory.images.length > 0 ?
+                          <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
+                        : null}
                       </div>
                       <div className="column">
                         <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
                       </div>
                       <div className="column">
-                      {accessory.rates &&
+                      {accessory.rates && accessory.rates.length > 0 &&
                         <Fragment>
                           €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
                         </Fragment>
@@ -564,7 +655,7 @@ class CheckoutPage extends Component {
                         <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
                       </div>
                       <div className="column">
-                      {accessory.rates &&
+                      {accessory.rates && accessory.rates.length > 0 &&
                         <Fragment>
                           €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
                         </Fragment>
@@ -665,7 +756,7 @@ class CheckoutPage extends Component {
               onRequestClose={this.closeSuccessModal}
               style={customStyles}
             >
-              <h1>Reservation Request Sent</h1>
+              <h1>Order Sent</h1>
               <p>Thanks for your inquiry! We will get back to you as quickly as possible±!</p>
               <p>Please check your Email inbox for the details</p>
               <a
@@ -704,13 +795,57 @@ class CheckoutPage extends Component {
             onRequestClose={this.closeModal}
             style={customStyles}
           >
-            <OrderForm
-              closeModal={this.closeModal}
+          {/* {this.state.orderFormStep} */}
+          {/* {JSON.stringify(this.state.contactInformation)} */}
+          {this.state.orderFormStep === 1 &&
+          <ContactInformationForm
+            initialValues={this.state.contactInformation}
+            cancel={() => {
+              this.closeModal()
+            }}
+            loading={this.state.loading}
+            handleSubmit={this.handleContactInformationForm}
+          />}
+
+          {this.state.orderFormStep === 2 &&
+            <ContracterInformationForm
+              initialValues={this.state.contracterInformation}
+              cancel={() => {
+                this.setState({
+                  orderFormStep: 1
+                })
+              }}
               loading={this.state.loading}
-              handleSubmit={this.requestReservation}
+              handleSubmit={this.handleContracterInformationForm}
+
             />
+          }
+
+          {this.state.orderFormStep === 3 &&
+            <StripeProvider stripe={this.state.stripe}>
+              <Elements>
+                <Fragment>
+                  <StripeForm
+                    onReady={this.handleReady}
+                    paymentIntent={this.state.paymentIntent}
+                    cancel={() => {
+                      this.setState({
+                        orderFormStep: 2
+                      })
+                    }}
+                    handleSubmit={() => {
+                      this.handleStripePayment()
+                    }}
+                  />
+                </Fragment>
+              </Elements>
+            </StripeProvider>}
+
           </Modal>}
 
+          <Script
+              url='https://js.stripe.com/v3/'
+              onLoad={() => this.onStripeLoad()} />
       </Default>
     );
   }

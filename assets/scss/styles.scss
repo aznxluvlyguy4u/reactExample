@@ -37,3 +37,21 @@
 @import 'modules/pages/index';
 @import 'modules/pages/search';
 
+
+// Override stripe form elements
+.StripeElement {
+  box-sizing: border-box !important;
+  font-family: "Tyros Pro" !important;
+  width: 100% !important;
+  border: 2px solid #D3D3D3 !important;
+  color: #19303B !important;
+  padding: 10px !important;
+
+  &.is-invalid {
+    border: 2px solid red !important;
+  }
+}
+
+.StripeElement--invalid {
+  border: 2px solid red !important;
+}
