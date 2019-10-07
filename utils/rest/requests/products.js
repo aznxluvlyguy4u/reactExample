@@ -25,8 +25,14 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
   }).then(handleRestResponse);
 }
 
-export function getProductById(id) {
-  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/${id}`;
+export function getProductById(id, deliveryLocation) {
+
+  let params = '';
+  if (deliveryLocation) {
+    params = `?delivery_location_id=${deliveryLocation}`;
+  }
+
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/${id}${params}`;
   return fetch(url, {
     method: 'GET',
     headers: {

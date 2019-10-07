@@ -54,6 +54,10 @@ class DetailPage extends Component {
     this.changeAccesoire = this.changeAccesoire.bind(this);
     this.onChangeConfiguration = this.onChangeConfiguration.bind(this);
     this.continueShopping = this.continueShopping.bind(this);
+
+    this.props.resetLocalSearch();
+    const search = Object.assign({}, this.props.searchReducer.search);
+    this.props.updateLocalSearch(search);
     // this.renderThirdView = this.renderThirdView.bind(this);
     // this.meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
   }
@@ -65,7 +69,6 @@ class DetailPage extends Component {
   }
 
   async componentDidMount() {
-    this.props.resetLocalSearch();
 
     await this.getProduct();
   }
@@ -85,8 +88,17 @@ class DetailPage extends Component {
 
   async getProduct() {
     const { id } = this.props;
+    let deliveryLocationId = null;
+
+    if (this.props.searchReducer.search.deliveryLocation && this.props.searchReducer.search.deliveryLocation.id) {
+      deliveryLocationId = this.props.searchReducer.search.deliveryLocation.id
+    };
+    if (this.props.localSearchReducer.search.deliveryLocation && this.props.localSearchReducer.search.deliveryLocation.id) {
+      deliveryLocationId = this.props.localSearchReducer.search.deliveryLocation.id
+    };
+
     try {
-      const response = await getProductById(id);
+      const response = await getProductById(id, deliveryLocationId);
       this.setState({ product: response.data });
       this.props.setSelectedProduct(response.data);
 
@@ -269,6 +281,10 @@ class DetailPage extends Component {
                   _prev={this._prev}
                   _next={this._next}
                   data={product}
+                  resetDeliveryLocation={() => {
+                    this.getProduct()
+                  }}
+
                 />
                 : null }
 

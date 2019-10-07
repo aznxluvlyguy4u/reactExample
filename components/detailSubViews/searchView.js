@@ -22,9 +22,6 @@ class SearchView extends Component {
   constructor(props) {
     super(props);
 
-    const search = Object.assign({}, this.props.searchReducer.search);
-    this.props.updateLocalSearch(search);
-
     this.state = {
       locations: [],
       modalIsOpen: false,
@@ -115,6 +112,9 @@ class SearchView extends Component {
                                   label: e.deliveryLocation.name,
                                   value: e.deliveryLocation
                                 })
+                              }
+                              if (e.deliveryLocation.id !== this.props.localSearchReducer.search.deliveryLocation.id) {
+                                this.props.resetDeliveryLocation()
                               }
                             }
                           }
