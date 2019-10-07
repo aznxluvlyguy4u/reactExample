@@ -1,0 +1,15 @@
+.background-wrapper {
+  background-color: black;
+  height: 750px;
+  background-image: url("/static/images/background-image.png");
+  background-repeat: none;
+  background-size: cover;
+}
+
+.slider-slide {
+ text-align:center
+}
+
+.slider .category-tile {
+  height: 300px;
+}

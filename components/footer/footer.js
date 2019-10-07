@@ -1,7 +1,6 @@
 // components/navbar.js
 
 import React from 'react';
-import './footer.scss';
 import Link from 'next/link';
 
 const Footer = () => (
@@ -11,7 +10,7 @@ const Footer = () => (
         <h2>Site</h2>
         <ul>
           <li>
-            <Link href="/explore"><a>Explore</a></Link>
+            <Link href="/"><a>Explore</a></Link>
           </li>
         </ul>
       </div>
@@ -19,7 +18,7 @@ const Footer = () => (
         <h2>Legal</h2>
         <ul>
           <li>
-            <Link href="/terms"><a>Terms and conditions</a></Link>
+            <Link target="_blank" href="https://www.oceanpremium.com/general-terms-conditions/"><a>Terms and conditions</a></Link>
           </li>
           <li>
             <Link href="/privacy_policy"><a>Privacy Policy</a></Link>

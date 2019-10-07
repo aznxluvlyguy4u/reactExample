@@ -1,0 +1,13 @@
+V Zoeken  vanaf home page het enige verplichte veld is delivery location. (Pick up location)
+V zoek key word required weghalen
+V Als ik zoek worden mijn gekozen locatie niet bewaard
+V Als ik zoek worden mijn gekozen datums niet bewaard
+
+
+V Als ik zoek mag start datum niet eerder zijn dan vandaag
+V Als ik zoek mag eind datum niet gelijk zijn aan start datum
+  - Gefixt door inputs readOnly te maken. Forceren om date picker te gebruiken. (Dat doet AirBNB ook dus neem een voorbeeld aan de partijen die al geld verdienen)
+
+
+- Zoek waardes opslaan in global store. Onderzoeken waarom dit soms fout gaat
+-

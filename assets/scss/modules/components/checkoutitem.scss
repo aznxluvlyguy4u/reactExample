@@ -1,0 +1,62 @@
+.checkoutitem{
+  width:100%;
+  .wrap-item{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+    padding-top:20px;
+    padding-bottom: 20px;
+    .sub-item{
+      display:flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 17.28%;
+      font-size:15px;
+      font-weight:lighter;
+      &.product{
+        justify-content: flex-start;
+      }
+      @include for-phone-only {
+        &.delivery{
+          display:none;
+        }
+        &.collection{
+          display:none;
+        }
+        &.details{
+          display:none;
+        }
+      }
+      .toggle{
+        display: flex;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .remove-item{
+        font-weight:normal;
+        font-size:20px;
+        cursor:pointer;
+      }
+      .column-item{
+        display:flex;
+        flex-direction: column;
+        &.date{
+          text-align:center;
+        }
+      }
+    }
+  }
+
+  .warning-message{
+    color: $yellow;
+    font-size: 12px;
+  }
+  .collapse-view{
+    width:100%;
+    .paragraph-wrapper {
+      width:100%;
+    }
+  }
+}

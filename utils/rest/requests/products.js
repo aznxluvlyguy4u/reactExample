@@ -1,5 +1,5 @@
 import { throttle, debounce } from 'throttle-debounce';
-import { BASE_URL } from '../requestConstants';
+import { PRODUCTS_ENDPOINT_BASE_URL } from '../requestConstants';
 import handleRestResponse from '../requestUtil';
 import { toQueryParameterString, NullCheckProps } from '../../queryparams';
 
@@ -15,8 +15,8 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
   const params = toQueryParameterString(NullCheckProps({
     keyword, category, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
   }));
-  const per_page = 4;
-  const url = `${BASE_URL}/products/inventory?page=${page + 1}&per_page=${per_page}${params}`;
+  const per_page = 15;
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?page=${page + 1}&per_page=${per_page}${params}`;
   return fetch(url, {
     method: 'GET',
     headers: {
@@ -26,7 +26,7 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
 }
 
 export function getProductById(id) {
-  const url = `${BASE_URL}/products/${id}`;
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/${id}`;
   return fetch(url, {
     method: 'GET',
     headers: {
