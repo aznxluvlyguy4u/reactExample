@@ -114,7 +114,7 @@ class SearchView extends Component {
                                 })
                               }
                               if (e.deliveryLocation.id !== this.props.localSearchReducer.search.deliveryLocation.id) {
-                                this.props.resetDeliveryLocation()
+                                this.props.resetDeliveryLocation(e.deliveryLocation)
                               }
                             }
                           }

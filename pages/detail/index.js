@@ -86,7 +86,7 @@ class DetailPage extends Component {
     }
   }
 
-  async getProduct() {
+  async getProduct(deliveryLocation) {
     const { id } = this.props;
     let deliveryLocationId = null;
 
@@ -97,6 +97,9 @@ class DetailPage extends Component {
       deliveryLocationId = this.props.localSearchReducer.search.deliveryLocation.id
     };
 
+    if (deliveryLocation) {
+      deliveryLocationId = deliveryLocation.id;
+    }
     try {
       const response = await getProductById(id, deliveryLocationId);
       this.setState({ product: response.data });
@@ -281,8 +284,8 @@ class DetailPage extends Component {
                   _prev={this._prev}
                   _next={this._next}
                   data={product}
-                  resetDeliveryLocation={() => {
-                    this.getProduct()
+                  resetDeliveryLocation={(deliveryLocation) => {
+                    this.getProduct(deliveryLocation)
                   }}
 
                 />
