@@ -13,7 +13,7 @@ import Default from '../../layouts/default';
 import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
 import { orderCartItems } from '../../utils/rest/requests/orders';
-import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+import { handleGeneralError, handlePaymentError } from '../../utils/rest/error/toastHandler';
 import LocalStorageUtil from '../../utils/localStorageUtil';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
 import {Elements, StripeProvider} from 'react-stripe-elements';
@@ -349,10 +349,9 @@ class CheckoutPage extends Component {
           if (payload.error) {
             this.setState({
               loading: false,
-              orderFailed: true,
-              orderFormStep: 2,
-              paymentIntent: null
+              orderFormStep: 3,
             })
+            handlePaymentError(payload.error);
           } else {
             this.setState({
               loading: false,
@@ -763,7 +762,7 @@ class CheckoutPage extends Component {
               onRequestClose={this.closeFailureModal}
               style={customStyles}
             >
-              <h1>Reservation Request Failed</h1>
+              <h1>Your payment failed Request Failed</h1>
               <p>This may be due to slow internet! Please retry the reservation</p>
               <a
                 className="button-border fullwidth"

@@ -14,7 +14,7 @@ class StripeForm extends Component {
         <div className="form-block">
           <div className="form-block">
             <div className="input-wrapper">
-              <CardElement onReady={this.props.onReady} />
+              <CardElement hidePostalCode={true} onReady={this.props.onReady} />
             </div>
           </div>
         </div>
