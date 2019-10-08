@@ -12,7 +12,8 @@ import Loader from '../../components/loader';
 import Default from '../../layouts/default';
 import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
-import { orderCartItems } from '../../utils/rest/requests/orders';
+import UpdatedPlaceOrderRequest from '../../utils/mapping/products/UpdatedPlaceOrderRequest';
+import { orderCartItems, updateOrderCartItems } from '../../utils/rest/requests/orders';
 import { handleGeneralError, handlePaymentError } from '../../utils/rest/error/toastHandler';
 import LocalStorageUtil from '../../utils/localStorageUtil';
 import OrderRequest from '../../utils/mapping/products/orderRequest';
@@ -303,24 +304,48 @@ class CheckoutPage extends Component {
       contracterInformation: values
     })
 
-    const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation).returnOrder();
-    this.setState({ loading: true });
-    const response = orderCartItems(request)
-      .then((res) => {
-        if(res.code === 201) {
-          this.setState({
-            orderFormStep: 3,
-            loading: false,
-            paymentIntent: res.data.paymentIntent
-          })
-        }
-      })
-      .catch(err => {
-        this.setState({
-          loading: false,
-          orderFormStep: 2
+    if (this.state.paymentIntent) {
+      // UPDATE existing order / payment intent
+      const request = new UpdatedPlaceOrderRequest(this.state.originalOrder, this.state.products, this.state.contactInformation, this.state.contracterInformation).returnUpdatedOrder();
+      this.setState({ loading: true });
+      const response = updateOrderCartItems(request)
+        .then((res) => {
+          if(res.code === 200) {
+            this.setState({
+              orderFormStep: 3,
+              loading: false,
+              originalOrder: res.data
+            })
+          }
         })
-      });
+        .catch(err => {
+          this.setState({
+            loading: false,
+            orderFormStep: 2
+          })
+        });
+    } else {
+      // New order/ payment intent
+      const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation).returnOrder();
+      this.setState({ loading: true });
+      const response = orderCartItems(request)
+        .then((res) => {
+          if(res.code === 201) {
+            this.setState({
+              orderFormStep: 3,
+              loading: false,
+              paymentIntent: res.data.paymentIntent,
+              originalOrder: res.data
+            })
+          }
+        })
+        .catch(err => {
+          this.setState({
+            loading: false,
+            orderFormStep: 2
+          })
+        });
+    }
   }
 
   handleReady = (element) => {

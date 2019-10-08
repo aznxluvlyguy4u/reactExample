@@ -1,7 +1,10 @@
-export default class PlaceOrderRequest {
-  constructor(products, contactInformation, contracterInformation) {
-    this.products = products;
 
+export default class UpdatedPlaceOrderRequest {
+  constructor(originalRequest, products, contactInformation, contracterInformation) {
+    this.products = products;
+    this.originalRequest = originalRequest;
+    // this.contactDetails = contactInformation;
+    // this.contractorDetails = contracterInformation;
     this.contactDetails = {
       firstName: contactInformation.firstName,
       surName: contactInformation.surName,
@@ -25,23 +28,13 @@ export default class PlaceOrderRequest {
         }
       }
     }
-    this.affiliation = contactInformation.affiliation.value;
-    this.comment = contactInformation.comment;
-    this.yachtName = contactInformation.yachtname;
-
   }
 
-  returnOrder() {
-    const obj = {
-      paymentMethod: "CARD",
-      products: this.products,
-      yachtName: this.yachtName,
-
-      contactDetails: this.contactDetails,
-      contractorDetails: this.contracterDetails,
-      message: this.comment,
-    };
-
-    return obj;
+  returnUpdatedOrder() {
+    let updatedRequest = this.originalRequest;
+    updatedRequest.products = this.products;
+    updatedRequest.contactDetails = this.contactDetails;
+    updatedRequest.contracterDetails = this.contracterDetails;
+    return updatedRequest;
   }
 }
