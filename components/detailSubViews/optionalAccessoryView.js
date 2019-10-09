@@ -15,7 +15,6 @@ class OptionalAccessoryView extends Component {
 
   componentDidMount() {
 
-
     this.setState({
       productOptionalAccessories: this.props.localSearchReducer.productOptionalAccessories,
     });
@@ -56,7 +55,11 @@ class OptionalAccessoryView extends Component {
                 </Fragment>
               }
 
-              <span className="description">{item.name}</span>
+              <span className="description">
+                <span className="title">{item.name}</span>
+                <br />
+                {item.description && item.description.summary && item.description.summary}
+              </span>
               <span className="counter">
                 <button
                   className="subtract-button"

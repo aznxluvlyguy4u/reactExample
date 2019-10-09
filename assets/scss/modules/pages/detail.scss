@@ -230,13 +230,11 @@
       width:40%;
       &.bold{
         font-weight:bold;
-
       }
     }
     .third{
       width:20%;
       text-align:right;
-
       &.bold{
         font-weight:bold;
       }
@@ -365,10 +363,11 @@
         display: inline-block;
         box-sizing: border-box;
         height:100%;
-        line-height:100%;
+        line-height:130%;
       }
       width:100%;
       display: block;
+      margin-bottom:20px;
       img {
         width: 25%;
         @include for-phone-only {
@@ -385,13 +384,18 @@
       }
       .description {
 
+        .title {
+          font-weight: bold;
+          font-size: 0.7rem;
+        }
         width: 40%;
         padding:1em;
+        font-size: 0.7rem;
         @include for-phone-only {
           width: 28%;
           padding:1em;
           padding-right: 0px;
-          font-size: 0.8rem;
+          font-size: 0.7rem;
         }
       }
 
