@@ -29,7 +29,7 @@ const getHTML = products => products.map((item, index) => (
         <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
         <h2>{item.name}</h2>
         <span>
-          {`${item.rates.day_rate} / day`}
+          {`from € ${item.rates.day_rate}`}
         </span>
       </div>
     </a>
