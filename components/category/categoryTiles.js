@@ -31,18 +31,14 @@ class CategoryTiles extends Component {
       const response = await getCategories();
       this.setState({
         categories: response.data.map((item, index) => (
-          <span key={index}>
-          <Link href={`/search?category=${item.id}`}>
-            <a draggable="false">
+          <Link href={`/search?category=${item.id}`} key={index}>
               <div
-                style={{ backgroundImage: `url(${item.customFields.publicIconThumbUrl})` }}
                 className="category-tile"
               >
+                <img src={item.customFields.publicIconThumbUrl} />
                 <span>{item.name}</span>
               </div>
-            </a>
           </Link>
-          </span>
         )),
       });
     } catch (error) {
@@ -63,8 +59,8 @@ class CategoryTiles extends Component {
             dragging
             slidesToScroll={1}
             slidesToShow={Math.round(width / 250)}
-            withoutControls
             wrapAround
+            renderBottomCenterControls={false}
           >
             { categories.map(category => category)}
           </Carousel>

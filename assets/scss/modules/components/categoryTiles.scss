@@ -1,9 +1,10 @@
+$slideHeight: 180px;
 .slider {
   margin-top: 40px;
   margin-bottom: 40px;
   .category-tile {
     background-position: center center;
-    height: 300px;
+    height: $slideHeight;
     display: flex;
     justify-content: center;
     background-size: cover;
@@ -21,4 +22,15 @@
   margin-left: 10%;
   margin-right: 10%;
   width: 80%;
+}
+
+.slider-slide {
+  margin: 0px 10px !important;
+  height: $slideHeight;
+  text-align: center;
+  img {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
 }
