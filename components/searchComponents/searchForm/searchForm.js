@@ -79,7 +79,7 @@ class SearchForm extends Component {
               </div>
               <div className="form-inline">
                 <div className="location form-block">
-                  <label htmlFor="deliveryLocation">Pick up Location</label>
+                  <label htmlFor="deliveryLocation">Pick up</label>
                   <Field
                     options={this.props.locationReducer.selectboxLocations}
                     onChange={
@@ -103,7 +103,7 @@ class SearchForm extends Component {
                     component={CustomSelect} />
                 </div>
                 <div className="location form-block">
-                  <label htmlFor="collectionLocation">Drop off Location</label>
+                  <label htmlFor="collectionLocation">Return</label>
                   <Field
                     options={this.props.locationReducer.selectboxLocations}
                     onChange={
@@ -124,7 +124,7 @@ class SearchForm extends Component {
               <div className="date form-block">
                 <div className="label-wrapper">
                   <label htmlFor="collectionDateRange">Pick up Date</label>
-                  <label htmlFor="collectionDateRange">Drop off Date</label>
+                  <label htmlFor="collectionDateRange">Return Date</label>
                 </div>
                 <Field
                   placeholders={['Date', 'Date']}

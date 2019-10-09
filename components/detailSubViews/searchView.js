@@ -99,7 +99,7 @@ class SearchView extends Component {
                   <div>
                     <div className="form-inline local-search-form">
                       <div className="edit-row">
-                        <label htmlFor="deliveryLocation">Pick up Location</label>
+                        <label htmlFor="deliveryLocation">Pick up</label>
                         <Field
                           placeholder="Delivery Location"
                           onChange={(e) => {
@@ -125,7 +125,7 @@ class SearchView extends Component {
                           component={CustomSelect} />
                       </div>
                       <div className="edit-row">
-                        <label htmlFor="deliveryLocation">Drop off Location</label>
+                        <label htmlFor="deliveryLocation">Return</label>
                         <Field
                           placeholder="Collection Location"
                           onChange={(e) => {
@@ -145,7 +145,7 @@ class SearchView extends Component {
 
                           <div className="label-wrapper">
                             <label htmlFor="collectionDateRange">Pick up Date</label>
-                            <label htmlFor="collectionDateRange">Drop off Date</label>
+                            <label htmlFor="collectionDateRange">Return Date</label>
                           </div>
                         <Field
                           validation={true}

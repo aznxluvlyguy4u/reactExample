@@ -68,7 +68,7 @@ class SearchEdit extends Component {
                 <div>
                   <div className="form-inline">
                     <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Pick up Location</label> : null}
+                      {label ? <label htmlFor="deliveryLocation">Pick up</label> : null}
                       <Field
                         placeholder="Delivery Location"
                         onChange={
@@ -81,7 +81,7 @@ class SearchEdit extends Component {
                         component={CustomSelect} />
                     </div>
                     <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Drop off Location</label> : null}
+                      {label ? <label htmlFor="deliveryLocation">Return</label> : null}
                       <Field
                         placeholder="Collection Location"
                         onChange={
@@ -97,7 +97,7 @@ class SearchEdit extends Component {
                       {label ? (
                         <div className="label-wrapper">
                          <label htmlFor="collectionDateRange">Pick up Date</label>
-                          <label htmlFor="collectionDateRange">Drop off Date</label>
+                          <label htmlFor="collectionDateRange">Return Date</label>
                         </div>
                       ) : null}
                       <Field
