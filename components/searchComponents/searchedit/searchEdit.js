@@ -2,9 +2,6 @@ import { Field, Form, Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import searchReducer from '../../../reducers/searchReducer';
-import locationReducer from '../../../reducers/locationReducer';
-import { transformLocationData } from '../../../utils/data/countryDataUtil';
 import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
 import searchEditValidation from './searchEditValidation';
@@ -41,7 +38,7 @@ class SearchEdit extends Component {
     const submitForm = this.handleSubmit;
     if (!isEmpty(this.state.locations) && this.props.searchReducer.search) {
       return (
-        <div className="searchedit">
+        <div className="searchedit top">
           <Formik
             validationSchema={validation ? searchEditValidation : undefined}
             enableReinitialize
@@ -68,7 +65,7 @@ class SearchEdit extends Component {
                 <div>
                   <div className="form-inline">
                     <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Pick up</label> : null}
+                     <label htmlFor="deliveryLocation">Pick up</label>
                       <Field
                         placeholder="Delivery Location"
                         onChange={
@@ -81,7 +78,7 @@ class SearchEdit extends Component {
                         component={CustomSelect} />
                     </div>
                     <div className="edit-row">
-                      {label ? <label htmlFor="deliveryLocation">Return</label> : null}
+                      <label htmlFor="deliveryLocation">Return</label>
                       <Field
                         placeholder="Collection Location"
                         onChange={
@@ -94,12 +91,10 @@ class SearchEdit extends Component {
                         component={CustomSelect} />
                     </div>
                     <div className="other-wrapper">
-                      {label ? (
-                        <div className="label-wrapper">
-                         <label htmlFor="collectionDateRange">Pick up Date</label>
-                          <label htmlFor="collectionDateRange">Return Date</label>
-                        </div>
-                      ) : null}
+                      <div className="label-wrapper">
+                        <label htmlFor="collectionDateRange">From</label>
+                        <label htmlFor="collectionDateRange">To</label>
+                      </div>
                       <Field
                         validation={validation}
                         placeholders={['Delivery Date', 'Collection Date']}
