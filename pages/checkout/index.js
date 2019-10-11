@@ -14,9 +14,8 @@ import { checkCartAvailability } from '../../utils/rest/requests/cart';
 import PlaceOrderRequest from '../../utils/mapping/products/placeOrderRequest';
 import UpdatedPlaceOrderRequest from '../../utils/mapping/products/UpdatedPlaceOrderRequest';
 import { orderCartItems, updateOrderCartItems } from '../../utils/rest/requests/orders';
-import { handleGeneralError, handlePaymentError } from '../../utils/rest/error/toastHandler';
+import { handlePaymentError } from '../../utils/rest/error/toastHandler';
 import LocalStorageUtil from '../../utils/localStorageUtil';
-import OrderRequest from '../../utils/mapping/products/orderRequest';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import StripeForm from '../../components/checkout/StripeForm';
 
@@ -76,12 +75,22 @@ class CheckoutPage extends Component {
     return collectionDate.diff(deliveryDate, 'days');
   }
 
+  openAccessories = (item) => {
+    item.collapsed = false;
+    this.forceUpdate();
+  }
+
   collapse(item) {
     if(item.collapsed) {
       item.collapsed = !item.collapsed;
     } else {
       item.collapsed = true;
     }
+    this.forceUpdate();
+  }
+
+  openMobileExtra = (item) => {
+    item.mobileCollapsed = true;
     this.forceUpdate();
   }
 
@@ -106,12 +115,12 @@ class CheckoutPage extends Component {
   }
 
   resize() {
-    // this.setState({isMobile: window.innerWidth <= 760});
+    this.setState({isMobile: window.innerWidth <= 760});
   }
 
   async componentDidMount() {
-    // window.addEventListener("resize", this.resize.bind(this));
-    // this.resize();
+    window.addEventListener("resize", this.resize.bind(this));
+    this.resize();
 
     const items = LocalStorageUtil.getCart();
     if(items && items.length > 0) {
@@ -218,6 +227,7 @@ class CheckoutPage extends Component {
       LocalStorageUtil.setCart(this.state.products);
       this.props.setCart(this.state.products);
     }
+    this.setState()
   }
 
   updateAccessoryQuantity(result) {
@@ -460,303 +470,341 @@ class CheckoutPage extends Component {
   render() {
     return (
       <Default nav="fixed" search meta={{ title: 'checkout page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
-        <div className="page-wrapper checkout">
-          <h1>Final Checkout</h1>
-          {!this.state.loading && this.props.cartReducer.items.length > 0 ?
-          <Fragment>
-            <div className="cart-item heading">
-              <div className="row">
-                <div className="column heading">
-                  &nbsp;
-                </div>
-                <div className="column heading">
-                  product
-                </div>
-                <div className="column heading">
-                  QTY
-                </div>
-                <div className="column heading">
-                  Price
-                </div>
-                <div className="column heading">
-                  Pick up
-                </div>
-                <div className="column heading">
-                  Drop off
-                </div>
-
-                <div className="column heading">
-                  Availability
-                </div>
-                <div className="column heading">
-                  &nbsp;
-                </div>
-                <div className="column heading">
-                &nbsp;
-                </div>
-              </div>
-            </div>
-
-            {this.state.products.map((item, index) => (
-              <div className="cart-item" key={index}>
-                <div className="product">
+        <div className="page-wrapper">
+          <div className="checkout-wrapper">
+            <h1>Final Checkout</h1>
+            {!this.state.loading && this.props.cartReducer.items.length > 0 ?
+              <Fragment>
+                <div className="cart-item heading">
                   <div className="row">
-                    <div className="column">
-                      <button
-                        onClick={(e) => {this.removeProductFromCart(item)}}>
-                        <i className="icon-x"></i>
-                      </button>
-                    </div>
-                    <div className="column">
-                      {this.state.isMobile ?
-                        <Fragment>
-                            <a onClick={e => {this.collapseMobile(item)}}>
-                              <small>{item.name}</small>
-                              {item.images && item.images.length > 0 ?
-                              <img className="checkoutProductImage" src={item.images[0].thumbnailUrl} />
-                              : null}
-                            </a>
-                        </Fragment>
-                      :
-                        <Fragment>
-                          {item.images && item.images.length > 0 ?
-                            <img className="checkoutProductImage" src={item.images[0].thumbnailUrl} />
-                          : null}
-                        </Fragment>
-                      }
-                    </div>
-                    <div className="column">
-                      <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity}/>
-                    </div>
-                    <div className="column">
-                      {item.rates && item.rates.length > 0 &&
-                        <Fragment>
-                          €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
-                        </Fragment>
-                      }
-                    </div>
-                    <div className="column">
-                      <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
-                      <br />
-                      <span>{item.location.delivery.name}</span>
-                    </div>
-                    <div className="column">
-                      <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
-                      <br />
-                      <span>{item.location.collection.name}</span>
-                    </div>
-
-                    <div className="column center">
-                      {this.returnAvailabilityIcon(item)}
-                    </div>
-                    {/* warning */}
-                    <div className="column">
-                      <small>
-                        {this.returnWarningMessage(item)}
-                        <span dangerouslySetInnerHTML={{ __html: this.quantityText(item) }} />
-                        {this.resetQuantityButton(item)}
-                        <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
-                      </small>
+                    <div className="column heading">
                       &nbsp;
                     </div>
-                    {/* drop dopdown */}
-                    <div className="column">
-                      {item.accessories.length > 0 &&
-                        <button className="yellow-chevron" onClick={(e) => {
-                          this.collapse(item)
-                        }}>
-                          <i className={classnames({
-                            'icon-down-open': item.collapsed && item.collapsed === true,
-                            'icon-up-open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
-                          })}></i>
-                        </button>
-                      }
+                    <div className="column heading">
+                      product
+                    </div>
+                    <div className="column heading">
+                      QTY
+                    </div>
+                    <div className="column heading">
+                      Price
+                    </div>
+                    <div className="column heading">
+                      Pick up
+                    </div>
+                    <div className="column heading">
+                      Drop off
+                    </div>
+
+                    <div className="column heading">
+                      Availability
+                    </div>
+                    <div className="column heading">
+                      &nbsp;
+                    </div>
+                    <div className="column heading">
+                      &nbsp;
                     </div>
                   </div>
                 </div>
 
-                <div className={classnames({
-                  'mobileExtra': true,
-                  'mobileExtraOpen': item.mobileCollapsed !== null && item.mobileCollapsed !== undefined && item.mobileCollapsed === true
-                 })}>
-                   <small>
-                      {this.returnWarningMessage(item)}
-                      <span dangerouslySetInnerHTML={{ __html: this.quantityText(item) }} />
-                      {this.resetQuantityButton(item)}
-                      <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
-                    </small>
-
-                    {item.accessories.map((accessory, index) => (
-                    <div className="row" key={index} style={
-                      accessory.quantityAvailable === 0 ? {background: '#eee', color: '#bbb'} : null
-                    }>
-                      <div className="column">
+                {this.state.products.map((item, index) => (
+                    <div key={index} className={classnames({
+                      'cart-item': true,
+                      'isMobile': this.state.isMobile === true
+                    })}>
+                    <div className="product">
+                      <div className="row">
                         <div className="column">
-                          <button onClick={(e) => {this.removeAccessoryFromCart(item, accessory)}}>
+                          <button
+                            onClick={(e) => {this.removeProductFromCart(item)}}>
                             <i className="icon-x"></i>
                           </button>
                         </div>
-                      </div>
-                      <div className="column">
-                        <small><strong>Optional Accessory</strong></small>
-                        <br />
-                        <small>{accessory.name}</small>
-                        {accessory.images && accessory.images.length > 0 ?
-                          <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
-                        : null}
-                      </div>
-                      <div className="column">
-                        <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
-                      </div>
-                      <div className="column">
-                      {accessory.rates && accessory.rates.length > 0 &&
-                        <Fragment>
-                          €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
-                        </Fragment>
-                      }
-                      </div>
-                      <div className="column">
-                        &nbsp;
-                      </div>
-                      <div className="column">
-                        &nbsp;
-                      </div>
-
-                      <div className="column center">
-                        {this.returnAvailabilityIcon(accessory)}
-                      </div>
-                      <div className="column">
-                        <small>Optional Accessory</small>
-                        <br />
-                        <small>
-                          {this.returnWarningMessage(accessory)}
-                          <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
-                          {this.resetQuantityButton(accessory)}
-                          <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
-                        </small>
-                        &nbsp;
-                      </div>
-                    </div>)
-                  )}
-                </div>
-
-                <div className={classnames({
-                  'accessories': true,
-                  'open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
-                 })}>
-                  {item.accessories.map((accessory, index) => (
-                    <div className="row" key={index} style={
-                      accessory.quantityAvailable === 0 ? {background: '#eee', color: '#bbb'} : null
-                    }>
-                      <div className="column">
                         <div className="column">
-                          <button onClick={(e) => {this.removeAccessoryFromCart(item, accessory)}}>
-                            <i className="icon-x"></i>
-                          </button>
+                          {this.state.isMobile ?
+                            <Fragment>
+                              <a onClick={(e) => {this.collapseMobile(item)}}>
+                                <small>{item.name}</small>
+                                {item.images && item.images.length > 0 ?
+                                <img className="checkoutProductImage" src={item.images[0].thumbnailUrl} />
+                                : null}
+                              </a>
+                            </Fragment>
+                          :
+                            <Fragment>
+                            <small>{item.name}</small>
+                              {item.images && item.images.length > 0 ?
+                                <img className="checkoutProductImage" src={item.images[0].thumbnailUrl} />
+                              : null}
+                            </Fragment>
+                          }
+                        </div>
+                        <div className="column">
+                          <Counter item={item} updateQuantity={this.updateProductQuantity} quantity={item.quantity} isClicked={(e) => {
+                              if (this.state.isMobile) {
+                                this.openMobileExtra(item)
+                              }
+                              this.openAccessories(item)
+                            }} />
+                        </div>
+                        <div className="column">
+                          {item.rates && item.rates.length > 0 &&
+                            <Fragment>
+                              €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
+                            </Fragment>
+                          }
+                        </div>
+                        <div className="column">
+                          <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
+                          <br />
+                          <span>{item.location.delivery.name}</span>
+                        </div>
+                        <div className="column">
+                          <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
+                          <br />
+                          <span>{item.location.collection.name}</span>
+                        </div>
+
+                        <div className="column center">
+                          {this.returnAvailabilityIcon(item)}
+                        </div>
+                        {/* warning */}
+                        <div className="column">
+                          <small>
+                            {this.returnWarningMessage(item)}
+                            <span dangerouslySetInnerHTML={{ __html: this.quantityText(item) }} />
+                            {this.resetQuantityButton(item)}
+                            <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
+                          </small>
+                          &nbsp;
+                        </div>
+                        {/* drop dopdown */}
+                        <div className="column">
+                          {item.accessories.length > 0 ?
+                            <button className="yellow-chevron" onClick={(e) => {
+                              this.collapse(item)
+                            }}>
+                              <i className={classnames({
+                                'icon-down-open': item.collapsed && item.collapsed === true,
+                                'icon-up-open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
+                              })}></i>
+                            </button>
+                            :
+                            <Fragment>&nbsp;</Fragment>
+                          }
                         </div>
                       </div>
-                      <div className="column">
-                          <small>{accessory.name}</small>
-                          {accessory.images && accessory.images.length > 0 ?
-                            <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
-                          : null}
-                      </div>
-                      <div className="column">
-                        <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
-                      </div>
-                      <div className="column">
-                      {accessory.rates && accessory.rates.length > 0 &&
-                        <Fragment>
-                          €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
-                        </Fragment>
-                      }
-                      </div>
-                      <div className="column">
-                        &nbsp;
-                      </div>
-                      <div className="column">
-                        &nbsp;
+                    </div>
+
+                    <div className={classnames({
+                      'mobileExtra': true,
+                      'mobileExtraOpen': item.mobileCollapsed !== null && item.mobileCollapsed !== undefined && item.mobileCollapsed === true
+                    })}>
+                      <div className="row generalInformation">
+                        <div className="column pickupDroppoff" style={{marginLeft: '40px'}}>
+
+                          <strong>Pick up</strong>
+                          <br />
+                          <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
+                          <br />
+                          <span>{item.location.delivery.name}</span>
+                          <br />
+                          <br />
+                          <strong>Drop off</strong>
+                          <br />
+                          <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
+                          <br />
+                          <span>{item.location.collection.name}</span>
+
+                        </div>
+                        <div className="column availabilityMessage">
+                          <small>
+                            {this.returnWarningMessage(item)}
+                            <span dangerouslySetInnerHTML={{ __html: this.quantityText(item) }} />
+                            {this.resetQuantityButton(item)}
+                            <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
+                          </small>
+
+                        </div>
                       </div>
 
-                      <div className="column center">
-                        {this.returnAvailabilityIcon(accessory)}
-                      </div>
-                      <div className="column">
-                        <small>Optional Accessory</small>
-                        <br />
-                        <small>
-                          {this.returnWarningMessage(accessory)}
-                          <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
-                          {this.resetQuantityButton(accessory)}
-                          <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
-                        </small>
-                        &nbsp;
-                      </div>
-                    </div>)
-                  )}
-                </div>
-              </div>
-            ))}
+                        {item.accessories.map((accessory, index) => (
+                        <div className="row" key={index} style={
+                          accessory.quantityAvailable === 0 ? {background: '#eee', color: '#bbb'} : null
+                        }>
+                          <div className="column">
+                            <div className="column">
+                              <button onClick={(e) => {this.removeAccessoryFromCart(item, accessory)}}>
+                                <i className="icon-x"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="column">
+                            {/* <small><strong>Optional Accessory</strong></small>
+                            <br /> */}
+                            <small>{accessory.name}</small>
+                            {accessory.images && accessory.images.length > 0 ?
+                              <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
+                            : null}
+                          </div>
+                          <div className="column">
+                            <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
+                          </div>
+                          <div className="column">
+                          {accessory.rates && accessory.rates.length > 0 &&
+                            <Fragment>
+                              €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
+                            </Fragment>
+                          }
+                          </div>
+                          <div className="column">
+                            &nbsp;
+                          </div>
+                          <div className="column">
+                            &nbsp;
+                          </div>
 
-           {/* <div className="cost-extras">
-              <div className="row">
-                <div className="column">
-                  <h3>Total Rental Fee (excl. VAT)</h3>
+                          <div className="column center">
+                            {this.returnAvailabilityIcon(accessory)}
+                          </div>
+                          <div className="column">
+                            <small>Optional Accessory</small>
+                            <br />
+                            <small>
+                              {this.returnWarningMessage(accessory)}
+                              <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
+                              {this.resetQuantityButton(accessory)}
+                              <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
+                            </small>
+                            &nbsp;
+                          </div>
+                        </div>)
+                      )}
+                    </div>
+
+                    <div className={classnames({
+                      'accessories': true,
+                      'open': item.collapsed === null || item.collapsed === undefined || item.collapsed === false
+                    })}>
+                      {item.accessories.map((accessory, index) => (
+                        <div className="row" key={index} style={
+                          accessory.quantityAvailable === 0 ? {background: '#eee', color: '#bbb'} : null
+                        }>
+                          <div className="column">
+                            <div className="column">
+                              <button onClick={(e) => {this.removeAccessoryFromCart(item, accessory)}}>
+                                <i className="icon-x"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="column">
+                            <small>{accessory.name}</small>
+                            {accessory.images && accessory.images.length > 0 ?
+                              <img className="checkoutProductImage" src={accessory.images[0].thumbnailUrl} />
+                            : null}
+                          </div>
+                          <div className="column">
+                            <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
+                          </div>
+                          <div className="column">
+                          {accessory.rates && accessory.rates.length > 0 &&
+                            <Fragment>
+                              €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
+                            </Fragment>
+                          }
+                          </div>
+                          <div className="column">
+                            &nbsp;
+                          </div>
+                          <div className="column">
+                            &nbsp;
+                          </div>
+
+                          <div className="column center">
+                            {this.returnAvailabilityIcon(accessory)}
+                          </div>
+                          <div className="column">
+                            <small>Optional Accessory</small>
+                            <br />
+                            <small>
+                              {this.returnWarningMessage(accessory)}
+                              <span dangerouslySetInnerHTML={{ __html: this.quantityText(accessory) }} />
+                              {this.resetQuantityButton(accessory)}
+                              <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(accessory) }} />
+                            </small>
+                            &nbsp;
+                          </div>
+                          <div className="column heading">
+                            &nbsp;
+                          </div>
+                        </div>)
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+              {/* <div className="cost-extras">
+                  <div className="row">
+                    <div className="column">
+                      <h3>Total Rental Fee (excl. VAT)</h3>
+                    </div>
+                    <div className="column">
+                      <h3>€ PRICE</h3>
+                    </div>
+                  </div>
+                  <div c lassName="row">
+                    <div className="column">
+                      <p>Delivery Costs</p>
+                    </div>
+                    <div className="column">
+                      to be determined at final booking
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="column">
+                      <p>A security deposit is going te be charged by credit card</p>
+                    </div>
+                    <div className="column">
+                      € PRICE
+                    </div>
+                  </div>
+                </div> */}
+                <div className="cost-total">
+                  <div className="row">
+                    <div className="column">
+                      <h3>Total Fee (excl. VAT)</h3>
+                    </div>
+                    <div className="column">
+                      <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="column">
+                      &nbsp;
+                    </div>
+                    <div className="column">
+                      {this.state.products.length > 0 &&
+                      <a
+                        className="button-full right"
+                        onClick={(e) => {
+                          this.openModal()
+                        }}
+                      >
+                        Order now
+                      </a>}
+                    </div>
+                  </div>
                 </div>
-                <div className="column">
-                  <h3>€ PRICE</h3>
-                </div>
-              </div>
-              <div c lassName="row">
-                <div className="column">
-                  <p>Delivery Costs</p>
-                </div>
-                <div className="column">
-                  to be determined at final booking
-                </div>
-              </div>
-              <div className="row">
-                <div className="column">
-                  <p>A security deposit is going te be charged by credit card</p>
-                </div>
-                <div className="column">
-                  € PRICE
-                </div>
-              </div>
-            </div> */}
-            <div className="cost-total">
-              <div className="row">
-                <div className="column">
-                  <h3>Total Fee (excl. VAT)</h3>
-                </div>
-                <div className="column">
-                  <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
-                </div>
-              </div>
-              <div className="row">
-                <div className="column">
-                  &nbsp;
-                </div>
-                <div className="column">
-                  {this.state.products.length > 0 &&
-                  <a
-                    className="button-full right"
-                    onClick={(e) => {
-                      this.openModal()
-                    }}
-                  >
-                    Request Reservation
-                  </a>}
-                </div>
-              </div>
-            </div>
-            </Fragment> :
+                </Fragment> :
               <Fragment>
                 {!this.state.loading && <span style={{textAlign: 'center'}}>Your cart is empty</span>}
               </Fragment>
-              }
-            {this.state.loading ? <Loader /> : null}
+            }
           </div>
+          {this.state.loading ? <Loader /> : null}
+        </div>
+
 
           {this.state.orderSuccess &&
             <Modal
@@ -854,8 +902,8 @@ class CheckoutPage extends Component {
           </Modal>}
 
           <Script
-              url='https://js.stripe.com/v3/'
-              onLoad={() => this.onStripeLoad()} />
+            url='https://js.stripe.com/v3/'
+            onLoad={() => this.onStripeLoad()} />
       </Default>
     );
   }

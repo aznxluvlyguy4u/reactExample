@@ -11,6 +11,10 @@ class Counter extends Component {
 
   }
 
+  isFunction = (functionToCheck) => {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+  }
+
   render() {
     return(
       <span className="counter">
@@ -19,6 +23,9 @@ class Counter extends Component {
           onClick={(e) => {
             if (this.props.quantity > 0) {
               this.props.updateQuantity({item: this.props.item, quantity: this.props.quantity - 1})
+              if(this.isFunction(this.props.isClicked)) {
+                this.props.isClicked(this.props.item)
+              }
             }
           }}
         >&minus;</button>
@@ -31,7 +38,9 @@ class Counter extends Component {
           onClick={(e) => {
             if (this.props.quantity < this.props.item.quantityAvailable) {
               this.props.updateQuantity({item: this.props.item, quantity: this.props.quantity + 1})
-            }
+              if(this.isFunction(this.props.isClicked)) {
+                this.props.isClicked(this.props.item)
+              }            }
           }}
         >+</button>
       </span>
