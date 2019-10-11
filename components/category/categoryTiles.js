@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import Carousel from 'nuka-carousel';
 import React, { Component } from 'react';
-import { getCategories } from '../../utils/rest/requests/categories';
-import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+
 
 class CategoryTiles extends Component {
   constructor(props) {
@@ -12,11 +11,22 @@ class CategoryTiles extends Component {
   }
 
   async componentDidMount() {
-    await this.retrieveCategories();
     window.addEventListener('resize', this.useWindowWidth);
     this.useWindowWidth();
   }
 
+  category(item, index) {
+    return (
+      <Link href={`/search?category=${item.id}`} key={index}>
+        <div
+          className="category-tile"
+        >
+          <img src={item.customFields.publicIconThumbUrl} />
+          <span>{item.name}</span>
+        </div>
+    </Link>
+    )
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.useWindowWidth);
   }
@@ -26,25 +36,6 @@ class CategoryTiles extends Component {
     return window.innerWidth;
   }
 
-  async retrieveCategories() {
-    try {
-      const response = await getCategories();
-      this.setState({
-        categories: response.data.map((item, index) => (
-          <Link href={`/search?category=${item.id}`} key={index}>
-              <div
-                className="category-tile"
-              >
-                <img src={item.customFields.publicIconThumbUrl} />
-                <span>{item.name}</span>
-              </div>
-          </Link>
-        )),
-      });
-    } catch (error) {
-      handleGeneralError(error);
-    }
-  }
 
   render() {
     const { categories, width } = this.state;
@@ -62,7 +53,9 @@ class CategoryTiles extends Component {
             wrapAround
             renderBottomCenterControls={false}
           >
-            { categories.map(category => category)}
+            { this.props.categories.map((category, index) => {
+                return this.category(category, index)
+            })}
           </Carousel>
         </div>
       );
