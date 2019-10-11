@@ -616,7 +616,6 @@ class CheckoutPage extends Component {
                           <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
                           <br />
                           <span>{item.location.collection.name}</span>
-
                         </div>
                         <div className="column availabilityMessage">
                           <small>
@@ -625,7 +624,6 @@ class CheckoutPage extends Component {
                             {this.resetQuantityButton(item)}
                             <span dangerouslySetInnerHTML={{ __html: this.checkStoreText(item) }} />
                           </small>
-
                         </div>
                       </div>
 
@@ -781,6 +779,14 @@ class CheckoutPage extends Component {
                   </div>
                   <div className="row">
                     <div className="column">
+                      <h3>Transport cost</h3>
+                    </div>
+                    <div className="column">
+                      <h3>€ 0</h3>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="column">
                       &nbsp;
                     </div>
                     <div className="column">
@@ -875,7 +881,6 @@ class CheckoutPage extends Component {
               }}
               loading={this.state.loading}
               handleSubmit={this.handleContracterInformationForm}
-
             />
           }
 
