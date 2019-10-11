@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import { connect } from 'react-redux';
 
 import ContactInformationForm from '../../components/checkout/orderForm/contactInformationForm';
-import ContracterInformationForm from '../../components/checkout/orderForm/ContracterInformationForm';
+import ContracterInformationForm from '../../components/checkout/orderForm/contracterInformationForm';
 import Counter from '../../components/detailSubViews/counter';
 import Loader from '../../components/loader';
 import Default from '../../layouts/default';
