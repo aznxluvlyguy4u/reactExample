@@ -252,8 +252,9 @@ class DetailPage extends Component {
         <Default nav="fixed" search meta={{ title: `${product.name} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
           <div className="page-wrapper">
             <div className="fullWidthImage" style={{ backgroundImage: `url(${product.images[0].fullImageUrl})` }} />
-            <h1>{product.name}</h1>
             <div className="detail-wrapper">
+              <h1>{product.name}</h1>
+
               <div className="description">
                 {product.description.section1 && product.description.section1.head ? <h2>{product.description.section1.head}</h2> : null}
                 {product.description.section1 && product.description.section1.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section1.paragraph }} /> : null}

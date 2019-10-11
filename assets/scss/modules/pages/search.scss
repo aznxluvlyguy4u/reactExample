@@ -1,13 +1,10 @@
-.page-wrapper {
-  padding-top: $default-margin-top;
-  padding-left: $default-margin;
-  padding-right: $default-margin;
-  min-height: 100vh;
-  padding-bottom: 5%;
 
-  h1 {
-    border-bottom: solid 0.3px $grey;
-    padding-bottom: 20px;
+
+  .searchresult-wrapper {
+    padding-top: $default-margin-top-big-desktop;
+    padding-left: $default-margin-left-big-desktop;
+    padding-right: $default-margin-right-big-desktop;
+    width: $default-width-big-desktop;
   }
 
   .ReactCollapse--content {
@@ -84,7 +81,7 @@
       }
     }
   }
-}
+
 
 #react-paginate ul {
   display: inline-block;
@@ -119,23 +116,21 @@
 }
 
 .result-wrapper {
+  // margin-right: -0.7%;
 
-      margin-right: -0.7%;
+  @include for-phone-only {
+    margin-right: -3.7%;
+  }
 
-      @include for-phone-only {
-        margin-right: -3.7%;
-      }
+  @include for-tablet-portrait-up {
+    margin-right: -2%;
+  }
 
-      @include for-tablet-portrait-up {
-        margin-right: -2%;
-      }
+  @include for-tablet-landscape-up {
+    margin-right: -2%;
+  }
 
-      @include for-tablet-landscape-up {
-        margin-right: -2%;
-      }
-
-      @include for-desktop-up {
-        padding-right:-1%;
-      }
-
+  @include for-desktop-up {
+    padding-right:-1%;
+  }
 }

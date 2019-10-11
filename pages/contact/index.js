@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { Field, Form, Formik } from 'formik';
-import moment from 'moment';
 import { connect } from 'react-redux';
 import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
-import PhoneNumbers from '../../components/landing-pages/phonenumbers';
-import CustomSelect from '../../components/formComponents/select/customSelect';
 import CustomInputComponent from '../../components/signup/customInputComponent';
 import { postContactMessage } from '../../utils/rest/requests/contact';
 import * as Yup from 'yup';
@@ -25,7 +22,6 @@ const ContactFormSchema = Yup.object().shape({
   message: Yup.string()
     .min(2, 'Too short!')
     .required('This is a required field'),
-
 });
 
 class AboutPage extends Component {
@@ -42,9 +38,7 @@ class AboutPage extends Component {
         {label: 'Caribbean', value: {id: 1, name: 'Caribbean'}},
       ],
       loading: false,
-
     };
-
     this.submitForm = this.submitForm.bind(this)
   }
 
@@ -73,11 +67,11 @@ class AboutPage extends Component {
           </div>
           <div className="contact-wrapper">
             <h1>Contact Us</h1>
-            <div className="col-left" style={{ padding: '0px 10px 15px 0px', boxSizing: 'border-box'}}>
-              <div style={{width:'40%', float: 'left', padding: '10px 10px 10px 0px', boxSizing: 'border-box'}}>
-                <img src="static/images/about/Barbara.png" width="100%"/>
+            <div className="col-left">
+              <div className="contact__image">
+                <img alt="Contact" src="static/images/about/Barbara.png" />
               </div>
-              <div style={{width:'60%', float: 'left', padding: '0px 0px 15px 10px', boxSizing: 'border-box'}}>
+              <div className="contact__text">
                 <p>Feel free to contact any of our offices for any questions you have
                   <br />
                   <br />

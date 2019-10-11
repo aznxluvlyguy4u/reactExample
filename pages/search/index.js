@@ -11,8 +11,6 @@ import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
 import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
 import Default from '../../layouts/default';
-import searchReducer from '../../reducers/searchReducer';
-import locationReducer from '../../reducers/locationReducer';
 import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
@@ -207,8 +205,9 @@ class SearchPage extends Component {
       <Default nav="fixed" search meta={this.meta}>
         <SearchEdit onChange={this.mergeObj} />
         <div className="page-wrapper">
-          <h1>Search Results</h1>
-          <div className="search-block">
+          <div className="searchresult-wrapper">
+            <h1>Search Results</h1>
+            <div className="search-block">
             <div className="result-wrapper">
               {notFound === true ? <h2>No results found for your search query</h2> : null}
               {isEmpty(products) ? (
@@ -224,6 +223,7 @@ class SearchPage extends Component {
               </Pagination>
               {loading ? <Loader /> : null}
             </div>
+          </div>
           </div>
         </div>
       </Default>

@@ -1,27 +1,9 @@
-.fullWidthImage{
-  width: 100%;
-  height: 300px;
-  background-size: cover;
-  background-position: center center;
-  margin-top: 8%;
-  @include for-phone-only {
-    height: 250px;
-  }
-
-  @include for-tablet-portrait-up {
-    height: 350px;
-  }
-
-  @include for-tablet-landscape-up {
-    height: 50vh;
-  }
-}
 
 .about-wrapper {
-  margin-top: 80px;
-  margin-left: 10%;
-  margin-right: 10%;
-  width: 80%;
+  padding-top: $default-margin-top-big-desktop;
+  padding-left: $default-margin-left-big-desktop;
+  padding-right: $default-margin-right-big-desktop;
+  width: $default-width-big-desktop;
 }
 
 .image {
