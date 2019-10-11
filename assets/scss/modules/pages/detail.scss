@@ -342,7 +342,8 @@
     padding:0px;
 
     li {
-      // height:100px;
+      min-height: 60px;
+      height: auto;
       span {
         display: inline-block;
         box-sizing: border-box;
