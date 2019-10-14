@@ -523,7 +523,7 @@ class CheckoutPage extends Component {
                       Pick up
                     </div>
                     <div className="column heading">
-                      Drop off
+                      Return
                     </div>
 
                     <div className="column heading">
@@ -641,7 +641,7 @@ class CheckoutPage extends Component {
                           <span>{item.location.delivery.name}</span>
                           <br />
                           <br />
-                          <strong>Drop off</strong>
+                          <strong>Return</strong>
                           <br />
                           <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
                           <br />
