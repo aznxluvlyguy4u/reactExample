@@ -1,6 +1,7 @@
 import { cloneDeep, isEmpty } from 'lodash';
 import Router from 'next/router';
 import React, { Component, Fragment } from 'react';
+import slugify from 'slugify';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -10,17 +11,14 @@ import SearchView from '../../components/detailSubViews/searchView';
 import Steps from '../../components/detailSubViews/steps'
 import Loader from '../../components/loader';
 import Default from '../../layouts/default';
-import rootReducer from '../../reducers/rootReducer';
 import {
   resetLocalSearch
 } from '../../actions/localSearchActions';
 import { generateSearchQueryParameterString } from '../../utils/queryparams';
 
 import Order from '../../utils/mapping/products/order';
-import OrderRequest from   '../../utils/mapping/products/orderRequest' ;//'../../utils/mapping/products/orderRequest';
 import { getProductById } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import {
   updateLocalSearch,
   updateLocalSearchProductQuantity,
@@ -73,6 +71,13 @@ class DetailPage extends Component {
     await this.getProduct();
   }
 
+  async componentDidUpdate(prevProps) {
+    // console.log('prevProps = ', prevProps)
+    // console.log('this.props = ', this.props)
+    if (prevProps.id !== this.props.id) {
+      await this.getProduct();
+    }
+  }
   continueShopping() {
     this.props.resetLocalSearch();
     // check if previous search exists...
@@ -87,6 +92,7 @@ class DetailPage extends Component {
   }
 
   async getProduct(deliveryLocation) {
+
     const { id } = this.props;
     let deliveryLocationId = null;
 
@@ -101,8 +107,11 @@ class DetailPage extends Component {
       deliveryLocationId = deliveryLocation.id;
     }
     try {
+      this.setState({
+        loading: true
+      })
       const response = await getProductById(id, deliveryLocationId);
-      this.setState({ product: response.data });
+      this.setState({ product: response.data, loading: false });
       this.props.setSelectedProduct(response.data);
 
       if (response.data.accessories) {
@@ -135,6 +144,9 @@ class DetailPage extends Component {
       }
     } catch (error) {
       handleGeneralError(error);
+      this.setState({
+        loading: false
+      })
     }
   }
 
@@ -401,7 +413,38 @@ class DetailPage extends Component {
                 }
               </div>
             </div>
+            {product.similarToys && product.similarToys.length > 0 &&
+            <div className="similar-toys-wrapper">
+              <div className="searchresult-title">
+                <h2>Similar toys</h2>
+              </div>
+              <div className="result-wrapper">
+                <div className="ReactCollapse--content">
+                    {product.similarToys.map((item, index) => {
+                      return (
+                        <Link
+                          key={index}
+                          href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                          as={`/detail/${item.id}/${slugify(item.name)}`}
+                        >
+                          <a>
+                            <div className="result-item">
+                              <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
+                              <h4>{item.name}</h4>
+                            </div>
+                          </a>
+                        </Link>
+                      )
+                    })}
+                </div>
+              </div>
+            </div>
+            }
           </div>
+          {
+            this.state.loading &&
+            <Loader />
+          }
         </Default>
       );
     }

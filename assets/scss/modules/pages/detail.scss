@@ -5,6 +5,16 @@
   width: $default-width-big-desktop;
 }
 
+.similar-toys-wrapper {
+  padding-left: $default-margin-left-big-desktop;
+  padding-right: $default-margin-right-big-desktop;
+  width: $default-width-big-desktop;
+  padding-top: 60px;
+  padding-bottom: 60px;
+  display:block;
+  float: left;
+}
+
 .description {
   float: left;
   width:60%;
