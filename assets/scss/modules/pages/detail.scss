@@ -37,7 +37,7 @@
   h3 {
     font-weight: normal;
   }
-  @include for-phone-only {
+  @include for-tablet-portrait-lower {
     padding-left: 0px;
     width:100%;
   }
@@ -56,6 +56,8 @@
 }
 .form {
 
+  border: solid 0.25px #D6D6D6;
+  padding: 25px;
   // width:50%;
   // @include for-phone-only {
   //   width:100%;
