@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Default from '../../layouts/default';
 import rootReducer from '../../reducers/rootReducer';
-import PhoneNumbers from '../../components/landing-pages/phonenumbers/';
 
 class PrivacyPolicyPage extends Component {
   constructor(props) {
