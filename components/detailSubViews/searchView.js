@@ -101,7 +101,7 @@ class SearchView extends Component {
                       <div className="edit-row">
                         <label htmlFor="deliveryLocation">Pick up</label>
                         <Field
-                          placeholder="Delivery Location"
+                          placeholder="Pick up"
                           onChange={(e) => {
                               this.props.updateLocalSearchDeliveryLocation({
                                 label: e.deliveryLocation.name,
@@ -127,7 +127,7 @@ class SearchView extends Component {
                       <div className="edit-row">
                         <label htmlFor="deliveryLocation">Return</label>
                         <Field
-                          placeholder="Collection Location"
+                          placeholder="Return"
                           onChange={(e) => {
                               this.props.updateLocalSearchCollectionLocation({
                                 label: e.collectionLocation.name,
@@ -149,7 +149,7 @@ class SearchView extends Component {
                           </div>
                         <Field
                           validation={true}
-                          placeholders={['Delivery Date', 'Collection Date']}
+                          placeholders={['Pick up Date', 'Return Date']}
                           onChange={(e) => {
                               if (e.hasOwnProperty('deliveryDate')) {
                                 this.props.updateLocalSearchDeliveryDate(e.deliveryDate);
@@ -162,7 +162,7 @@ class SearchView extends Component {
                           startDate={this.props.localSearchReducer.search.deliveryDate}
                           endDate={this.props.localSearchReducer.search.collectionDate}
                           name="collectionDate"
-                          placeholder="Delivery Date"
+                          placeholder="Return Date"
                           setFieldValue={setFieldValue}
                           component={DatePicker} />
                       </div>

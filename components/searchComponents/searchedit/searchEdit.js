@@ -67,7 +67,7 @@ class SearchEdit extends Component {
                     <div className="edit-row">
                      <label htmlFor="deliveryLocation">Pick up</label>
                       <Field
-                        placeholder="Delivery Location"
+                        placeholder="Pick up"
                         onChange={
                           onChange || null
                         }
@@ -80,7 +80,7 @@ class SearchEdit extends Component {
                     <div className="edit-row">
                       <label htmlFor="deliveryLocation">Return</label>
                       <Field
-                        placeholder="Collection Location"
+                        placeholder="Return"
                         onChange={
                           onChange || null
                         }
@@ -97,14 +97,14 @@ class SearchEdit extends Component {
                       </div>
                       <Field
                         validation={validation}
-                        placeholders={['Delivery Date', 'Collection Date']}
+                        placeholders={['Pick up', 'Return']}
                         onChange={
                           onChange || null
                         }
                         startDate={this.props.searchReducer.search.deliveryDate}
                         endDate={this.props.searchReducer.search.collectionDate}
                         name="collectionDate"
-                        placeholder="Delivery Date"
+                        placeholder="Return"
                         setFieldValue={setFieldValue}
                         component={DatePicker} />
                     </div>
