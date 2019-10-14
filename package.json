@@ -49,6 +49,7 @@
     "react-motion": "^0.5.2",
     "react-paginate": "^6.3.0",
     "react-redux": "^7.0.3",
+    "react-scrollable-anchor": "^0.6.1",
     "react-select": "^2.4.3",
     "react-spinners": "^0.5.4",
     "react-stripe-elements": "^5.0.1",

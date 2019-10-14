@@ -5,6 +5,8 @@ import slugify from 'slugify';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import ScrollableAnchor, { configureAnchors } from "react-scrollable-anchor";
+
 import OptionalAccessoryView from '../../components/detailSubViews/optionalAccessoryView';
 import SummaryView from '../../components/detailSubViews/summaryView';
 import SearchView from '../../components/detailSubViews/searchView';
@@ -66,14 +68,15 @@ class DetailPage extends Component {
     };
   }
 
-  async componentDidMount() {
+  componentWillMount() {
+    configureAnchors()
+  }
 
+  async componentDidMount() {
     await this.getProduct();
   }
 
   async componentDidUpdate(prevProps) {
-    // console.log('prevProps = ', prevProps)
-    // console.log('this.props = ', this.props)
     if (prevProps.id !== this.props.id) {
       await this.getProduct();
     }
@@ -92,7 +95,6 @@ class DetailPage extends Component {
   }
 
   async getProduct(deliveryLocation) {
-
     const { id } = this.props;
     let deliveryLocationId = null;
 
@@ -107,11 +109,8 @@ class DetailPage extends Component {
       deliveryLocationId = deliveryLocation.id;
     }
     try {
-      this.setState({
-        loading: true
-      })
       const response = await getProductById(id, deliveryLocationId);
-      this.setState({ product: response.data, loading: false });
+      this.setState({ product: response.data });
       this.props.setSelectedProduct(response.data);
 
       if (response.data.accessories) {
@@ -144,9 +143,6 @@ class DetailPage extends Component {
       }
     } catch (error) {
       handleGeneralError(error);
-      this.setState({
-        loading: false
-      })
     }
   }
 
@@ -413,38 +409,42 @@ class DetailPage extends Component {
                 }
               </div>
             </div>
-            {product.similarToys && product.similarToys.length > 0 &&
             <div className="similar-toys-wrapper">
-              <div className="searchresult-title">
-                <h2>Similar toys</h2>
-              </div>
-              <div className="result-wrapper">
-                <div className="ReactCollapse--content">
-                    {product.similarToys.map((item, index) => {
-                      return (
-                        <Link
-                          key={index}
-                          href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
-                          as={`/detail/${item.id}/${slugify(item.name)}`}
-                        >
-                          <a>
-                            <div className="result-item">
-                              <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
-                              <h4>{item.name}</h4>
-                            </div>
-                          </a>
-                        </Link>
-                      )
-                    })}
+              <ScrollableAnchor id="similar">
+                <div>
+                  {product.similarToys && product.similarToys.length > 0 &&
+                  <div>
+                    <div className="searchresult-title">
+                      <h2>Similar toys</h2>
+                    </div>
+                    <div className="result-wrapper">
+                      <div className="ReactCollapse--content">
+                        {product.similarToys.map((item, index) => {
+                          return (
+                            <Link
+                              key={index}
+                              href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                              as={`/detail/${item.id}/${slugify(item.name)}`}
+                            >
+                              <a>
+                                <div className="result-item">
+                                  <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
+                                  <h4>{item.name}</h4>
+                                </div>
+                              </a>
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  }
                 </div>
-              </div>
+              </ScrollableAnchor>
             </div>
-            }
           </div>
-          {
-            this.state.loading &&
-            <Loader />
-          }
+          {this.state.loading &&
+          <Loader />}
         </Default>
       );
     }
