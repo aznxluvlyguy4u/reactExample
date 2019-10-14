@@ -38,9 +38,9 @@ class MyApp extends App {
     if (cart && cart !== "" && cart !== undefined && cart !== null) {
       let filteredItemsInCart = [];
       if (cart) {
-        filteredItemsInCart = cart.map(item => {
+        filteredItemsInCart = cart.filter(item => {
           const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
-          if (item && item !== null && item !== undefined && !moment(item.deliveryDate).isBefore(now, 'day')) {
+          if (item && item !== null && item !== undefined && !moment(item.period.start).isBefore(now, 'day')) {
             store.dispatch(addToCart(item));
             return item;
           }
