@@ -308,15 +308,41 @@ class CheckoutPage extends Component {
     return;
   }
 
+  setOrder = (order) => {
+    const orderJson = JSON.stringify(order);
+    sessionStorage.setItem('order', orderJson);
+  }
+  getOrder = () => {
+    const orderJson = sessionStorage.getItem('order');
+    let order = null;
+    if (orderJson !== "") {
+      order = JSON.parse(orderJson);
+    }
+    return order;
+  }
+
+  setPaymentIntent = (paymentIntent) => {
+    const paymentIntentJson = JSON.stringify(paymentIntent);
+    sessionStorage.setItem('paymentIntent', paymentIntentJson);
+  }
+
+  getPaymentIntent = () => {
+    const paymentIntentJson = sessionStorage.getItem('paymentIntent');
+    let paymentIntent = null;
+    if (paymentIntentJson !== "") {
+      paymentIntent = JSON.parse(paymentIntentJson);
+    }
+    return paymentIntent;
+  }
+
   handleContracterInformationForm = (values) => {
     this.setState({
-      orderFormStep: 3,
       contracterInformation: values
     })
 
-    if (this.state.paymentIntent) {
+    if (this.getOrder() !== null && this.getPaymentIntent() !== null) {
       // UPDATE existing order / payment intent
-      const request = new UpdatedPlaceOrderRequest(this.state.originalOrder, this.state.products, this.state.contactInformation, this.state.contracterInformation).returnUpdatedOrder();
+      const request = new UpdatedPlaceOrderRequest(this.getOrder(), this.state.products, this.state.contactInformation, this.state.contracterInformation).returnUpdatedOrder();
       this.setState({ loading: true });
       const response = updateOrderCartItems(request)
         .then((res) => {
@@ -326,7 +352,10 @@ class CheckoutPage extends Component {
               loading: false,
               originalOrder: res.data
             })
+            this.setOrder(res.data);
+            this.setPaymentIntent(res.data.paymentIntent);
           }
+
         })
         .catch(err => {
           this.setState({
@@ -344,9 +373,10 @@ class CheckoutPage extends Component {
             this.setState({
               orderFormStep: 3,
               loading: false,
-              paymentIntent: res.data.paymentIntent,
               originalOrder: res.data
             })
+            this.setOrder(res.data);
+            this.setPaymentIntent(res.data.paymentIntent);
           }
         })
         .catch(err => {
@@ -368,12 +398,12 @@ class CheckoutPage extends Component {
     })
 
 
-    // const splitSecret = this.state.paymentIntent.clientSecret.split('_secret_')[0];
-    if (this.state.stripe && this.state.paymentIntent !== null) {
+    // const splitSecret = getPaymentIntent().clientSecret.split('_secret_')[0];
+    if (this.state.stripe && this.getPaymentIntent() !== null) {
 
 
       this.state.stripe
-        .handleCardPayment(this.state.paymentIntent.clientSecret, this.element, {
+        .handleCardPayment(this.getPaymentIntent().clientSecret, this.element, {
           payment_method_data: {
             billing_details: {
               name: 'Jenny Rosen'
@@ -771,18 +801,18 @@ class CheckoutPage extends Component {
                 <div className="cost-total">
                   <div className="row">
                     <div className="column">
-                      <h3>Total Fee (excl. VAT)</h3>
-                    </div>
-                    <div className="column">
-                      <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="column">
                       <h3>Transport cost</h3>
                     </div>
                     <div className="column">
                       <h3>€ 0</h3>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="column">
+                      <h3>Total Fee (excl. VAT)</h3>
+                    </div>
+                    <div className="column">
+                      <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
                     </div>
                   </div>
                   <div className="row">
@@ -890,7 +920,7 @@ class CheckoutPage extends Component {
                 <Fragment>
                   <StripeForm
                     onReady={this.handleReady}
-                    paymentIntent={this.state.paymentIntent}
+                    paymentIntent={this.getPaymentIntent()}
                     cancel={() => {
                       this.setState({
                         orderFormStep: 2
