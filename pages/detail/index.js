@@ -274,6 +274,7 @@ class DetailPage extends Component {
                 {product.description.section8 && product.description.section8.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section8.paragraph }} /> : null}
                 {product.description.section9 && product.description.section9.head ? <h2>{product.description.section9.head}</h2> : null}
                 {product.description.section9 && product.description.section9.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section9.paragraph }} /> : null}
+                &nbsp;
               </div>
               <div className="form-wrapper">
 
