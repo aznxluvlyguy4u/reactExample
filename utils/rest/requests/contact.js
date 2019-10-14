@@ -1,5 +1,6 @@
 import handleRestResponse from '../requestUtil';
 import { OFFICES_ENDPOINT_BASE_URL } from '../requestConstants';
+import 'whatwg-fetch';
 
 export function postContactMessage(contactRequest) {
   const url = `${OFFICES_ENDPOINT_BASE_URL}/offices/1/enquiries`;

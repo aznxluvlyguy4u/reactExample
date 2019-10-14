@@ -1,5 +1,6 @@
 import { LOCATIONS_ENDPOINT_BASE_URL } from '../requestConstants';
 import handleRestResponse from '../requestUtil';
+import 'whatwg-fetch';
 
 export function getLocations() {
   const url = `${LOCATIONS_ENDPOINT_BASE_URL}/locations`;

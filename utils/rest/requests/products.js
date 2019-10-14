@@ -2,6 +2,7 @@ import { throttle, debounce } from 'throttle-debounce';
 import { PRODUCTS_ENDPOINT_BASE_URL } from '../requestConstants';
 import handleRestResponse from '../requestUtil';
 import { toQueryParameterString, NullCheckProps } from '../../queryparams';
+import 'whatwg-fetch';
 
 function requestAllWithDelay(urls, delay) {
   return urls.reduce((promise, url) => promise

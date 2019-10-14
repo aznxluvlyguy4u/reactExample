@@ -1,6 +1,7 @@
 import { AUTH_ENDPOINT_BASE_URL } from '../requestConstants';
 import RegisterRequest from '../../mapping/register/RegisterRequest';
 import handleRestResponse from '../requestUtil';
+import 'whatwg-fetch';
 
 export function registerUser(json) {
   const payload = new RegisterRequest(json).returnPostPayload();
