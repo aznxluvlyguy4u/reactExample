@@ -22,7 +22,7 @@ const PRODUCTS_DEV_URL = 'https://1qie0vagy1.execute-api.eu-west-1.amazonaws.com
 const PRODUCTS_STAGING_URL = 'https://zu6wjlgc49.execute-api.eu-west-1.amazonaws.com/staging/api/v1';
 const PRODUCTS_PROD_URL = 'https://y9gnyonusf.execute-api.eu-west-1.amazonaws.com/prod/api/v1';
 
-const PRODUCTS_ENDPOINT_BASE_URL = PRODUCTS_DEV_URL;
+const PRODUCTS_ENDPOINT_BASE_URL = PRODUCTS_STAGING_URL;
 export { PRODUCTS_ENDPOINT_BASE_URL };
 
 
