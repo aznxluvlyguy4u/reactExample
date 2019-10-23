@@ -74,12 +74,16 @@ class OptionalAccessoryView extends Component {
                 <span className="center">
                   <span className="quantity">{item.quantity}</span>
                   <br />
-                  {item.rates &&
+                  {item.rates.length > 0 && item.rates[0].price &&
                     <Fragment>
-                      €{parseFloat(item.quantity * Number(item.rates[0].price) * this.dayCount()).toFixed(2)}
+                      €{parseFloat(item.quantity * Number(item.rates[0].price))}
                     </Fragment>
                   }
+                   <br />
+                  <span className="pricePerDayLabel">price per day</span>
+
                 </span>
+
                 <button
                   className="add-button"
                   onClick={(e) => {

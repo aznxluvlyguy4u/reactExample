@@ -257,7 +257,7 @@ class DetailPage extends Component {
     } = this.state;
     if (product) {
       return (
-        <Default nav="fixed" search meta={{ title: `${product.name} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
+        <Default nav="fixed" search meta={{ title: `${product.seoFriendlyName} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
           <div className="page-wrapper">
             <div className="fullWidthImage" style={{ backgroundImage: `url(${product.images[0].fullImageUrl})` }} />
             <div className="detail-wrapper">
@@ -327,6 +327,8 @@ class DetailPage extends Component {
                           {this.props.localSearchReducer.selectedProduct.rates &&
                             <Fragment>
                               € {parseFloat(this.props.localSearchReducer.selectedProduct.rates[0].price * this.props.localSearchReducer.productQuantity).toFixed(2)}
+                              <br />
+                              <span className="pricePerDayLabel">price per day</span>
                             </Fragment>
                           }
                         </span>

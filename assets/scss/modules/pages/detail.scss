@@ -20,7 +20,9 @@
   width:60%;
   font-weight:lighter;
 
-
+  a {
+    color: $yellow;
+  }
   @include for-phone-only {
     width:100%;
   }
@@ -517,3 +519,6 @@
   }
 }
 
+.pricePerDayLabel {
+  font-size: 0.7rem;
+}
