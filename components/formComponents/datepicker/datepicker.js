@@ -25,7 +25,6 @@ import 'react-dates/initialize';
 //   },
 // });
 
-
 class DatePicker extends Component {
   constructor(props) {
     super(props);
@@ -58,12 +57,20 @@ class DatePicker extends Component {
 
     this.setState({ startDate, endDate });
     if (startDate !== null) {
-      onChange ? onChange({ deliveryDate: startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null; //.toISOString() }) : null;
-      setFieldValue('deliveryDate', startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ')); //.toISOString());
+      // onChange ? onChange({ collectionDate: startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null; //.toISOString() }) : null;
+      setFieldValue('collectionDate', startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ')); //.toISOString());
     }
     if (endDate !== null) {
-      onChange ? onChange({ collectionDate: endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null; // toISOString() }) : null;
-      setFieldValue('collectionDate', endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ')); //.toISOString());
+      // onChange ? onChange({ deliveryDate: endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null; // toISOString() }) : null;
+      setFieldValue('deliveryDate', endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ')); //.toISOString());
+    }
+
+    if (endDate === null && startDate !== null) {
+      let addedDay = moment(startDate).add(1, 'd');
+      this.setState({ startDate: moment.utc(startDate) });
+      this.setState({ endDate: moment.utc(addedDay) });
+      // onChange ? onChange({ deliveryDate: addedDay.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null;
+      setFieldValue('collectionDate', addedDay.format('YYYY-MM-DDTHH:mm:ss.ssZ'));
     }
   }
 
@@ -75,12 +82,10 @@ class DatePicker extends Component {
       return (
         <div className="validationWrapper">
           <div>
-            {form.touched.deliveryDate
-        && startDate === null ? 'This is a required field' : ''}
+            {form.touched.deliveryDate && startDate === null ? 'This is a required field' : ''}
           </div>
           <div>
-            {form.touched.collectionDate
-        && endDate === null ? 'This is a required field' : ''}
+            {form.touched.collectionDate && endDate === null ? 'This is a required field' : ''}
           </div>
         </div>
       );
@@ -100,14 +105,14 @@ class DatePicker extends Component {
           hideKeyboardShortcutsPanel
           customArrowIcon=""
           startDate={this.state.startDate} // momentPropTypes.momentObj or null,
-          startDateId={form.touched.deliveryDate
-        && this.state.startDate === null ? 'error' : 'deliveryDate'} // PropTypes.string.isRequired,
+          startDateId={form.touched.deliveryDate && this.state.startDate === null ? 'error' : 'deliveryDate'} // PropTypes.string.isRequired,
           endDate={this.state.endDate} // momentPropTypes.momentObj or null,
-          endDateId={form.touched.collectionDate
-        && this.state.endDate === null ? 'error' : 'collectionDate'} // PropTypes.string.isRequired,
+          endDateId={form.touched.collectionDate && this.state.endDate === null ? 'error' : 'collectionDate'} // PropTypes.string.isRequired,
           onDatesChange={({ startDate, endDate }) => this.onChange(startDate, endDate)} // PropTypes.func.isRequired,
           focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-          onFocusChange={pickerFocusedInput => this.setState({ focusedInput: pickerFocusedInput })}
+          onFocusChange={pickerFocusedInput => {
+            this.setState({ focusedInput: pickerFocusedInput })
+          }}
           block
           numberOfMonths={1}
         />
