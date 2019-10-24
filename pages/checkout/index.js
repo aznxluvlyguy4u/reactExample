@@ -187,7 +187,7 @@ class CheckoutPage extends Component {
 
     accessories.map(item => {
       if (item.rates && item.rates.length > 0) {
-        price += this.dayCount(item)  * Number(item.rates[0].price) * item.quantity
+        price += this.dayCount(item) * Number(item.rates[0].price) * item.quantity
       }
     });
     return price;
