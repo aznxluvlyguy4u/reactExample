@@ -9,9 +9,6 @@ import {
   updateSearchDeliveryDate,
   updateSearchCollectionDate
  } from '../../../actions/searchActions';
-import searchReducer from '../../../reducers/searchReducer';
-import locationReducer from '../../../reducers/locationReducer';
-import { transformLocationData } from '../../../utils/data/countryDataUtil';
 import { generateSearchQueryParameterString } from '../../../utils/queryparams';
 import DatePicker from '../../formComponents/datepicker/datepicker';
 import CustomSelect from '../../formComponents/select/customSelect';
