@@ -25,14 +25,20 @@ class IndexPage extends Component {
   }
 
   async addProducts() {
-    const test = this.state.categories.map(category => {
+    const test = this.state.categories.forEach((category, index) => {
       category.products = []
+      this.loadProducts(category, index);
+    })
+    this.forceUpdate();
+  }
+
+  loadProducts = (category, index) => {
+    setTimeout(() => {
       const test = getFirstProducts(category.id).then(response => {
         category.products = response.data;
         this.forceUpdate();
       });
-    })
-    this.forceUpdate();
+    }, 800 * index )
   }
 
   async retrieveProducts(categoryId) {
