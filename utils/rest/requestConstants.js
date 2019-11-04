@@ -20,7 +20,7 @@ export { LOCATIONS_ENDPOINT_BASE_URL };
 // Products endpoint
 const PRODUCTS_DEV_URL = 'https://1qie0vagy1.execute-api.eu-west-1.amazonaws.com/dev/api/v1';
 const PRODUCTS_STAGING_URL = 'https://zu6wjlgc49.execute-api.eu-west-1.amazonaws.com/staging/api/v1';
-const PRODUCTS_PROD_URL = 'https://y9gnyonusf.execute-api.eu-west-1.amazonaws.com/prod/api/v1';
+const PRODUCTS_PROD_URL = 'https://cmcyj6c72l.execute-api.eu-west-1.amazonaws.com/prod/api/v1';
 
 const PRODUCTS_ENDPOINT_BASE_URL = PRODUCTS_DEV_URL;
 export { PRODUCTS_ENDPOINT_BASE_URL };
