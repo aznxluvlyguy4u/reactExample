@@ -27,7 +27,7 @@ export function getProducts(keyword, category, deliveryLocation, collectionLocat
 }
 
 export function getFirstProducts(category) {
-  const per_page = 5;
+  const per_page = 8;
   const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_id_eq]=${category}&?page=1&per_page=${per_page}`;
   return fetch(url, {
     method: 'GET',

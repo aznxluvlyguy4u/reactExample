@@ -13,9 +13,11 @@ class PrivacyPolicyPage extends Component {
 
     return (
       <Default nav="fixed" search meta={{ title: 'Privacy policy | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
-        <div className="page-wrapper">
-          <div className="about-wrapper">
-            <h1>Privacy policy</h1>
+        <div className="container" style={{marginTop: '100px'}}>
+          <div className="row">
+            <div className="col">
+              <h1 className="main-title">Privacy policy</h1>
+            </div>
           </div>
         </div>
       </Default>

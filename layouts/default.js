@@ -12,12 +12,10 @@ const Default = ({
 }) => (
   <ErrorLogging>
     <ToastContainer autoClose={5000} transition={Slide} position="top-right" />
-    <div>
-      <Meta props={meta} />
-      <Header nav={nav} search={search} />
-      { children }
-      <Footer />
-    </div>
+    <Meta props={meta} />
+    <Header nav={nav} search={search} />
+    { children }
+    <Footer />
   </ErrorLogging>
 );
 

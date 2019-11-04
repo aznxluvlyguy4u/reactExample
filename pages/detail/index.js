@@ -252,18 +252,24 @@ class DetailPage extends Component {
   }
 
   render() {
+
     const {
-      product, accessories,
+      product,
+      accessories,
     } = this.state;
+
     if (product) {
       return (
         <Default nav="fixed" search meta={{ title: `${product.seoFriendlyName} | OCEAN PREMIUM`, description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
-          <div className="page-wrapper">
-            <div className="fullWidthImage" style={{ backgroundImage: `url(${product.images[0].fullImageUrl})` }} />
-            <div className="detail-wrapper">
-              <h1>{product.name}</h1>
-
-              <div className="description">
+          {product.images && product.images.length > 0 && product.images[0].fullImageUrl && <div className="fullWidthImage" style={{ backgroundImage: `url(${product.images[0].fullImageUrl})` }}></div>}
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                <h1 className="main-title">{product.name}</h1>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-7 col-sm-12 product-detail-description">
                 {product.description.section1 && product.description.section1.head ? <h2>{product.description.section1.head}</h2> : null}
                 {product.description.section1 && product.description.section1.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section1.paragraph }} /> : null}
                 {product.description.section2 && product.description.section2.head ? <h2>{product.description.section2.head}</h2> : null}
@@ -284,22 +290,20 @@ class DetailPage extends Component {
                 {product.description.section9 && product.description.section9.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section9.paragraph }} /> : null}
                 &nbsp;
               </div>
-              <div className="form-wrapper">
-
-              {/* STEP SEARCH / ITINERARY */}
-              {this.props.localSearchReducer.currentStep === 1 ?
-                <SearchView
-                  configurationsstate={this.state.configurations}
-                  onChangeConfiguration={this.onChangeConfiguration}
-                  _prev={this._prev}
-                  _next={this._next}
-                  data={product}
-                  resetDeliveryLocation={(deliveryLocation) => {
-                    this.getProduct(deliveryLocation)
-                  }}
-
-                />
-                : null }
+              <div className="col-lg-5 col-sm-12 product-detail-form">
+                {/* STEP SEARCH / ITINERARY */}
+                {this.props.localSearchReducer.currentStep === 1 ?
+                  <SearchView
+                    configurationsstate={this.state.configurations}
+                    onChangeConfiguration={this.onChangeConfiguration}
+                    _prev={this._prev}
+                    _next={this._next}
+                    data={product}
+                    resetDeliveryLocation={(deliveryLocation) => {
+                      this.getProduct(deliveryLocation)
+                    }}
+                  />
+                  : null }
 
                 {/* STEP SELECT QUANTITY */}
                 {this.props.localSearchReducer.currentStep === 2 ?
@@ -403,7 +407,12 @@ class DetailPage extends Component {
                         onClick={(e) => {
                           this.props.resetLocalSearch()
                         }}
-                        href="/checkout"><a className="search-button-border">Go To Cart</a></Link>
+                        href="/checkout"
+                      >
+                        <a className="search-button-border">
+                          Go To Cart
+                        </a>
+                      </Link>
                     </div>
                   </div>
                   :
@@ -411,42 +420,15 @@ class DetailPage extends Component {
                 }
               </div>
             </div>
-            <div className="similar-toys-wrapper">
-              <ScrollableAnchor id="similar">
-                <div>
-                  {product.similarToys && product.similarToys.length > 0 &&
-                  <div>
-                    <div className="searchresult-title">
-                      <h2>Similar toys</h2>
-                    </div>
-                    <div className="result-wrapper">
-                      <div className="ReactCollapse--content">
-                        {product.similarToys.map((item, index) => {
-                          return (
-                            <Link
-                              key={index}
-                              href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
-                              as={`/detail/${item.id}/${slugify(item.name)}`}
-                            >
-                              <a>
-                                <div className="result-item">
-                                  <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
-                                  <h4>{item.name}</h4>
-                                </div>
-                              </a>
-                            </Link>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                  }
-                </div>
-              </ScrollableAnchor>
+
+            <div className="row">
+              <div className="col">
+                <h2>Similar toys</h2>
+              </div>
             </div>
           </div>
-          {this.state.loading &&
-          <Loader />}
+
+          {this.state.loading && <Loader />}
         </Default>
       );
     }

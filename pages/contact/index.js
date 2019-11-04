@@ -65,99 +65,95 @@ class AboutPage extends Component {
           <div className="maps">
             <iframe src="https://www.google.com/maps/d/embed?mid=1uqybh4Cedy9BeWZxfU9_B606fnY" width="100%" height="100%"></iframe>
           </div>
-          <div className="contact-wrapper">
-            <h1>Contact Us</h1>
-            <div className="col-left">
-              <div className="contact__image">
-                <img alt="Contact" src="static/images/about/Barbara.png" />
-              </div>
-              <div className="contact__text">
-                <p>Feel free to contact any of our offices for any questions you have
-                  <br />
-                  <br />
-                  We are available to help 24/7.
-                </p>
-                <a href="tel:+33 640 62 95 99" className="button-border">+33 640 62 95 99</a>
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12">
+                <h1 className="main-title">Contact Us</h1>
               </div>
             </div>
-            <div className="col-right">
-              {this.state.thankYou  === true ?
-                <div>
-                  <h3>Thank you</h3>
-                  <p>We will answer your message as soon as possible</p>
-                </div>
-              :
-              <Formik
-                validationSchema={ContactFormSchema}
-                onSubmit={this.submitForm || undefined}
-                enableReinitialize
-                initialValues={{
-                  name: '',
-                  office: '',
-                  emailAddress: '',
-                  phoneNumber: '',
-                  message: '',
-                }}
-              >
-                {({
-                  setFieldValue,
-                  /* and other goodies */
-                }) => (
-                  <Form>
-                    <div>
-                      <div className="keyword form-block">
-                        <label htmlFor="keyword">Name</label>
-                        <Field
-                          name="name"
-                          component={CustomInputComponent} />
-                      </div>
-                      {/* <div className="keyword form-block">
-                        <label htmlFor="office">Office</label>
-                        <Field
-                          placeholder="Select Office"
-                          options={this.state.offices}
-                          name="office"
-                          setFieldValue={setFieldValue}
-                          component={CustomSelect} />
-                      </div> */}
+            <div className="row">
+              <div className="col-md-7 col-lg-7 col-sm-12">
+                <div className="row">
+                  <div className="col-md-4">
+                    <img width="100%" alt="Contact" src="static/images/about/Barbara.png" />
+                  </div>
+                  <div className="col-md-8">
+                    <p>
+                      Feel free to contact any of our offices for any questions you have
+                      <br />
+                      <br />
+                      We are available to help 24/7.
+                    </p>
+                    <a href="tel:+33 640 62 95 99" className="button-border">+33 640 62 95 99</a>
+                  </div>
+                </div>]
+              </div>
 
-                      <div style={{width: '50%', float: 'left'}} className="form-left">
+              <div className="col-md-5 col-lg-5 col-sm-12">
+                {this.state.thankYou === true ?
+                  <div>
+                    <h3>Thank you</h3>
+                    <p>We will answer your message as soon as possible</p>
+                  </div>
+                :
+                <Formik
+                  validationSchema={ContactFormSchema}
+                  onSubmit={this.submitForm || undefined}
+                  enableReinitialize
+                  initialValues={{
+                    name: '',
+                    office: '',
+                    emailAddress: '',
+                    phoneNumber: '',
+                    message: '',
+                  }}
+                >
+                  {({
+                    setFieldValue,
+                  }) => (
+                    <Form>
+                      <div>
                         <div className="keyword form-block">
-                          <label htmlFor="emailAddress">Email</label>
+                          <label htmlFor="keyword">Name</label>
                           <Field
-                            name="emailAddress"
+                            name="name"
                             component={CustomInputComponent} />
                         </div>
-                      </div>
-                      <div style={{width: '50%', float: 'left'}} className="form-right">
+
+                        <div style={{width: '50%', float: 'left'}} className="form-left">
+                          <div className="keyword form-block">
+                            <label htmlFor="emailAddress">Email</label>
+                            <Field
+                              name="emailAddress"
+                              component={CustomInputComponent} />
+                          </div>
+                        </div>
+                        <div style={{width: '50%', float: 'left'}} className="form-right">
+                          <div className="keyword form-block">
+                            <label htmlFor="phoneNumber">Phone number</label>
+                            <Field
+                              name="phoneNumber"
+                              component={CustomInputComponent} />
+                          </div>
+                        </div>
                         <div className="keyword form-block">
-                          <label htmlFor="phoneNumber">Phone number</label>
+                          <label htmlFor="message">Message</label>
                           <Field
-                            name="phoneNumber"
-                            component={CustomInputComponent} />
-                        </div>
+                            validation={true}
+                            name="message"
+                            setFieldValue={setFieldValue}
+                            component="textarea" />
+                          </div>
+                          <button disabled={this.state.loading === true} className="search-button-full" type="submit">Submit</button>
                       </div>
-                      <div className="keyword form-block">
-                        <label htmlFor="message">Message</label>
-                        <Field
-                          validation={true}
-                          name="message"
-                          setFieldValue={setFieldValue}
-                          component="textarea" />
-                        </div>
-                        <button disabled={this.state.loading === true} className="search-button-full" type="submit">Submit</button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>}
+                    </Form>
+                  )}
+                </Formik>}
 
-              {this.state.loading ? <Loader /> : null}
+                {this.state.loading ? <Loader /> : null}
 
+              </div>
             </div>
-            {/* <div className="col-full" style={{width:'100%', display:'block', float:'left'}}>
-              <h1>Regional Help Centers</h1>
-              <PhoneNumbers />
-            </div> */}
           </div>
         </div>
       </Default>
