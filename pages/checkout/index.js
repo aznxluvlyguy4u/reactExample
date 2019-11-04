@@ -196,9 +196,10 @@ class CheckoutPage extends Component {
   calculateTotalPrice() {
     let productPrice = 0;
     let accessoryPrice = 0;
+
     this.state.products.map(product => {
       if (product.rates && product.rates.length > 0) {
-        productPrice = this.dayCount(product) * Number(product.rates[0].price) * product.quantity
+        productPrice += (this.dayCount(product) * Number(product.rates[0].price) * product.quantity)
       }
       accessoryPrice += this.calculateTotalAccessoires(product.accessories)
       product.totalCostAccessories  = accessoryPrice;
@@ -484,6 +485,20 @@ class CheckoutPage extends Component {
     }
   }
 
+  itemPrice = (item) => {
+    if(item.rates && item.rates.length > 0) {
+      return (
+        <Fragment>
+          {item.name}
+          <br />
+          €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
+          <br />
+          {item.rates[0].price} * {item.quantity} * {this.dayCount(item)}
+        </Fragment>
+      )
+    }
+  }
+
   closeSuccessModal = () => {
     this.setState({
       orderSuccess: false
@@ -525,7 +540,6 @@ class CheckoutPage extends Component {
                     <div className="column heading">
                       Return
                     </div>
-
                     <div className="column heading">
                       Availability
                     </div>
@@ -579,11 +593,12 @@ class CheckoutPage extends Component {
                             }} />
                         </div>
                         <div className="column">
-                          {item.rates && item.rates.length > 0 &&
+                          {/* {item.rates && item.rates.length > 0 &&
                             <Fragment>
                               €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
                             </Fragment>
-                          }
+                          } */}
+                          {this.itemPrice(item)}
                         </div>
                         <div className="column">
                           <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
@@ -680,11 +695,7 @@ class CheckoutPage extends Component {
                             <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
                           </div>
                           <div className="column">
-                          {accessory.rates && accessory.rates.length > 0 &&
-                            <Fragment>
-                              €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
-                            </Fragment>
-                          }
+                             {this.itemPrice(accessory)}
                           </div>
                           <div className="column">
                             &nbsp;
@@ -736,11 +747,7 @@ class CheckoutPage extends Component {
                             <Counter item={accessory} updateQuantity={this.updateAccessoryQuantity} quantity={accessory.quantity}/>
                           </div>
                           <div className="column">
-                          {accessory.rates && accessory.rates.length > 0 &&
-                            <Fragment>
-                              €{parseFloat(Number(accessory.rates[0].price) * accessory.quantity * this. dayCount(item)).toFixed(2)}
-                            </Fragment>
-                          }
+                            {this.itemPrice(accessory)}
                           </div>
                           <div className="column">
                             &nbsp;
