@@ -2,17 +2,11 @@
   background-color: black;
   height: 750px;
   background-image: url("/static/images/background-image.png");
-  background-repeat: none;
+  background-repeat: no-repeat;
   background-size: cover;
+  margin-bottom: -630px;
 }
 
-.result-item {
-  h4 {
-    margin-bottom: 0px;
-  }
-}
-.searchresult-title {
-  h2 {
-    margin-bottom: 1px;
-  }
+.banner {
+  text-align: center
 }

@@ -4,9 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 
 const Footer = () => (
-  <div className="footer">
-    <div className="column-wrapper">
-      <div className="column">
+  <div className="container footer">
+    <div className="row">
+      <div className="col-md-4">
         <h2>Site</h2>
         <ul>
           <li>
@@ -14,7 +14,7 @@ const Footer = () => (
           </li>
         </ul>
       </div>
-      <div className="column">
+      <div className="col-md-4">
         <h2>Legal</h2>
         <ul>
           <li>
@@ -25,7 +25,7 @@ const Footer = () => (
           </li>
         </ul>
       </div>
-      <div className="column">
+      <div className="col-md-4">
         <h2>Help</h2>
         <ul>
           <li>
@@ -37,10 +37,17 @@ const Footer = () => (
         </ul>
       </div>
     </div>
-
-    <img className="logo" alt="logo" src="/static/images/logo_dark.png" height="35" width="150" />
-    <div className="copyright-wrapper">
-      <span>© 2019 Ocean Premium - Water Toys anytime anywhere.</span>
+    <div className="row">
+      <div className="col">
+        <img className="logo" alt="logo" src="/static/images/logo_dark.png" height="35" width="150" />
+      </div>
+    </div>
+    <div className="row">
+      <div className="col text-center">
+        <div className="copyright-wrapper">
+          <span>© 2019 Ocean Premium - Water Toys anytime anywhere.</span>
+        </div>
+      </div>
     </div>
   </div>
 );

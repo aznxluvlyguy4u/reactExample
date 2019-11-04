@@ -41,22 +41,26 @@ class CategoryTiles extends Component {
     const { categories, width } = this.state;
     if (width) {
       return (
-        <div className="category-wrapper">
-          <h2>Something for everyone</h2>
-          <Carousel
-            autoplay
-            autoplayInterval={2000}
-            cellSpacing={20}
-            dragging
-            slidesToScroll={1}
-            slidesToShow={Math.round(width / 250)}
-            wrapAround
-            renderBottomCenterControls={false}
-          >
-            { this.props.categories.map((category, index) => {
-                return this.category(category, index)
-            })}
-          </Carousel>
+        <div className="container first-carousel">
+          <div className="row">
+            <div className="col">
+            <h2>Something for everyone</h2>
+              <Carousel
+                autoplay
+                autoplayInterval={2000}
+                cellSpacing={20}
+                dragging
+                slidesToScroll={1}
+                slidesToShow={Math.round(width / 250)}
+                wrapAround
+                renderBottomCenterControls={false}
+              >
+                { this.props.categories.map((category, index) => {
+                    return this.category(category, index)
+                })}
+              </Carousel>
+            </div>
+          </div>
         </div>
       );
     } return null;

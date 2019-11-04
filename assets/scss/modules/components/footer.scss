@@ -1,74 +1,43 @@
 .footer {
-  background-color: white;
-  box-sizing: border-box;
-  border-top: 0.25px solid #C4C4C4;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  padding-left: $default-margin-left-big-desktop;
-  padding-right: $default-margin-right-big-desktop;
   padding-bottom: 30px;
   padding-top: 30px;
-
   margin-top: 50px;
-  float: left;
+
+  h2 {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+
+    li {
+      list-style: none;
+      line-height: 1.8rem;
+      a {
+        text-decoration: none;
+        color: black;
+        font-size: 14px;
+        font-weight: normal;
+      }
+    }
+  }
+
 
   .logo {
-    padding-top: 30px;
+    margin-top:50px;
+    height:35px;
   }
 
   .copyright-wrapper {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+    text-align:center;
     font-size: 18px;
     color: #C4C4C4;
     font-weight: regular;
     padding-top: 40px;
     padding-bottom: 40px;
-  }
-
-  .column-wrapper {
-    padding-bottom: 30px;
-    padding-top: 30px;
-    display: flex;
-
-    @include for-phone-only {
-      flex-direction: column;
-    }
-
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    // border-bottom: 0.25px solid #C4C4C4;
-
-    .column {
-      margin-right: 25px;
-      margin-bottom: 25px;
-
-      h2 {
-        text-transform: uppercase;
-        font-size: 18px;
-        font-weight: bold;
-      }
-
-      ul {
-        padding: 0;
-        margin: 0;
-
-        li {
-          list-style: none;
-
-          a {
-            text-decoration: none;
-            color: black;
-            font-size: 14px;
-            font-weight: regular;
-          }
-        }
-      }
-    }
   }
 }

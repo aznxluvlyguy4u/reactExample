@@ -69,52 +69,82 @@ class IndexPage extends Component {
   render() {
     return (
       <Default meta={meta}>
-        <div className="background-wrapper" />
+        <div className="background-wrapper"></div>
         <SearchFormWrapper />
         <CategoryTiles categories={this.state.categories} />
-        {this.state.categories.map((category, index) => {
-          return (
-            <Fragment>
-              {category.products && category.products.length > 0 && <div className="searchresult-wrapper">
-                <div className="search-block">
-                  <div className="result-wrapper">
-                    <div className="searchresult-title">
-                      <h2>{category.name}</h2>
+
+        <div className="container">
+          {this.state.categories.map((category, index) => {
+            return (
+              <Fragment>
+              {index === 1 || index === 3 ?
+                <div className="row">
+                  <div className="col banner">
+                    <Link
+                      href="#"
+                      >
+                        <a>
+                          <img src="/static/images/banner-mock.png" />
+                        </a>
+                    </Link>
+                  </div>
+                </div>
+              :
+              <div className="row">
+                <div className="col">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h2 className="section-title">{category.name}</h2>
                       <span>Search through hundreds of Water Toys and add them to your trip!</span>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <div className="result-wrapper">
-                    <div className="ReactCollapse--content" style={{borderBottom: '1px dotted #ccc'}}>
-                    {category.products && category.products.length > 0 &&
-                      category.products.map((item, index) => {
-                        return (
-                          <Link
-                            key={index}
-                            href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
-                            as={`/detail/${item.id}/${slugify(item.name)}`}
-                          >
-                            <a>
-                              <div className="result-item">
-                                <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
-                                <h4>{item.name}</h4>
-                              </div>
+                  <div className="row products">
+                    <div className="col-md-12">
+                      <div className="row">
+                          {category.products && category.products.length > 0 &&
+                            category.products.map((item, index) => {
+                              return (
+                                <div className="col-lg-3 col-md-4 col-sm-6">
+                                  <Link
+                                    key={index}
+                                    href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                                    as={`/detail/${item.id}/${slugify(item.name)}`}
+                                  >
+                                    <a>
+                                      <div className="product">
+                                        <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
+                                        <h4>{item.name}</h4>
+                                        {/* <span>
+                                          {`from € ${item.rates.day_rate}`}
+                                        </span> */}
+                                      </div>
+                                    </a>
+                                  </Link>
+                                </div>
+                              )
+                            })
+                          }
+                        </div>
+                        < div className="row">
+                          <div className="col">
+                            <a href={`/search?category=${category.id}`} class="showmore">
+                              Show More &gt;
                             </a>
-                          </Link>
-                        )
-                      })
-                    }
-
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <a href={`/search?category=${category.id}`} class="showmore">Show More &gt;</a>
-
-                  </div>
                 </div>
-              </div>}
-            </Fragment>
-            )
-        })}
+              </div> }
+
+              </Fragment>
+
+              )
+
+          })
+        }
+
+        </div>
       </Default>
     )
   }

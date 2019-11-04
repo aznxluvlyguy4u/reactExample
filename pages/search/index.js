@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import Link from 'next/link';
 import Router from 'next/router';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import slugify from 'slugify';
 import { updateSearch, updateSearchObject } from '../../actions/searchActions';
@@ -15,24 +15,6 @@ import ProductResponse from '../../utils/mapping/products/ProductResponse';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
-
-const getHTML = products => products.map((item, index) => (
-  <Link
-    key={index}
-    href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
-    as={`/detail/${item.id}/${slugify(item.name)}`}
-  >
-    <a>
-      <div className="result-item">
-        <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
-        <h2>{item.name}</h2>
-        <span>
-          {`from € ${item.rates.day_rate}`}
-        </span>
-      </div>
-    </a>
-  </Link>
-));
 
 class SearchPage extends Component {
   constructor(props) {
@@ -81,14 +63,15 @@ class SearchPage extends Component {
     };
   }
 
+  getHtml = (products) => {
+
+  }
+
   async componentDidMount() {
     const {
       keyword,
       deliveryLocation,
       collectionLocation,
-      collectionDate,
-      deliveryDate,
-      category_id,
     } = this.props;
 
     if (keyword !== '') {
@@ -147,7 +130,6 @@ class SearchPage extends Component {
     if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
       // if query parameters have been modified by user
-
       if (keyword === '' || category_id === '', deliveryLocation === '' || collectionLocation === '') {
         this.setState({ notFound: true, loading: false });
       } else {
@@ -161,6 +143,7 @@ class SearchPage extends Component {
     const {
       category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
     } = this.props;
+
     let { current_page, products } = this.state;
     try {
       if (type === 'update') {
@@ -199,31 +182,71 @@ class SearchPage extends Component {
 
   render() {
     const {
-      products, loading, notFound, total_page_count, current_page,
+      products,
+      loading,
+      notFound,
+      total_page_count,
+      current_page,
     } = this.state;
+
     return (
       <Default nav="fixed" search meta={this.meta}>
         <SearchEdit onChange={this.mergeObj} />
-        <div className="page-wrapper">
-          <div className="searchresult-wrapper">
-            <h1>Search Results</h1>
-            <div className="search-block">
-            <div className="result-wrapper">
-              {notFound === true ? <h2>No results found for your search query</h2> : null}
-              {isEmpty(products) ? (
-                null
-              ) : (
-                <div className="searchresult-title">
-                  <h3>Matching Water Toys</h3>
-                  <span>Search through hundreds of Water Toys and add them to your trip!</span>
-                </div>
-              )}
-              <Pagination total_page_count={total_page_count} current_page={current_page} onClick={() => this.getMoreProducts()}>
-                {getHTML(products)}
-              </Pagination>
-              {loading ? <Loader /> : null}
+        <div className="container">
+          <div className="row">
+            <div className="col">
+              <h1 className="main-title">Search Results</h1>
             </div>
           </div>
+          <div className="row">
+            <div className="col">
+
+              {notFound === true ? <h2>No results found for your search query</h2> : null}
+
+              {isEmpty(products) ?
+                null
+              :
+                <Fragment>
+                  <div className="row">
+                    <div className="col">
+                      <div className="searchresult-title">
+                        <h2 className="section-title">Matching Water Toys</h2>
+                        <span>Search through hundreds of Water Toys and add them to your trip!</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row products">
+                    {products.map((item, index) => {
+                      return (
+                        <div className="col-lg-3 col-md-4 col-sm-6">
+                          <Link
+                            key={index}
+                            href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                            as={`/detail/${item.id}/${slugify(item.name)}`}
+                          >
+                            <a>
+                              <div className="product">
+                                <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
+                                <h4>{item.name}</h4>
+                                <span>
+                                  {`from € ${item.rates.day_rate}`}
+                                </span>
+                              </div>
+                            </a>
+                          </Link>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="row">
+                    <div className="col">
+                      {/* {total_page_count > current_page ? <button className="showmore" onClick={onClick}>Show More (+4) ></button> : null} */}
+                    </div>
+                  </div>
+                </Fragment>
+              }
+              {loading ? <Loader /> : null}
+            </div>
           </div>
         </div>
       </Default>
