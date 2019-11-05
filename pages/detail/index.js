@@ -110,6 +110,16 @@ class DetailPage extends Component {
     }
     try {
       const response = await getProductById(id, deliveryLocationId);
+      // response.data.similarToys = [
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
+      // ]
       this.setState({ product: response.data });
       this.props.setSelectedProduct(response.data);
 
@@ -421,11 +431,40 @@ class DetailPage extends Component {
               </div>
             </div>
 
-            <div className="row">
-              <div className="col">
-                <h2>Similar toys</h2>
+
+            {product.similarToys && product.similarToys.length > 0 &&
+              <div className="row similar-toys">
+                <div className="col">
+                  <h3>Similar toys</h3>
+                </div>
               </div>
-            </div>
+            }
+
+            {product.similarToys && product.similarToys.length > 0 &&
+              <div className="row products">
+                {product.similarToys.map((item, index) => {
+                  return (
+                    <div className="col-lg-3 col-md-4 col-sm-6">
+                      <Link
+                        key={index}
+                        href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                        as={`/detail/${item.id}/${slugify(item.name)}`}
+                      >
+                        <a>
+                          <div className="product">
+                            <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
+                            <h4>{item.name}</h4>
+                            <span>
+                              {`from € ${item.rates.day_rate}`}
+                            </span>
+                          </div>
+                        </a>
+                      </Link>
+                    </div>
+                  )
+                })}
+              </div>
+            }
           </div>
 
           {this.state.loading && <Loader />}
