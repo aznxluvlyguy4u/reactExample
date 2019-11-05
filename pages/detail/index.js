@@ -110,16 +110,7 @@ class DetailPage extends Component {
     }
     try {
       const response = await getProductById(id, deliveryLocationId);
-      // response.data.similarToys = [
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      //   {name: 'test1', images: [{fullImageUrl: '/static/images/flyboard.png'}], rates: {day_rate: '0,00'}},
-      // ]
+
       this.setState({ product: response.data });
       this.props.setSelectedProduct(response.data);
 
