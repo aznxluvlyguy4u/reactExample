@@ -78,15 +78,28 @@ class IndexPage extends Component {
             return (
               <Fragment>
               {index === 1 || index === 3 ?
+
                 <div className="row">
                   <div className="col banner">
-                    <Link
-                      href="#"
+                    {index === 1 &&
+                      <Link
+                      href="/call-to-action1"
                       >
                         <a>
-                          <img src="/static/images/banner-mock.png" />
+                          <img src="/static/images/banner-mock1.png" />
                         </a>
                     </Link>
+                    }
+                    {index === 3 &&
+                      <Link
+                      href="/call-to-action2"
+                      >
+                        <a>
+                          <img src="/static/images/banner-mock2.png" />
+                        </a>
+                    </Link>
+                    }
+
                   </div>
                 </div>
               :
