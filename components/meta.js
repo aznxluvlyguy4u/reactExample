@@ -20,12 +20,6 @@ const Meta = ({ props: { title, description } }) => (
     <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="96x96" href="/static/images/favicon/favicon-96x96.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon/favicon-16x16.png" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap-grid.min.css"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap-grid.min.css"
-      crossorigin="anonymous"
-    />
     <link rel="icon" href="/static/images/favicon/favicon.ico" type="image/x-icon" />
     <meta name="description" content={description || 'Next.js Test Description'} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

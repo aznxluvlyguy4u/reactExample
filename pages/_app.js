@@ -11,6 +11,8 @@ import store from '../store';
 import '../assets/scss/styles.scss';
 import SelectboxLocation from '../utils/mapping/locations/SelectboxLocation';
 import LocalStorageUtil from '../utils/localStorageUtil';
+import 'bootstrap/dist/css/bootstrap-grid.min.css';
+
 /**
 * @param {object} initialState
 * @param {boolean} options.isServer indicates whether it is a server side or client side
