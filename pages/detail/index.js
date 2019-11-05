@@ -109,7 +109,7 @@ class DetailPage extends Component {
       deliveryLocationId = deliveryLocation.id;
     }
     try {
-      const response = await getProductById(id, deliveryLocationId);
+      let response = await getProductById(id, deliveryLocationId);
 
       this.setState({ product: response.data });
       this.props.setSelectedProduct(response.data);
@@ -266,7 +266,14 @@ class DetailPage extends Component {
           <div className="container">
             <div className="row">
               <div className="col">
-                <h1 className="main-title">{product.name}</h1>
+                <h1 className="main-title-with-price">{product.name}</h1>
+                  {product.rates && product.rates.length > 0 && product.rates[0].price &&
+                    <Fragment>
+                      <span className="main-title-price">
+                        <strong>from</strong> €{product.rates[0].price}
+                      </span>
+                    </Fragment>
+                  }
               </div>
             </div>
             <div className="row">
@@ -424,11 +431,13 @@ class DetailPage extends Component {
 
 
             {product.similarToys && product.similarToys.length > 0 &&
+            <ScrollableAnchor id="similar">
               <div className="row similar-toys">
                 <div className="col">
                   <h3>Similar toys</h3>
                 </div>
               </div>
+            </ScrollableAnchor>
             }
 
             {product.similarToys && product.similarToys.length > 0 &&

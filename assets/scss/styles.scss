@@ -70,6 +70,17 @@ h1.main-title {
   border-bottom: solid 0.3px $grey;
   padding-bottom: 20px;
 }
+h1.main-title-with-price {
+  padding-bottom: 1px;
+  margin-bottom: 1px;
+}
+span.main-title-price {
+  display: block;
+  width: 100%;
+  border-bottom: solid 0.3px $grey;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
 
 h2.section-title {
   margin-bottom:1px;
