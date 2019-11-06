@@ -45,6 +45,7 @@ const Checkbox = ({
         onBlur={onBlur}
       />{" "}
       <span style={{color: '#000'}}>{label}</span>
+      <br />
       {touched[name] && <InputFeedback error={errors[name]} />}
     </Fragment>
 
@@ -90,7 +91,8 @@ class ContracterInformationForm extends Component {
             streetNumberBlock: this.props.initialValues && this.props.initialValues.streetNumberBlock || '',
             postalCode: this.props.initialValues && this.props.initialValues.postalCode || '',
             country: this.props.initialValues && this.props.initialValues.country || '',
-            terms: false
+            terms: false,
+            securityDeposit: false
           }}
           onSubmit={this.props.handleSubmit}
         >
@@ -180,13 +182,21 @@ class ContracterInformationForm extends Component {
                 <div className="form-block">
                     <Field
                       component={Checkbox}
+                      name="securityDeposit"
+                      id="securityDeposit"
+                      label={'Security deposit will be charged before delivery'}
+                    />
+                    {" "}
+                </div>
+
+                <div className="form-block">
+                    <Field
+                      component={Checkbox}
                       name="terms"
-                      id="singleCheckbox"
+                      id="terms"
                       label={['I accept ', <a style={{textDecoration: "underline", color: "#00"}} href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>]}
                     />
                     {" "}
-                    <span style={{color: '#000'}}>
-                           </span>
                 </div>
               {this.props.loading === false ?
                 <span>
