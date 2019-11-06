@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {CardElement, injectStripe} from 'react-stripe-elements';
+import {CardElement, injectStripe, CardNumberElement, CardCvcElement, CardExpiryElement} from 'react-stripe-elements';
 
 class StripeForm extends Component {
   constructor(props) {
@@ -14,7 +14,11 @@ class StripeForm extends Component {
         <div className="form-block">
           <div className="form-block">
             <div className="input-wrapper">
-              <CardElement hidePostalCode={true} onReady={this.props.onReady} />
+              <CardNumberElement onReady={this.props.onReady} />
+              <br />
+              <CardCvcElement onReady={this.props.onReady} />
+              <br />
+              <CardExpiryElement onReady={this.props.onReady} />
             </div>
           </div>
         </div>
