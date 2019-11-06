@@ -66,6 +66,27 @@
 }
 
 // Generic styles
+.yellow-button {
+  background-color: $yellow;
+  color: $white;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 18px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  max-width:320px;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+
+
 h1.main-title {
   border-bottom: solid 0.3px $grey;
   padding-bottom: 20px;

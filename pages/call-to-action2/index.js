@@ -12,7 +12,7 @@ class CallToAction1Page extends Component {
   render() {
     return (
       <Default nav="fixed" search meta={{ title: 'Detail Page | OCEAN PREMIUM', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' }}>
-          <div className="fullWidthImage" style={{ backgroundImage: `url('static/images/about.png')` }} />
+          <div className="fullWidthImage" style={{ backgroundImage: `url('https://picsum.photos/1900/400')` }} />
 
           <div className="container about">
             <div className="row">

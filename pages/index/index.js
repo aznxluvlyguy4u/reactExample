@@ -81,23 +81,31 @@ class IndexPage extends Component {
 
                 <div className="row">
                   <div className="col banner">
+
                     {index === 1 &&
-                      <Link
-                      href="/call-to-action1"
-                      >
-                        <a>
-                          <img src="/static/images/banner-mock1.png" />
-                        </a>
-                    </Link>
+                      <div>
+                        <img src="https://picsum.photos/1000/230" />
+                        <Link
+                          href="/call-to-action1"
+                          >
+                          <a className="yellow-button">
+                            CALL TO ACTION TEXT 1
+                          </a>
+                        </Link>
+                      </div>
                     }
+
                     {index === 3 &&
-                      <Link
-                      href="/call-to-action2"
-                      >
-                        <a>
-                          <img src="/static/images/banner-mock2.png" />
-                        </a>
-                    </Link>
+                      <div>
+                        <img src="https://picsum.photos/1000/230" />
+                        <Link
+                          href="/call-to-action2"
+                          >
+                          <a className="yellow-button">
+                            CALL TO ACTION TEXT 2
+                          </a>
+                        </Link>
+                      </div>
                     }
 
                   </div>
