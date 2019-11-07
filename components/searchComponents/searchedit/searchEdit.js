@@ -62,51 +62,55 @@ class SearchEdit extends Component {
               /* and other goodies */
             }) => (
               <Form>
-                <div>
-                  <div className="form-inline">
-                    <div className="edit-row">
-                     <label htmlFor="deliveryLocation">Pick up</label>
-                      <Field
-                        placeholder="Pick up"
-                        onChange={
-                          onChange || null
-                        }
-                        value={this.props.searchReducer.search.deliveryLocation}
-                        options={this.state.locations}
-                        name="deliveryLocation"
-                        setFieldValue={setFieldValue}
-                        component={CustomSelect} />
-                    </div>
-                    <div className="edit-row">
-                      <label htmlFor="deliveryLocation">Return</label>
-                      <Field
-                        placeholder="Return"
-                        onChange={
-                          onChange || null
-                        }
-                        value={this.props.searchReducer.search.collectionLocation}
-                        options={this.state.locations}
-                        name="collectionLocation"
-                        setFieldValue={setFieldValue}
-                        component={CustomSelect} />
-                    </div>
-                    <div className="other-wrapper">
-                      <div className="label-wrapper">
-                        <label htmlFor="collectionDateRange">From</label>
-                        <label htmlFor="collectionDateRange">To</label>
+                <div className="container">
+                  <div className="row">
+                    <div className="col">
+                      <div className="form-inline">
+                        <div className="edit-row">
+                          <label htmlFor="deliveryLocation">Pick up</label>
+                          <Field
+                            placeholder="Pick up"
+                            onChange={
+                              onChange || null
+                            }
+                            value={this.props.searchReducer.search.deliveryLocation}
+                            options={this.state.locations}
+                            name="deliveryLocation"
+                            setFieldValue={setFieldValue}
+                            component={CustomSelect} />
+                        </div>
+                        <div className="edit-row">
+                          <label htmlFor="deliveryLocation">Return</label>
+                          <Field
+                            placeholder="Return"
+                            onChange={
+                              onChange || null
+                            }
+                            value={this.props.searchReducer.search.collectionLocation}
+                            options={this.state.locations}
+                            name="collectionLocation"
+                            setFieldValue={setFieldValue}
+                            component={CustomSelect} />
+                        </div>
+                        <div className="other-wrapper">
+                          <div className="label-wrapper">
+                            <label htmlFor="collectionDateRange">From</label>
+                            <label htmlFor="collectionDateRange">To</label>
+                          </div>
+                          <Field
+                            validation={validation}
+                            placeholders={['Pick up', 'Return']}
+                            onChange={
+                              onChange || null
+                            }
+                            startDate={this.props.searchReducer.search.deliveryDate}
+                            endDate={this.props.searchReducer.search.collectionDate}
+                            name="collectionDate"
+                            placeholder="Return"
+                            setFieldValue={setFieldValue}
+                            component={DatePicker} />
+                        </div>
                       </div>
-                      <Field
-                        validation={validation}
-                        placeholders={['Pick up', 'Return']}
-                        onChange={
-                          onChange || null
-                        }
-                        startDate={this.props.searchReducer.search.deliveryDate}
-                        endDate={this.props.searchReducer.search.collectionDate}
-                        name="collectionDate"
-                        placeholder="Return"
-                        setFieldValue={setFieldValue}
-                        component={DatePicker} />
                     </div>
                   </div>
                 </div>

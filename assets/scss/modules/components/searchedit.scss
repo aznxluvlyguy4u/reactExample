@@ -2,8 +2,8 @@
   margin-top:70px;
   padding-top:20px;
   padding-bottom:20px;
-  padding-left: 5%;
-  padding-right: 5%;
+  // padding-left: 5%;
+  // padding-right: 5%;
   @include box-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
   .form-inline{
     justify-content: flex-start;
@@ -62,9 +62,9 @@
   }
 
   &.top {
-    padding-left: $default-margin-left-big-desktop;
-    padding-right: $default-margin-right-big-desktop;
-    width: $default-width-big-desktop;
+    // padding-left: $default-margin-left-big-desktop;
+    // padding-right: $default-margin-right-big-desktop;
+    // width: $default-width-big-desktop;
     label {
       text-transform: uppercase;
       font-size:0.7rem;
