@@ -3,6 +3,8 @@ export default class ProductResponse {
     this.id = state.id;
     this.name = state.name;
     this.description = state.description;
+    this.fullImageUrl = state.images[0].fullImageUrl;
+    this.thumbnailUrl = state.images[0].thumbnailUrl;
     this.public_icon_url = state.images[0].fullImageUrl;
     this.day_rate = state.rates[0].price;
     this.available = parseFloat(state.rates[0].quantityAvailable) > 0.0;
@@ -19,6 +21,8 @@ export default class ProductResponse {
         day_rate: this.day_rate,
       },
       available: this.available,
+      thumbnailUrl: this.thumbnailUrl,
+      fullImageUrl: this.fullImageUrl
     };
   }
 }

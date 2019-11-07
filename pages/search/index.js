@@ -227,7 +227,7 @@ class SearchPage extends Component {
                             >
                               <a>
                                 <div className="product">
-                                  <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
+                                  <img alt={item.name} src={item.thumbnailUrl ? item.thumbnailUrl : '/static/images/flyboard.png'} />
                                   <h4>{item.name}</h4>
                                   <span>
                                     {`from € ${item.rates.day_rate}`}
@@ -236,7 +236,7 @@ class SearchPage extends Component {
                               </a>
                             </Link> :
                             <div className="product">
-                              <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
+                              <img alt={item.name} src={item.thumbnailUrl ? item.thumbnailUrl : '/static/images/flyboard.png'} />
                               <h4>{item.name}</h4>
                               <span>
                                 {/* {`from € ${item.rates.day_rate}`} */}
@@ -275,7 +275,7 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
 
 export default connect(
   mapStateToProps,{
-    updateSearch,
-    updateSearchObject,
-    updateLocalSearch
-  })(SearchPage);
+  updateSearch,
+  updateSearchObject,
+  updateLocalSearch
+})(SearchPage);
