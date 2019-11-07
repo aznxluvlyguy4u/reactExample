@@ -270,7 +270,13 @@ class DetailPage extends Component {
                   {product.rates && product.rates.length > 0 && product.rates[0].price &&
                     <Fragment>
                       <span className="main-title-price">
-                        <strong>from</strong> €{product.rates[0].price}
+                        {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable) > 0.0 ?
+                          <Fragment>
+                            <strong>from</strong> €{product.rates[0].price}
+                          </Fragment>
+                          :
+                          <strong>Currently not available</strong>
+                        }
                       </span>
                     </Fragment>
                   }
@@ -298,7 +304,8 @@ class DetailPage extends Component {
                 {product.description.section9 && product.description.section9.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section9.paragraph }} /> : null}
                 &nbsp;
               </div>
-              <div className="col-lg-5 col-sm-12 product-detail-form">
+              {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable) > 0.0 &&
+                <div className="col-lg-5 col-sm-12 product-detail-form">
                 {/* STEP SEARCH / ITINERARY */}
                 {this.props.localSearchReducer.currentStep === 1 ?
                   <SearchView
@@ -427,6 +434,7 @@ class DetailPage extends Component {
                   null
                 }
               </div>
+              }
             </div>
 
 
