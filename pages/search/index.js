@@ -219,21 +219,33 @@ class SearchPage extends Component {
                     {products.map((item, index) => {
                       return (
                         <div className="col-lg-3 col-md-4 col-sm-6">
-                          <Link
-                            key={index}
-                            href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
-                            as={`/detail/${item.id}/${slugify(item.name)}`}
-                          >
-                            <a>
-                              <div className="product">
-                                <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
-                                <h4>{item.name}</h4>
-                                <span>
-                                  {`from € ${item.rates.day_rate}`}
-                                </span>
-                              </div>
-                            </a>
-                          </Link>
+                          {item.available ?
+                            <Link
+                              key={index}
+                              href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                              as={`/detail/${item.id}/${slugify(item.name)}`}
+                            >
+                              <a>
+                                <div className="product">
+                                  <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
+                                  <h4>{item.name}</h4>
+                                  <span>
+                                    {`from € ${item.rates.day_rate}`}
+                                  </span>
+                                </div>
+                              </a>
+                            </Link> :
+                            <div className="product">
+                              <img alt={item.name} src={item.images.public_icon_url ? item.images.public_icon_url : '/static/images/flyboard.png'} />
+                              <h4>{item.name}</h4>
+                              <span>
+                                {/* {`from € ${item.rates.day_rate}`} */}
+                                Currently not available
+                              </span>
+                              <div className="unavailable"></div>
+
+                            </div>
+                          }
                         </div>
                       )
                     })}
