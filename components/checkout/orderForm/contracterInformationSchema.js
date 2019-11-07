@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 
 const ContracterInformationFormSchema = Yup.object().shape({
+  terms: Yup.bool().oneOf([true], "Agree to terms and conditions"),
+  securityDeposit: Yup.bool().oneOf([true], "Agree to security deposit will be charged before delivery"),
   firstName: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')

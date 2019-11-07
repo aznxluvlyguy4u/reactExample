@@ -816,7 +816,7 @@ class CheckoutPage extends Component {
                   </div>
                   <div className="row">
                     <div className="column">
-                      <h3>Total Fee (excl. VAT)</h3>
+                      <h3>Total Rental Fee (excl. VAT)</h3>
                     </div>
                     <div className="column">
                       <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>

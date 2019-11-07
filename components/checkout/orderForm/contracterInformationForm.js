@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
-  Formik, Field, Form, ErrorMessage,
+  Formik, Field, Form, ErrorMessage
 } from 'formik';
 import CustomInputComponent from '../../signup/customInputComponent';
 import CustomTextArea from '../../formComponents/customTextArea/customTextArea';
@@ -18,6 +18,38 @@ const customStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
   },
+};
+
+// Input feedback
+const InputFeedback = ({ error }) =>
+  error ? <span>{error}</span> : null;
+
+const Checkbox = ({
+  field: { name, value, onChange, onBlur },
+  form: { errors, touched, setFieldValue },
+  id,
+  label,
+  className,
+  ...props
+}) => {
+  return (
+    <Fragment>
+      <input
+        style={{width: 'auto'}}
+        name={name}
+        id={id}
+        type="checkbox"
+        value={value}
+        checked={value}
+        onChange={onChange}
+        onBlur={onBlur}
+      />{" "}
+      <span style={{color: '#000'}}>{label}</span>
+      <br />
+      {touched[name] && <InputFeedback error={errors[name]} />}
+    </Fragment>
+
+  );
 };
 
 const initialValues = {
@@ -41,7 +73,6 @@ class ContracterInformationForm extends Component {
 
   render() {
 
-
     return (
       <div className="signup">
         <h1>Contracter information</h1>
@@ -59,7 +90,9 @@ class ContracterInformationForm extends Component {
             streetNumber: this.props.initialValues && this.props.initialValues.streetNumber || '',
             streetNumberBlock: this.props.initialValues && this.props.initialValues.streetNumberBlock || '',
             postalCode: this.props.initialValues && this.props.initialValues.postalCode || '',
-            country: this.props.initialValues && this.props.initialValues.country || ''
+            country: this.props.initialValues && this.props.initialValues.country || '',
+            terms: false,
+            securityDeposit: false
           }}
           onSubmit={this.props.handleSubmit}
         >
@@ -145,6 +178,25 @@ class ContracterInformationForm extends Component {
                     name="country"
                     placeholder="country"
                     component={CustomInputComponent} />
+                </div>
+                <div className="form-block">
+                    <Field
+                      component={Checkbox}
+                      name="securityDeposit"
+                      id="securityDeposit"
+                      label={'Security deposit will be charged before delivery'}
+                    />
+                    {" "}
+                </div>
+
+                <div className="form-block">
+                    <Field
+                      component={Checkbox}
+                      name="terms"
+                      id="terms"
+                      label={['I accept ', <a style={{textDecoration: "underline", color: "#00"}} href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>]}
+                    />
+                    {" "}
                 </div>
               {this.props.loading === false ?
                 <span>
