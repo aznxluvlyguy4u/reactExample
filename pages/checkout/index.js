@@ -492,8 +492,8 @@ class CheckoutPage extends Component {
           {item.name}
           <br />
           €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
-          <br />
-          {item.rates[0].price} * {item.quantity} * {this.dayCount(item)}
+          {/* <br />
+          {item.rates[0].price} * {item.quantity} * {this.dayCount(item)} */}
         </Fragment>
       )
     }
@@ -820,6 +820,17 @@ class CheckoutPage extends Component {
                     </div>
                     <div className="column">
                       <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="column">
+                      <p style={{fontSize: '12px', textAlign: 'left'}}>
+                      <strong>Please note:</strong>
+                      <br />
+                      A security deposit will be charged before picking up your rented toys</p>
+                    </div>
+                    <div className="column">
+
                     </div>
                   </div>
                   <div className="row">
