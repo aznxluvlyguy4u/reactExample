@@ -133,7 +133,7 @@ class IndexPage extends Component {
                                   >
                                     <a>
                                       <div className="product">
-                                        <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
+                                        <img alt={item.name} src={item.images[0].thumbImageUrl ? item.images[0].thumbImageUrl : '/static/images/flyboard.png'} />
                                         <h4>{item.name}</h4>
                                         {/* <span>
                                           {`from € ${item.rates.day_rate}`}
