@@ -144,8 +144,6 @@ h2.section-title {
       padding: 0px;
       top: 0px;
       left: 0px;
-
-
     }
 
 
@@ -196,8 +194,7 @@ h2.section-title {
   width: 100%;
 }
 
-// div[class^="col-"] {
-//   margin-top: 15px;
-//   margin-bottom: 50px;
-//   background: #ff00ff;
-// }
+.order-form {
+  min-width: 320px;
+  max-width: 350px;
+}
