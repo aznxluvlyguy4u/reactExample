@@ -190,13 +190,13 @@ class ContracterInformationForm extends Component {
                 </div>
 
                 <div className="form-block">
-                    <Field
-                      component={Checkbox}
-                      name="terms"
-                      id="terms"
-                      label={['I accept ', <a style={{textDecoration: "underline", color: "#00"}} href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>]}
-                    />
-                    {" "}
+                  <Field
+                    component={Checkbox}
+                    name="terms"
+                    id="terms"
+                    label={['I accept ', <a style={{textDecoration: "underline", color: "#00"}} href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>]}
+                  />
+                  {" "}
                 </div>
               {this.props.loading === false ?
                 <span>

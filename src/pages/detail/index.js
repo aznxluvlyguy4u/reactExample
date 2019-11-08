@@ -304,7 +304,7 @@ class DetailPage extends Component {
                 {product.description.section9 && product.description.section9.paragraph ? <div dangerouslySetInnerHTML={{ __html: product.description.section9.paragraph }} /> : null}
                 &nbsp;
               </div>
-              {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable) > 0.0 &&
+              {/* {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable)  0.0 && */}
                 <div className="col-lg-5 col-sm-12 product-detail-form">
                 {/* STEP SEARCH / ITINERARY */}
                 {this.props.localSearchReducer.currentStep === 1 ?
@@ -434,7 +434,7 @@ class DetailPage extends Component {
                   null
                 }
               </div>
-              }
+              {/* } */}
             </div>
 
 
