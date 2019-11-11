@@ -463,7 +463,7 @@ class DetailPage extends Component {
                             <img alt={item.name} src={item.images[0].fullImageUrl ? item.images[0].fullImageUrl : '/static/images/flyboard.png'} />
                             <h4>{item.name}</h4>
                             <span>
-                              {`from € ${item.rates.day_rate}`}
+                              {`from € ${item.fromPrice}`}
                             </span>
                           </div>
                         </a>

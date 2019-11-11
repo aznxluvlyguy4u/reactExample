@@ -28,7 +28,6 @@ export default class PlaceOrderRequest {
     this.affiliation = contactInformation.affiliation.value;
     this.comment = contactInformation.comment;
     this.yachtName = contactInformation.yachtname;
-
   }
 
   returnOrder() {
