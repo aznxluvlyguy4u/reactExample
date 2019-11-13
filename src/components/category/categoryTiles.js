@@ -17,14 +17,14 @@ class CategoryTiles extends Component {
 
   category(item, index) {
     return (
-      <Link href={`/search?category=${item.id}`} key={index}>
+      <a href={`/search?category=${item.id}`} key={index}>
         <div
           className="category-tile"
         >
           <img src={item.customFields.publicIconThumbUrl} />
           <span>{item.name}</span>
         </div>
-    </Link>
+    </a>
     )
   }
   componentWillUnmount() {
@@ -53,7 +53,7 @@ class CategoryTiles extends Component {
                 slidesToScroll={1}
                 slidesToShow={Math.round(width / 250)}
                 wrapAround
-                renderBottomCenterControls={false}
+                renderBottomCenterControls={() => {}}
               >
                 { this.props.categories.map((category, index) => {
                     return this.category(category, index)

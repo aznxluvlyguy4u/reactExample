@@ -79,7 +79,7 @@ class IndexPage extends Component {
               <Fragment>
               {index === 1 || index === 3 ?
 
-                <div className="row">
+                <div className="row" key={category+index}>
                   <div className="col banner">
 
                     {index === 1 &&
@@ -111,7 +111,7 @@ class IndexPage extends Component {
                   </div>
                 </div>
               :
-              <div className="row">
+              <div className="row" key={category+index}>
                 <div className="col">
                   <div className="row">
                     <div className="col-md-12">
@@ -148,7 +148,7 @@ class IndexPage extends Component {
                         </div>
                         < div className="row">
                           <div className="col">
-                            <a href={`/search?category=${category.id}`} class="showmore">
+                            <a href={`/search?category=${category.id}`} className="showmore">
                               Show More &gt;
                             </a>
                           </div>
