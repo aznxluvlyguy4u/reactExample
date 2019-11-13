@@ -3,8 +3,10 @@ const next = require('next');
 require('jsdom-global')();
 
 const port = parseInt(process.env.PORT, 10) || 3000;
+// false if not production
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
+let app = null;
+app = next({ dev, dir: './src' });
 const handle = app.getRequestHandler();
 
 app

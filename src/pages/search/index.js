@@ -11,11 +11,12 @@ import Loader from '../../components/loader';
 import Pagination from '../../components/pagination';
 import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
 import Default from '../../layouts/default';
-import ProductResponse from '../../utils/mapping/products/ProductResponse';
+import Product from '../../utils/mapping/products/Product';
 import { CreateQueryParams } from '../../utils/queryparams';
 import { getProducts } from '../../utils/rest/requests/products';
 import { handleGeneralError } from '../../utils/rest/error/toastHandler';
 
+import ResponseToProductMapper from '../../utils/mapping/products/ResponseToProductMapper';
 class SearchPage extends Component {
   constructor(props) {
     super(props);
@@ -151,7 +152,10 @@ class SearchPage extends Component {
       }
       this.setState({ loading: true, notFound: false });
       const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, current_page);
-      const responseProducts = response.data.map(i => new ProductResponse(i).returnProduct());
+
+      const mapper = new ResponseToProductMapper();
+      const responseProducts = mapper.mapResponseToProducts(response.data);
+
       this.setState({
         notFound: false,
         loading: false,
@@ -230,7 +234,7 @@ class SearchPage extends Component {
                                   <img alt={item.name} src={item.thumbnailUrl ? item.thumbnailUrl : '/static/images/flyboard.png'} />
                                   <h4>{item.name}</h4>
                                   <span>
-                                    {`from € ${item.rates.day_rate}`}
+                                    {`from € ${item.fromPrice}`}
                                   </span>
                                 </div>
                               </a>
@@ -239,7 +243,6 @@ class SearchPage extends Component {
                               <img alt={item.name} src={item.thumbnailUrl ? item.thumbnailUrl : '/static/images/flyboard.png'} />
                               <h4>{item.name}</h4>
                               <span>
-                                {/* {`from € ${item.rates.day_rate}`} */}
                                 Currently not available
                               </span>
                               <div className="unavailable"></div>

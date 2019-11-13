@@ -136,7 +136,7 @@ class IndexPage extends Component {
                                         <img alt={item.name} src={item.images[0].thumbImageUrl ? item.images[0].thumbImageUrl : '/static/images/flyboard.png'} />
                                         <h4>{item.name}</h4>
                                         {/* <span>
-                                          {`from € ${item.rates.day_rate}`}
+                                          {`from € ${item.fromPrice}`}
                                         </span> */}
                                       </div>
                                     </a>
