@@ -91,9 +91,10 @@ class ContracterInformationForm extends Component {
             streetNumberBlock: this.props.initialValues && this.props.initialValues.streetNumberBlock || '',
             postalCode: this.props.initialValues && this.props.initialValues.postalCode || '',
             country: this.props.initialValues && this.props.initialValues.country || '',
-            terms: false,
-            securityDeposit: false
+            termsAndConditionsConsent: false,
+            securityDepositConsent: false
           }}
+
           onSubmit={this.props.handleSubmit}
         >
           {({ errors, setFieldValue }) => (
@@ -182,8 +183,8 @@ class ContracterInformationForm extends Component {
                 <div className="form-block">
                     <Field
                       component={Checkbox}
-                      name="securityDeposit"
-                      id="securityDeposit"
+                      name="securityDepositConsent"
+                      id="securityDepositConsent"
                       label={'Security deposit will be charged before delivery'}
                     />
                     {" "}
@@ -192,8 +193,8 @@ class ContracterInformationForm extends Component {
                 <div className="form-block">
                     <Field
                       component={Checkbox}
-                      name="terms"
-                      id="terms"
+                      name="termsAndConditionsConsent"
+                      id="termsAndConditionsConsent"
                       label={['I accept ', <a style={{textDecoration: "underline", color: "#00"}} href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>]}
                     />
                     {" "}

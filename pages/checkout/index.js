@@ -357,7 +357,7 @@ class CheckoutPage extends Component {
     if (this.state.paymentMethod === 'CARD') {
       if (this.getOrder() !== null && this.getPaymentIntent() !== null) {
         // UPDATE existing order / payment intent
-        const request = new UpdatedPlaceOrderRequest(this.getOrder(), this.state.products, this.state.contactInformation, this.state.contracterInformation).returnUpdatedOrder();
+        const request = new UpdatedPlaceOrderRequest(this.getOrder(), this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnUpdatedOrder();
         this.setState({ loading: true });
         const response = updateOrderCartItems(request)
           .then((res) => {
@@ -380,7 +380,7 @@ class CheckoutPage extends Component {
           });
       } else {
         // New order/ payment intent
-        const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation).returnOrder();
+        const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnOrder();
         this.setState({ loading: true });
         const response = orderCartItems(request)
           .then((res) => {
@@ -406,30 +406,27 @@ class CheckoutPage extends Component {
       // SecurityDepositConsent
       // TermsAndConditionsConsent
 
-      alert('Show loader, call api send order, and receive betalings kenmerk');
-      // const response = updateOrderCartItems(request)
-      //   .then((res) => {
-      //     if(res.code === 200) {
-      //       this.setState({
-      //         orderFormStep: 4,
-      //         loading: false,
-      //         originalOrder: res.data
-      //       })
-      //       this.setOrder(res.data);
-      //     }
-      //   })
-      //   .catch(err => {
-      //     this.setState({
-      //       loading: false,
-      //       orderFormStep: 3
-      //     })
-      //   });
-
-      this.setState({
-        orderFormStep: 4
-      })
-    }
-
+    // alert('Show loader, call api send order, and receive betalings kenmerk');
+    const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnOrder();
+      this.setState({ loading: true });
+      const response = orderCartItems(request)
+        .then((res) => {
+          if(res.code === 201) {
+            this.setState({
+              orderFormStep: 4,
+              loading: false,
+              originalOrder: res.data
+            })
+            this.setOrder(res.data);
+          }
+        })
+        .catch(err => {
+          this.setState({
+            loading: false,
+            orderFormStep: 3
+          })
+        });
+      }
   }
   handleReady = (element) => {
     this.element = element;
@@ -986,7 +983,7 @@ class CheckoutPage extends Component {
             {this.state.orderFormStep === 4 && this.state.paymentMethod === 'BANK_TRANSFER' &&
               <Fragment>
                 <p>
-                  Show betalings kenmerk en bedank voor de order...
+                  Thank you for your order. Please transfer the fee to the following bank account with payment id <strong>{this.state.originalOrder.orderId}</strong>
                 </p>
                 <button
                   className="button-border fullwidth"
