@@ -1,9 +1,13 @@
 // next.config.js
+
 const withSass = require('@zeit/next-sass')
 const withCSS = require('@zeit/next-css')
 // module.exports = withSass({
 //   cssModules: true
 // })
+module.exports = {
+  distDir: '../dist'
+}
 
 // next.config.js
 module.exports = withCSS(withSass({
