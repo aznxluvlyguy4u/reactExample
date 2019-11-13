@@ -528,11 +528,7 @@ class CheckoutPage extends Component {
     if(item.rates && item.rates.length > 0) {
       return (
         <Fragment>
-          {item.name}
-          <br />
           €{parseFloat(Number(item.rates[0].price) * item.quantity * this.dayCount(item)).toFixed(2)}
-          {/* <br />
-          {item.rates[0].price} * {item.quantity} * {this.dayCount(item)} */}
         </Fragment>
       )
     }
