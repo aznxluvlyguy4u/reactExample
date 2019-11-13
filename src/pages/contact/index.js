@@ -72,7 +72,7 @@ class AboutPage extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-md-7 col-lg-7 col-sm-12">
+              <div className="col-md-8 col-lg-8 col-sm-12">
                 <div className="row">
                   <div className="col-md-4">
                     <img width="100%" alt="Contact" src="static/images/about/Barbara.png" />
@@ -86,10 +86,10 @@ class AboutPage extends Component {
                     </p>
                     <a href="tel:+33 640 62 95 99" className="button-border">+33 640 62 95 99</a>
                   </div>
-                </div>]
+                </div>
               </div>
 
-              <div className="col-md-5 col-lg-5 col-sm-12">
+              <div className="col-md-4 col-lg-4 col-sm-12">
                 {this.state.thankYou === true ?
                   <div>
                     <h3>Thank you</h3>
