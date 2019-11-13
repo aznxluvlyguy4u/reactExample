@@ -71,6 +71,10 @@ class CheckoutPage extends Component {
     }
   }
 
+  formatDate(date) {
+    return moment(date).format('MM.DD.YYYY');
+  }
+
   dayCount(item) {
     const collectionDate = moment(item.period.end).endOf('day');;
     const deliveryDate = moment(item.period.start).startOf('day');
@@ -208,7 +212,7 @@ class CheckoutPage extends Component {
       product.totalCostProducts = productPrice;
     });
 
-    return productPrice + accessoryPrice;
+    return parseFloat((productPrice + accessoryPrice).toFixed(2));
   }
 
   openModal() {
@@ -403,9 +407,6 @@ class CheckoutPage extends Component {
       }
     } else if (this.state.paymentMethod === 'BANK_TRANSFER') {
 
-      // SecurityDepositConsent
-      // TermsAndConditionsConsent
-
     // alert('Show loader, call api send order, and receive betalings kenmerk');
     const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnOrder();
       this.setState({ loading: true });
@@ -428,6 +429,7 @@ class CheckoutPage extends Component {
         });
       }
   }
+
   handleReady = (element) => {
     this.element = element;
   }
@@ -636,12 +638,12 @@ class CheckoutPage extends Component {
                           {this.itemPrice(item)}
                         </div>
                         <div className="column">
-                          <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
+                          <span>{this.formatDate(item.period.start)}</span>
                           <br />
                           <span>{item.location.delivery.name}</span>
                         </div>
                         <div className="column">
-                          <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
+                          <span>{this.formatDate(item.period.end)}</span>
                           <br />
                           <span>{item.location.collection.name}</span>
                         </div>
@@ -686,14 +688,14 @@ class CheckoutPage extends Component {
 
                           <strong>Pick up</strong>
                           <br />
-                          <span>{moment(item.period.start).format('DD.MM.YYYY')}</span>
+                          <span>{this.formatDate(item.period.start)}</span>
                           <br />
                           <span>{item.location.delivery.name}</span>
                           <br />
                           <br />
                           <strong>Return</strong>
                           <br />
-                          <span>{moment(item.period.end).format('DD.MM.YYYY')}</span>
+                          <span>{this.formatDate(item.period.end)}</span>
                           <br />
                           <span>{item.location.collection.name}</span>
                         </div>
@@ -854,7 +856,7 @@ class CheckoutPage extends Component {
                       <h3>Total Rental Fee (excl. VAT)</h3>
                     </div>
                     <div className="column">
-                      <h3>€ {parseFloat(this.calculateTotalPrice().toFixed(2))}</h3>
+                      <h3>€ {this.calculateTotalPrice()}</h3>
                     </div>
                   </div>
                   <div className="row">

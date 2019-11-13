@@ -18,6 +18,10 @@ class SummaryView extends Component {
     this.setState({ dayCount: daycount });
   }
 
+  formatDate(date) {
+    return moment(date).format('MM.DD.YYYY');
+  }
+
   calculateTotalAccessoires(accessories) {
     // const { accessories } = this.props;
     let price = 0;
@@ -74,14 +78,14 @@ class SummaryView extends Component {
             <div className="content-wrapper" />
               <div className="date-wrapper">
                 <div className="date-element">
-                  <span>{this.props.localSearchReducer.search.deliveryDate ? moment(this.props.localSearchReducer.search.deliveryDate).format('DD.MM.YYYY') : null}</span>
+                  <span>{this.props.localSearchReducer.search.deliveryDate ? this.formatDate(this.props.localSearchReducer.search.deliveryDate) : null}</span>
                   <span>{this.props.localSearchReducer.search.deliveryLocation.label ? this.props.localSearchReducer.search.deliveryLocation.value.name : null}</span>
                 </div>
                 <div className="date-element">
                   <img src="/static/images/arrow.png" height="7" width="40" />
                 </div>
                 <div className="date-element">
-                  <span>{this.props.localSearchReducer.search.collectionDate ? moment(this.props.localSearchReducer.search.collectionDate).format('DD.MM.YYYY') : null}</span>
+                  <span>{this.props.localSearchReducer.search.collectionDate ? this.formatDate(this.props.localSearchReducer.search.collectionDate) : null}</span>
                   <span>{this.props.localSearchReducer.search.collectionLocation.label ? this.props.localSearchReducer.search.collectionLocation.value.name : null}</span>
                 </div>
               </div>
