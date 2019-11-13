@@ -1,7 +1,9 @@
 export default class PlaceOrderRequest {
-  constructor(products, contactInformation, contracterInformation) {
+  constructor(products, contactInformation, contracterInformation, paymentMethod) {
+    this.paymentMethod = paymentMethod;
     this.products = products;
-
+    this.securityDepositConsent = contracterInformation.securityDepositConsent;
+    this.termsAndConditionsConsent = contracterInformation.termsAndConditionsConsent;
     this.contactDetails = {
       firstName: contactInformation.firstName,
       surName: contactInformation.surName,
@@ -33,10 +35,11 @@ export default class PlaceOrderRequest {
 
   returnOrder() {
     const obj = {
-      paymentMethod: "CARD",
+      paymentMethod: this.paymentMethod,
       products: this.products,
       yachtName: this.yachtName,
-
+      securityDepositConsent: this.securityDepositConsent,
+      termsAndConditionsConsent: this.termsAndConditionsConsent,
       contactDetails: this.contactDetails,
       contractorDetails: this.contracterDetails,
       message: this.comment,

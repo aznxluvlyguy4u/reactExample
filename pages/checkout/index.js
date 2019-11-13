@@ -18,6 +18,7 @@ import { handlePaymentError } from '../../utils/rest/error/toastHandler';
 import LocalStorageUtil from '../../utils/localStorageUtil';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import StripeForm from '../../components/checkout/StripeForm';
+import PaymentMethodForm from '../../components/checkout/PaymentMethodForm';
 
 import { emptyCart, setCart } from '../../actions/cartActions';
 import Script from 'react-load-script';
@@ -53,7 +54,8 @@ class CheckoutPage extends Component {
       cartUuid: null,
       contactInformation: null,
       contracterInformation: null,
-      paymentIntent: null
+      paymentIntent: null,
+      paymentMethod: null
     };
 
     this.updateProductQuantity = this.updateProductQuantity.bind(this);
@@ -218,7 +220,10 @@ class CheckoutPage extends Component {
   }
 
   closeModal = () => {
-    this.setState({ modalIsOpen: false });
+    this.setState({
+      modalIsOpen: false,
+      orderFormStep: 1
+     });
   }
 
   updateProductQuantity(result) {
@@ -338,57 +343,91 @@ class CheckoutPage extends Component {
 
   handleContracterInformationForm = (values) => {
     this.setState({
-      contracterInformation: values
+      contracterInformation: values,
+      orderFormStep: 3
     })
+  }
 
-    if (this.getOrder() !== null && this.getPaymentIntent() !== null) {
-      // UPDATE existing order / payment intent
-      const request = new UpdatedPlaceOrderRequest(this.getOrder(), this.state.products, this.state.contactInformation, this.state.contracterInformation).returnUpdatedOrder();
-      this.setState({ loading: true });
-      const response = updateOrderCartItems(request)
-        .then((res) => {
-          if(res.code === 200) {
-            this.setState({
-              orderFormStep: 3,
-              loading: false,
-              originalOrder: res.data
-            })
-            this.setOrder(res.data);
-            this.setPaymentIntent(res.data.paymentIntent);
-          }
+  handlePaymentMethod = (values) => {
+    this.setState({
+      paymentMethod: values.paymentMethod.value
+      // loading: true,
+    });
 
-        })
-        .catch(err => {
-          this.setState({
-            loading: false,
-            orderFormStep: 2
+    if (this.state.paymentMethod === 'CARD') {
+      if (this.getOrder() !== null && this.getPaymentIntent() !== null) {
+        // UPDATE existing order / payment intent
+        const request = new UpdatedPlaceOrderRequest(this.getOrder(), this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnUpdatedOrder();
+        this.setState({ loading: true });
+        const response = updateOrderCartItems(request)
+          .then((res) => {
+            if(res.code === 200) {
+              this.setState({
+                orderFormStep: 4,
+                loading: false,
+                originalOrder: res.data
+              })
+              this.setOrder(res.data);
+              this.setPaymentIntent(res.data.paymentIntent);
+            }
+
           })
-        });
-    } else {
-      // New order/ payment intent
-      const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation).returnOrder();
+          .catch(err => {
+            this.setState({
+              loading: false,
+              orderFormStep: 3
+            })
+          });
+      } else {
+        // New order/ payment intent
+        const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnOrder();
+        this.setState({ loading: true });
+        const response = orderCartItems(request)
+          .then((res) => {
+            if(res.code === 201) {
+              this.setState({
+                orderFormStep: 4,
+                loading: false,
+                originalOrder: res.data
+              })
+              this.setOrder(res.data);
+              this.setPaymentIntent(res.data.paymentIntent);
+            }
+          })
+          .catch(err => {
+            this.setState({
+              loading: false,
+              orderFormStep: 3
+            })
+          });
+      }
+    } else if (this.state.paymentMethod === 'BANK_TRANSFER') {
+
+      // SecurityDepositConsent
+      // TermsAndConditionsConsent
+
+    // alert('Show loader, call api send order, and receive betalings kenmerk');
+    const request = new PlaceOrderRequest(this.state.products, this.state.contactInformation, this.state.contracterInformation, this.state.paymentMethod).returnOrder();
       this.setState({ loading: true });
       const response = orderCartItems(request)
         .then((res) => {
           if(res.code === 201) {
             this.setState({
-              orderFormStep: 3,
+              orderFormStep: 4,
               loading: false,
               originalOrder: res.data
             })
             this.setOrder(res.data);
-            this.setPaymentIntent(res.data.paymentIntent);
           }
         })
         .catch(err => {
           this.setState({
             loading: false,
-            orderFormStep: 2
+            orderFormStep: 3
           })
         });
-    }
+      }
   }
-
   handleReady = (element) => {
     this.element = element;
   }
@@ -907,50 +946,78 @@ class CheckoutPage extends Component {
             onRequestClose={this.closeModal}
             style={customStyles}
           >
-          {/* {this.state.orderFormStep} */}
-          {/* {JSON.stringify(this.state.contactInformation)} */}
-          {this.state.orderFormStep === 1 &&
-          <ContactInformationForm
-            initialValues={this.state.contactInformation}
-            cancel={() => {
-              this.closeModal()
-            }}
-            loading={this.state.loading}
-            handleSubmit={this.handleContactInformationForm}
-          />}
+          <div className="order-form">
 
-          {this.state.orderFormStep === 2 &&
-            <ContracterInformationForm
-              initialValues={this.state.contracterInformation}
+            {this.state.orderFormStep === 1 &&
+            <ContactInformationForm
+              initialValues={this.state.contactInformation}
               cancel={() => {
-                this.setState({
-                  orderFormStep: 1
-                })
+                this.closeModal()
               }}
               loading={this.state.loading}
-              handleSubmit={this.handleContracterInformationForm}
-            />
-          }
+              handleSubmit={this.handleContactInformationForm}
+            />}
 
-          {this.state.orderFormStep === 3 &&
-            <StripeProvider stripe={this.state.stripe}>
-              <Elements>
-                <Fragment>
-                  <StripeForm
-                    onReady={this.handleReady}
-                    paymentIntent={this.getPaymentIntent()}
-                    cancel={() => {
-                      this.setState({
-                        orderFormStep: 2
-                      })
-                    }}
-                    handleSubmit={() => {
-                      this.handleStripePayment()
-                    }}
-                  />
-                </Fragment>
-              </Elements>
-            </StripeProvider>}
+            {this.state.orderFormStep === 2 &&
+              <ContracterInformationForm
+                initialValues={this.state.contracterInformation}
+                cancel={() => {
+                  this.setState({
+                    orderFormStep: 1
+                  })
+                }}
+                loading={this.state.loading}
+                handleSubmit={this.handleContracterInformationForm}
+              />
+            }
+
+            {this.state.orderFormStep === 3 &&
+              <PaymentMethodForm
+                handleSubmit={this.handlePaymentMethod}
+              cancel={() => this.setState({
+                orderFormStep: 2
+              })}
+              />
+            }
+
+            {this.state.orderFormStep === 4 && this.state.paymentMethod === 'BANK_TRANSFER' &&
+              <Fragment>
+                <p>
+                  Thank you for your order. Please transfer the fee to the following bank account with payment id <strong>{this.state.originalOrder.orderId}</strong>
+                </p>
+                <button
+                  className="button-border fullwidth"
+                  onClick={
+                    this.closeModal
+                  }>
+                    Close
+                </button>
+              </Fragment>
+
+            }
+
+            {this.state.orderFormStep === 4 && this.state.paymentMethod === 'CARD' &&
+              <StripeProvider stripe={this.state.stripe}>
+                <Elements>
+                  <Fragment>
+                    <StripeForm
+                      onReady={this.handleReady}
+                      paymentIntent={this.getPaymentIntent()}
+                      cancel={() => {
+                        this.setState({
+                          orderFormStep: 3
+                        })
+                      }}
+                      handleSubmit={() => {
+                        this.handleStripePayment()
+                      }}
+                    />
+                  </Fragment>
+                </Elements>
+              </StripeProvider>
+            }
+
+          </div>
 
           </Modal>}
 

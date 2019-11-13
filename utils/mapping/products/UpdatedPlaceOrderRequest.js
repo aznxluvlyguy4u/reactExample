@@ -1,8 +1,12 @@
 
 export default class UpdatedPlaceOrderRequest {
-  constructor(originalRequest, products, contactInformation, contracterInformation) {
+  constructor(originalRequest, products, contactInformation, contracterInformation, paymentMethod) {
+    this.paymentMethod = paymentMethod;
+
     this.products = products;
     this.originalRequest = originalRequest;
+    this.securityDepositConsent = contracterInformation.securityDepositConsent;
+    this.termsAndConditionsConsent = contracterInformation.termsAndConditionsConsent;
     // this.contactDetails = contactInformation;
     // this.contractorDetails = contracterInformation;
     this.contactDetails = {
