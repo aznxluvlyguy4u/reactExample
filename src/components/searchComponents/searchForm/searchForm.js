@@ -44,6 +44,15 @@ class SearchForm extends Component {
     Router.push({ pathname: '/search', query: params });
   }
 
+  handleDateChange = (e) => {
+    if (e.hasOwnProperty('deliveryDate')) {
+      this.props.updateSearchDeliveryDate(e.deliveryDate);
+    }
+    if (e.hasOwnProperty('collectionDate')) {
+      this.props.updateSearchCollectionDate(e.collectionDate);
+    }
+  }
+
   render() {
     return (
       <div>
@@ -125,18 +134,16 @@ class SearchForm extends Component {
                 </div>
                 <Field
                   placeholders={['Date', 'Date']}
-                  onChange={
-                    (e) =>{
-                      if (e.hasOwnProperty('deliveryDate')) {
-                        this.props.updateSearchDeliveryDate(e.deliveryDate);
-                      }
-                      if (e.hasOwnProperty('collectionDate')) {
-                        this.props.updateSearchCollectionDate(e.collectionDate);
-                      }
+                  onChange={(e) => {
+                    if (e.hasOwnProperty('deliveryDate')) {
+                      this.props.updateSearchDeliveryDate(e.deliveryDate);
                     }
-                  }
-                  name="collectionDate" placeholder="Date"
+                    if (e.hasOwnProperty('collectionDate')) {
+                      this.props.updateSearchCollectionDate(e.collectionDate);
+                    }
+                  }}
                   setFieldValue={setFieldValue}
+                  name="collectionDate" placeholder="Date"
                   startDate={this.props.searchReducer.search.deliveryDate}
                   endDate={this.props.searchReducer.search.collectionDate}
                   component={DatePicker} />

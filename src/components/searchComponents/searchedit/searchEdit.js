@@ -51,15 +51,7 @@ class SearchEdit extends Component {
             onSubmit={submitForm || undefined}
           >
             {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting,
               setFieldValue,
-              /* and other goodies */
             }) => (
               <Form>
                 <div className="container">
@@ -80,7 +72,7 @@ class SearchEdit extends Component {
                             component={CustomSelect} />
                         </div>
                         <div className="edit-row">
-                          <label htmlFor="deliveryLocation">Return</label>
+                          <label htmlFor="collectionLocation">Return</label>
                           <Field
                             placeholder="Return"
                             onChange={
