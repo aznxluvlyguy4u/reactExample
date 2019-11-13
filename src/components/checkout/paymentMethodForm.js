@@ -3,7 +3,7 @@ import CustomSelect from '../formComponents/select/customSelect';
 import {
   Formik, Field, Form, ErrorMessage,
 } from 'formik';
-import PaymentMethodFormSchema from './PaymentMethodFormSchema';
+import PaymentMethodFormSchema from './paymentMethodFormSchema';
 
 const options = [
   {value: "CARD", label: "Creditcard"},

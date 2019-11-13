@@ -18,7 +18,7 @@ import { handlePaymentError } from '../../utils/rest/error/toastHandler';
 import LocalStorageUtil from '../../utils/localStorageUtil';
 import {Elements, StripeProvider} from 'react-stripe-elements';
 import StripeForm from '../../components/checkout/StripeForm';
-import PaymentMethodForm from '../../components/checkout/PaymentMethodForm';
+import PaymentMethodForm from '../../components/checkout/paymentMethodForm';
 
 import { emptyCart, setCart } from '../../actions/cartActions';
 import Script from 'react-load-script';
