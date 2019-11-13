@@ -38,7 +38,7 @@ class SearchEdit extends Component {
     const submitForm = this.handleSubmit;
     if (!isEmpty(this.state.locations) && this.props.searchReducer.search) {
       return (
-        <div className="searchedit top">
+        <div className="topSearch">
           <Formik
             validationSchema={validation ? searchEditValidation : undefined}
             enableReinitialize

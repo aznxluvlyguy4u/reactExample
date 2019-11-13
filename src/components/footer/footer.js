@@ -12,6 +12,9 @@ const Footer = () => (
           <li>
             <Link href="/"><a>Explore</a></Link>
           </li>
+          <li>
+            <Link href="https://www.oceanpremium.com/shop/">Shop</Link>
+          </li>
         </ul>
       </div>
       <div className="col-md-4">

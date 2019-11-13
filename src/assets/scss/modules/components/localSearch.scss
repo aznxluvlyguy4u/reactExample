@@ -16,7 +16,7 @@
       padding-right: 20px;
     }
     .other-wrapper{
-      z-index: 4000;
+      z-index: 0;
       @include for-phone-only {
         width:50%;
       }

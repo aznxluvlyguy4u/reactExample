@@ -15,7 +15,6 @@
 }
 
 .form {
-
   border: solid 0.25px #D6D6D6;
   padding: 25px;
   width: 100%;
@@ -62,7 +61,7 @@
   .form-inline{
     justify-content: space-between !important;
     .other-wrapper {
-      z-index: 4000;
+      // z-index: 4000;
       width: 100%;
       margin-top:20px;
       @include for-phone-only {
