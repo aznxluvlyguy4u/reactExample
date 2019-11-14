@@ -21,8 +21,10 @@ class CategoryTiles extends Component {
         <div
           className="category-tile"
         >
-          <img src={item.customFields.publicIconThumbUrl} />
-          <span>{item.name}</span>
+          {item.customFields && item.customFields.publicIconThumbUrl &&
+            <img src={item.customFields.publicIconThumbUrl} />
+          }
+          <span>{item.name && item.name}</span>
         </div>
     </a>
     )
