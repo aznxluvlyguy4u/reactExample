@@ -1,0 +1,30 @@
+.background-wrapper {
+  background-color: black;
+  height: 750px;
+  background-image: url("/static/images/background-image.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-bottom: -630px;
+}
+
+.banner {
+  text-align: center;
+
+  img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    // max-width: 1000px;
+    position:relative;
+    z-index: 1;
+  }
+
+  .yellow-button {
+    margin-top: -95px;
+    margin-left: auto;
+    margin-right: auto;
+    position:relative;
+    z-index: 3;
+
+  }
+}

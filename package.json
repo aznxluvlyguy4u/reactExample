@@ -21,6 +21,7 @@
     "@zeit/next-sass": "^1.0.1",
     "aws-serverless-express": "^3.3.6",
     "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
     "countries-list": "^2.4.2",
     "dotenv": "^7.0.0",

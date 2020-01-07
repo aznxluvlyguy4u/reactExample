@@ -1,0 +1,131 @@
+.transparent {
+  position: absolute;
+  color: $white;
+  @include transition(background-color 300ms linear);
+
+  .cart-icon {
+    background-image: url("/static/images/cart_white.png");
+  }
+
+  a {
+    color: $white;
+  }
+
+  .bm-burger-button {
+    color: white;
+  }
+
+  .mobile-menu {
+    color: black;
+
+    a {
+      color: $black;
+    }
+
+    .cart-icon {
+      background-image: url("/static/images/cart_dark.png");
+    }
+  }
+}
+
+.fixed {
+  // position: absolute;
+  top: 0;
+  // bottom: 0;
+  // right: 0;
+  // left: 0;
+  // height:80px;
+  position: fixed;
+  transform: translate3d(0,0,0);
+  color: $black;
+  background-color: $white;
+  @include transition(background-color 300ms linear);
+  @include box-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
+
+  .cart-icon {
+    background-image: url("/static/images/cart_dark.png");
+  }
+
+  .nav {
+    &.responsive {
+      background-color: white;
+      color: black;
+    }
+  }
+
+  .bm-burger-button {
+    color: black;
+  }
+
+  a {
+    color: $black;
+  }
+}
+
+.mobile-menu {
+  .cart {
+    position: absolute;
+    right: 50px;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  z-index:4001;
+  li {
+    font-weight: lighter;
+  }
+
+  .cart-wrapper {
+    display: flex;
+    align-items: center;
+
+    .cart {
+      width: 60px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .cart-icon {
+      margin-right: 5px;
+      width: 27px;
+      height: 24px;
+      background-size: cover;
+    }
+
+    img {
+      margin-right: 5px;
+    }
+
+    .cart-title {
+      display: inline-block;
+
+      @include for-tablet-portrait-up {
+        display: none;
+      }
+    }
+  }
+
+  .logo-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 70px;
+    width: 75%;
+
+    @include for-tablet-portrait-up {
+      width: 300px;
+    }
+
+    .logo {
+      margin-top: 5px;
+      margin-left: $nav_margin;
+    }
+  }
+}

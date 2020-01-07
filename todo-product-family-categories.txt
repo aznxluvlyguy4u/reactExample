@@ -1,0 +1,46 @@
+Currently the frontend has been reverted to the way it was planned:
+The correct images are shown at the right spots
+
+It seems the images are not uploaded to S3 yet.
+This can be done by following this manual:
+https://bitbucket.org/oceanpremium/ocean-premium-api/wiki/A-Z%20Guide%20to%20prepare%20CurrentRMS%20data%20for%20production
+
+The category images can be added to currentRMS as wel
+
+Frontend
+
+Stappen die Barbara zal moeten doorlopen zijn:
+- Plaatjes toevoegen aan aws (categorie map of iets dergelijks)
+- De plaatjes de zelfde naam geven als de namen in het lijstje met categorieen.
+- De frontend verwijst standaard naar de map en plakt daar de categorie naam aanvast + de extensie van de afbeelding
+- Toon de categorieen die terug komen uit de endpoint
+- Product groepen
+
+https://aws-blabla-/category-name.jpg
+
+productgroups annoteren.
+
+Endpoint die alle product groepen ophaalt.
+
+categorie endpoint maken..
+API haalt alle productgroepen op
+Deze haalt alle (categorie tags) tags op uit die groepen
+Vervolgens maakt hij daar een lijst van en zorgt dat alle dubbele eruit zijn Unieke categorieen
+Vefvolgens draai je de boel om.]
+
+Dus aan categorieen wordt de lijst met productgroepen gehangen die daar aan getagd zijn
+
+Categorie (Fun):
+   - productgroep 1 (Jetski's)
+   - productgroep 2 (Jetlevts)
+   - productgroep 3 (etc)
+
+Categorie (Family):
+   - productgroep 1 (Jetski's)
+   - productgroep 5 (Pools)
+   - productgroep 6 (Water slides)
+
+- Haal alle producten op binnen die product groep.
+
+Wel of niet tonen van een categorie is mogelijk:
+De enige optie om een categorie niet weer te geven is om GEEN product groepen aan de categorie te koppelen.

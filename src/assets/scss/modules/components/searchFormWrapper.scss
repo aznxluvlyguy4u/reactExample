@@ -1,0 +1,22 @@
+.searchform-wrapper {
+  background-color: white;
+  position:relative;
+  padding: 30px;
+  margin-bottom: 100px;
+  @include for-tablet-portrait-up {
+    width: 500px;
+  }
+  @include for-phone-only {
+    width:100%;
+  }
+
+  h1 {
+    font-size: 36px;
+    margin: 0;
+  }
+
+  h3 {
+    font-weight: lighter;
+    font-size: 18px;
+  }
+}
