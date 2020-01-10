@@ -39,7 +39,7 @@ class MyApp extends App {
     const cart =  LocalStorageUtil.getCart()
     if (cart && cart !== "" && cart !== undefined && cart !== null) {
       let filteredItemsInCart = [];
-      if (cart) {
+      if (cart && cart.filter) {
         filteredItemsInCart = cart.filter(item => {
           const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
           if (item && item !== null && item !== undefined && !moment(item.period.start).isBefore(now, 'day')) {
