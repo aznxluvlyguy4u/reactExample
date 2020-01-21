@@ -1,23 +1,27 @@
-import React, { Component, Fragment } from 'react';
-import Default from '../../layouts/default';
-import Link from 'next/link';
-import slugify from 'slugify';
+import React, { Component, Fragment } from "react";
 
-import SearchFormWrapper from '../../components/searchComponents/searchFormWrapper';
-import CategoryTiles from '../../components/category/categoryTiles';
-import { getCategories } from '../../utils/rest/requests/categories';
-import { getFirstProducts } from '../../utils/rest/requests/products';
-import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+import Default from "../../layouts/default";
+import SearchFormWrapper from "../../components/searchComponents/searchFormWrapper";
+import CategoryTiles from "../../components/category/categoryTiles";
+import Banner from "../../components/banner/banner";
+import Tiles from "../../components/tiles/tiles";
 
-const meta = { title: 'OCEAN PREMIUM - Water toys anytime anywhere.', description: 'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts' };
+import { getCategories } from "../../utils/rest/requests/categories";
+import { getFirstProducts } from "../../utils/rest/requests/products";
+import { handleGeneralError } from "../../utils/rest/error/toastHandler";
+
+const meta = {
+  title: "OCEAN PREMIUM - Water toys anytime anywhere.",
+  description:
+    "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
+};
 
 class IndexPage extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       categories: []
-    }
+    };
   }
 
   async componentDidMount() {
@@ -26,9 +30,9 @@ class IndexPage extends Component {
 
   async addProducts() {
     const test = this.state.categories.forEach((category, index) => {
-      category.products = []
+      category.products = [];
       this.loadProducts(category, index);
-    })
+    });
     this.forceUpdate();
   }
 
@@ -38,8 +42,8 @@ class IndexPage extends Component {
         category.products = response.data;
         this.forceUpdate();
       });
-    }, 800 * index )
-  }
+    }, 800 * index);
+  };
 
   async retrieveProducts(categoryId) {
     try {
@@ -77,97 +81,50 @@ class IndexPage extends Component {
           {this.state.categories.map((category, index) => {
             return (
               <Fragment>
-              {index === 1 || index === 3 ?
-
-                <div className="row" key={category+index}>
-                  <div className="col banner">
-
-                    {index === 1 &&
-                      <div>
-                        <img src="https://picsum.photos/1000/230" />
-                        <Link
-                          href="/call-to-action1"
-                          >
-                          <a className="yellow-button">
-                            CALL TO ACTION TEXT 1
-                          </a>
-                        </Link>
-                      </div>
-                    }
-
-                    {index === 3 &&
-                      <div>
-                        <img src="https://picsum.photos/1000/230" />
-                        <Link
-                          href="/call-to-action2"
-                          >
-                          <a className="yellow-button">
-                            CALL TO ACTION TEXT 2
-                          </a>
-                        </Link>
-                      </div>
-                    }
-
-                  </div>
-                </div>
-              :
-              <div className="row" key={category+index}>
-                <div className="col">
+                {index === 0 && (
+                  <Banner
+                    title="One-way Rentals"
+                    subTitle=" Search through hundreds of Water Toys and add them to your trip!"
+                    bannerText="Drop-off and Pick-ups are possible anytime anywhere"
+                    bannerImg="/static/images/banner-image-1.png"
+                  />
+                )}
+                {index === 2 && (
+                  <Banner
+                    title="Explore the Underwater World"
+                    subTitle="A new addition to our collection of toys allows you to
+                   explore the under water world in comfort."
+                    bannerText=" Add a Personal Submiarine to your next Adventure!"
+                    bannerImg="/static/images/banner-image-2.png"
+                  />
+                )}
+                <Tiles category={category} />
+                {index === this.state.categories.length - 1 && (
                   <div className="row">
-                    <div className="col-md-12">
-                      <h2 className="section-title">{category.name}</h2>
-                      <span>Search through hundreds of Water Toys and add them to your trip!</span>
-                    </div>
-                  </div>
-                  <div className="row products">
-                    <div className="col-md-12">
-                      <div className="row">
-                          {category.products && category.products.length > 0 &&
-                            category.products.map((item, index) => {
-                              return (
-                                <div className="col-lg-3 col-md-4 col-sm-6">
-                                  <Link
-                                    key={index}
-                                    href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
-                                    as={`/detail/${item.id}/${slugify(item.name)}`}
-                                  >
-                                    <a>
-                                      <div className="product">
-                                        <img alt={item.name} src={item.images[0].thumbImageUrl ? item.images[0].thumbImageUrl : '/static/images/flyboard.png'} />
-                                        <h4>{item.name}</h4>
-                                        {/* <span>
-                                          {`from € ${item.fromPrice}`}
-                                        </span> */}
-                                      </div>
-                                    </a>
-                                  </Link>
-                                </div>
-                              )
-                            })
-                          }
-                        </div>
-                        < div className="row">
-                          <div className="col">
-                            <a href={`/search?category=${category.id}`} className="showmore">
-                              Show More &gt;
-                            </a>
-                          </div>
+                    <div className="col banner">
+                      <div className="grid">
+                        <h2 className="banner-left-title">
+                          Leaders in Water Toy Rentals
+                        </h2>
+                        <div>
+                          With charter clients today often confirming their
+                          bookings last minute it can be difficult to ensure
+                          that the right water toys are available on-board. A
+                          fast response and availability at short notice are two
+                          of the qualities we pride ourselves in to make your
+                          life easier.
                         </div>
                       </div>
+                      <img src="/static/images/banner-image-3.png" />
                     </div>
-                </div>
-              </div> }
-
+                  </div>
+                )}
               </Fragment>
-
-              )
-
-          })
-        }
-
+            );
+          })}
         </div>
       </Default>
-    )
+    );
   }
 }
 

@@ -1,48 +1,49 @@
-@import './_variables';
-@import './_mixins';
-@import './_fonts';
-@import './_icons';
+@import "./_variables";
+@import "./_mixins";
+@import "./_fonts";
+@import "./_icons";
 
 // defaults
-@import '_defaults';
+@import "_defaults";
 
 // External libs
-@import '~react-dates/lib/css/_datepicker.css';
+@import "~react-dates/lib/css/_datepicker.css";
 
 // Modules
-@import 'modules/components/datepicker';
-@import 'modules/components/categoryTiles';
-@import 'modules/components/checkoutitem';
-@import 'modules/components/finalcheckout';
-@import 'modules/components/footer';
-@import 'modules/components/modal';
-@import 'modules/components/orderform';
-@import 'modules/components/selectionoverview';
-@import 'modules/components/select';
-@import 'modules/components/header';
-@import 'modules/components/menuContainer';
-@import 'modules/components/searchInput';
-@import 'modules/components/phonenumbers';
-@import 'modules/components/topSearch';
-@import 'modules/components/searchForm';
-@import 'modules/components/searchFormWrapper';
-@import 'modules/components/signup';
-@import 'modules/components/localSearch';
+@import "modules/components/datepicker";
+@import "modules/components/categoryTiles";
+@import "modules/components/banner";
+@import "modules/components/tiles";
+@import "modules/components/checkoutitem";
+@import "modules/components/finalcheckout";
+@import "modules/components/footer";
+@import "modules/components/modal";
+@import "modules/components/orderform";
+@import "modules/components/selectionoverview";
+@import "modules/components/select";
+@import "modules/components/header";
+@import "modules/components/menuContainer";
+@import "modules/components/searchInput";
+@import "modules/components/phonenumbers";
+@import "modules/components/topSearch";
+@import "modules/components/searchForm";
+@import "modules/components/searchFormWrapper";
+@import "modules/components/signup";
+@import "modules/components/localSearch";
 
 // Pages
-@import 'modules/pages/checkout';
-@import 'modules/pages/contact';
-@import 'modules/pages/detail';
-@import 'modules/pages/index';
-
+@import "modules/pages/checkout";
+@import "modules/pages/contact";
+@import "modules/pages/detail";
+@import "modules/pages/index";
 
 // Override stripe form elements
 .StripeElement {
   box-sizing: border-box !important;
   font-family: "Tyros Pro" !important;
   width: 100% !important;
-  border: 2px solid #D3D3D3 !important;
-  color: #19303B !important;
+  border: 2px solid #d3d3d3 !important;
+  color: #19303b !important;
   padding: 10px !important;
 
   &.is-invalid {
@@ -78,7 +79,7 @@
   display: block;
   align-items: center;
   justify-content: center;
-  max-width:320px;
+  max-width: 320px;
 
   &:hover {
     color: #fff;
@@ -102,11 +103,12 @@ span.main-title-price {
 }
 
 h2.section-title {
-  margin-bottom:1px;
+  margin-bottom: 1px;
 }
 
 .first-carousel {
   margin-top: 60px;
+  margin-bottom: 50px;
 }
 
 .similar-toys {
@@ -114,21 +116,21 @@ h2.section-title {
 }
 
 .banner {
-  margin-bottom: 80px;
+  height: 100%;
 }
 
 .products {
-  margin-bottom: 120px;
-  margin-top : 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 
   div[class^="col-"] {
-    margin-bottom: 80px;
+    margin-bottom: 20px;
   }
 
   .product {
     width: 100%;
     height: 100%;
-    min-height: 100px;
+    min-height: 150px;
     position: relative;
     top: 0px;
     left: 0px;
@@ -148,15 +150,17 @@ h2.section-title {
 
     img {
       width: 100%;
-      height: 180px;
+      max-width: 319px;
+      height: 214px;
       object-fit: cover;
       z-index: 10;
+      border-radius: 5px;
     }
 
     h4 {
       margin-top: 4px;
       display: block;
-      margin-bottom:2px;
+      margin-bottom: 2px;
       position: relative;
       z-index: 10;
       top: 0px;
@@ -197,4 +201,26 @@ h2.section-title {
 .order-form {
   min-width: 320px;
   max-width: 350px;
+}
+
+@media (max-width: 992px) {
+  .products {
+    .product {
+      img {
+        max-width: 100%;
+        height: 214px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .products {
+    .product {
+      img {
+        max-width: 100%;
+        height: 214px;
+      }
+    }
+  }
 }

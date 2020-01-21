@@ -1,7 +1,8 @@
-import Link from 'next/link';
-import Carousel from 'nuka-carousel';
-import React, { Component } from 'react';
-
+import Link from "next/link";
+import Carousel from "nuka-carousel";
+import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 class CategoryTiles extends Component {
   constructor(props) {
@@ -10,27 +11,13 @@ class CategoryTiles extends Component {
     this.useWindowWidth = this.useWindowWidth.bind(this);
   }
 
-  async componentDidMount() {
-    window.addEventListener('resize', this.useWindowWidth);
+  componentDidMount() {
+    window.addEventListener("resize", this.useWindowWidth);
     this.useWindowWidth();
   }
 
-  category(item, index) {
-    return (
-      <a href={`/search?category=${item.id}`} key={index}>
-        <div
-          className="category-tile"
-        >
-          {item.customFields && item.customFields.publicIconThumbUrl &&
-            <img src={item.customFields.publicIconThumbUrl} />
-          }
-          <span>{item.name && item.name}</span>
-        </div>
-    </a>
-    )
-  }
   componentWillUnmount() {
-    window.removeEventListener('resize', this.useWindowWidth);
+    window.removeEventListener("resize", this.useWindowWidth);
   }
 
   useWindowWidth() {
@@ -38,6 +25,26 @@ class CategoryTiles extends Component {
     return window.innerWidth;
   }
 
+  category(item, index) {
+    return (
+      <a href={`/search?category=${item.id}`} key={index}>
+        <div className="category-tile">
+          <img
+            src={
+              item.productGroups[0].customFields
+                ? item.productGroups[0].customFields.publicIconThumbUrl
+                : "/static/images/flyboard.png"
+            }
+          />
+          <span>{item.name && this.toUpperCase(item.name)}</span>
+        </div>
+      </a>
+    );
+  }
+
+  toUpperCase(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   render() {
     const { categories, width } = this.state;
@@ -46,26 +53,48 @@ class CategoryTiles extends Component {
         <div className="container first-carousel">
           <div className="row">
             <div className="col">
-            <h2>Something for everyone</h2>
+              <h2>Something for Everyone</h2>
               <Carousel
+                className="category-tile"
                 autoplay
                 autoplayInterval={2000}
                 cellSpacing={20}
                 dragging
                 slidesToScroll={1}
-                slidesToShow={Math.round(width / 250)}
+                slidesToShow={5}
                 wrapAround
-                renderBottomCenterControls={() => {}}
+                renderCenterLeftControls={({ previousSlide }) => (
+                  <div className="left-arrow">
+                    <img
+                      src="/static/images/angle-left.png"
+                      className="icon"
+                      onClick={previousSlide}
+                    />
+                  </div>
+                )}
+                renderCenterRightControls={({ nextSlide }) => (
+                  <div className="right-arrow">
+                    <img
+                      src="/static/images/angle-right.png"
+                      className="icon"
+                      onClick={nextSlide}
+                    />
+                  </div>
+                )}
+                renderBottomCenterControls={({ currentSlide }) =>
+                  (currentSlide = null)
+                }
               >
-                { this.props.categories.map((category, index) => {
-                    return this.category(category, index)
+                {this.props.categories.map((category, index) => {
+                  return this.category(category, index);
                 })}
               </Carousel>
             </div>
           </div>
         </div>
       );
-    } return null;
+    }
+    return null;
   }
 }
 
