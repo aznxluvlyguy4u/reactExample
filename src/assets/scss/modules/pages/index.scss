@@ -7,37 +7,8 @@
   margin-bottom: -630px;
 }
 
-.arrow-icon {
-  width: 20px;
-  height: 50px;
-}
-
-.right-arrow {
-  position: relative;
-  left: 80px;
-}
-
-.left-arrow {
-  position: relative;
-  left: -80px;
-}
-
-.right-arrow .icon {
-  //transform: rotate(90deg);
-  object-fit: contain;
-  height: 100px;
-  width: 80px;
-  cursor: pointer;
-}
-
-.left-arrow .icon {
-  //transform: rotate(-90deg);
-  object-fit: contain;
-  height: 100px;
-  width: 80px;
-  cursor: pointer;
-}
-
-.category-tile {
-  min-height: 180px;
+@media (max-width: 678px) {
+  .background-wrapper {
+    height: 132vh;
+  }
 }

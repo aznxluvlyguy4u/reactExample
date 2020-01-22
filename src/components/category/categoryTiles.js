@@ -1,8 +1,5 @@
-import Link from "next/link";
 import Carousel from "nuka-carousel";
 import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 class CategoryTiles extends Component {
   constructor(props) {
@@ -54,41 +51,43 @@ class CategoryTiles extends Component {
           <div className="row">
             <div className="col">
               <h2>Something for Everyone</h2>
-              <Carousel
-                className="category-tile"
-                autoplay
-                autoplayInterval={2000}
-                cellSpacing={20}
-                dragging
-                slidesToScroll={1}
-                slidesToShow={5}
-                wrapAround
-                renderCenterLeftControls={({ previousSlide }) => (
-                  <div className="left-arrow">
-                    <img
-                      src="/static/images/angle-left.png"
-                      className="icon"
-                      onClick={previousSlide}
-                    />
-                  </div>
-                )}
-                renderCenterRightControls={({ nextSlide }) => (
-                  <div className="right-arrow">
-                    <img
-                      src="/static/images/angle-right.png"
-                      className="icon"
-                      onClick={nextSlide}
-                    />
-                  </div>
-                )}
-                renderBottomCenterControls={({ currentSlide }) =>
-                  (currentSlide = null)
-                }
-              >
-                {this.props.categories.map((category, index) => {
-                  return this.category(category, index);
-                })}
-              </Carousel>
+              <div className="slider-container">
+                <Carousel
+                  className="category-tile"
+                  autoplay
+                  autoplayInterval={2000}
+                  cellSpacing={20}
+                  dragging
+                  slidesToScroll={1}
+                  slidesToShow={5}
+                  wrapAround
+                  renderCenterLeftControls={({ previousSlide }) => (
+                    <div className="left-arrow">
+                      <img
+                        src="/static/images/angle-left.png"
+                        className="icon"
+                        onClick={previousSlide}
+                      />
+                    </div>
+                  )}
+                  renderCenterRightControls={({ nextSlide }) => (
+                    <div className="right-arrow">
+                      <img
+                        src="/static/images/angle-right.png"
+                        className="icon"
+                        onClick={nextSlide}
+                      />
+                    </div>
+                  )}
+                  renderBottomCenterControls={({ currentSlide }) =>
+                    (currentSlide = null)
+                  }
+                >
+                  {this.props.categories.map((category, index) => {
+                    return this.category(category, index);
+                  })}
+                </Carousel>
+              </div>
             </div>
           </div>
         </div>

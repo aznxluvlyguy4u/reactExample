@@ -18,9 +18,9 @@ class Banner extends Component {
         <div className="row">
           <div className="col banner">
             <div className="banner-container">
-              <h2 className="banner-text">
+              <p className="banner-text">
               {this.props.bannerText}
-              </h2>
+              </p>
               <div className="img-container">
                 <img src={this.props.bannerImg} />
               </div>
