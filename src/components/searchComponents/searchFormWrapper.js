@@ -4,7 +4,7 @@ import SearchForm from './searchForm/searchForm';
 export default class SearchFormWrapper extends Component {
   render() {
     return (
-      <div className="container">
+      <div className="container form-wrapper">
         <div className="row">
           <div className="col">
             <div className="searchform-wrapper">
