@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from "react";
+import classnames from "classnames";
+import { scroller } from "react-scroll";
 
 import Default from "../../layouts/default";
 import SearchFormWrapper from "../../components/searchComponents/searchFormWrapper";
@@ -20,30 +22,39 @@ class IndexPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      categories: []
+      categories: [],
+      visible: false
     };
   }
 
   async componentDidMount() {
     await this.retrieveCategories();
+    window.addEventListener("scroll", this.handleScroll);
   }
 
-  async addProducts() {
-    const test = this.state.categories.forEach((category, index) => {
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  handleScroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    let visible;
+    if (currentScrollPos == 0) {
+      visible = false;
+    } else {
+      visible = true;
+    }
+    this.setState({
+      visible
+    });
+  };
+
+  addProducts() {
+    this.state.categories.forEach((category, index) => {
       category.products = [];
-      this.loadProducts(category, index);
     });
     this.forceUpdate();
   }
-
-  loadProducts = (category, index) => {
-    setTimeout(() => {
-      const test = getFirstProducts(category.id).then(response => {
-        category.products = response.data;
-        this.forceUpdate();
-      });
-    }, 800 * index);
-  };
 
   async retrieveProducts(categoryId) {
     try {
@@ -70,11 +81,39 @@ class IndexPage extends Component {
     }
   }
 
+  scrollTo() {
+    scroller.scrollTo("scroll-to-element", {
+      duration: 500,
+      delay: 0,
+      smooth: "easeInOutQuart"
+    });
+  }
+
   render() {
     return (
-      <Default meta={meta}>
-        <div className="background-wrapper"></div>
-        <SearchFormWrapper />
+      <Default meta={meta} ref={this.pageRef}>
+        <div className="background-wrapper">
+          <div className="background"></div>
+          <div
+            className={classnames("scroll-down-circle", {
+              "display-none": !this.state.visible
+            })}
+          >
+            <img src="/static/images/Ellipse 2.png" />
+          </div>
+          <div
+            className={classnames("scroll-down-arrow", {
+              "display-none": !this.state.visible
+            })}
+          >
+            <img
+              onClick={() => this.scrollTo()}
+              src="/static/images/Vector 9.png"
+            />
+          </div>
+          <SearchFormWrapper />
+        </div>
+        <div name="scroll-to-element"></div>
         <CategoryTiles categories={this.state.categories} />
 
         <div className="container">
@@ -98,15 +137,15 @@ class IndexPage extends Component {
                     bannerImg="/static/images/banner-image-2.png"
                   />
                 )}
-                <Tiles category={category} />
+                <Tiles category={category} subHeading={true} />
                 {index === this.state.categories.length - 1 && (
                   <div className="row">
                     <div className="col banner">
                       <div className="grid">
-                        <h2 className="banner-left-title">
+                        <h2 className="banner-left-title heading">
                           Leaders in Water Toy Rentals
                         </h2>
-                        <div>
+                        <div className="banner-right-text">
                           With charter clients today often confirming their
                           bookings last minute it can be difficult to ensure
                           that the right water toys are available on-board. A

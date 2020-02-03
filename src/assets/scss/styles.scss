@@ -36,6 +36,8 @@
 @import "modules/pages/contact";
 @import "modules/pages/detail";
 @import "modules/pages/index";
+@import "modules/pages/category";
+@import "modules/pages/product-group.scss";
 
 // Override stripe form elements
 .StripeElement {
@@ -104,11 +106,7 @@ span.main-title-price {
 
 h2.section-title {
   margin-bottom: 1px;
-}
-
-.first-carousel {
-  margin-top: 60px;
-  margin-bottom: 50px;
+  overflow: hidden;
 }
 
 .similar-toys {

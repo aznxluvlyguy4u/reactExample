@@ -1,22 +1,22 @@
-import { isEmpty } from 'lodash';
-import moment from 'moment';
-import Link from 'next/link';
-import Router from 'next/router';
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
-import slugify from 'slugify';
-import { updateSearch, updateSearchObject } from '../../actions/searchActions';
-import { updateLocalSearch } from '../../actions/localSearchActions';
-import Loader from '../../components/loader';
-import Pagination from '../../components/pagination';
-import SearchEdit from '../../components/searchComponents/searchedit/searchEdit';
-import Default from '../../layouts/default';
-import Product from '../../utils/mapping/products/Product';
-import { CreateQueryParams } from '../../utils/queryparams';
-import { getProducts } from '../../utils/rest/requests/products';
-import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+import { isEmpty } from "lodash";
+import moment from "moment";
+import Link from "next/link";
+import Router from "next/router";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import slugify from "slugify";
+import { updateSearch, updateSearchObject } from "../../actions/searchActions";
+import { updateLocalSearch } from "../../actions/localSearchActions";
+import Loader from "../../components/loader";
+import Pagination from "../../components/pagination";
+import SearchEdit from "../../components/searchComponents/searchedit/searchEdit";
+import Default from "../../layouts/default";
+import Product from "../../utils/mapping/products/Product";
+import { CreateQueryParams } from "../../utils/queryparams";
+import { getProducts } from "../../utils/rest/requests/products";
+import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 
-import ResponseToProductMapper from '../../utils/mapping/products/ResponseToProductMapper';
+import ResponseToProductMapper from "../../utils/mapping/products/ResponseToProductMapper";
 class SearchPage extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +29,10 @@ class SearchPage extends Component {
       locations: [],
       searchUpdated: false
     };
-    this.meta = { title: 'Search | OCEAN PREMIUM - Water toys Anytime Anywhere', description: 'Index description' };
+    this.meta = {
+      title: "Search | OCEAN PREMIUM - Water toys Anytime Anywhere",
+      description: "Index description"
+    };
     this.counter = 0;
     this.mergeObj = this.mergeObj.bind(this);
   }
@@ -37,12 +40,18 @@ class SearchPage extends Component {
   static async getInitialProps({ query }) {
     const obj = query;
     if (query.keyword === undefined) {
-      obj.keyword = '';
+      obj.keyword = "";
     }
-    if (query.deliveryDate !== null && !moment(query.deliveryDate, moment.ISO_8601).isValid()) {
+    if (
+      query.deliveryDate !== null &&
+      !moment(query.deliveryDate, moment.ISO_8601).isValid()
+    ) {
       obj.deliveryDate = null;
     }
-    if (query.collectionDate !== null && !moment(query.collectionDate, moment.ISO_8601).isValid()) {
+    if (
+      query.collectionDate !== null &&
+      !moment(query.collectionDate, moment.ISO_8601).isValid()
+    ) {
       obj.collectionDate = null;
     }
     if (query.category !== null && !Number.isInteger(query.category)) {
@@ -54,116 +63,148 @@ class SearchPage extends Component {
     if (query.collectionLocation !== null && isNaN(query.collectionLocation)) {
       obj.collectionLocation = null;
     }
+    debugger;
     return {
       keyword: decodeURIComponent(obj.keyword),
       category_id: obj.category,
       deliveryLocation: obj.deliveryLocation,
       collectionLocation: obj.collectionLocation,
       deliveryDate: obj.deliveryDate,
-      collectionDate: obj.collectionDate,
+      collectionDate: obj.collectionDate
     };
   }
 
-  getHtml = (products) => {
-
-  }
+  getHtml = products => {};
 
   async componentDidMount() {
-    const {
-      keyword,
-      deliveryLocation,
-      collectionLocation,
-    } = this.props;
+    const { keyword, deliveryLocation, collectionLocation } = this.props;
 
-    if (keyword !== '') {
-      this.meta = { title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`, description: 'Index description' };
+    if (keyword !== "") {
+      this.meta = {
+        title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`,
+        description: "Index description"
+      };
     }
 
     // if query parameters have been modified by user
     // (keyword === '' && category_id) || (keyword === '' && deliveryLocation) &&
-    if (deliveryLocation !== '' && collectionLocation !== '') {
+    if (deliveryLocation !== "" && collectionLocation !== "") {
       this.setState({ notFound: false });
-      await this.getProducts('update');
+      await this.getProducts("update");
     } else {
       this.setState({ notFound: true, loading: false });
     }
   }
 
   async componentDidUpdate(prevProps) {
-
     const {
       keyword,
       deliveryLocation,
       collectionLocation,
       collectionDate,
       deliveryDate,
-      category_id,
+      category_id
     } = this.props;
 
     // if locations are in memory retrieve the locations by
     // id and put the search query in store
-    if(this.props.locationReducer.selectboxLocations.length > 0 && !this.state.searchUpdated && deliveryLocation !== '' && collectionLocation !== '') {
+    if (
+      this.props.locationReducer.selectboxLocations.length > 0 &&
+      !this.state.searchUpdated &&
+      deliveryLocation !== "" &&
+      collectionLocation !== ""
+    ) {
       try {
-
         let search = {
           keyword,
           collectionDate,
           deliveryDate
+        };
+
+        if (deliveryLocation !== "" && deliveryLocation !== null) {
+          search.deliveryLocation = this.props.locationReducer.selectboxLocations.find(
+            item => item.id === Number(deliveryLocation)
+          );
         }
 
-        if (deliveryLocation !== '' && deliveryLocation !== null) {
-          search.deliveryLocation = this.props.locationReducer.selectboxLocations.find(item => item.id === Number(deliveryLocation));
-        }
-
-        if (collectionLocation !== '' && collectionLocation !== null) {
-          search.collectionLocation = this.props.locationReducer.selectboxLocations.find(item => item.id === Number(collectionLocation));
+        if (collectionLocation !== "" && collectionLocation !== null) {
+          search.collectionLocation = this.props.locationReducer.selectboxLocations.find(
+            item => item.id === Number(collectionLocation)
+          );
         }
 
         this.props.updateSearch(search);
         this.setState({
           searchUpdated: true
-        })
+        });
       } catch (error) {
         handleGeneralError(error);
       }
     }
 
-    if (prevProps.keyword !== keyword || prevProps.collectionDate !== collectionDate || prevProps.deliveryDate !== deliveryDate || prevProps.collectionLocation !== collectionLocation || prevProps.deliveryLocation !== deliveryLocation) {
+    if (
+      prevProps.keyword !== keyword ||
+      prevProps.collectionDate !== collectionDate ||
+      prevProps.deliveryDate !== deliveryDate ||
+      prevProps.collectionLocation !== collectionLocation ||
+      prevProps.deliveryLocation !== deliveryLocation
+    ) {
       this.setState({ products: [], current_page: 0, total_page_count: 0 });
       // if query parameters have been modified by user
-      if (keyword === '' || category_id === '', deliveryLocation === '' || collectionLocation === '') {
+      if (
+        (keyword === "" || category_id === "",
+        deliveryLocation === "" || collectionLocation === "")
+      ) {
         this.setState({ notFound: true, loading: false });
       } else {
         this.setState({ notFound: false });
-        await this.getProducts('update');
+        await this.getProducts("update");
       }
     }
   }
 
   async getProducts(type) {
     const {
-      category_id, keyword, deliveryLocation, collectionLocation, collectionDate, deliveryDate,
+      category_id,
+      keyword,
+      deliveryLocation,
+      collectionLocation,
+      collectionDate,
+      deliveryDate
     } = this.props;
 
     let { current_page, products } = this.state;
     try {
-      if (type === 'update') {
+      if (type === "update") {
         current_page = 0;
       }
       this.setState({ loading: true, notFound: false });
-      const response = await getProducts(keyword, category_id, deliveryLocation, collectionLocation, deliveryDate, collectionDate, current_page);
-
+      const response = await getProducts(
+        keyword,
+        category_id,
+        deliveryLocation,
+        collectionLocation,
+        deliveryDate,
+        collectionDate,
+        current_page
+      );
       const mapper = new ResponseToProductMapper();
       const responseProducts = mapper.mapResponseToProducts(response.data);
 
       this.setState({
         notFound: false,
         loading: false,
-        products: type === 'append' ? [...products, ...responseProducts] : responseProducts,
-        total_page_count: Math.ceil(response.meta.totalRowCount / response.meta.perPage),
-        current_page: response.meta.page,
+        products:
+          type === "append"
+            ? [...products, ...responseProducts]
+            : responseProducts,
+        total_page_count: Math.ceil(
+          response.meta.totalRowCount / response.meta.perPage
+        ),
+        current_page: response.meta.page
       });
     } catch (error) {
+      debugger;
       this.setState({ loading: false });
       if (error.code === 404) {
         this.setState({ notFound: true });
@@ -175,13 +216,13 @@ class SearchPage extends Component {
   }
 
   async getMoreProducts() {
-    await this.getProducts('append');
+    await this.getProducts("append");
   }
 
   mergeObj(obj) {
     this.props.updateSearchObject(this.props.searchReducer.search, obj);
     const params = CreateQueryParams(this.props.searchReducer.search);
-    Router.push({ pathname: '/search', query: params });
+    Router.push({ pathname: "/search", query: params });
   }
 
   render() {
@@ -190,7 +231,7 @@ class SearchPage extends Component {
       loading,
       notFound,
       total_page_count,
-      current_page,
+      current_page
     } = this.state;
 
     return (
@@ -204,18 +245,20 @@ class SearchPage extends Component {
           </div>
           <div className="row">
             <div className="col">
+              {notFound === true ? (
+                <h2>No results found for your search query</h2>
+              ) : null}
 
-              {notFound === true ? <h2>No results found for your search query</h2> : null}
-
-              {isEmpty(products) ?
-                null
-              :
+              {isEmpty(products) ? null : (
                 <Fragment>
                   <div className="row">
                     <div className="col">
                       <div className="searchresult-title">
                         <h2 className="section-title">Matching Water Toys</h2>
-                        <span>Search through hundreds of Water Toys and add them to your trip!</span>
+                        <span>
+                          Search through hundreds of Water Toys and add them to
+                          your trip!
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -223,34 +266,46 @@ class SearchPage extends Component {
                     {products.map((item, index) => {
                       return (
                         <div className="col-lg-3 col-md-4 col-sm-6">
-                          {item.available ?
+                          {item.available ? (
                             <Link
                               key={index}
-                              href={`/detail?id=${item.id}&slug=${slugify(item.name)}`}
+                              href={`/detail?id=${item.id}&slug=${slugify(
+                                item.name
+                              )}`}
                               as={`/detail/${item.id}/${slugify(item.name)}`}
                             >
                               <a>
                                 <div className="product">
-                                  <img alt={item.name} src={item.thumbnailUrl ? item.thumbnailUrl : '/static/images/flyboard.png'} />
+                                  <img
+                                    alt={item.name}
+                                    src={
+                                      item.thumbnailUrl
+                                        ? item.thumbnailUrl
+                                        : "/static/images/flyboard.png"
+                                    }
+                                  />
                                   <h4>{item.name}</h4>
-                                  <span>
-                                    {`from € ${item.fromPrice}`}
-                                  </span>
+                                  <span>{`from € ${item.fromPrice}`}</span>
                                 </div>
                               </a>
-                            </Link> :
+                            </Link>
+                          ) : (
                             <div className="product">
-                              <img alt={item.name} src={item.thumbnailUrl ? item.thumbnailUrl : '/static/images/flyboard.png'} />
+                              <img
+                                alt={item.name}
+                                src={
+                                  item.thumbnailUrl
+                                    ? item.thumbnailUrl
+                                    : "/static/images/flyboard.png"
+                                }
+                              />
                               <h4>{item.name}</h4>
-                              <span>
-                                Currently not available
-                              </span>
+                              <span>Currently not available</span>
                               <div className="unavailable"></div>
-
                             </div>
-                          }
+                          )}
                         </div>
-                      )
+                      );
                     })}
                   </div>
                   <div className="row">
@@ -259,7 +314,7 @@ class SearchPage extends Component {
                     </div>
                   </div>
                 </Fragment>
-              }
+              )}
               {loading ? <Loader /> : null}
             </div>
           </div>
@@ -276,8 +331,7 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
   };
 };
 
-export default connect(
-  mapStateToProps,{
+export default connect(mapStateToProps, {
   updateSearch,
   updateSearchObject,
   updateLocalSearch

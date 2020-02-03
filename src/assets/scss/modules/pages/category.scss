@@ -1,0 +1,48 @@
+.category-background {
+  position: relative;
+  top: 70px;
+  min-height: 512px;
+  width: 100%;
+  background-color: black;
+  background-image: url("/static/images/static-category-img.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.category-text {
+  position: absolute;
+  top: 150px;
+  font-size: x-large;
+  font-weight: 400;
+  width: 43%;
+  margin-left: 10%;
+  color: white !important;
+}
+
+.tiles {
+  position: relative;
+  top: 100px;
+}
+
+@media (max-width: 768px) {
+  .category-background {
+    position: relative;
+    top: 70px;
+    min-height: 30vh;
+    width: 100%;
+    background-color: black;
+    background-image: url("/static/images/static-category-img.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .category-text {
+    position: absolute;
+    top: 100px;
+    font-size: small;
+    font-weight: 400;
+    width: 60%;
+    margin-left: 10%;
+    color: white !important;
+  }
+}
