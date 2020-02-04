@@ -87,17 +87,17 @@ class CategoryPage extends Component {
             <h1 style={{ color: "white" }}>Extreme Water Toy Rentals</h1>
             <h3>Largest range of water toys for the active and daring</h3>
           </div>
-          <div style={{ position: "relative", top: "70px" }}>
+          <div>
             <div
               className={classnames("scroll-down-circle", {
-                "display-none": !this.state.visible
+                "display-none": this.state.visible
               })}
             >
               <img src="/static/images/Ellipse 2.png" />
             </div>
             <div
               className={classnames("scroll-down-arrow", {
-                "display-none": !this.state.visible
+                "display-none": this.state.visible
               })}
             >
               <img
