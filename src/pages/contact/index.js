@@ -67,12 +67,8 @@ class AboutPage extends Component {
           </div>
           <div className="container">
             <div className="row">
-              <div className="col-lg-12">
-                <h1 className="main-title">Contact Us</h1>
-              </div>
-            </div>
-            <div className="row">
               <div className="col-md-8 col-lg-8 col-sm-12">
+                <h1 className="main-title">Contact Us</h1>
                 <div className="row">
                   <div className="col-md-4">
                     <img width="100%" alt="Contact" src="static/images/about/Barbara.png" />
@@ -90,6 +86,7 @@ class AboutPage extends Component {
               </div>
 
               <div className="col-md-4 col-lg-4 col-sm-12">
+                <h1 className="main-title">Contact Form</h1>
                 {this.state.thankYou === true ?
                   <div>
                     <h3>Thank you</h3>
