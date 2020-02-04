@@ -57,8 +57,8 @@ class Tiles extends Component {
                                   <img
                                     alt={item.name}
                                     src={
-                                      item.customFields
-                                        ? item.customFields.publicIconThumbUrl
+                                      item.imageThumbnail
+                                        ? item.imageThumbnail.url
                                         : "/static/images/flyboard.png"
                                     }
                                   />

@@ -9,7 +9,7 @@
 // External libs
 @import "~react-dates/lib/css/_datepicker.css";
 
-// Modules
+// Components
 @import "modules/components/datepicker";
 @import "modules/components/categoryTiles";
 @import "modules/components/banner";
@@ -30,6 +30,7 @@
 @import "modules/components/searchFormWrapper";
 @import "modules/components/signup";
 @import "modules/components/localSearch";
+@import "modules/components/product-tiles.scss";
 
 // Pages
 @import "modules/pages/checkout";

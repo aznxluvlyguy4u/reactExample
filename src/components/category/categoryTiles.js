@@ -44,7 +44,7 @@ class CategoryTiles extends Component {
             <img
               src={
                 item.images.length
-                  ? item.images[0].url
+                  ? item.imageThumbnail.url
                   : "/static/images/flyboard.png"
               }
             />

@@ -51,9 +51,20 @@ export function getProducts(
   }).then(handleRestResponse);
 }
 
-export function getFirstProducts(category) {
+// export function getFirstProducts(category) {
+//   const per_page = 8;
+//   const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_id_eq]=${category}&?page=1&per_page=${per_page}`;
+//   return fetch(url, {
+//     method: "GET",
+//     headers: {
+//       Accept: "application/json"
+//     }
+//   }).then(handleRestResponse);
+// }
+
+export function getGroupByCateogryId(categoryId) {
   const per_page = 8;
-  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_id_eq]=${category}&?page=1&per_page=${per_page}`;
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/groups?q[category_ids_cont]=${categoryId}`;
   return fetch(url, {
     method: "GET",
     headers: {
@@ -62,20 +73,9 @@ export function getFirstProducts(category) {
   }).then(handleRestResponse);
 }
 
-export function getByGroupId(prodcut_group_id) {
+export function getByGroupId(productGroupId) {
   const per_page = 8;
-  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/groups?q[category_ids_cont]=${prodcut_group_id}`;
-  return fetch(url, {
-    method: "GET",
-    headers: {
-      Accept: "application/json"
-    }
-  }).then(handleRestResponse);
-}
-
-export function getByCategoryGroupId(categoryId) {
-  const per_page = 8;
-  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_id_eq]=${categoryId}`;
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_id_eq]=${productGroupId}`;
   return fetch(url, {
     method: "GET",
     headers: {
