@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import { scroller } from "react-scroll";
-import classnames from "classnames";
+import React, { Component } from 'react';
+import { scroller } from 'react-scroll';
+import classnames from 'classnames';
 
-import Default from "../../layouts/default";
-import Loader from "../../components/loader";
-import CategoryTiles from "../../components/category/categoryTiles";
-import Tiles from "../../components/tiles/tiles";
+import Default from '../../layouts/default';
+import Loader from '../../components/loader';
+import CategoryTiles from '../../components/category/categoryTiles';
+import Tiles from '../../components/tiles/tiles';
 
-import { handleGeneralError } from "../../utils/rest/error/toastHandler";
-import { getCategories } from "../../utils/rest/requests/categories";
+import { handleGeneralError } from '../../utils/rest/error/toastHandler';
+import { getCategories } from '../../utils/rest/requests/categories';
 
 const meta = {
-  title: "Oceanpremium - Categories",
+  title: 'Oceanpremium - Categories',
   description:
-    "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
+    'The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts'
 };
 
 class CategoryPage extends Component {
@@ -22,7 +22,7 @@ class CategoryPage extends Component {
     this.state = {
       categories: null,
       category: null,
-      visible: false
+      visible: false,
     };
   }
 
@@ -34,7 +34,7 @@ class CategoryPage extends Component {
 
   async componentDidMount() {
     await this.retrieveCategories();
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll);
   }
 
   async retrieveCategories() {
@@ -70,10 +70,10 @@ class CategoryPage extends Component {
   };
 
   scrollTo() {
-    scroller.scrollTo("scroll-to-element", {
+    scroller.scrollTo('scroll-to-element', {
       duration: 500,
       delay: 0,
-      smooth: "easeInOutQuart"
+      smooth: 'easeInOutQuart'
     });
   }
 
@@ -84,20 +84,20 @@ class CategoryPage extends Component {
         <Default meta={meta} nav="fixed">
           <div className="category-background"></div>
           <div className="category-text">
-            <h1 style={{ color: "white" }}>Extreme Water Toy Rentals</h1>
+            <h1 style={{ color: 'white' }}>Extreme Water Toy Rentals</h1>
             <h3>Largest range of water toys for the active and daring</h3>
           </div>
           <div>
             <div
-              className={classnames("scroll-down-circle", {
-                "display-none": this.state.visible
+              className={classnames('scroll-down-circle', {
+                'display-none': this.state.visible
               })}
             >
               <img src="/static/images/Ellipse 2.png" />
             </div>
             <div
-              className={classnames("scroll-down-arrow", {
-                "display-none": this.state.visible
+              className={classnames('scroll-down-arrow', {
+                'display-none': this.state.visible
               })}
             >
               <img
@@ -109,7 +109,7 @@ class CategoryPage extends Component {
           <div name="scroll-to-element"></div>
           <div className="container tiles">
             <Tiles category={this.state.category} />
-            <div style={{ position: "relative", paddingBottom: "20px" }}>
+            <div style={{ position: 'relative', paddingBottom: '20px' }}>
               <CategoryTiles categories={this.state.categories} />
             </div>
           </div>

@@ -343,7 +343,11 @@ class ContactPage extends Component {
                 get back to you as quickly as a possible.
               </p>
               <p>
-                You can also send an email or call us directly at one of our
+                You can also send an &nbsp;
+                <a className="yellow" href="mailTo:booking@oceanpremium.com">email</a>
+                &nbsp;or&nbsp;
+                <a className="yellow" href="tel:+33781151254">call</a> 
+                &nbsp;us directly at one of our
                 HQs.
               </p>
               <table className="contact-table">
@@ -353,7 +357,7 @@ class ContactPage extends Component {
                   </td>
                   <td>
                     <p className="uppercase">Email</p>
-                    <strong>booking@oceanpremium.com</strong>
+                    <a href="mailTo:booking@oceanpremium.com"><strong>booking@oceanpremium.com</strong></a>
                   </td>
                 </tr>
                 <tr>
@@ -362,7 +366,7 @@ class ContactPage extends Component {
                   </td>
                   <td>
                     <p className="uppercase">Phone</p>
-                    <strong>+33 781 15 12 54</strong>
+                    <a href="tel:+33781151254"><strong>+33 781 15 12 54</strong></a>
                   </td>
                 </tr>
               </table>
@@ -377,8 +381,11 @@ class ContactPage extends Component {
                   FAQs
                 </a>
                 &nbsp; or send us a message via the contact form below. We will
-                get back to you as quickly as a possible. You can also send an
-                email or call us directly at one of our HQs.
+                get back to you as quickly as a possible. You can also send an &nbsp; 
+                <a className="yellow" href="mailTo:supply@oceanpremium.com">email</a>
+                &nbsp;or&nbsp; 
+                <a className="yellow" href="tel:+31618940507">call</a>
+                &nbsp; us directly at one of our HQs.
               </p>
               <table className="contact-table">
                 <tr>
@@ -387,7 +394,7 @@ class ContactPage extends Component {
                   </td>
                   <td>
                     <p className="uppercase">Email</p>
-                    <strong>supply@oceanpremium.com</strong>
+                    <a href="mailTo:supply@oceanpremium.com"><strong>supply@oceanpremium.com</strong></a>
                   </td>
                 </tr>
                 <tr>
@@ -396,7 +403,7 @@ class ContactPage extends Component {
                   </td>
                   <td>
                     <p className="uppercase">Phone</p>
-                    <strong>+31 61 89 40 507</strong>
+                    <a href="tel:+31618940507"><strong>+31 61 89 40 507</strong></a>
                   </td>
                 </tr>
               </table>
@@ -442,7 +449,7 @@ class ContactPage extends Component {
                       </td>
                       <td>
                         <p className="uppercase">Email</p>
-                        <strong>info@oceanpremium.com</strong>
+                        <a href="mailTo:info@oceanpremium.com"><strong>info@oceanpremium.com</strong></a>
                       </td>
                     </tr>
                     <tr>
@@ -451,7 +458,7 @@ class ContactPage extends Component {
                       </td>
                       <td>
                         <p className="uppercase">Phone</p>
-                        <strong>+31 61 89 40 507</strong>
+                        <a href="tel:+31618940507"><strong>+31 61 89 40 507</strong></a>
                       </td>
                     </tr>
                   </table>
@@ -483,7 +490,7 @@ class ContactPage extends Component {
                       </td>
                       <td>
                         <p className="uppercase">Email</p>
-                        <strong>monaco@oceanpremium.com</strong>
+                        <a href="mailTo:monaco@oceanpremium.com"><strong>monaco@oceanpremium.com</strong></a>
                       </td>
                     </tr>
                     <tr>
@@ -492,7 +499,7 @@ class ContactPage extends Component {
                       </td>
                       <td>
                         <p className="uppercase">Phone</p>
-                        <strong>+33 640 62 95 99</strong>
+                        <a href="tel:+33640629599"><strong>+33 640 62 95 99</strong></a>
                       </td>
                     </tr>
                   </table>

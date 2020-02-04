@@ -1,14 +1,14 @@
 // /products/groups
-import { PRODUCTS_ENDPOINT_BASE_URL } from "../requestConstants";
-import handleRestResponse from "../requestUtil";
-import "whatwg-fetch";
+import { PRODUCTS_ENDPOINT_BASE_URL } from '../requestConstants';
+import handleRestResponse from '../requestUtil';
+import 'whatwg-fetch';
 
 export function getCategories() {
   const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/categories`;
   return fetch(url, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      Accept: "application/json"
+      Accept: 'application/json'
     }
   }).then(handleRestResponse);
 }
