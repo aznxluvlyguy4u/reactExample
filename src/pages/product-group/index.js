@@ -44,12 +44,20 @@ class ProductGroupPage extends Component {
       this.setState({
         categories: response.data
       });
+      // console.log(response.data);
       response.data.forEach(category => {
-        if (category.id === id) {
-          this.setState({
-            category: category
-          });
-        }
+        category.productGroups.forEach(productGroup => {
+          if (productGroup.id === id) {
+            this.setState({
+              category
+            })
+          }
+        });
+        // if (category.id === id) {
+        //   this.setState({
+        //     category: category
+        //   });
+        // }
       });
     } catch (error) {
       handleGeneralError(error);

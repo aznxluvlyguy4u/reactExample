@@ -43,7 +43,7 @@ class CategoryTiles extends Component {
           <div className="category-tile">
             <img
               src={
-                item.images.length
+                item.images && item.images.length
                   ? item.images[0].url
                   : "/static/images/flyboard.png"
               }
