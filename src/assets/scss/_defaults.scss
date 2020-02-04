@@ -44,6 +44,15 @@ a:hover
    cursor:pointer;
 }
 
+a.yellow {
+  color: $yellow;
+  text-decoration: none;
+}
+
+a.yellow:hover {color: $yellow;
+  color: $yellow;
+}
+
 textarea, select, input, button { outline: none; }
 
 .form-inline {
@@ -70,6 +79,13 @@ textarea, select, input, button { outline: none; }
     border-bottom: solid 0.3px $grey;
     padding-bottom: 20px;
   }
+}
+
+.page-wrapper-simple {
+  padding-left: $default-margin;
+  padding-right: $default-margin;
+  min-height: 100vh;
+  padding-bottom: 5%;
 }
 
 .fullWidthImage{

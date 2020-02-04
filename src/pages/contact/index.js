@@ -132,8 +132,8 @@ class ContactPage extends Component {
     this.submitForm = this.submitForm.bind(this);
   }
 
-  scrollTo() {
-    scroller.scrollTo("scroll-to-element", {
+  scrollTo(name) {
+    scroller.scrollTo(name, {
       duration: 500,
       delay: 0,
       smooth: "easeInOutQuart"
@@ -185,272 +185,319 @@ class ContactPage extends Component {
               })}
             >
               <img
-                onClick={() => this.scrollTo("myFrame")}
+                alt="scroll"
+                onClick={() => this.scrollTo("general-contact")}
                 src="/static/images/Vector 9.png"
               />
             </div>
           </div>
         </div>
-        <div className="container tiles">
-          <h1>FAQs</h1>
-          <Accordion>
-            {this.faqs.map(item => (
-              <div label={item.title}>
-                <div className="container">
-                  <p>{item.content}</p>
-                </div>
-              </div>
-            ))}
-          </Accordion>
-          <h1>For General Questions</h1>
-          <div className="row">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-body">
-                  <h3>Send us a message</h3>
-                  {this.state.thankYou === true ? (
-                    <div>
-                      <h3>Thank you</h3>
-                      <p>We will answer your message as soon as possible</p>
+
+        <div className="page-wrapper-simple">
+          <div name="faqs"></div>
+          <div className="container tiles">
+            <div className="section">
+              <h1>FAQs</h1>
+              <Accordion>
+                {this.faqs.map(item => (
+                  <div label={item.title}>
+                    <div className="container">
+                      <p>{item.content}</p>
                     </div>
-                  ) : (
-                    <Formik
-                      validationSchema={ContactFormSchema}
-                      onSubmit={this.submitForm || undefined}
-                      enableReinitialize
-                      initialValues={{
-                        name: "",
-                        office: "",
-                        emailAddress: "",
-                        phoneNumber: "",
-                        message: "",
-                        enquiryType: ""
-                      }}
-                    >
-                      {({ setFieldValue, values, errors, touched }) => (
-                        <Form>
-                          <div>
-                            <div className="keyword form-block">
-                              <label htmlFor="keyword">Name</label>
-                              <Field
-                                name="name"
-                                component={CustomInputComponent}
-                              />
-                            </div>
-
-                            <div
-                              style={{ width: "50%", float: "left" }}
-                              className="form-left"
-                            >
-                              <div className="keyword form-block">
-                                <label htmlFor="emailAddress">Email</label>
-                                <Field
-                                  name="emailAddress"
-                                  component={CustomInputComponent}
-                                  placeHolder="@"
-                                />
-                              </div>
-                            </div>
-                            <div
-                              style={{ width: "50%", float: "left" }}
-                              className="form-right"
-                            >
-                              <div className="keyword form-block">
-                                <label htmlFor="phoneNumber">
-                                  Phone number
-                                </label>
-                                <Field
-                                  name="phoneNumber"
-                                  component={CustomInputComponent}
-                                  placeHolder="+00 123 456 789"
-                                />
-                              </div>
-                            </div>
-                            <div className="keyword form-block">
-                              <label htmlFor="message">Message</label>
-                              <Field
-                                validation
-                                name="message"
-                                setFieldValue={setFieldValue}
-                                component="textarea"
-                              />
-                            </div>
-                            <div className="keyword form-block">
-                              <RadioButtonGroup
-                                id="radioGroup"
-                                label=""
-                                value={values.enquiryType}
-                                error={errors.enquiryType}
-                                touched={touched.enquiryType}
-                              >
-                                <Field
-                                  component={RadioButton}
-                                  name="enquiryType"
-                                  id="radioOption1"
-                                  label="Rentals"
-                                />
-                                <Field
-                                  component={RadioButton}
-                                  name="enquiryType"
-                                  id="radioOption2"
-                                  label="Sales"
-                                />
-                              </RadioButtonGroup>
-                            </div>
-                            <button
-                              disabled={this.state.loading === true}
-                              className="search-button-full"
-                              type="submit"
-                            >
-                              Send message
-                            </button>
-                          </div>
-                        </Form>
-                      )}
-                    </Formik>
-                  )}
-
-                  {this.state.loading ? <Loader /> : null}
-                </div>
-              </div>
+                  </div>
+                ))}
+              </Accordion>
+              <div name="general-contact"></div>
             </div>
-          </div>
-          <h1>Questions related to Rentals</h1>
-          <p>
-            For questions related to your rental booking, drop-offs and/or
-            pick-ups, locations or rental products or accessories you can check
-            out our FAQs or send us a message via the contact form below. We
-            will get back to you as quickly as a possible.
-          </p>
-          <p>
-            You can also send an email or call us directly at one of our HQs.
-          </p>
-          <table>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-          </table>
-        </div>
-        <div className="page-wrapper tiles">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-8 col-lg-8 col-sm-12">
-                <h1 className="main-title">Contact Us</h1>
-                <div className="row">
-                  <div className="col-md-4">
-                    <img
-                      width="100%"
-                      alt="Contact"
-                      src="static/images/about/Barbara.png"
-                    />
-                  </div>
-                  <div className="col-md-8">
-                    <p>
-                      Feel free to contact any of our offices for any questions
-                      you have
-                      <br />
-                      <br />
-                      We are available to help 24/7.
-                    </p>
-                    <a href="tel:+33 640 62 95 99" className="button-border">
-                      +33 640 62 95 99
-                    </a>
-                  </div>
-                </div>
-              </div>
 
-              <div className="col-md-4 col-lg-4 col-sm-12">
-                <h1 className="main-title">Contact Form</h1>
-                {this.state.thankYou === true ? (
-                  <div>
-                    <h3>Thank you</h3>
-                    <p>We will answer your message as soon as possible</p>
-                  </div>
-                ) : (
-                  <Formik
-                    validationSchema={ContactFormSchema}
-                    onSubmit={this.submitForm || undefined}
-                    enableReinitialize
-                    initialValues={{
-                      name: "",
-                      office: "",
-                      emailAddress: "",
-                      phoneNumber: "",
-                      message: ""
-                    }}
-                  >
-                    {({ setFieldValue }) => (
-                      <Form>
+            <div className="section">
+              <h1>For General Questions</h1>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="card">
+                    <div className="card-body">
+                      <h3>Send us a message</h3>
+                      {this.state.thankYou === true ? (
                         <div>
-                          <div className="keyword form-block">
-                            <label htmlFor="keyword">Name</label>
-                            <Field
-                              name="name"
-                              component={CustomInputComponent}
-                            />
-                          </div>
-
-                          <div
-                            style={{ width: "50%", float: "left" }}
-                            className="form-left"
-                          >
-                            <div className="keyword form-block">
-                              <label htmlFor="emailAddress">Email</label>
-                              <Field
-                                name="emailAddress"
-                                component={CustomInputComponent}
-                              />
-                            </div>
-                          </div>
-                          <div
-                            style={{ width: "50%", float: "left" }}
-                            className="form-right"
-                          >
-                            <div className="keyword form-block">
-                              <label htmlFor="phoneNumber">Phone number</label>
-                              <Field
-                                name="phoneNumber"
-                                component={CustomInputComponent}
-                              />
-                            </div>
-                          </div>
-                          <div className="keyword form-block">
-                            <label htmlFor="message">Message</label>
-                            <Field
-                              validation
-                              name="message"
-                              setFieldValue={setFieldValue}
-                              component="textarea"
-                            />
-                          </div>
-                          <button
-                            disabled={this.state.loading === true}
-                            className="search-button-full"
-                            type="submit"
-                          >
-                            Submit
-                          </button>
+                          <h3>Thank you</h3>
+                          <p>We will answer your message as soon as possible</p>
                         </div>
-                      </Form>
-                    )}
-                  </Formik>
-                )}
+                      ) : (
+                        <Formik
+                          validationSchema={ContactFormSchema}
+                          onSubmit={this.submitForm || undefined}
+                          enableReinitialize
+                          initialValues={{
+                            name: "",
+                            office: "",
+                            emailAddress: "",
+                            phoneNumber: "",
+                            message: "",
+                            enquiryType: ""
+                          }}
+                        >
+                          {({ setFieldValue, values, errors, touched }) => (
+                            <Form>
+                              <div>
+                                <div className="keyword form-block">
+                                  <label htmlFor="keyword">Name</label>
+                                  <Field
+                                    name="name"
+                                    component={CustomInputComponent}
+                                  />
+                                </div>
 
-                {this.state.loading ? <Loader /> : null}
+                                <div
+                                  style={{ width: "50%", float: "left" }}
+                                  className="form-left"
+                                >
+                                  <div className="keyword form-block">
+                                    <label htmlFor="emailAddress">Email</label>
+                                    <Field
+                                      name="emailAddress"
+                                      component={CustomInputComponent}
+                                      placeHolder="@"
+                                    />
+                                  </div>
+                                </div>
+                                <div
+                                  style={{ width: "50%", float: "left" }}
+                                  className="form-right"
+                                >
+                                  <div className="keyword form-block">
+                                    <label htmlFor="phoneNumber">
+                                      Phone number
+                                    </label>
+                                    <Field
+                                      name="phoneNumber"
+                                      component={CustomInputComponent}
+                                      placeHolder="+00 123 456 789"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="keyword form-block">
+                                  <label htmlFor="message">Message</label>
+                                  <Field
+                                    validation
+                                    name="message"
+                                    setFieldValue={setFieldValue}
+                                    component="textarea"
+                                  />
+                                </div>
+                                <div className="keyword form-block">
+                                  <RadioButtonGroup
+                                    id="radioGroup"
+                                    label=""
+                                    value={values.enquiryType}
+                                    error={errors.enquiryType}
+                                    touched={touched.enquiryType}
+                                  >
+                                    <Field
+                                      component={RadioButton}
+                                      name="enquiryType"
+                                      id="radioOption1"
+                                      label="Rentals"
+                                    />
+                                    <Field
+                                      component={RadioButton}
+                                      name="enquiryType"
+                                      id="radioOption2"
+                                      label="Sales"
+                                    />
+                                  </RadioButtonGroup>
+                                </div>
+                                <button
+                                  disabled={this.state.loading === true}
+                                  className="search-button-full"
+                                  type="submit"
+                                >
+                                  Send message
+                                </button>
+                              </div>
+                            </Form>
+                          )}
+                        </Formik>
+                      )}
+
+                      {this.state.loading ? <Loader /> : null}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="maps">
-              <iframe
-                name="scroll-to-element"
-                src="https://www.google.com/maps/d/embed?mid=1uqybh4Cedy9BeWZxfU9_B606fnY"
-                width="100%"
-                height="100%"
-              />
+
+            <div className="section">
+              <h1>Questions related to Rentals</h1>
+              <p>
+                For questions related to your rental booking, drop-offs and/or
+                pick-ups, locations or rental products or accessories you can
+                check out our &nbsp;
+                <a
+                  href="#"
+                  className="yellow"
+                  onClick={() => this.scrollTo("faqs")}
+                >
+                  FAQs
+                </a>
+                &nbsp; or send us a message via the contact form below. We will
+                get back to you as quickly as a possible.
+              </p>
+              <p>
+                You can also send an email or call us directly at one of our
+                HQs.
+              </p>
+              <table className="contact-table">
+                <tr>
+                  <td>
+                    <img alt="email" src="/static/images/email-icon.png" />
+                  </td>
+                  <td>
+                    <p className="uppercase">Email</p>
+                    <strong>booking@oceanpremium.com</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/static/images/phone-icon.png" alt="phone" />
+                  </td>
+                  <td>
+                    <p className="uppercase">Phone</p>
+                    <strong>+33 781 15 12 54</strong>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div className="section">
+              <h1>Questions related to Purchases</h1>
+              <p>
+                For questions related to purchases of products or accessories
+                you can check out our&nbsp;
+                <a className="yellow" onClick={() => this.scrollTo("faqs")}>
+                  FAQs
+                </a>
+                &nbsp; or send us a message via the contact form below. We will
+                get back to you as quickly as a possible. You can also send an
+                email or call us directly at one of our HQs.
+              </p>
+              <table className="contact-table">
+                <tr>
+                  <td>
+                    <img alt="email" src="/static/images/email-icon.png" />
+                  </td>
+                  <td>
+                    <p className="uppercase">Email</p>
+                    <strong>supply@oceanpremium.com</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/static/images/phone-icon.png" alt="phone" />
+                  </td>
+                  <td>
+                    <p className="uppercase">Phone</p>
+                    <strong>+31 61 89 40 507</strong>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div className="section">
+              <h3>Ocean Premium Offices</h3>
+              <div className="maps">
+                <iframe
+                  src="https://www.google.com/maps/d/embed?mid=1uqybh4Cedy9BeWZxfU9_B606fnY"
+                  width="100%"
+                  height="100%"
+                />
+              </div>
+            </div>
+
+            <div className="section">
+              <div className="row">
+                <div className="col-md-6">
+                  <h3>Ocean Premium HQ - Netherlands</h3>
+                  <table>
+                    <tr>
+                      <td>Street</td>
+                      <td>Jupiter 65</td>
+                    </tr>
+                    <tr>
+                      <td>Post Code</td>
+                      <td>2685 LV</td>
+                    </tr>
+                    <tr>
+                      <td>City</td>
+                      <td>Poeldijk</td>
+                    </tr>
+                    <tr>
+                      <td>Country</td>
+                      <td>The Netherlands</td>
+                    </tr>
+                  </table>
+                  <table className="contact-table">
+                    <tr>
+                      <td>
+                        <img alt="email" src="/static/images/email-icon.png" />
+                      </td>
+                      <td>
+                        <p className="uppercase">Email</p>
+                        <strong>info@oceanpremium.com</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <img src="/static/images/phone-icon.png" alt="phone" />
+                      </td>
+                      <td>
+                        <p className="uppercase">Phone</p>
+                        <strong>+31 61 89 40 507</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div className="col-md-6">
+                  <h3>Ocean Premium HQ - France & Monaco</h3>
+                  <table>
+                    <tr>
+                      <td>Street</td>
+                      <td>8 Boulevard d’Aquillon</td>
+                    </tr>
+                    <tr>
+                      <td>Post Code</td>
+                      <td>66000</td>
+                    </tr>
+                    <tr>
+                      <td>City</td>
+                      <td>Antibes</td>
+                    </tr>
+                    <tr>
+                      <td>Country</td>
+                      <td>France</td>
+                    </tr>
+                  </table>
+                  <table className="contact-table">
+                    <tr>
+                      <td>
+                        <img alt="email" src="/static/images/email-icon.png" />
+                      </td>
+                      <td>
+                        <p className="uppercase">Email</p>
+                        <strong>monaco@oceanpremium.com</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <img src="/static/images/phone-icon.png" alt="phone" />
+                      </td>
+                      <td>
+                        <p className="uppercase">Phone</p>
+                        <strong>+33 640 62 95 99</strong>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
