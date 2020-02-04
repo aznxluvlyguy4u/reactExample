@@ -33,6 +33,7 @@
 
 // Pages
 @import "modules/pages/checkout";
+@import "modules/pages/about";
 @import "modules/pages/contact";
 @import "modules/pages/detail";
 @import "modules/pages/index";
@@ -199,6 +200,11 @@ h2.section-title {
 .order-form {
   min-width: 320px;
   max-width: 350px;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
 }
 
 @media (max-width: 992px) {
