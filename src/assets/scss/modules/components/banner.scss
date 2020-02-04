@@ -41,23 +41,7 @@
   height: 260px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 25% 65%;
-  justify-content: space-evenly;
-  padding: 20px;
-  width: 100%;
-  margin-top: 100px;
-  z-index: 3;
-  color: white;
-  position: absolute;
-  top: -25px;
-  text-align: start;
-}
 
-.banner-left-title {
-  margin: 0px;
-}
 
 @media (max-width: 678px) {
   .banner-text {

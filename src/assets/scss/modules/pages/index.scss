@@ -1,14 +1,99 @@
 .background-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.background {
+  position: absolute;
   background-color: black;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   background-image: url("/static/images/background-image.png");
   background-repeat: no-repeat;
   background-size: cover;
-  margin-bottom: -630px;
+}
+
+.scroll-down-circle {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  bottom: -35px;
+  img {
+    height: 60px;
+    width: 60px;
+  }
+}
+
+.scroll-down-arrow {
+  z-index: 3;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  bottom: -33px;
+  img {
+    padding: 22px 18px;
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+}
+
+.display-none {
+  display: none;
+}
+
+.heading {
+  font-size: xx-large;
+  font-weight: 450;
+}
+
+.sub-heading {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.grid {
+  position: absolute;
+  display: grid;
+  grid-template-columns: 20% 65%;
+  justify-content: space-evenly;
+  top: 70px;
+  z-index: 3;
+  color: white;
+  text-align: start;
+}
+
+.banner-left-title {
+  margin: 0px;
+}
+
+.banner-right-text {
+  margin: 0px;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 678px) {
   .background-wrapper {
-    height: 132vh;
+    width: 100%;
+    height: 100%;
+  }
+  .banner-left-title {
+    margin: auto;
+  }
+
+  .banner-right-text {
+    display: none;
+  }
+  .grid {
+    display: block;
+    width: auto;
+    text-align: center;
+  }
+  .sub-heading {
+    font-size: 1rem;
+    font-weight: 200;
   }
 }

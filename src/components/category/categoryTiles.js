@@ -1,16 +1,26 @@
-import Carousel from "nuka-carousel";
 import React, { Component } from "react";
+import Link from "next/link";
+
+import Carousel from "nuka-carousel";
+import slugify from "slugify";
 
 class CategoryTiles extends Component {
   constructor(props) {
     super(props);
-    this.state = { categories: [], width: undefined };
+    this.state = { categories: [], width: undefined, slideNumber: 5 };
     this.useWindowWidth = this.useWindowWidth.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener("resize", this.useWindowWidth);
     this.useWindowWidth();
+    if (window.innerWidth < 1025) {
+      this.state.slideNumber = 3;
+    } else if (window.innerWidth < 678) {
+      this.state.slideNumber = 2;
+    } else {
+      this.state.slideNumber = 5;
+    }
   }
 
   componentWillUnmount() {
@@ -22,20 +32,26 @@ class CategoryTiles extends Component {
     return window.innerWidth;
   }
 
-  category(item, index) {
+  category(item) {
     return (
-      <a href={`/search?category=${item.id}`} key={index}>
-        <div className="category-tile">
-          <img
-            src={
-              item.productGroups[0].customFields
-                ? item.productGroups[0].customFields.publicIconThumbUrl
-                : "/static/images/flyboard.png"
-            }
-          />
-          <span>{item.name && this.toUpperCase(item.name)}</span>
-        </div>
-      </a>
+      <Link>
+        <a
+          href={`/category?id=${item.id}&slug=${slugify(item.name)}`}
+          as={`/category/${item.id}/${slugify(item.name)}`}
+          key={item.id}
+        >
+          <div className="category-tile">
+            <img
+              src={
+                item.images.length
+                  ? item.images[0].url
+                  : "/static/images/flyboard.png"
+              }
+            />
+            <span>{item.name && this.toUpperCase(item.name)}</span>
+          </div>
+        </a>
+      </Link>
     );
   }
 
@@ -50,7 +66,7 @@ class CategoryTiles extends Component {
         <div className="container first-carousel">
           <div className="row">
             <div className="col">
-              <h2>Something for Everyone</h2>
+              <h2 className="heading">Something for Everyone</h2>
               <div className="slider-container">
                 <Carousel
                   className="category-tile"
@@ -59,7 +75,7 @@ class CategoryTiles extends Component {
                   cellSpacing={20}
                   dragging
                   slidesToScroll={1}
-                  slidesToShow={5}
+                  slidesToShow={this.state.slideNumber}
                   wrapAround
                   renderCenterLeftControls={({ previousSlide }) => (
                     <div className="left-arrow">
@@ -83,8 +99,8 @@ class CategoryTiles extends Component {
                     (currentSlide = null)
                   }
                 >
-                  {this.props.categories.map((category, index) => {
-                    return this.category(category, index);
+                  {this.props.categories.map(category => {
+                    return this.category(category);
                   })}
                 </Carousel>
               </div>

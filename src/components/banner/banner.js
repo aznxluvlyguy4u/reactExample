@@ -10,8 +10,8 @@ class Banner extends Component {
     return (
       <div>
         <div className="mb-3">
-          <h2 className="section-title">{this.props.title}</h2>
-          <span>
+          <h2 className="section-title heading">{this.props.title}</h2>
+          <span className="sub-heading">
           {this.props.subTitle}
           </span>
         </div>

@@ -1,13 +1,14 @@
 .form-wrapper {
   position: relative;
-  top: -115px;
-  height: 82vh;
+  //height: 82vh;
 }
+
 .searchform-wrapper {
   background-color: white;
   position: relative;
   padding: 30px;
-  margin-bottom: 100px;
+  margin-top: 20vh;
+  margin-bottom: 40px;
   @include for-tablet-portrait-up {
     width: 500px;
   }
@@ -27,8 +28,10 @@
 }
 
 @media (max-height: 815px) {
-  .form-wrapper {
-    top: -42px;
-    height: 100vh;
+  // .form-wrapper {
+  //   height: 100vh;
+  // }
+  .searchform-wrapper {
+    margin-top: 80px;
   }
 }
