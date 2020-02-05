@@ -1,0 +1,53 @@
+.about-background {
+  position: relative;
+  top: 70px;
+  min-height: 512px;
+  width: 100%;
+  background-color: black;
+  background-image: url("/static/images/about.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.about-background .heading {
+  margin-left: 10%;
+  width: 78vw;
+  max-width: 660px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.about-background .heading h1 {
+  font-size: 36px;
+}
+
+.about-background .heading h1,
+.about-background .heading p {
+  color: #fff;
+}
+
+.about-background .heading p {
+  font-size: 18px;
+}
+
+a.yellow-button {
+  max-width: 200px;
+  text-align: center;
+}
+
+
+
+@media (max-width: 768px) {
+
+  .about-background .heading {
+    font-size: small;
+    width: 60%;
+    margin-left: 10%;
+  }
+
+  .about-background .heading p {
+    font-size: small;
+  }
+}
