@@ -1,6 +1,19 @@
-import Link from "next/link";
 import React, { Component } from "react";
+import Modal from "react-modal";
+
+import Link from "next/link";
 import slugify from "slugify";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)"
+  }
+};
 
 class ProductTiles extends Component {
   constructor(props) {
@@ -9,8 +22,14 @@ class ProductTiles extends Component {
       product.qty = 0;
     });
     this.state = {
-      products: this.props.products
+      products: this.props.products,
+      modalIsOpen: false
     };
+
+    this.openModal = this.openModal.bind(this);
+    this.afterOpenModal = this.afterOpenModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   addProdcut(product) {
@@ -27,6 +46,19 @@ class ProductTiles extends Component {
     this.setState({
       products: this.state.products
     });
+  }
+
+  openModal() {
+    this.setState({ modalIsOpen: true });
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //this.subtitle.style.color = "#f00";
+  }
+
+  closeModal() {
+    this.setState({ modalIsOpen: false });
   }
 
   render() {
@@ -99,7 +131,7 @@ class ProductTiles extends Component {
                               </div>
                             </div>
                             <div className="col-md-8">
-                              <div className="add-btn">
+                              <div onClick={this.openModal} className="add-btn">
                                 <i className="icon-cart"></i>
                                 Add to booking
                               </div>
@@ -114,6 +146,19 @@ class ProductTiles extends Component {
             </div>
           </div>
         )}
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+        >
+          <div>
+            <h2>Feature coming soon!</h2>
+          </div>
+          <button className="add-btn" onClick={this.closeModal}>
+            Close
+          </button>
+        </Modal>
       </div>
     );
   }
