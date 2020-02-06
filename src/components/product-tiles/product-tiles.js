@@ -97,15 +97,39 @@ class ProductTiles extends Component {
                                       : "/static/images/flyboard.png"
                                   }
                                 />
+                                {item.rates[0].quantityAvailable == 0 && (
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      top: "10px",
+                                      padding: "8px",
+                                      backgroundColor: "rgb(255, 121, 7)",
+                                      color: "white"
+                                    }}
+                                  >
+                                    Currently unavailable
+                                  </div>
+                                )}
                               </div>
                             </a>
                           </Link>
                           <h4>{item.name}</h4>
                           <hr></hr>
                           <div className="description">
-                            {item.description.dimensions
-                              ? item.description.dimensions
+                            {item.description.section1
+                              ? item.description.section1.paragraph
                               : "Test description"}
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: "0px",
+                                width: "100%",
+                                height: "100%",
+                                background:
+                                  "linear-gradient(180deg, transparent, white)",
+                                zIndex: "3"
+                              }}
+                            ></div>
                           </div>
 
                           <div className="tag-line">tagline</div>

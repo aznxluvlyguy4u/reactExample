@@ -14,23 +14,23 @@
 @import "modules/components/categoryTiles";
 @import "modules/components/banner";
 @import "modules/components/tiles";
-@import "modules/components/checkoutitem";
-@import "modules/components/finalcheckout";
+@import "modules/components/checkoutItem";
+@import "modules/components/finalCheckout";
 @import "modules/components/footer";
 @import "modules/components/modal";
-@import "modules/components/orderform";
-@import "modules/components/selectionoverview";
+@import "modules/components/orderForm";
+@import "modules/components/selectionOverview";
 @import "modules/components/select";
 @import "modules/components/header";
 @import "modules/components/menuContainer";
 @import "modules/components/searchInput";
-@import "modules/components/phonenumbers";
+@import "modules/components/phoneNumbers";
 @import "modules/components/topSearch";
 @import "modules/components/searchForm";
 @import "modules/components/searchFormWrapper";
 @import "modules/components/signup";
 @import "modules/components/localSearch";
-@import "modules/components/product-tiles.scss";
+@import "modules/components/productTiles.scss";
 
 // Pages
 @import "modules/pages/checkout";
@@ -39,7 +39,7 @@
 @import "modules/pages/detail";
 @import "modules/pages/index";
 @import "modules/pages/category";
-@import "modules/pages/product-group.scss";
+@import "modules/pages/productGroup.scss";
 
 // Override stripe form elements
 .StripeElement {

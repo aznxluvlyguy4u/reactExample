@@ -9,7 +9,6 @@ import Banner from "../../components/banner/banner";
 import Tiles from "../../components/tiles/tiles";
 
 import { getCategories } from "../../utils/rest/requests/categories";
-import { getFirstProducts } from "../../utils/rest/requests/products";
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 
 const meta = {
@@ -54,16 +53,6 @@ class IndexPage extends Component {
       category.products = [];
     });
     this.forceUpdate();
-  }
-
-  async retrieveProducts(categoryId) {
-    try {
-      const response = await getFirstProducts(categoryId);
-      return response.data;
-    } catch (error) {
-      handleGeneralError(error);
-      return [];
-    }
   }
 
   async retrieveCategories() {
