@@ -60,7 +60,7 @@ class SearchForm extends Component {
     return (
       <div>
         <Formik
-          // validationSchema={searchValidation}
+          validationSchema={searchValidation}
           enableReinitialize
           initialValues={{
             keyword: this.props.searchReducer.search.keyword,
