@@ -51,6 +51,10 @@ class CustomSelect extends Component {
     if (onChange) {
       onChange(obj);
     }
+
+    if(this.props.onSelect){ 
+      this.props.onSelect(value);
+    }
   }
 
   setDropdownValue(value) {

@@ -4,32 +4,36 @@ import Modal from "react-modal";
 import Link from "next/link";
 import slugify from "slugify";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
-};
+import styles from "./product-tiles.style";
+
+import ProductBookingForm from "../product-booking-components/product-booking-form";
 
 class ProductTiles extends Component {
   constructor(props) {
     super(props);
+
     this.props.products.forEach(product => {
       product.qty = 0;
     });
+
     this.state = {
       products: this.props.products,
-      modalIsOpen: false
+      modalIsOpen: false,
+      requestedProduct: undefined
     };
 
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  setRequestedAndOpenModal(item) {
+    this.state.requestedProduct = item;
+    this.setState({
+      modalIsOpen: true,
+      requestedProduct: item
+    });
   }
 
   addProdcut(product) {
@@ -105,7 +109,7 @@ class ProductTiles extends Component {
                           <div className="description">
                             {item.description.dimensions
                               ? item.description.dimensions
-                              : "Test description"}
+                              : "--"}
                           </div>
 
                           <div className="tag-line">tagline</div>
@@ -131,7 +135,12 @@ class ProductTiles extends Component {
                               </div>
                             </div>
                             <div className="col-md-8">
-                              <div onClick={this.openModal} className="add-btn">
+                              <div
+                                onClick={() =>
+                                  this.setRequestedAndOpenModal(item)
+                                }
+                                className="add-btn"
+                              >
                                 <i className="icon-cart"></i>
                                 Add to booking
                               </div>
@@ -150,14 +159,53 @@ class ProductTiles extends Component {
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
-          style={customStyles}
+          style={styles}
+          portalClassName="product-tile-modal"
         >
-          <div>
-            <h2>Feature coming soon!</h2>
-          </div>
-          <button className="add-btn" onClick={this.closeModal}>
-            Close
-          </button>
+          {this.state.requestedProduct && (
+            <div className="row">
+              <div className="col-md-7 equal-height-columns">
+                <div className="row no-gutters">
+                  <div className="col-md-1 equal-height-columns">
+                    <img
+                      src="static/images/back-arrow-white.svg"
+                      alt="previous"
+                      onClick={this.closeModal}
+                    />
+                  </div>
+                  <div className="col-md-11 equal-height-columns">
+                    <div className="white-bg h-100 p-5">
+                      <div className="row">
+                        <div className="col-md-9">
+                          <h3>Add {this.state.requestedProduct.name}</h3>
+                          <p>Add to an existing booking or create a new one!</p>
+                        </div>
+                        <div className="col-md-3">
+                          {this.state.requestedProduct.images.length > 0 && (
+                            <img
+                              className="img-fluid"
+                              alt={this.state.requestedProduct.name}
+                              src={this.state.requestedProduct.images[0].url}
+                            />
+                          )}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-12">
+                          <ProductBookingForm product={this.state.requestedProduct}/>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-5 equal-height-columns">
+                <div className="white-bg h-100 p-5">
+                  <h3>Recommended Accessories</h3>
+                </div>
+              </div>
+            </div>
+          )}
         </Modal>
       </div>
     );
