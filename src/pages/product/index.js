@@ -75,6 +75,7 @@ class DetailPage extends Component {
       await this.getProduct();
     }
   }
+
   continueShopping() {
     this.props.resetLocalSearch();
     // check if previous search exists...
@@ -113,6 +114,8 @@ class DetailPage extends Component {
     }
     try {
       let response = await getProductById(id, deliveryLocationId);
+
+      response.data.qty = 0;
 
       this.setState({ product: response.data });
       this.props.setSelectedProduct(response.data);
@@ -278,20 +281,27 @@ class DetailPage extends Component {
     return null;
   }
 
+  addProdcut(product) {
+    product.qty += 1;
+    this.setState({
+      products: this.state.products
+    });
+  }
+
+  removeProdcut(product) {
+    if (product.qty > 0) {
+      product.qty -= 1;
+    }
+    this.setState({
+      products: this.state.products
+    });
+  }
+
   render() {
     const { product, accessories } = this.state;
-
     if (product) {
       return (
-        <Default
-          nav="fixed"
-          search
-          meta={{
-            title: `${product.seoFriendlyName} | OCEAN PREMIUM`,
-            description:
-              "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
-          }}
-        >
+        <div>
           {product.images &&
             product.images.length > 0 &&
             product.images[0].fullImageUrl && (
@@ -303,9 +313,8 @@ class DetailPage extends Component {
               ></div>
             )}
           <div className="container">
-            <div className="row">
+            {/* <div className="row">
               <div className="col">
-                <h1 className="main-title-with-price">{product.name}</h1>
                 {product.rates &&
                   product.rates.length > 0 &&
                   product.rates[0].price && (
@@ -324,122 +333,289 @@ class DetailPage extends Component {
                     </Fragment>
                   )}
               </div>
-            </div>
+            </div> */}
             <div className="row">
-              <div className="col-lg-7 col-sm-12 product-detail-description">
-                {product.description.section1 &&
-                product.description.section1.head ? (
-                  <h2>{product.description.section1.head}</h2>
-                ) : null}
-                {product.description.section1 &&
-                product.description.section1.paragraph ? (
+              <div
+                style={{ maxHeight: "100vh" }}
+                className="col-lg-1 col-sm-12"
+              >
+                <img
+                  style={{
+                    height: "35px",
+                    position: "relative",
+                    top: "25px",
+                    left: "25px",
+                    cursor: "pointer"
+                  }}
+                  src="/static/images/back.png"
+                ></img>
+              </div>
+              <div
+                style={{ maxHeight: "100vh" }}
+                className="col-lg-7 col-sm-12"
+              >
+                <div className="images">
+                  <div className="main-image">
+                    {/* <img [src]="selectedImage" /> */}
+                    <img src={product.images[0].url}></img>
+                  </div>
+                  <div className="small-images">
+                    {/* <img *ngFor="let imageUrl of product.imageUrls" [src]="imageUrl" (click)="selectedImage = imageUrl"
+                [ngClass]="{ 'active': selectedImage == imageUrl}" /> */}
+                    <img src={product.images[0].url} />
+                    <img src={product.images[0].url} />
+                    <img src={product.images[0].url} />
+                  </div>
+                </div>
+              </div>
+              <div
+                style={{
+                  maxHeight: "100vh",
+                  overflow: "hidden",
+                  position: "relative"
+                }}
+                className="col-lg-4 col-sm-12 product-detail-description"
+              >
+                <div
+                  style={{
+                    maxHeight: "100vh",
+                    overflow: "auto",
+                    width: "110%",
+                    paddingBottom: "25px"
+                  }}
+                >
+                  <h2>Rental > JetSkis > SeeDoo GTR X 230</h2>
+                  <h1 className="main-title">{product.name}</h1>
+                  <p>
+                    Lorem Ipsum is simply dummy text of the printing and
+                    typesetting industry.
+                  </p>
+                  <div className="tag-line">tagline</div>
+
+                  <div>
+                    <strong>€ {product.rates[0].price}</strong>EUR
+                    <div className="per-day-text">per day</div>
+                  </div>
                   <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section1.paragraph
+                    style={{
+                      display: "flex",
+                      marginBottom: "32px",
+                      marginBottom: "25px",
+                      borderBottom: "solid 1.3px lightgrey",
+                      paddingBottom: "25px"
                     }}
-                  />
-                ) : null}
-                {product.description.section2 &&
-                product.description.section2.head ? (
-                  <h2>{product.description.section2.head}</h2>
-                ) : null}
-                {product.description.section2 &&
-                product.description.section2.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section2.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section3 &&
-                product.description.section3.head ? (
-                  <h2>{product.description.section3.head}</h2>
-                ) : null}
-                {product.description.section3 &&
-                product.description.section3.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section3.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section4 &&
-                product.description.section4.head ? (
-                  <h2>{product.description.section4.head}</h2>
-                ) : null}
-                {product.description.section4 &&
-                product.description.section4.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section4.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section5 &&
-                product.description.section5.head ? (
-                  <h2>{product.description.section5.head}</h2>
-                ) : null}
-                {product.description.section5 &&
-                product.description.section5.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section5.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section6 &&
-                product.description.section6.head ? (
-                  <h2>{product.description.section6.head}</h2>
-                ) : null}
-                {product.description.section6 &&
-                product.description.section6.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section6.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section7 &&
-                product.description.section7.head ? (
-                  <h2>{product.description.section7.head}</h2>
-                ) : null}
-                {product.description.section7 &&
-                product.description.section7.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section7.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section8 &&
-                product.description.section8.head ? (
-                  <h2>{product.description.section8.head}</h2>
-                ) : null}
-                {product.description.section8 &&
-                product.description.section8.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section8.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section9 &&
-                product.description.section9.head ? (
-                  <h2>{product.description.section9.head}</h2>
-                ) : null}
-                {product.description.section9 &&
-                product.description.section9.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section9.paragraph
-                    }}
-                  />
-                ) : null}
+                  >
+                    <div className="col-md-4 counter">
+                      <div
+                        onClick={() => this.removeProdcut(product)}
+                        className="plus-minus"
+                      >
+                        -
+                      </div>
+                      <div className="value">{product.qty}</div>
+                      <div
+                        onClick={() => this.addProdcut(product)}
+                        className="plus-minus"
+                      >
+                        +
+                      </div>
+                    </div>
+                    <div className="col-md-8">
+                      <div onClick={this.openModal} className="add-btn">
+                        <i className="icon-cart"></i>
+                        Add to booking
+                      </div>
+                    </div>
+                  </div>
+                  {product.description.section1 &&
+                  product.description.section1.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/tag.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section1.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section1 &&
+                  product.description.section1.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section1.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section2 &&
+                  product.description.section2.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/note.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section2.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section2 &&
+                  product.description.section2.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section2.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section3 &&
+                  product.description.section3.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/question.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section3.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section3 &&
+                  product.description.section3.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section3.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section4 &&
+                  product.description.section4.head ? (
+                    <div style={{ display: "flex" }}>
+                      <i className="icon-attention"></i>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section4.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section4 &&
+                  product.description.section4.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section4.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section5 &&
+                  product.description.section5.head ? (
+                    <div style={{ display: "flex" }}>
+                      <h1 style={{ lineHeight: "7px" }}>+</h1>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section5.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section5 &&
+                  product.description.section5.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section5.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section6 &&
+                  product.description.section6.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/award.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section6.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section6 &&
+                  product.description.section6.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section6.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section7 &&
+                  product.description.section7.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/dimensions.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section7.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section7 &&
+                  product.description.section7.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section7.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section8 &&
+                  product.description.section8.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/tag.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section8.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section8 &&
+                  product.description.section8.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section8.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section9 &&
+                  product.description.section9.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/tag.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                        {product.description.section9.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section9 &&
+                  product.description.section9.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section9.paragraph
+                      }}
+                    />
+                  ) : null}
+                </div>
                 &nbsp;
               </div>
               {/* {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable)  0.0 && */}
-              <div className="col-lg-5 col-sm-12 product-detail-form">
-                {/* STEP SEARCH / ITINERARY */}
+              {/* <div className="col-lg-5 col-sm-12 product-detail-form">
+                STEP SEARCH / ITINERARY
                 {this.props.localSearchReducer.currentStep === 1 ? (
                   <SearchView
                     configurationsstate={this.state.configurations}
@@ -453,7 +629,7 @@ class DetailPage extends Component {
                   />
                 ) : null}
 
-                {/* STEP SELECT QUANTITY */}
+                STEP SELECT QUANTITY
                 {this.props.localSearchReducer.currentStep === 2 ? (
                   <div className={"form active quantity-wrapper"}>
                     <div className="titlewrapper">
@@ -518,7 +694,7 @@ class DetailPage extends Component {
                   </div>
                 ) : null}
 
-                {/* STEP OPTIONAL ACCESSORIES */}
+                STEP OPTIONAL ACCESSORIES
                 {this.props.localSearchReducer.currentStep === 3 &&
                 this.props.localSearchReducer.totalSteps === 4 ? (
                   <div className={"form active accessories-wrapper"}>
@@ -536,7 +712,7 @@ class DetailPage extends Component {
                   </div>
                 ) : null}
 
-                {/* STEP SUMMARY */}
+                STEP SUMMARY
                 {(this.props.localSearchReducer.currentStep === 3 &&
                   this.props.localSearchReducer.totalSteps === 3) ||
                 this.props.localSearchReducer.currentStep === 4 ? (
@@ -551,7 +727,7 @@ class DetailPage extends Component {
                   />
                 ) : null}
 
-                {/* STEP CONTINUE SHOPPING? */}
+                STEP CONTINUE SHOPPING?
                 {this.props.localSearchReducer.currentStep === 5 ? (
                   <div className="form active confirmationview">
                     <div className="titlewrapper"> </div>
@@ -582,11 +758,10 @@ class DetailPage extends Component {
                     </div>
                   </div>
                 ) : null}
-              </div>
-              {/* } */}
+              </div> */}
             </div>
 
-            {product.similarToys && product.similarToys.length > 0 && (
+            {/* {product.similarToys && product.similarToys.length > 0 && (
               <ScrollableAnchor id="similar">
                 <div className="row similar-toys">
                   <div className="col">
@@ -594,9 +769,9 @@ class DetailPage extends Component {
                   </div>
                 </div>
               </ScrollableAnchor>
-            )}
+            )} */}
 
-            {product.similarToys && product.similarToys.length > 0 && (
+            {/* {product.similarToys && product.similarToys.length > 0 && (
               <div className="row products">
                 {product.similarToys.map((item, index) => {
                   return (
@@ -627,28 +802,18 @@ class DetailPage extends Component {
                   );
                 })}
               </div>
-            )}
+            )} */}
           </div>
-
-          {this.state.loading && <Loader />}
-        </Default>
+          {/* {this.state.loading && <Loader />} */}
+        </div>
       );
-    }
-    return (
-      <Default
-        nav="fixed"
-        search
-        meta={{
-          title: "Detail Page | OCEAN PREMIUM",
-          description:
-            "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
-        }}
-      >
+    } else {
+      return (
         <div className="page-wrapper">
           <Loader />
         </div>
-      </Default>
-    );
+      );
+    }
   }
 }
 
