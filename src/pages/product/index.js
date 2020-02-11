@@ -121,7 +121,7 @@ class DetailPage extends Component {
         this.props.setTotalSteps(4);
 
         const accessories = [];
-        response.data.accessories.map(item => {
+        response.data.accessories.map((item) => {
           item.quantity = 0;
           accessories.push(item);
         });
@@ -174,52 +174,62 @@ class DetailPage extends Component {
     this.props.setCurrentStep(currentStep);
   }
 
+  // eslint-disable-next-line max-len
+  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["productForDateRangeAndLocationsExist","cartItemHasProductForDateRangeAndLocations"] }] */
+  productForDateRangeAndLocationsExist(existingCartItems, orderDetails) {
+    return existingCartItems.some(cartItem => (
+      cartItem.products.findIndex(cartProduct => cartProduct.id === orderDetails.selectedProduct.id) >= 0
+      && moment(cartItem.period.start).isSame(moment(orderDetails.deliveryDate), 'day')
+      && moment(cartItem.period.end).isSame(moment(orderDetails.collectionDate), 'day')
+      && cartItem.location.collection.name === orderDetails.collectionLocation.label
+      && cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    ));
+  }
+
+  // eslint-disable-next-line max-len
+  cartItemHasProductForDateRangeAndLocations(cartItem, orderDetails) {
+    return cartItem.products.findIndex(cartItemProduct => cartItemProduct.id === orderDetails.selectedProduct.id) >= 0
+    && moment(cartItem.period.start).isSame(moment(orderDetails.deliveryDate), 'day') 
+    && moment(cartItem.period.end).isSame(moment(orderDetails.collectionDate), 'day') 
+    && cartItem.location.collection.name === orderDetails.collectionLocation.label
+    && cartItem.location.delivery.name === orderDetails.deliveryLocation.label;
+  }
+
   addToCart() {
     const order = new Order().returnOrder();
 
     let existingItems = this.props.cartReducer.items;
+    
     let mergedItems = [];
-    if (
-      existingItems.some(someItem => {
-        return (
-          someItem.id === order.selectedProduct.id &&
-          moment(someItem.period.start).isSame(
-            moment(order.deliveryDate),
-            "day"
-          ) &&
-          moment(someItem.period.end).isSame(
-            moment(order.collectionDate),
-            "day"
-          ) &&
-          someItem.location.collection.name ===
-            order.collectionLocation.label &&
-          someItem.location.delivery.name === order.deliveryLocation.label
-        );
-      })
-    ) {
-      mergedItems = existingItems.map(item => {
-        if (
-          item.id === order.selectedProduct.id &&
-          moment(item.period.start).isSame(moment(order.deliveryDate), "day") &&
-          moment(item.period.end).isSame(moment(order.collectionDate), "day") &&
-          item.location.collection.name === order.collectionLocation.label &&
-          item.location.delivery.name === order.deliveryLocation.label
-        ) {
-          item.quantity = item.quantity + order.productQuantity;
-          if (item.accessories) {
-            item.accessories.map(existingAccessory => {
-              order.productOptionalAccessories.map(newAccessory => {
-                if (existingAccessory.id === newAccessory.id) {
-                  existingAccessory.quantity =
-                    existingAccessory.quantity + newAccessory.quantity;
-                }
-              });
-            });
-          }
-          return item;
-        } else {
-          return item;
+    if (this.productForDateRangeAndLocationsExist(existingItems, order)) {
+      mergedItems = existingItems.map((cartItem) => {
+        if (this.cartItemHasProductForDateRangeAndLocations(cartItem, order)) {
+          cartItem.products.map((cartItemProduct) => {
+            if (cartItemProduct.id === order.selectedProduct.id) {
+              cartItemProduct.quantity += order.productQuantity;
+              if (cartItemProduct.accessories) {
+                order.productOptionalAccessories.map((productAccessory) => {
+                  if (productAccessory.quantity > 0
+                      && cartItemProduct.accessories.some(accessory => accessory.id === productAccessory.id)) {
+                    cartItemProduct.accessories.map((existingAccessory) => {
+                      if (existingAccessory.id === productAccessory.id) {
+                        existingAccessory.quantity += productAccessory.quantity;
+                      }
+                    });
+                  } else if (productAccessory.quantity > 0) {
+                    cartItemProduct.accessories.push(productAccessory);
+                  }
+                });
+              } else {
+                cartItemProduct.accessories.push(order.productOptionalAccessories.map(accessory => accessory.quantity > 0));
+              }
+            } else {
+              return cartItemProduct;
+            }
+          });
+          return cartItem;
         }
+        return cartItem;
       });
     }
 
@@ -447,7 +457,7 @@ class DetailPage extends Component {
                     _prev={this._prev}
                     _next={this._next}
                     data={product}
-                    resetDeliveryLocation={deliveryLocation => {
+                    resetDeliveryLocation={(deliveryLocation) => {
                       this.getProduct(deliveryLocation);
                     }}
                   />
@@ -464,7 +474,7 @@ class DetailPage extends Component {
                       <div className="big-counter">
                         <button
                           className="subtract-button"
-                          onClick={e => {
+                          onClick={(e) => {
                             if (
                               this.props.localSearchReducer.productQuantity > 0
                             ) {
@@ -501,7 +511,7 @@ class DetailPage extends Component {
 
                         <button
                           className="add-button"
-                          onClick={e => {
+                          onClick={(e) => {
                             this.props.updateLocalSearchProductQuantity(
                               this.props.localSearchReducer.productQuantity + 1
                             );
@@ -564,7 +574,7 @@ class DetailPage extends Component {
                       <button
                         className="search-button-full"
                         type="button"
-                        onClick={e => {
+                        onClick={(e) => {
                           this.continueShopping();
                         }}
                       >
@@ -572,7 +582,7 @@ class DetailPage extends Component {
                       </button>
                       <span>or</span>
                       <Link
-                        onClick={e => {
+                        onClick={(e) => {
                           this.props.resetLocalSearch();
                         }}
                         href="/checkout"

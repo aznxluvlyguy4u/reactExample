@@ -12,30 +12,22 @@ class ProductBookingForm extends Component {
 
   constructor(props) {
     super(props);
-
     const cart = LocalStorageUtil.getCart() || [];
-    
-    const bookingDropDown = [
-      { 
-        id: undefined,
-        label: 'New Booking',
-        name: 'New Booking',
-        deliveryDate: new Date(),
-        collectionDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-        products: [],
-      },
-    ];
 
-    cart.forEach((cartItem) => {
-      bookingDropDown.push(cartItem);
-    });
-
+    const bookingDropDown = this.setUpCartItemSelection(cart);
     this.state = {
-      bookingDropDown: bookingDropDown,
-      cartItem: { bookingCollection: {}, qty: this.props.product.qty },
-      cart: cart,
+      bookingDropDown,
+      productBookingForm: {
+        booking: '',
+        location: { delivery: '', collection: '' },
+        period: { start: new Date() , end: new Date(new Date().setDate(new Date().getDate() + 1))},
+        qty: props.product.qty,
+        accessories: [],
+      },
+      cart,
     };
   }
+
   onSubmit(values) {
 
     console.log(values);
@@ -56,7 +48,7 @@ class ProductBookingForm extends Component {
       collectionLocation: values.collectionLocation,
       collectionDate: values.collectionDate,
       deliveryDate: values.deliveryDate,
-      products: values.bookingItem.products
+      products: values.bookingItem.products,
     };
 
     const bookingItemIndex = this.state.cart.findIndex(x => x.id === cartItem.id);
@@ -68,30 +60,63 @@ class ProductBookingForm extends Component {
     //LocalStorageUtil.setCart(this.state.cart);
   }
 
-  setFormFromBooking(cartItem) {
-    let existingCartItem = this.state.cartItem;
+  setUpCartItemSelection(cart) {
+    console.log(this.props.propduct);
+    console.log(cart);
+    
+    const start = new Date();
+    const end = new Date(new Date().setDate(new Date().getDate() + 1));
 
-    if (existingCartItem.id === undefined) {
-      existingCartItem.bookingCollection = cartItem;
-      existingCartItem.collectionLocation = existingCartItem.collectionLocation ? existingCartItem.collectionLocation : cartItem.collectionLocation;
-      existingCartItem.deliveryLocation = existingCartItem.deliveryLocation ? existingCartItem.deliveryLocation : cartItem.deliveryLocation;
-      existingCartItem.deliveryDate = existingCartItem.deliveryDate ? existingCartItem.deliveryDate : cartItem.deliveryDate;
-      existingCartItem.collectionDate = existingCartItem.collectionDate ? existingCartItem.collectionDate : cartItem.collectionDate;
-      existingCartItem.products = [this.props.product];
+    const bookingDropDown = [
+      { 
+        id: undefined,
+        label: 'New Booking',
+        name: 'New Booking',
+        period: { start, end },
+        location: { delivery: {}, collection: {} },
+        accessories: [],
+      },
+    ];
+
+    cart.forEach((cartItem) => {
+      let dropDownItem = cartItem;
+      dropDownItem.label = `${cartItem.location.delivery.name} - ${cartItem.location.collection.name}`;
+      dropDownItem.name = `${cartItem.location.delivery.name} - ${cartItem.location.collection.name}`,
+      bookingDropDown.push(dropDownItem);
+    });
+
+    return bookingDropDown;
+  }
+
+  setFormFromBooking(cartItem) {
+    if (cartItem.id === undefined) {
+      console.log('Do nothing for now');
     } else {
-      console.log(cartItem);
-      let qtyIndex = cartItem.products.findIndex(this.props.product.id);
-      cartItem.qty = cartItem.products[qtyIndex].qty;
-      existingCartItem = cartItem;
+      if (cartItem.id == this.props.product.id) {
+        let productBookingForm = this.state.productBookingForm;
+        productBookingForm.qty = cartItem.quantity;
+        productBookingForm.booking = cartItem;
+
+        cartItem.location.delivery = cartItem.location.delivery;
+        cartItem.location.delivery.value = cartItem.location.delivery;
+        cartItem.location.delivery.label = cartItem.location.delivery.name;
+
+        cartItem.location.collection = cartItem.location.collection;
+        cartItem.location.collection.value = cartItem.location.collection;
+        cartItem.location.collection.label = cartItem.location.collection.name;
+
+        productBookingForm.location = cartItem.location;
+        productBookingForm.period = cartItem.period;
+        this.setState({productBookingForm});
+      }
     }
-    this.setState({cartItem: existingCartItem});
   }
 
   setQty(value) {
-    const cartItem = this.state.cartItem;
-    cartItem.qty = value;
-    this.props.product.qty = value;
-    this.setState({cartItem: cartItem});
+    const productBookingForm = this.state.productBookingForm;
+    productBookingForm.qty = value;
+    this.setState({productBookingForm});
+    console.log(this.state.productBookingForm);
   }
 
   handleDateChange = (e) => {
@@ -105,12 +130,12 @@ class ProductBookingForm extends Component {
           validationSchema={searchValidation}
           enableReinitialize
           initialValues={{
-            bookingItem: this.state.cartItem.bookingCollection,
-            deliveryLocation: this.state.cartItem.deliveryLocation,
-            collectionLocation: this.state.cartItem.deliveryLocation,
-            collectionDate: this.state.cartItem.collectionDate,
-            deliveryDate: this.state.cartItem.deliveryDate,
-            qty: this.state.cartItem.qty,
+            bookingItem: this.state.productBookingForm.booking,
+            deliveryLocation: this.state.productBookingForm.location.delivery,
+            collectionLocation: this.state.productBookingForm.location.collection,
+            collectionDate: this.state.productBookingForm.period.start,
+            deliveryDate: this.state.productBookingForm.period.end,
+            qty: this.props.product.qty,
           }}
           onSubmit={this.onSubmit.bind(this)}
         >
@@ -123,7 +148,7 @@ class ProductBookingForm extends Component {
                     options={this.state.bookingDropDown}
                     name="bookingItem"
                     placeholder="New Booking"
-                    value={this.state.cartItem.bookingCollection}
+                    value={this.state.productBookingForm.booking}
                     setFieldValue={setFieldValue}
                     component={CustomSelect}
                     onSelect={this.setFormFromBooking.bind(this)}
@@ -136,7 +161,7 @@ class ProductBookingForm extends Component {
                       options={this.props.locationReducer.selectboxLocations}
                       name="deliveryLocation"
                       placeholder="Location"
-                      value={this.state.cartItem.deliveryLocation}
+                      value={this.state.productBookingForm.location.delivery}
                       setFieldValue={setFieldValue}
                       component={CustomSelect}
                     />
@@ -147,7 +172,7 @@ class ProductBookingForm extends Component {
                       options={this.props.locationReducer.selectboxLocations}
                       name="collectionLocation"
                       placeholder="Location"
-                      value={this.state.cartItem.collectionLocation}
+                      value={this.state.productBookingForm.location.collection}
                       setFieldValue={setFieldValue}
                       component={CustomSelect}
                     />
@@ -163,8 +188,8 @@ class ProductBookingForm extends Component {
                     setFieldValue={setFieldValue}
                     name="collectionDate"
                     placeholder="Date"
-                    startDate={this.state.cartItem.deliveryDate}
-                    endDate={this.state.cartItem.collectionDate}
+                    startDate={this.state.productBookingForm.period.start}
+                    endDate={this.state.productBookingForm.period.end}
                     component={DatePicker}
                   />
                 </div>
@@ -183,7 +208,7 @@ class ProductBookingForm extends Component {
                     <NumberInput
                       name="qty"
                       placeholder="Location"
-                      value={this.state.cartItem.qty}
+                      value={this.state.productBookingForm.qty}
                       setFieldValue={setFieldValue}
                       changeValue={this.setQty.bind(this)}
                     />

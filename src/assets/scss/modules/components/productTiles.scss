@@ -5,7 +5,10 @@
 }
 
 .description {
+  position: relative;
   margin: 16px 0px;
+  height: 80px;
+  overflow: hidden;
 }
 
 .tag-line {

@@ -30,7 +30,7 @@
 @import "modules/components/searchFormWrapper";
 @import "modules/components/signup";
 @import "modules/components/localSearch";
-@import "modules/components/product-tiles.scss";
+@import "modules/components/productTiles.scss";
 
 // Pages
 @import "modules/pages/checkout";
@@ -39,7 +39,7 @@
 @import "modules/pages/detail";
 @import "modules/pages/index";
 @import "modules/pages/category";
-@import "modules/pages/product-group.scss";
+@import "modules/pages/productGroup.scss";
 
 // Override stripe form elements
 .StripeElement {

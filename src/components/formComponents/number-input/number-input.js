@@ -4,7 +4,7 @@ class NumberInput extends Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = { value: this.props.value };
+    this.state = { value: props.value };
   }
 
   changeValue(number) {
@@ -15,6 +15,10 @@ class NumberInput extends Component {
     if (this.props.changeValue) { 
       this.props.changeValue(newval);
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ value: nextProps.value });  
   }
 
   render() {

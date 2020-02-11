@@ -42,7 +42,9 @@ class CustomSelect extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+  
   onChange(value) {
+    console.log('change');
     const { setFieldValue, field, onChange } = this.props;
     setFieldValue(field.name, value);
     this.setDropdownValue(value);
@@ -57,7 +59,16 @@ class CustomSelect extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value !== '' && this.state.value.id !== nextProps.value.id) {
+      const { setFieldValue, field } = this.props;
+      setFieldValue(field.name, nextProps.value);
+      this.setDropdownValue(nextProps.value);
+    }
+  }
+
   setDropdownValue(value) {
+    console.log('set dropdown', value);
     this.setState({ value });
   }
 

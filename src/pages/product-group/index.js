@@ -5,7 +5,7 @@ import classnames from "classnames";
 
 import Default from "../../layouts/default";
 import Loader from "../../components/loader";
-import PrductTiles from "../../components/product-tiles/product-tiles";
+import ProductTiles from "../../components/product-tiles/product-tiles";
 
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 import { getByGroupId } from "../../utils/rest/requests/products";
@@ -26,7 +26,6 @@ class ProductGroupPage extends Component {
   }
 
   static async getInitialProps({ query }) {
-    debugger;
     return {
       id: parseInt(query.id),
       slug: query.slug
@@ -77,7 +76,6 @@ class ProductGroupPage extends Component {
   render() {
     const { products, error } = this.state;
     const slug = this.props.slug;
-    console.log(slug);
     if (products) {
       return (
         <Default meta={meta} nav="fixed">
@@ -144,7 +142,7 @@ class ProductGroupPage extends Component {
             <div className="products-container">
               <h1 className="product-group-heading">{slug} Options</h1>
               {/* <hr></hr> */}
-              <PrductTiles products={products} />
+              <ProductTiles products={products} />
             </div>
           </div>
           <div className="container">

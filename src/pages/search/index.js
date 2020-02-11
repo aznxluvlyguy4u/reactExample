@@ -1,26 +1,33 @@
-import { isEmpty } from "lodash";
-import moment from "moment";
-import Link from "next/link";
-import Router from "next/router";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import slugify from "slugify";
+import Router from "next/router";
+
+import { isEmpty } from "lodash";
+import moment from "moment";
+
+// Actions:
 import { updateSearch, updateSearchObject } from "../../actions/searchActions";
 import { updateLocalSearch } from "../../actions/localSearchActions";
+
+// Components:
+import Default from "../../layouts/default";
 import Loader from "../../components/loader";
 import Pagination from "../../components/pagination";
 import SearchEdit from "../../components/searchComponents/searchedit/searchEdit";
-import Default from "../../layouts/default";
-import Product from "../../utils/mapping/products/Product";
+import ProductTiles from "../../components/product-tiles/product-tiles";
+import CategoryTiles from "../../components/category/categoryTiles";
+
+// Utils:
 import { CreateQueryParams } from "../../utils/queryparams";
 import { getProducts } from "../../utils/rest/requests/products";
+import { getCategories } from "../../utils/rest/requests/categories";
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 
-import ResponseToProductMapper from "../../utils/mapping/products/ResponseToProductMapper";
 class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      categories: [],
       products: [],
       total_page_count: 0,
       current_page: 0,
@@ -63,7 +70,6 @@ class SearchPage extends Component {
     if (query.collectionLocation !== null && isNaN(query.collectionLocation)) {
       obj.collectionLocation = null;
     }
-    debugger;
     return {
       keyword: decodeURIComponent(obj.keyword),
       category_id: obj.category,
@@ -73,8 +79,6 @@ class SearchPage extends Component {
       collectionDate: obj.collectionDate
     };
   }
-
-  getHtml = products => {};
 
   async componentDidMount() {
     const { keyword, deliveryLocation, collectionLocation } = this.props;
@@ -86,11 +90,10 @@ class SearchPage extends Component {
       };
     }
 
-    // if query parameters have been modified by user
-    // (keyword === '' && category_id) || (keyword === '' && deliveryLocation) &&
     if (deliveryLocation !== "" && collectionLocation !== "") {
       this.setState({ notFound: false });
       await this.getProducts("update");
+      await this.getCategories();
     } else {
       this.setState({ notFound: true, loading: false });
     }
@@ -188,23 +191,18 @@ class SearchPage extends Component {
         collectionDate,
         current_page
       );
-      const mapper = new ResponseToProductMapper();
-      const responseProducts = mapper.mapResponseToProducts(response.data);
 
+      const products = response.data;
       this.setState({
         notFound: false,
         loading: false,
-        products:
-          type === "append"
-            ? [...products, ...responseProducts]
-            : responseProducts,
+        products: products,
         total_page_count: Math.ceil(
           response.meta.totalRowCount / response.meta.perPage
         ),
         current_page: response.meta.page
       });
     } catch (error) {
-      debugger;
       this.setState({ loading: false });
       if (error.code === 404) {
         this.setState({ notFound: true });
@@ -213,6 +211,13 @@ class SearchPage extends Component {
         handleGeneralError(error);
       }
     }
+  }
+
+  async getCategories() {
+    const response = await getCategories();
+    this.setState({
+      categories: response.data
+    });
   }
 
   async getMoreProducts() {
@@ -227,6 +232,7 @@ class SearchPage extends Component {
 
   render() {
     const {
+      categories,
       products,
       loading,
       notFound,
@@ -263,59 +269,53 @@ class SearchPage extends Component {
                     </div>
                   </div>
                   <div className="row products">
-                    {products.map((item, index) => {
-                      return (
-                        <div className="col-lg-3 col-md-4 col-sm-6">
-                          {item.available ? (
-                            <Link
-                              key={index}
-                              href={`/detail?id=${item.id}&slug=${slugify(
-                                item.name
-                              )}`}
-                              as={`/detail/${item.id}/${slugify(item.name)}`}
-                            >
-                              <a>
-                                <div className="product">
-                                  <img
-                                    alt={item.name}
-                                    src={
-                                      item.thumbnailUrl
-                                        ? item.thumbnailUrl
-                                        : "/static/images/flyboard.png"
-                                    }
-                                  />
-                                  <h4>{item.name}</h4>
-                                  <span>{`from € ${item.fromPrice}`}</span>
-                                </div>
-                              </a>
-                            </Link>
-                          ) : (
-                            <div className="product">
-                              <img
-                                alt={item.name}
-                                src={
-                                  item.thumbnailUrl
-                                    ? item.thumbnailUrl
-                                    : "/static/images/flyboard.png"
-                                }
-                              />
-                              <h4>{item.name}</h4>
-                              <span>Currently not available</span>
-                              <div className="unavailable"></div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                    <ProductTiles products={products} />
                   </div>
+                  {categories.length && (
+                    <div style={{ position: "relative", top: "-65px" }}>
+                      <CategoryTiles categories={categories} />
+                    </div>
+                  )}
                   <div className="row">
-                    <div className="col">
-                      {/* {total_page_count > current_page ? <button className="showmore" onClick={onClick}>Show More (+4) ></button> : null} */}
+                    <div className="col banner">
+                      <div
+                        style={{ width: "100%", top: "62px" }}
+                        className="grid"
+                      >
+                        <div
+                          style={{ textAlign: "center" }}
+                          className="banner-left-title "
+                        >
+                          <h1 style={{ color: "white" }}>Support</h1>
+                          <div className="banner-right-text">
+                            Available 24/7
+                          </div>
+                        </div>
+
+                        <div
+                          style={{ display: "flex" }}
+                          className="banner-right-text"
+                        >
+                          <div className="col-md-6">
+                            <h2>EMAIL</h2>
+                            info@oceanpremium.com
+                          </div>
+                          <div className="col-md-6">
+                            <h2>PHONE</h2>
+                            +33 781 15 12 54
+                          </div>
+                        </div>
+                      </div>
+                      <img src="/static/images/banner-image-3.png" />
                     </div>
                   </div>
                 </Fragment>
               )}
-              {loading ? <Loader /> : null}
+              {loading ? (
+                <div className="page-wrapper">
+                  <Loader />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
