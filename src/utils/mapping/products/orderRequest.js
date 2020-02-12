@@ -1,10 +1,11 @@
 import { isEmpty } from 'lodash';
 import store from '../../../store';
+import moment from "moment";
 
 export default class OrderRequest {
   constructor(item) {
     if(item) {
-      this.id = item.selectedProduct.id,
+      this.id = moment().unix(),
       this.quantity = item.productQuantity,
       this.period = {
         start: item.deliveryDate,
@@ -20,16 +21,18 @@ export default class OrderRequest {
           name: item.collectionLocation.value.name
         }
       };
-
+      this.products = [
+        { id: item.selectedProduct.id, quantity: item.productQuantity }
+      ];
       if (!isEmpty(item.productConfigurations)) {
         this.configurations.map(configuration => ({ id: configuration.id, name: configuration.name, value: configuration.value }));
-        this.configurations = this.configurations;
+        this.products[0].configurations = this.configurations;
       }
 
       const list = item.productOptionalAccessories.filter(accessory => accessory.quantity !== 0);
       if (!isEmpty(list)) {
         list.map(accessory => ({ id: accessory.id, quantity: accessory.quantity }));
-        this.accessories = list;
+        this.products[0].accessories = list;
       }
     }
   }
@@ -39,8 +42,7 @@ export default class OrderRequest {
     let orderRequests = [];
     orderRequests = state.cartReducer.items.map(item => {
       const obj = {
-        id: item.id,
-        quantity: item.quantity,
+        id: moment().unix(),
         period: {
           start: item.period.start, //deliveryDate,
           end: item.period.end, //collectionDate,
@@ -55,16 +57,19 @@ export default class OrderRequest {
             name: item.location.end, //collectionLocation.value.name
           }
         },
+        products: [
+          { id: item.selectedProduct.id, quantity: item.productQuantity }
+        ]
       };
       if (!isEmpty(item.productConfigurations)) {
         this.configurations.map(configuration => ({ id: configuration.id, name: configuration.name, value: configuration.value }));
-        obj.configurations = this.configurations;
+        obj.products[0].configurations = this.configurations;
       }
 
       const list = item.accessories.filter(accessory => accessory.quantity !== 0);
       if (!isEmpty(list)) {
         list.map(accessory => ({ id: accessory.id, quantity: accessory.quantity }));
-        obj.accessories = list;
+        obj.products[0].accessories = list;
       }
       return obj;
     });

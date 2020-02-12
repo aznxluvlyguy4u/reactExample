@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import Steps from './steps';
-import localSearchReducer from '../../reducers/localSearchReducer';
 import { updateAccessoryQuantityById } from '../../actions/localSearchActions';
 
 class OptionalAccessoryView extends Component {

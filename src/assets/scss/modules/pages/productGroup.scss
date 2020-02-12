@@ -95,6 +95,74 @@
   font-size: 1.2rem;
 }
 
+.recommended-accessories .accessory-thumb{
+  height: 100px;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 0.513606px solid #E0E0E0;
+  box-sizing: border-box;
+  box-shadow: 1.02721px 1.02721px 2.05442px rgba(0, 0, 0, 0.1);
+  border-radius: 2.56803px;
+  text-align: center;
+}
+
+.recommended-accessories .accessory-thumb.active{
+  position: relative;
+  background: $yellow;
+  opacity: 0.5;
+}
+.recommended-accessories .accessory-thumb.active p {
+  position: absolute;
+  bottom: -5px;
+  z-index: 4;
+  text-align: center;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 0;
+  color: white;
+}
+.recommended-accessories .accessory-thumb.active img.tick {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  text-align: center;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.recommended-accessories .accessory-thumb img{
+  max-height: 80px!important;
+}
+
+.recommended-accessories p {
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.recommended-accessories p.title {
+  line-height: 14px;
+}
+
+.recommended-accessories p.from {
+  line-height: 14px;
+  color: #BDBDBD;
+}
+
+.rental-details {
+  font-size: 10px;
+}
+
+.search-button-border {
+  background-color: white;
+  color: $yellow;
+  width:100%;
+  display:block;
+  text-align:center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border: solid 2px $yellow;
+}
+
 @media (max-width: 678px) {
   .background-wrapper {
     width: 100%;

@@ -90,7 +90,70 @@
   }
 }
 
-h1.main-title {
+.yellow-button-sqaure {
+  background-color: $yellow;
+  color: $white;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 0px;
+  cursor: pointer;
+  font-size: 10px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+// Generic styles
+.yellow-button-outline {
+  background-color: white;
+  color: $yellow;
+  border: 1px solid $yellow;
+  padding: 6px;
+  border-radius: 0px;
+  cursor: pointer;
+  font-size: 10px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+
+  &:hover {
+    color: $yellow;
+  }
+}
+
+.yellow-button-outline.active {
+  background-color: $yellow;
+  color: white;
+  border: 1px solid $yellow;
+  padding: 6px;
+  border-radius: 0px;
+  cursor: pointer;
+  font-size: 10px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+
+  &:hover {
+    color: white;
+  }
+}
+
+.yellow-text {
+  color: $yellow;
+}
+
+h1.main-title, h2.main-title, h3.main-title {
   border-bottom: solid 0.3px $grey;
   padding-bottom: 20px;
 }
@@ -104,6 +167,14 @@ span.main-title-price {
   border-bottom: solid 0.3px $grey;
   padding-bottom: 20px;
   margin-bottom: 40px;
+}
+
+hr.page-divide {
+  border: 0.465537px solid $grey;
+}
+
+.text-right {
+  text-align: right;
 }
 
 h2.section-title {

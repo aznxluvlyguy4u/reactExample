@@ -7,6 +7,7 @@ import slugify from "slugify";
 import styles from "./product-tiles.style";
 
 import ProductBookingForm from "../product-booking-components/product-booking-form";
+import ProductBookingSummary from  "../product-booking-components/product-booking-summary";
 
 class ProductTiles extends Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ProductTiles extends Component {
     });
 
     this.state = {
+      step: undefined,
       products: this.props.products,
       modalIsOpen: false,
       requestedProduct: undefined
@@ -29,10 +31,11 @@ class ProductTiles extends Component {
   }
 
   setRequestedAndOpenModal(item) {
-    this.state.requestedProduct = item;
+    console.log(item);
     this.setState({
       modalIsOpen: true,
-      requestedProduct: item
+      requestedProduct: item,
+      step: 1,
     });
   }
 
@@ -63,6 +66,14 @@ class ProductTiles extends Component {
 
   closeModal() {
     this.setState({ modalIsOpen: false });
+  }
+
+  setStep(step) {
+    this.setState({ step });
+  }
+
+  setCartItemIndex(cartItemIndex) {
+    this.setState({ cartItemIndex });
   }
 
   render() {
@@ -186,49 +197,11 @@ class ProductTiles extends Component {
           style={styles}
           portalClassName="product-tile-modal"
         >
-          {this.state.requestedProduct && (
-            <div className="row">
-              <div className="col-md-7 equal-height-columns">
-                <div className="row no-gutters">
-                  <div className="col-md-1 equal-height-columns">
-                    <img
-                      src="static/images/back-arrow-white.svg"
-                      alt="previous"
-                      onClick={this.closeModal}
-                    />
-                  </div>
-                  <div className="col-md-11 equal-height-columns">
-                    <div className="white-bg h-100 p-5">
-                      <div className="row">
-                        <div className="col-md-9">
-                          <h3>Add {this.state.requestedProduct.name}</h3>
-                          <p>Add to an existing booking or create a new one!</p>
-                        </div>
-                        <div className="col-md-3">
-                          {this.state.requestedProduct.images.length > 0 && (
-                            <img
-                              className="img-fluid"
-                              alt={this.state.requestedProduct.name}
-                              src={this.state.requestedProduct.images[0].url}
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-12">
-                          <ProductBookingForm product={this.state.requestedProduct}/>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-5 equal-height-columns">
-                <div className="white-bg h-100 p-5">
-                  <h3>Recommended Accessories</h3>
-                </div>
-              </div>
-            </div>
+          {this.state.requestedProduct && this.state.step === 1 && (
+            <ProductBookingForm setCartItemIndex={this.setCartItemIndex.bind(this)} closeModal={this.closeModal.bind(this)} setStep={this.setStep.bind(this)} product={this.state.requestedProduct} cartItemIndex={this.state.cartItemIndex}/>
+          )}
+          {this.state.requestedProduct && this.state.step === 2 && (
+            <ProductBookingSummary closeModal={this.closeModal.bind(this)} setStep={this.setStep.bind(this)} product={this.state.requestedProduct} cartItemIndex={this.state.cartItemIndex}/>
           )}
         </Modal>
       </div>

@@ -44,7 +44,6 @@ class CustomSelect extends Component {
 
   
   onChange(value) {
-    console.log('change');
     const { setFieldValue, field, onChange } = this.props;
     setFieldValue(field.name, value);
     this.setDropdownValue(value);
@@ -68,7 +67,6 @@ class CustomSelect extends Component {
   }
 
   setDropdownValue(value) {
-    console.log('set dropdown', value);
     this.setState({ value });
   }
 
