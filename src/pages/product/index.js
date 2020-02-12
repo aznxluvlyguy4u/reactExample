@@ -493,7 +493,10 @@ class DetailPage extends Component {
                   {product.description.section4 &&
                   product.description.section4.head ? (
                     <div style={{ display: "flex" }}>
-                      <i className="icon-attention"></i>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/attention.png"
+                      ></img>
                       <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
                         {product.description.section4.head}
                       </h2>
