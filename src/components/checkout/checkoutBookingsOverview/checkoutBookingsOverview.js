@@ -79,34 +79,48 @@ class CheckoutBookingsOverview extends Component {
             </h1>
             <div className="paragraph">
               {this.state.cart.map((cartItem, index) => (
-                <div className="row mb-2">
+                <div className="row mb-2 equal-height-columns">
                   <div className="col-1 align-self-center">
                     <a onClick={() => this.openModalAndSetItem(index)}>
                       <img src="static/images/delete.png" />
                     </a>
                   </div>
                   <div className="col-3">
-                    <h3>{cartItem.label}</h3>
+                    <h3>{cartItem.location.delivery.name} {cartItem.location.collection.name}</h3>
                     <br />
                     {moment(cartItem.period.start).format("DD.MM.YYYY")} -{" "}
                     {moment(cartItem.period.end).format("DD.MM.YYYY")}
                   </div>
-                  <div className="col-5">
+                  <div className="col-5 align-self-center">
                     {cartItem.products.map((product, pIndex) => (
-                      <div>
-                        <img
-                          className="img-fluid"
-                          src={product.details.images[0].url}
-                          style={{ maxHeight: "80px" }}
-                        />
-                        {product.accessories.map((accessory, pIndex) => (
-                          <img
-                          className="img-fluid"
-                            src={accessory.images[0].url}
-                            style={{ maxHeight: "80px" }}
-                          />
-                        ))}
-                      </div>
+                      <table>
+                        <tr>
+                          <td>
+                            <img
+                              className="img-fluid"
+                              src={product.details.images[0].url}
+                              style={{ maxHeight: "80px" }}
+                            />
+                          </td>
+                          {product.accessories.length > 0 && (
+                            <td className="pluscontainer">
+                              <img src="static/images/add.png" />
+                            </td>
+                          )}
+                          {product.accessories.map((accessory, pIndex) => ([
+                            <td>
+                              <img
+                              className="img-fluid"
+                                src={accessory.images[0].url}
+                                style={{ maxHeight: "80px" }}
+                              />
+                            </td>,
+                            <td className={(pIndex + 1) < product.accessories.length ? '' : 'd-none'}>
+                              <img src="static/images/add.png" />
+                            </td>
+                          ]))}
+                        </tr>
+                      </table>
                     ))}
                   </div>
                   <div className="col-3 align-self-end pricing">

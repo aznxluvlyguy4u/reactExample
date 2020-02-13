@@ -40,6 +40,26 @@
     font-weight: bold;
     width: 160px;
   }
+
+  .itemwrapper {
+    height: 80px;
+  }
+
+  .pluscontainer {
+    height: 80px;
+    position: relative;
+    float: left;
+    margin-right: 10px;
+    width: auto;
+  }
+
+  .pluscontainer > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+
 }
 
 .checkout-overview-modal {
