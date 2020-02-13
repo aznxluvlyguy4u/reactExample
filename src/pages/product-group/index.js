@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { scroller } from "react-scroll";
 import Iframe from "react-iframe";
 import classnames from "classnames";
+import Modal from "react-modal";
 
 import Default from "../../layouts/default";
 import Loader from "../../components/loader";
@@ -21,7 +22,8 @@ class ProductGroupPage extends Component {
     super(props);
     this.state = {
       products: null,
-      error: null
+      error: null,
+      selectedProduct: null
     };
   }
 
@@ -141,7 +143,9 @@ class ProductGroupPage extends Component {
             <div className="products-container">
               <h1 className="product-group-heading">{slug} Options</h1>
               {/* <hr></hr> */}
-              <ProductTiles products={products} />
+              <ProductTiles
+                products={products}
+              />
             </div>
           </div>
           <div className="container">

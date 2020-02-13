@@ -1,5 +1,6 @@
 import { cloneDeep, isEmpty } from "lodash";
 import Router from "next/router";
+import Modal from "react-modal";
 import React, { Component, Fragment } from "react";
 import slugify from "slugify";
 import Link from "next/link";
@@ -32,6 +33,9 @@ import {
 } from "../../actions/localSearchActions";
 import { updateCart, addToCart, setCart } from "../../actions/cartActions";
 
+import ProductBookingForm from "../../components/product-booking-components/product-booking-form";
+import ProductBookingSummary from "../../components/product-booking-components/product-booking-summary";
+
 class DetailPage extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +43,8 @@ class DetailPage extends Component {
       accessories: [],
       product: undefined,
       configurations: [],
-      total: undefined
+      total: undefined,
+      selectedProductUrl: null
     };
 
     this.addToCart = this.addToCart.bind(this);
@@ -117,14 +122,19 @@ class DetailPage extends Component {
 
       response.data.qty = 0;
 
-      this.setState({ product: response.data });
+      let initialUrl = null;
+      if (response.data.images && response.data.images.length > 0) {
+        initialUrl = response.data.images[0].url;
+      }
+
+      this.setState({ product: response.data, selectedProductUrl: initialUrl });
       this.props.setSelectedProduct(response.data);
 
       if (response.data.accessories) {
         this.props.setTotalSteps(4);
 
         const accessories = [];
-        response.data.accessories.map((item) => {
+        response.data.accessories.map(item => {
           item.quantity = 0;
           accessories.push(item);
         });
@@ -180,41 +190,67 @@ class DetailPage extends Component {
   // eslint-disable-next-line max-len
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["productForDateRangeAndLocationsExist","cartItemHasProductForDateRangeAndLocations"] }] */
   productForDateRangeAndLocationsExist(existingCartItems, orderDetails) {
-    return existingCartItems.some(cartItem => (
-      cartItem.products.findIndex(cartProduct => cartProduct.id === orderDetails.selectedProduct.id) >= 0
-      && moment(cartItem.period.start).isSame(moment(orderDetails.deliveryDate), 'day')
-      && moment(cartItem.period.end).isSame(moment(orderDetails.collectionDate), 'day')
-      && cartItem.location.collection.name === orderDetails.collectionLocation.label
-      && cartItem.location.delivery.name === orderDetails.deliveryLocation.label
-    ));
+    return existingCartItems.some(
+      cartItem =>
+        cartItem.products.findIndex(
+          cartProduct => cartProduct.id === orderDetails.selectedProduct.id
+        ) >= 0 &&
+        moment(cartItem.period.start).isSame(
+          moment(orderDetails.deliveryDate),
+          "day"
+        ) &&
+        moment(cartItem.period.end).isSame(
+          moment(orderDetails.collectionDate),
+          "day"
+        ) &&
+        cartItem.location.collection.name ===
+          orderDetails.collectionLocation.label &&
+        cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    );
   }
 
   // eslint-disable-next-line max-len
   cartItemHasProductForDateRangeAndLocations(cartItem, orderDetails) {
-    return cartItem.products.findIndex(cartItemProduct => cartItemProduct.id === orderDetails.selectedProduct.id) >= 0
-    && moment(cartItem.period.start).isSame(moment(orderDetails.deliveryDate), 'day') 
-    && moment(cartItem.period.end).isSame(moment(orderDetails.collectionDate), 'day') 
-    && cartItem.location.collection.name === orderDetails.collectionLocation.label
-    && cartItem.location.delivery.name === orderDetails.deliveryLocation.label;
+    return (
+      cartItem.products.findIndex(
+        cartItemProduct =>
+          cartItemProduct.id === orderDetails.selectedProduct.id
+      ) >= 0 &&
+      moment(cartItem.period.start).isSame(
+        moment(orderDetails.deliveryDate),
+        "day"
+      ) &&
+      moment(cartItem.period.end).isSame(
+        moment(orderDetails.collectionDate),
+        "day"
+      ) &&
+      cartItem.location.collection.name ===
+        orderDetails.collectionLocation.label &&
+      cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    );
   }
 
   addToCart() {
     const order = new Order().returnOrder();
 
     let existingItems = this.props.cartReducer.items;
-    
+
     let mergedItems = [];
     if (this.productForDateRangeAndLocationsExist(existingItems, order)) {
-      mergedItems = existingItems.map((cartItem) => {
+      mergedItems = existingItems.map(cartItem => {
         if (this.cartItemHasProductForDateRangeAndLocations(cartItem, order)) {
-          cartItem.products.map((cartItemProduct) => {
+          cartItem.products.map(cartItemProduct => {
             if (cartItemProduct.id === order.selectedProduct.id) {
               cartItemProduct.quantity += order.productQuantity;
               if (cartItemProduct.accessories) {
-                order.productOptionalAccessories.map((productAccessory) => {
-                  if (productAccessory.quantity > 0
-                      && cartItemProduct.accessories.some(accessory => accessory.id === productAccessory.id)) {
-                    cartItemProduct.accessories.map((existingAccessory) => {
+                order.productOptionalAccessories.map(productAccessory => {
+                  if (
+                    productAccessory.quantity > 0 &&
+                    cartItemProduct.accessories.some(
+                      accessory => accessory.id === productAccessory.id
+                    )
+                  ) {
+                    cartItemProduct.accessories.map(existingAccessory => {
                       if (existingAccessory.id === productAccessory.id) {
                         existingAccessory.quantity += productAccessory.quantity;
                       }
@@ -224,7 +260,11 @@ class DetailPage extends Component {
                   }
                 });
               } else {
-                cartItemProduct.accessories.push(order.productOptionalAccessories.map(accessory => accessory.quantity > 0));
+                cartItemProduct.accessories.push(
+                  order.productOptionalAccessories.map(
+                    accessory => accessory.quantity > 0
+                  )
+                );
               }
             } else {
               return cartItemProduct;
@@ -307,11 +347,65 @@ class DetailPage extends Component {
     });
   }
 
+  onImageClicked(selectedProductUrl) {
+    this.setState({
+      selectedProductUrl
+    });
+  }
+
+  openModal() {
+    this.setState({ modalIsOpen: true });
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //this.subtitle.style.color = "#f00";
+  }
+
+  closeModal() {
+    this.setState({ modalIsOpen: false });
+  }
+
+  setStep(step) {
+    this.setState({ step });
+  }
+
+  setCartItemIndex(cartItemIndex) {
+    this.setState({ cartItemIndex });
+  }
+
+  setRequestedAndOpenModal(item) {
+    console.log(item);
+    this.setState({
+      modalIsOpen: true,
+      requestedProduct: item,
+      step: 1
+    });
+  }
+
   render() {
     const { product, accessories } = this.state;
     if (product) {
       return (
         <div>
+          <a
+            href={`/product-group?id=${product.productGroup.id}&slug=${slugify(
+              product.productGroup.name
+            )}`}
+            as={`/product-group/${product.id}/${slugify(
+              product.productGroup.name
+            )}`}
+            style={{ position: "absolute", left: "25px", top: "65px" }}
+          >
+            <img
+              style={{
+                height: "35px",
+                position: "relative",
+                cursor: "pointer"
+              }}
+              src="/static/images/back.png"
+            ></img>
+          </a>
           {product.images &&
             product.images.length > 0 &&
             product.images[0].fullImageUrl && (
@@ -344,57 +438,71 @@ class DetailPage extends Component {
                   )}
               </div>
             </div> */}
-            <div className="row">
+            <div className="row" style={{ marginTop: "60px" }}>
               <div
                 style={{ maxHeight: "100vh" }}
-                className="col-lg-1 col-sm-12"
-              >
-                <img
-                  style={{
-                    height: "35px",
-                    position: "relative",
-                    top: "25px",
-                    left: "25px",
-                    cursor: "pointer"
-                  }}
-                  src="/static/images/back.png"
-                ></img>
-              </div>
-              <div
-                style={{ maxHeight: "100vh" }}
-                className="col-lg-7 col-sm-12"
+                className="col-lg-8 col-sm-12"
               >
                 <div className="images">
                   <div className="main-image">
-                    {/* <img [src]="selectedImage" /> */}
-                    <img src={product.images[0].url}></img>
+                    <img
+                      src={
+                        this.state.selectedProductUrl
+                          ? this.state.selectedProductUrl
+                          : ""
+                      }
+                    />
+                    {/* <img src={product.images[0].url}></img> */}
                   </div>
                   <div className="small-images">
-                    {/* <img *ngFor="let imageUrl of product.imageUrls" [src]="imageUrl" (click)="selectedImage = imageUrl"
-                [ngClass]="{ 'active': selectedImage == imageUrl}" /> */}
-                    <img src={product.images[0].url} />
-                    <img src={product.images[0].url} />
-                    <img src={product.images[0].url} />
+                    {product.images &&
+                      product.images.map(productImage => {
+                        return (
+                          <img
+                            src={productImage.url}
+                            onClick={e => {
+                              this.onImageClicked(productImage.url);
+                            }}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
               </div>
               <div
                 style={{
-                  maxHeight: "100vh",
-                  overflow: "hidden",
-                  position: "relative"
+                  overflow: "scroll"
                 }}
                 className="col-lg-4 col-sm-12 product-detail-description"
               >
                 <div
                   style={{
-                    maxHeight: "100vh",
-                    overflow: "auto",
-                    width: "110%",
+                    maxHeight: "70vh",
                     paddingBottom: "25px"
                   }}
                 >
-                  <h2>Rental > JetSkis > SeeDoo GTR X 230</h2>
+                  <h2>
+                    <a style={{ color: "black" }} href="/">
+                      Rental
+                    </a>{" "}
+                    >{" "}
+                    <a
+                      style={{ color: "black" }}
+                      href={`/product-group?id=${
+                        product.productGroup.id
+                      }&slug=${slugify(product.productGroup.name)}`}
+                      as={`/product-group/${product.id}/${slugify(
+                        product.productGroup.name
+                      )}`}
+                    >
+                      {" "}
+                      {product.productGroup.name}
+                    </a>{" "}
+                    >{" "}
+                    <span style={{ color: "#FAB900", fontSize: "20px" }}>
+                      {product.name}
+                    </span>
+                  </h2>
                   <h1 className="main-title">{product.name}</h1>
                   <p>
                     Lorem Ipsum is simply dummy text of the printing and
@@ -431,7 +539,10 @@ class DetailPage extends Component {
                       </div>
                     </div>
                     <div className="col-md-8">
-                      <div onClick={this.openModal} className="add-btn">
+                      <div
+                        onClick={() => this.setRequestedAndOpenModal(product)}
+                        className="add-btn"
+                      >
                         <i className="icon-cart"></i>
                         Add to booking
                       </div>
@@ -444,7 +555,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/tag.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section1.head}
                       </h2>
                     </div>
@@ -465,7 +576,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/note.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section2.head}
                       </h2>
                     </div>
@@ -486,7 +597,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/question.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section3.head}
                       </h2>
                     </div>
@@ -507,7 +618,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/attention.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section4.head}
                       </h2>
                     </div>
@@ -525,7 +636,7 @@ class DetailPage extends Component {
                   product.description.section5.head ? (
                     <div style={{ display: "flex" }}>
                       <h1 style={{ lineHeight: "7px" }}>+</h1>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section5.head}
                       </h2>
                     </div>
@@ -546,7 +657,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/award.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section6.head}
                       </h2>
                     </div>
@@ -567,7 +678,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/dimensions.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section7.head}
                       </h2>
                     </div>
@@ -588,7 +699,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/tag.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section8.head}
                       </h2>
                     </div>
@@ -609,7 +720,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/tag.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section9.head}
                       </h2>
                     </div>
@@ -817,7 +928,52 @@ class DetailPage extends Component {
               </div>
             )} */}
           </div>
-          {/* {this.state.loading && <Loader />} */}
+
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            onAfterOpen={this.afterOpenModal.bind(this)}
+            onRequestClose={this.closeModal.bind(this)}
+            style={{
+              overlay: {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "#19303b",
+                zIndex: 4002
+              },
+              content: {
+                top: "50%",
+                left: "50%",
+                right: "auto",
+                bottom: "auto",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "transparent",
+                border: "none",
+                width: "80%"
+              }
+            }}
+            portalClassName="product-tile-modal"
+          >
+            {this.state.requestedProduct && this.state.step === 1 && (
+              <ProductBookingForm
+                setCartItemIndex={this.setCartItemIndex.bind(this)}
+                closeModal={this.closeModal.bind(this)}
+                setStep={this.setStep.bind(this)}
+                product={this.state.requestedProduct}
+                cartItemIndex={this.state.cartItemIndex}
+              />
+            )}
+            {this.state.requestedProduct && this.state.step === 2 && (
+              <ProductBookingSummary
+                closeModal={this.closeModal.bind(this)}
+                setStep={this.setStep.bind(this)}
+                product={this.state.requestedProduct}
+                cartItemIndex={this.state.cartItemIndex}
+              />
+            )}
+          </Modal>
         </div>
       );
     } else {
