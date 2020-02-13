@@ -75,7 +75,7 @@ class ProductBookingForm extends Component {
       cart.push(cartItem);
     }
     LocalStorageUtil.setCart(cart);
-    const cartItemIndex = cart.findIndex(cartItem => cartItem.id);
+    const cartItemIndex = cart.findIndex(cartItem => cartItem.id === values.bookingItem.id);
     this.props.setCartItemIndex(cartItemIndex);
     this.props.setStep(2);
   }

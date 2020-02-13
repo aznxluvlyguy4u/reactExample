@@ -10,10 +10,12 @@ class ProductBookingRentalDetails extends Component {
   constructor(props) {
     super(props);
     const cart = LocalStorageUtil.getCart() || [];
+    console.log(props.cartItemIndex);
     const cartItem = cart[props.cartItemIndex];
     const start = moment(cart[props.cartItemIndex].period.start).endOf("day");
     const end = moment(cart[props.cartItemIndex].period.end).endOf("day");
     const dayCount = end.diff(start, "days");
+    console.log('Debugger' ,cartItem, props.product.id);
     const cartItemProductIndex = cartItem.products.findIndex(
       p => p.id === props.product.id
     );
