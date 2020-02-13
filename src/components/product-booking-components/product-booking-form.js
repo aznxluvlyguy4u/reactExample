@@ -36,7 +36,6 @@ class ProductBookingForm extends Component {
   }
 
   onSubmit(values) {
-    console.log(values);
 
     if (this.state.productBookingForm.qty === 0) {
       return;
@@ -50,7 +49,7 @@ class ProductBookingForm extends Component {
     };
     const product = {
       id: this.props.product.id,
-      accessories: this.state.accessories,
+      accessories: this.state.accessories || [],
       quantity: this.state.productBookingForm.qty,
     };
 
