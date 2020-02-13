@@ -71,11 +71,11 @@ class ProductBookingForm extends Component {
         location,
         products: [product],
       };
+      values.bookingItem.id = cartItem.id;
       cart.push(cartItem);
     }
     LocalStorageUtil.setCart(cart);
-
-    const cartItemIndex = cart.findIndex(cartItem => cartItem.id === values.bookingItem.id && cartItem.name === values.bookingItem.name);
+    const cartItemIndex = cart.findIndex(cartItem => cartItem.id);
     this.props.setCartItemIndex(cartItemIndex);
     this.props.setStep(2);
   }

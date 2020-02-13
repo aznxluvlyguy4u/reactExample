@@ -107,7 +107,6 @@ class ProductGroupPage extends Component {
           <div className="container">
             <div className="products-container">
               <h1 className="product-group-heading">{slug} Rentals</h1>
-              {/* <hr></hr> */}
               <div className="row">
                 <div className="col-sm-12 col-md-6 product-group-text">
                   <div className="text-group">
