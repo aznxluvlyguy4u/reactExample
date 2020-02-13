@@ -136,9 +136,12 @@ class CheckoutPage extends Component {
         orderRequests.push({
           id: product.id,
           quantity: product.quantity,
-          accesories: product.accesories,
           location: orderItem.location,
-          period: orderItem.period
+          period: {
+            start: moment(orderItem.period.start).format('YYYY-MM-DDTHH:mm:ss.000Z'),
+            end: moment(orderItem.period.end).format('YYYY-MM-DDTHH:mm:ss.000Z'),
+          },
+          accesories: product.accessories,
         });
         return;
       });
@@ -154,10 +157,10 @@ class CheckoutPage extends Component {
     const items = LocalStorageUtil.getCart();
     if (items && items.length > 0) {
       this.setState({ loading: true });
-
       const orderRequest = items;
       if (orderRequest.length > 0) {
         const orderRequests = await this.getProductsFromCartItems(orderRequest);
+        console.log(orderRequests);
         let response = await checkCartAvailability(orderRequests).then(
           response => {
             //LocalStorageUtil.setCart(response.data.products);
