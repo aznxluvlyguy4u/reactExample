@@ -31,7 +31,6 @@ class ProductTiles extends Component {
   }
 
   setRequestedAndOpenModal(item) {
-    console.log(item);
     this.setState({
       modalIsOpen: true,
       requestedProduct: item,

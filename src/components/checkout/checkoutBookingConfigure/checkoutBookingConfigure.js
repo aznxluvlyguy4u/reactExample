@@ -2,15 +2,16 @@ import React, { Component } from "react";
 import moment from "moment";
 import CartUtils from "../../../utils/mapping/cart/cartUtils";
 import Modal from "react-modal";
-import styles from "./checkout-overview-modal.style";
+import styles from "./checkoutBookingConfigure.style";
 import LocalStorageUtil from "../../../utils/localStorageUtil";
 
-class CheckoutBookingsOverview extends Component {
+class CheckoutBookingConfigure extends Component {
   constructor(props) {
     super(props);
 
     let cart = props.cart;
     let ct = cart;
+    let cartItem;
 
     if (cart) {
       ct = cart.map((cartItem, index) => {
@@ -20,13 +21,15 @@ class CheckoutBookingsOverview extends Component {
         });
         return cartItem;
       });
+      cartItem = cart[props.configureIndex];
     }
 
     this.state = {
       modalIsOpen: false,
       cart: ct,
       cartUtils: new CartUtils(),
-      cartIndex: undefined
+      cartItemIndex: props.configureIndex,
+      cartItem
     };
 
     this.openModal = this.openModal.bind(this);
@@ -37,14 +40,14 @@ class CheckoutBookingsOverview extends Component {
 
   removeFromCartAndClose() {
     let cart = this.state.cart;
-    cart.splice(this.state.cartIndex,1);
+    cart.splice(this.state.cartIndex, 1);
     this.props.updateCart(cart);
     LocalStorageUtil.setCart(cart);
     this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
   }
 
   configureAll() {
-    this.props.setConfigureAll();
+    this.props.setConfigureAll("configurAll");
   }
 
   configure(cartItemIndex) {
@@ -71,53 +74,59 @@ class CheckoutBookingsOverview extends Component {
   render() {
     if (this.props.cart) {
       return (
-        <div className="page-wrapper checkout-overview">
+        <div className="page-wrapper checkout-configure">
           <div className="checkout-wrapper">
             <h1>
-              Bookings
-              <button onClick={ () => this.configureAll() } className="yellow-button-outline">Configure All</button>
+              Overview{" "}
+              <span>
+                {" "}
+                / <a> Checkout </a>/ <a> Pay </a>{" "}
+              </span>
             </h1>
             <div className="paragraph">
-              {this.state.cart.map((cartItem, index) => (
-                <div className="row mb-2">
-                  <div className="col-1 align-self-center">
-                    <a onClick={() => this.openModalAndSetItem(index)}>
-                      <img src="static/images/delete.png" />
-                    </a>
-                  </div>
-                  <div className="col-3">
-                    <h3>{cartItem.label}</h3>
-                    <br />
-                    {moment(cartItem.period.start).format("DD.MM.YYYY")} -{" "}
-                    {moment(cartItem.period.end).format("DD.MM.YYYY")}
-                  </div>
-                  <div className="col-5">
-                    {cartItem.products.map((product, pIndex) => (
-                      <div>
-                        <img
-                          className="img-fluid"
-                          src={product.details.images[0].url}
-                          style={{ maxHeight: "80px" }}
-                        />
-                        {product.accessories.map((accessory, pIndex) => (
-                          <img
-                          className="img-fluid"
-                            src={accessory.images[0].url}
-                            style={{ maxHeight: "80px" }}
-                          />
-                        ))}
+              {this.state.cartItem &&
+                this.state.cartItem.products.map((product, index) => (
+                  <div>
+                    <div className="row mb-2">
+                      <div className="col-6">Product</div>
+                      <div className="col-2">Qty</div>
+                      <div className="col-2">Price</div>
+                      <div className="col-2">Availability</div>
+                    </div>
+
+                    <div className="row mb-2">
+                      <div className="col-1 align-self-center">
+                        <a onClick={() => this.openModalAndSetItem(index)}>
+                          <img src="static/images/delete.png" />
+                        </a>
                       </div>
-                    ))}
+                      <div className="col-5 align-items-center">
+                        <div>
+                        <div className="left">
+                          {product.details && product.details.images && product.details.images.length > 0 && (
+                            <img className="product-item" src={product.details.images[0].url} />
+                          )}
+                        </div>
+                        <div className="left">
+                            <h3>{product.details.name}</h3>
+                            {product.details && product.details.rates && product.details.rates.length > 0 && (
+                              <span class="grey">from € {product.details.rates[0].price}</span>
+                            )}
+                        </div>
+                        </div>
+                      </div>
+                      <div className="col-2">
+
+                      </div>
+                      <div className="col-2">
+
+                      </div>
+                      <div className="col-2">
+
+                      </div>
+                    </div>
                   </div>
-                  <div className="col-3 align-self-end pricing">
-                    <h2>€ {this.state.cartUtils.getCartItemTotal(cartItem)}</h2>
-                    <p>Excl. VAT & Security Deposit</p>
-                    <button onClick={ () => this.configure(index) } type="button" className="configure-solid-yellow">
-                      Configure
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           <Modal
@@ -140,7 +149,10 @@ class CheckoutBookingsOverview extends Component {
                 Yes! Please remove this booking.
               </button>
               <br />
-              <button onClick={this.closeModal} className="yellow-outline-button">
+              <button
+                onClick={this.closeModal}
+                className="yellow-outline-button"
+              >
                 Keep Booking
               </button>
             </div>
@@ -152,4 +164,4 @@ class CheckoutBookingsOverview extends Component {
   }
 }
 
-export default CheckoutBookingsOverview;
+export default CheckoutBookingConfigure;
