@@ -43,10 +43,20 @@ class CheckoutBookingConfigure extends Component {
 
   removeFromCartAndClose() {
     let cart = this.state.cart;
+    console.log(this.state.cartItem);
+    if(this.state.cartIndex.aIndex){
+      console.log('remove accessory');
+      
+      console.log(this.cart[this.cartItemIndex].products[this.state.cartIndex.pIndex].accessories[this.state.cartIndex.aIndex]);
+    }else{
+      console.log(this.cartItem.products[this.state.cartIndex.pIndex]);
+    }
+    /*
+    
     cart.splice(this.state.cartIndex, 1);
     this.props.updateCart(cart);
     LocalStorageUtil.setCart(cart);
-    this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
+    this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });*/
   }
 
   configureAll() {
@@ -121,7 +131,7 @@ class CheckoutBookingConfigure extends Component {
                         this.updateProductCounter(pIndex, value)
                       }
                       openModalAndSetItem={() =>
-                        this.openModalAndSetItem(pIndex)
+                        this.openModalAndSetItem({pIndex})
                       }
                     />
                     <div className="divider my-3"></div>
@@ -141,7 +151,7 @@ class CheckoutBookingConfigure extends Component {
                             this.updateAccessoryCounter(pIndex, aIndex, value)
                           }
                           openModalAndSetItem={() =>
-                            this.openModalAndSetItem(pIndex)
+                            this.openModalAndSetItem({pIndex, aIndex})
                           }
                         />
                       ))}
@@ -160,8 +170,8 @@ class CheckoutBookingConfigure extends Component {
               X
             </span>
             <div className="content">
-              <h1>Remove Booking</h1>
-              <p>Are you sure you want to remove the booking from your cart?</p>
+              <h1>Remove Item</h1>
+              <p>Are you sure you want to remove this item from your cart?</p>
               <button
                 onClick={this.removeFromCartAndClose}
                 className="grey-button-outline"
