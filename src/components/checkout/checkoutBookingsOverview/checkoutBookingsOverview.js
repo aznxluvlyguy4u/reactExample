@@ -107,7 +107,7 @@ class CheckoutBookingsOverview extends Component {
                               <img src="static/images/add.png" />
                             </td>
                           )}
-                          {product.accessories.map((accessory, pIndex) => ([
+                          {product.accessories.map((accessory, aIndex) => ([
                             <td>
                               <img
                               className="img-fluid"
@@ -115,7 +115,7 @@ class CheckoutBookingsOverview extends Component {
                                 style={{ maxHeight: "80px" }}
                               />
                             </td>,
-                            <td className={(pIndex + 1) < product.accessories.length ? '' : 'd-none'}>
+                            <td className={(aIndex + 1) < product.accessories.length ? '' : 'd-none'}>
                               <img src="static/images/add.png" />
                             </td>
                           ]))}
