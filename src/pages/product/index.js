@@ -417,27 +417,6 @@ class DetailPage extends Component {
               ></div>
             )}
           <div className="container">
-            {/* <div className="row">
-              <div className="col">
-                {product.rates &&
-                  product.rates.length > 0 &&
-                  product.rates[0].price && (
-                    <Fragment>
-                      <span className="main-title-price">
-                        {product.rates &&
-                        product.rates.length > 0 &&
-                        parseFloat(product.rates[0].quantityAvailable) > 0.0 ? (
-                          <Fragment>
-                            <strong>from</strong> €{product.rates[0].price}
-                          </Fragment>
-                        ) : (
-                          <strong>Currently not available</strong>
-                        )}
-                      </span>
-                    </Fragment>
-                  )}
-              </div>
-            </div> */}
             <div className="row" style={{ marginTop: "60px" }}>
               <div
                 style={{ maxHeight: "100vh" }}
@@ -504,14 +483,13 @@ class DetailPage extends Component {
                     </span>
                   </h2>
                   <h1 className="main-title">{product.name}</h1>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <div className="tag-line">tagline</div>
+                  <p>{product.description && product.description.summary}</p>
+                  <div className="tag-line">
+                    {product.description && product.description.tagline}
+                  </div>
 
                   <div>
-                    <strong>€ {product.rates[0].price}</strong>EUR
+                    <strong>€ {product.rates[0].price}</strong> EUR
                     <div className="per-day-text">per day</div>
                   </div>
                   <div
@@ -543,8 +521,7 @@ class DetailPage extends Component {
                         onClick={() => this.setRequestedAndOpenModal(product)}
                         className="add-btn"
                       >
-                        <i className="icon-cart"></i>
-                        Add to booking
+                        <i className="icon-cart"></i> Add to booking
                       </div>
                     </div>
                   </div>
@@ -737,196 +714,7 @@ class DetailPage extends Component {
                 </div>
                 &nbsp;
               </div>
-              {/* {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable)  0.0 && */}
-              {/* <div className="col-lg-5 col-sm-12 product-detail-form">
-                STEP SEARCH / ITINERARY
-                {this.props.localSearchReducer.currentStep === 1 ? (
-                  <SearchView
-                    configurationsstate={this.state.configurations}
-                    onChangeConfiguration={this.onChangeConfiguration}
-                    _prev={this._prev}
-                    _next={this._next}
-                    data={product}
-                    resetDeliveryLocation={(deliveryLocation) => {
-                      this.getProduct(deliveryLocation);
-                    }}
-                  />
-                ) : null}
-
-                STEP SELECT QUANTITY
-                {this.props.localSearchReducer.currentStep === 2 ? (
-                  <div className={"form active quantity-wrapper"}>
-                    <div className="titlewrapper">
-                      <h3 className="localSearchTitle">Product Quantity</h3>
-                      <Steps />
-                    </div>
-                    <div className="item-wrap">
-                      <div className="big-counter">
-                        <button
-                          className="subtract-button"
-                          onClick={(e) => {
-                            if (
-                              this.props.localSearchReducer.productQuantity > 0
-                            ) {
-                              this.props.updateLocalSearchProductQuantity(
-                                this.props.localSearchReducer.productQuantity -
-                                  1
-                              );
-                            }
-                          }}
-                        >
-                          &minus;
-                        </button>
-                        <span className="center">
-                          <span className="quantity">
-                            {this.props.localSearchReducer.productQuantity}
-                          </span>
-                          <br />
-                          {this.props.localSearchReducer.selectedProduct
-                            .rates && (
-                            <Fragment>
-                              €{" "}
-                              {parseFloat(
-                                this.props.localSearchReducer.selectedProduct
-                                  .rates[0].price *
-                                  this.props.localSearchReducer.productQuantity
-                              ).toFixed(2)}
-                              <br />
-                              <span className="pricePerDayLabel">
-                                price per day
-                              </span>
-                            </Fragment>
-                          )}
-                        </span>
-
-                        <button
-                          className="add-button"
-                          onClick={(e) => {
-                            this.props.updateLocalSearchProductQuantity(
-                              this.props.localSearchReducer.productQuantity + 1
-                            );
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div className="button-wrapper">
-                      {this.previousButton(this.state.currentStep)}
-                      {this.nextButton(this.state.currentStep)}
-                    </div>
-                  </div>
-                ) : null}
-
-                STEP OPTIONAL ACCESSORIES
-                {this.props.localSearchReducer.currentStep === 3 &&
-                this.props.localSearchReducer.totalSteps === 4 ? (
-                  <div className={"form active accessories-wrapper"}>
-                    <div className="titlewrapper">
-                      <h3 className="localSearchTitle">Optional Accessories</h3>
-                      <Steps />
-                    </div>
-                    <div className="item-wrap">
-                      <OptionalAccessoryView onChange={this.changeAccesoire} />
-                    </div>
-                    <div className="button-wrapper">
-                      {this.previousButton()}
-                      {this.nextButton()}
-                    </div>
-                  </div>
-                ) : null}
-
-                STEP SUMMARY
-                {(this.props.localSearchReducer.currentStep === 3 &&
-                  this.props.localSearchReducer.totalSteps === 3) ||
-                this.props.localSearchReducer.currentStep === 4 ? (
-                  <SummaryView
-                    total={this.state.total}
-                    _prev={this._prev}
-                    accessories={this.state.accessories}
-                    handleSubmit={this.addToCart}
-                    accessories={accessories.filter(
-                      val => val.type !== "mandatory"
-                    )}
-                  />
-                ) : null}
-
-                STEP CONTINUE SHOPPING?
-                {this.props.localSearchReducer.currentStep === 5 ? (
-                  <div className="form active confirmationview">
-                    <div className="titlewrapper"> </div>
-                    <div className="subview">
-                      <img
-                        src="/static/images/success.png"
-                        height="100"
-                        width="100"
-                      />
-                      <button
-                        className="search-button-full"
-                        type="button"
-                        onClick={(e) => {
-                          this.continueShopping();
-                        }}
-                      >
-                        Continue Shopping
-                      </button>
-                      <span>or</span>
-                      <Link
-                        onClick={(e) => {
-                          this.props.resetLocalSearch();
-                        }}
-                        href="/checkout"
-                      >
-                        <a className="search-button-border">Go To Cart</a>
-                      </Link>
-                    </div>
-                  </div>
-                ) : null}
-              </div> */}
             </div>
-
-            {/* {product.similarToys && product.similarToys.length > 0 && (
-              <ScrollableAnchor id="similar">
-                <div className="row similar-toys">
-                  <div className="col">
-                    <h3>Similar toys</h3>
-                  </div>
-                </div>
-              </ScrollableAnchor>
-            )} */}
-
-            {/* {product.similarToys && product.similarToys.length > 0 && (
-              <div className="row products">
-                {product.similarToys.map((item, index) => {
-                  return (
-                    <div className="col-lg-3 col-md-4 col-sm-6">
-                      <Link
-                        key={index}
-                        href={`/detail?id=${item.id}&slug=${slugify(
-                          item.name
-                        )}`}
-                        as={`/detail/${item.id}/${slugify(item.name)}`}
-                      >
-                        <a>
-                          <div className="product">
-                            <img
-                              alt={item.name}
-                              src={
-                                item.images[0].fullImageUrl
-                                  ? item.images[0].fullImageUrl
-                                  : "/static/images/flyboard.png"
-                              }
-                            />
-                            <h4>{item.name}</h4>
-                            <span>{`from € ${item.fromPrice}`}</span>
-                          </div>
-                        </a>
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            )} */}
           </div>
 
           <Modal

@@ -152,7 +152,7 @@ class ProductTiles extends Component {
                             ></div>
                           </div>
 
-                          <div className="tag-line">tagline</div>
+                          {item.tagline && <div className="tag-line">{item.tagline}</div>}
 
                           <div>
                             <strong>€ {item.rates[0].price}</strong>EUR
