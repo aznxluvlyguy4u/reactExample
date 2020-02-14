@@ -1,5 +1,6 @@
 import { cloneDeep, isEmpty } from "lodash";
 import Router from "next/router";
+import Modal from "react-modal";
 import React, { Component, Fragment } from "react";
 import slugify from "slugify";
 import Link from "next/link";
@@ -32,6 +33,9 @@ import {
 } from "../../actions/localSearchActions";
 import { updateCart, addToCart, setCart } from "../../actions/cartActions";
 
+import ProductBookingForm from "../../components/product-booking-components/product-booking-form";
+import ProductBookingSummary from "../../components/product-booking-components/product-booking-summary";
+
 class DetailPage extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +43,8 @@ class DetailPage extends Component {
       accessories: [],
       product: undefined,
       configurations: [],
-      total: undefined
+      total: undefined,
+      selectedProductUrl: null
     };
 
     this.addToCart = this.addToCart.bind(this);
@@ -75,6 +80,7 @@ class DetailPage extends Component {
       await this.getProduct();
     }
   }
+
   continueShopping() {
     this.props.resetLocalSearch();
     // check if previous search exists...
@@ -114,14 +120,21 @@ class DetailPage extends Component {
     try {
       let response = await getProductById(id, deliveryLocationId);
 
-      this.setState({ product: response.data });
+      response.data.qty = 0;
+
+      let initialUrl = null;
+      if (response.data.images && response.data.images.length > 0) {
+        initialUrl = response.data.images[0].url;
+      }
+
+      this.setState({ product: response.data, selectedProductUrl: initialUrl });
       this.props.setSelectedProduct(response.data);
 
       if (response.data.accessories) {
         this.props.setTotalSteps(4);
 
         const accessories = [];
-        response.data.accessories.map((item) => {
+        response.data.accessories.map(item => {
           item.quantity = 0;
           accessories.push(item);
         });
@@ -177,41 +190,67 @@ class DetailPage extends Component {
   // eslint-disable-next-line max-len
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["productForDateRangeAndLocationsExist","cartItemHasProductForDateRangeAndLocations"] }] */
   productForDateRangeAndLocationsExist(existingCartItems, orderDetails) {
-    return existingCartItems.some(cartItem => (
-      cartItem.products.findIndex(cartProduct => cartProduct.id === orderDetails.selectedProduct.id) >= 0
-      && moment(cartItem.period.start).isSame(moment(orderDetails.deliveryDate), 'day')
-      && moment(cartItem.period.end).isSame(moment(orderDetails.collectionDate), 'day')
-      && cartItem.location.collection.name === orderDetails.collectionLocation.label
-      && cartItem.location.delivery.name === orderDetails.deliveryLocation.label
-    ));
+    return existingCartItems.some(
+      cartItem =>
+        cartItem.products.findIndex(
+          cartProduct => cartProduct.id === orderDetails.selectedProduct.id
+        ) >= 0 &&
+        moment(cartItem.period.start).isSame(
+          moment(orderDetails.deliveryDate),
+          "day"
+        ) &&
+        moment(cartItem.period.end).isSame(
+          moment(orderDetails.collectionDate),
+          "day"
+        ) &&
+        cartItem.location.collection.name ===
+          orderDetails.collectionLocation.label &&
+        cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    );
   }
 
   // eslint-disable-next-line max-len
   cartItemHasProductForDateRangeAndLocations(cartItem, orderDetails) {
-    return cartItem.products.findIndex(cartItemProduct => cartItemProduct.id === orderDetails.selectedProduct.id) >= 0
-    && moment(cartItem.period.start).isSame(moment(orderDetails.deliveryDate), 'day') 
-    && moment(cartItem.period.end).isSame(moment(orderDetails.collectionDate), 'day') 
-    && cartItem.location.collection.name === orderDetails.collectionLocation.label
-    && cartItem.location.delivery.name === orderDetails.deliveryLocation.label;
+    return (
+      cartItem.products.findIndex(
+        cartItemProduct =>
+          cartItemProduct.id === orderDetails.selectedProduct.id
+      ) >= 0 &&
+      moment(cartItem.period.start).isSame(
+        moment(orderDetails.deliveryDate),
+        "day"
+      ) &&
+      moment(cartItem.period.end).isSame(
+        moment(orderDetails.collectionDate),
+        "day"
+      ) &&
+      cartItem.location.collection.name ===
+        orderDetails.collectionLocation.label &&
+      cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    );
   }
 
   addToCart() {
     const order = new Order().returnOrder();
 
     let existingItems = this.props.cartReducer.items;
-    
+
     let mergedItems = [];
     if (this.productForDateRangeAndLocationsExist(existingItems, order)) {
-      mergedItems = existingItems.map((cartItem) => {
+      mergedItems = existingItems.map(cartItem => {
         if (this.cartItemHasProductForDateRangeAndLocations(cartItem, order)) {
-          cartItem.products.map((cartItemProduct) => {
+          cartItem.products.map(cartItemProduct => {
             if (cartItemProduct.id === order.selectedProduct.id) {
               cartItemProduct.quantity += order.productQuantity;
               if (cartItemProduct.accessories) {
-                order.productOptionalAccessories.map((productAccessory) => {
-                  if (productAccessory.quantity > 0
-                      && cartItemProduct.accessories.some(accessory => accessory.id === productAccessory.id)) {
-                    cartItemProduct.accessories.map((existingAccessory) => {
+                order.productOptionalAccessories.map(productAccessory => {
+                  if (
+                    productAccessory.quantity > 0 &&
+                    cartItemProduct.accessories.some(
+                      accessory => accessory.id === productAccessory.id
+                    )
+                  ) {
+                    cartItemProduct.accessories.map(existingAccessory => {
                       if (existingAccessory.id === productAccessory.id) {
                         existingAccessory.quantity += productAccessory.quantity;
                       }
@@ -221,7 +260,11 @@ class DetailPage extends Component {
                   }
                 });
               } else {
-                cartItemProduct.accessories.push(order.productOptionalAccessories.map(accessory => accessory.quantity > 0));
+                cartItemProduct.accessories.push(
+                  order.productOptionalAccessories.map(
+                    accessory => accessory.quantity > 0
+                  )
+                );
               }
             } else {
               return cartItemProduct;
@@ -288,20 +331,81 @@ class DetailPage extends Component {
     return null;
   }
 
+  addProdcut(product) {
+    product.qty += 1;
+    this.setState({
+      products: this.state.products
+    });
+  }
+
+  removeProdcut(product) {
+    if (product.qty > 0) {
+      product.qty -= 1;
+    }
+    this.setState({
+      products: this.state.products
+    });
+  }
+
+  onImageClicked(selectedProductUrl) {
+    this.setState({
+      selectedProductUrl
+    });
+  }
+
+  openModal() {
+    this.setState({ modalIsOpen: true });
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //this.subtitle.style.color = "#f00";
+  }
+
+  closeModal() {
+    this.setState({ modalIsOpen: false });
+  }
+
+  setStep(step) {
+    this.setState({ step });
+  }
+
+  setCartItemIndex(cartItemIndex) {
+    this.setState({ cartItemIndex });
+  }
+
+  setRequestedAndOpenModal(item) {
+    console.log(item);
+    this.setState({
+      modalIsOpen: true,
+      requestedProduct: item,
+      step: 1
+    });
+  }
+
   render() {
     const { product, accessories } = this.state;
-
     if (product) {
       return (
-        <Default
-          nav="fixed"
-          search
-          meta={{
-            title: `${product.seoFriendlyName} | OCEAN PREMIUM`,
-            description:
-              "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
-          }}
-        >
+        <div>
+          <a
+            href={`/product-group?id=${product.productGroup.id}&slug=${slugify(
+              product.productGroup.name
+            )}`}
+            as={`/product-group/${product.id}/${slugify(
+              product.productGroup.name
+            )}`}
+            style={{ position: "absolute", left: "25px", top: "65px" }}
+          >
+            <img
+              style={{
+                height: "35px",
+                position: "relative",
+                cursor: "pointer"
+              }}
+              src="/static/images/back.png"
+            ></img>
+          </a>
           {product.images &&
             product.images.length > 0 &&
             product.images[0].fullImageUrl && (
@@ -313,352 +417,360 @@ class DetailPage extends Component {
               ></div>
             )}
           <div className="container">
-            <div className="row">
-              <div className="col">
-                <h1 className="main-title-with-price">{product.name}</h1>
-                {product.rates &&
-                  product.rates.length > 0 &&
-                  product.rates[0].price && (
-                    <Fragment>
-                      <span className="main-title-price">
-                        {product.rates &&
-                        product.rates.length > 0 &&
-                        parseFloat(product.rates[0].quantityAvailable) > 0.0 ? (
-                          <Fragment>
-                            <strong>from</strong> €{product.rates[0].price}
-                          </Fragment>
-                        ) : (
-                          <strong>Currently not available</strong>
-                        )}
-                      </span>
-                    </Fragment>
-                  )}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-7 col-sm-12 product-detail-description">
-                {product.description.section1 &&
-                product.description.section1.head ? (
-                  <h2>{product.description.section1.head}</h2>
-                ) : null}
-                {product.description.section1 &&
-                product.description.section1.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section1.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section2 &&
-                product.description.section2.head ? (
-                  <h2>{product.description.section2.head}</h2>
-                ) : null}
-                {product.description.section2 &&
-                product.description.section2.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section2.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section3 &&
-                product.description.section3.head ? (
-                  <h2>{product.description.section3.head}</h2>
-                ) : null}
-                {product.description.section3 &&
-                product.description.section3.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section3.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section4 &&
-                product.description.section4.head ? (
-                  <h2>{product.description.section4.head}</h2>
-                ) : null}
-                {product.description.section4 &&
-                product.description.section4.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section4.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section5 &&
-                product.description.section5.head ? (
-                  <h2>{product.description.section5.head}</h2>
-                ) : null}
-                {product.description.section5 &&
-                product.description.section5.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section5.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section6 &&
-                product.description.section6.head ? (
-                  <h2>{product.description.section6.head}</h2>
-                ) : null}
-                {product.description.section6 &&
-                product.description.section6.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section6.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section7 &&
-                product.description.section7.head ? (
-                  <h2>{product.description.section7.head}</h2>
-                ) : null}
-                {product.description.section7 &&
-                product.description.section7.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section7.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section8 &&
-                product.description.section8.head ? (
-                  <h2>{product.description.section8.head}</h2>
-                ) : null}
-                {product.description.section8 &&
-                product.description.section8.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section8.paragraph
-                    }}
-                  />
-                ) : null}
-                {product.description.section9 &&
-                product.description.section9.head ? (
-                  <h2>{product.description.section9.head}</h2>
-                ) : null}
-                {product.description.section9 &&
-                product.description.section9.paragraph ? (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: product.description.section9.paragraph
-                    }}
-                  />
-                ) : null}
-                &nbsp;
-              </div>
-              {/* {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable)  0.0 && */}
-              <div className="col-lg-5 col-sm-12 product-detail-form">
-                {/* STEP SEARCH / ITINERARY */}
-                {this.props.localSearchReducer.currentStep === 1 ? (
-                  <SearchView
-                    configurationsstate={this.state.configurations}
-                    onChangeConfiguration={this.onChangeConfiguration}
-                    _prev={this._prev}
-                    _next={this._next}
-                    data={product}
-                    resetDeliveryLocation={(deliveryLocation) => {
-                      this.getProduct(deliveryLocation);
-                    }}
-                  />
-                ) : null}
-
-                {/* STEP SELECT QUANTITY */}
-                {this.props.localSearchReducer.currentStep === 2 ? (
-                  <div className={"form active quantity-wrapper"}>
-                    <div className="titlewrapper">
-                      <h3 className="localSearchTitle">Product Quantity</h3>
-                      <Steps />
-                    </div>
-                    <div className="item-wrap">
-                      <div className="big-counter">
-                        <button
-                          className="subtract-button"
-                          onClick={(e) => {
-                            if (
-                              this.props.localSearchReducer.productQuantity > 0
-                            ) {
-                              this.props.updateLocalSearchProductQuantity(
-                                this.props.localSearchReducer.productQuantity -
-                                  1
-                              );
-                            }
-                          }}
-                        >
-                          &minus;
-                        </button>
-                        <span className="center">
-                          <span className="quantity">
-                            {this.props.localSearchReducer.productQuantity}
-                          </span>
-                          <br />
-                          {this.props.localSearchReducer.selectedProduct
-                            .rates && (
-                            <Fragment>
-                              €{" "}
-                              {parseFloat(
-                                this.props.localSearchReducer.selectedProduct
-                                  .rates[0].price *
-                                  this.props.localSearchReducer.productQuantity
-                              ).toFixed(2)}
-                              <br />
-                              <span className="pricePerDayLabel">
-                                price per day
-                              </span>
-                            </Fragment>
-                          )}
-                        </span>
-
-                        <button
-                          className="add-button"
-                          onClick={(e) => {
-                            this.props.updateLocalSearchProductQuantity(
-                              this.props.localSearchReducer.productQuantity + 1
-                            );
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div className="button-wrapper">
-                      {this.previousButton(this.state.currentStep)}
-                      {this.nextButton(this.state.currentStep)}
-                    </div>
+            <div className="row" style={{ marginTop: "60px" }}>
+              <div
+                style={{ maxHeight: "100vh" }}
+                className="col-lg-8 col-sm-12"
+              >
+                <div className="images">
+                  <div className="main-image">
+                    <img
+                      src={
+                        this.state.selectedProductUrl
+                          ? this.state.selectedProductUrl
+                          : ""
+                      }
+                    />
+                    {/* <img src={product.images[0].url}></img> */}
                   </div>
-                ) : null}
-
-                {/* STEP OPTIONAL ACCESSORIES */}
-                {this.props.localSearchReducer.currentStep === 3 &&
-                this.props.localSearchReducer.totalSteps === 4 ? (
-                  <div className={"form active accessories-wrapper"}>
-                    <div className="titlewrapper">
-                      <h3 className="localSearchTitle">Optional Accessories</h3>
-                      <Steps />
-                    </div>
-                    <div className="item-wrap">
-                      <OptionalAccessoryView onChange={this.changeAccesoire} />
-                    </div>
-                    <div className="button-wrapper">
-                      {this.previousButton()}
-                      {this.nextButton()}
-                    </div>
-                  </div>
-                ) : null}
-
-                {/* STEP SUMMARY */}
-                {(this.props.localSearchReducer.currentStep === 3 &&
-                  this.props.localSearchReducer.totalSteps === 3) ||
-                this.props.localSearchReducer.currentStep === 4 ? (
-                  <SummaryView
-                    total={this.state.total}
-                    _prev={this._prev}
-                    accessories={this.state.accessories}
-                    handleSubmit={this.addToCart}
-                    accessories={accessories.filter(
-                      val => val.type !== "mandatory"
-                    )}
-                  />
-                ) : null}
-
-                {/* STEP CONTINUE SHOPPING? */}
-                {this.props.localSearchReducer.currentStep === 5 ? (
-                  <div className="form active confirmationview">
-                    <div className="titlewrapper"> </div>
-                    <div className="subview">
-                      <img
-                        src="/static/images/success.png"
-                        height="100"
-                        width="100"
-                      />
-                      <button
-                        className="search-button-full"
-                        type="button"
-                        onClick={(e) => {
-                          this.continueShopping();
-                        }}
-                      >
-                        Continue Shopping
-                      </button>
-                      <span>or</span>
-                      <Link
-                        onClick={(e) => {
-                          this.props.resetLocalSearch();
-                        }}
-                        href="/checkout"
-                      >
-                        <a className="search-button-border">Go To Cart</a>
-                      </Link>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-              {/* } */}
-            </div>
-
-            {product.similarToys && product.similarToys.length > 0 && (
-              <ScrollableAnchor id="similar">
-                <div className="row similar-toys">
-                  <div className="col">
-                    <h3>Similar toys</h3>
+                  <div className="small-images">
+                    {product.images &&
+                      product.images.map(productImage => {
+                        return (
+                          <img
+                            src={productImage.url}
+                            onClick={e => {
+                              this.onImageClicked(productImage.url);
+                            }}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
-              </ScrollableAnchor>
-            )}
-
-            {product.similarToys && product.similarToys.length > 0 && (
-              <div className="row products">
-                {product.similarToys.map((item, index) => {
-                  return (
-                    <div className="col-lg-3 col-md-4 col-sm-6">
-                      <Link
-                        key={index}
-                        href={`/detail?id=${item.id}&slug=${slugify(
-                          item.name
-                        )}`}
-                        as={`/detail/${item.id}/${slugify(item.name)}`}
-                      >
-                        <a>
-                          <div className="product">
-                            <img
-                              alt={item.name}
-                              src={
-                                item.images[0].fullImageUrl
-                                  ? item.images[0].fullImageUrl
-                                  : "/static/images/flyboard.png"
-                              }
-                            />
-                            <h4>{item.name}</h4>
-                            <span>{`from € ${item.fromPrice}`}</span>
-                          </div>
-                        </a>
-                      </Link>
-                    </div>
-                  );
-                })}
               </div>
-            )}
+              <div
+                style={{
+                  overflow: "scroll"
+                }}
+                className="col-lg-4 col-sm-12 product-detail-description"
+              >
+                <div
+                  style={{
+                    maxHeight: "70vh",
+                    paddingBottom: "25px"
+                  }}
+                >
+                  <h2>
+                    <a style={{ color: "black" }} href="/">
+                      Rental
+                    </a>{" "}
+                    >{" "}
+                    <a
+                      style={{ color: "black" }}
+                      href={`/product-group?id=${
+                        product.productGroup.id
+                      }&slug=${slugify(product.productGroup.name)}`}
+                      as={`/product-group/${product.id}/${slugify(
+                        product.productGroup.name
+                      )}`}
+                    >
+                      {" "}
+                      {product.productGroup.name}
+                    </a>{" "}
+                    >{" "}
+                    <span style={{ color: "#FAB900", fontSize: "20px" }}>
+                      {product.name}
+                    </span>
+                  </h2>
+                  <h1 className="main-title">{product.name}</h1>
+                  <p>{product.description && product.description.summary}</p>
+                  <div className="tag-line">
+                    {product.description && product.description.tagline}
+                  </div>
+
+                  <div>
+                    <strong>€ {product.rates[0].price}</strong> EUR
+                    <div className="per-day-text">per day</div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginBottom: "32px",
+                      marginBottom: "25px",
+                      borderBottom: "solid 1.3px lightgrey",
+                      paddingBottom: "25px"
+                    }}
+                  >
+                    <div className="col-md-4 counter">
+                      <div
+                        onClick={() => this.removeProdcut(product)}
+                        className="plus-minus"
+                      >
+                        -
+                      </div>
+                      <div className="value">{product.qty}</div>
+                      <div
+                        onClick={() => this.addProdcut(product)}
+                        className="plus-minus"
+                      >
+                        +
+                      </div>
+                    </div>
+                    <div className="col-md-8">
+                      <div
+                        onClick={() => this.setRequestedAndOpenModal(product)}
+                        className="add-btn"
+                      >
+                        <i className="icon-cart"></i> Add to booking
+                      </div>
+                    </div>
+                  </div>
+                  {product.description.section1 &&
+                  product.description.section1.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/tag.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section1.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section1 &&
+                  product.description.section1.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section1.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section2 &&
+                  product.description.section2.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/note.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section2.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section2 &&
+                  product.description.section2.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section2.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section3 &&
+                  product.description.section3.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/question.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section3.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section3 &&
+                  product.description.section3.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section3.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section4 &&
+                  product.description.section4.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/attention.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section4.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section4 &&
+                  product.description.section4.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section4.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section5 &&
+                  product.description.section5.head ? (
+                    <div style={{ display: "flex" }}>
+                      <h1 style={{ lineHeight: "7px" }}>+</h1>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section5.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section5 &&
+                  product.description.section5.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section5.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section6 &&
+                  product.description.section6.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/award.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section6.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section6 &&
+                  product.description.section6.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section6.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section7 &&
+                  product.description.section7.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/dimensions.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section7.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section7 &&
+                  product.description.section7.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section7.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section8 &&
+                  product.description.section8.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/tag.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section8.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section8 &&
+                  product.description.section8.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section8.paragraph
+                      }}
+                    />
+                  ) : null}
+                  {product.description.section9 &&
+                  product.description.section9.head ? (
+                    <div style={{ display: "flex" }}>
+                      <img
+                        style={{ height: "35px" }}
+                        src="/static/images/tag.png"
+                      ></img>
+                      <h2 style={{ lineHeight: "7px" }}>
+                        {product.description.section9.head}
+                      </h2>
+                    </div>
+                  ) : null}
+                  {product.description.section9 &&
+                  product.description.section9.paragraph ? (
+                    <div
+                      style={{ marginBottom: "32px" }}
+                      dangerouslySetInnerHTML={{
+                        __html: product.description.section9.paragraph
+                      }}
+                    />
+                  ) : null}
+                </div>
+                &nbsp;
+              </div>
+            </div>
           </div>
 
-          {this.state.loading && <Loader />}
-        </Default>
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            onAfterOpen={this.afterOpenModal.bind(this)}
+            onRequestClose={this.closeModal.bind(this)}
+            style={{
+              overlay: {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "#19303b",
+                zIndex: 4002
+              },
+              content: {
+                top: "50%",
+                left: "50%",
+                right: "auto",
+                bottom: "auto",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "transparent",
+                border: "none",
+                width: "80%"
+              }
+            }}
+            portalClassName="product-tile-modal"
+          >
+            {this.state.requestedProduct && this.state.step === 1 && (
+              <ProductBookingForm
+                setCartItemIndex={this.setCartItemIndex.bind(this)}
+                closeModal={this.closeModal.bind(this)}
+                setStep={this.setStep.bind(this)}
+                product={this.state.requestedProduct}
+                cartItemIndex={this.state.cartItemIndex}
+              />
+            )}
+            {this.state.requestedProduct && this.state.step === 2 && (
+              <ProductBookingSummary
+                closeModal={this.closeModal.bind(this)}
+                setStep={this.setStep.bind(this)}
+                product={this.state.requestedProduct}
+                cartItemIndex={this.state.cartItemIndex}
+              />
+            )}
+          </Modal>
+        </div>
       );
-    }
-    return (
-      <Default
-        nav="fixed"
-        search
-        meta={{
-          title: "Detail Page | OCEAN PREMIUM",
-          description:
-            "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
-        }}
-      >
+    } else {
+      return (
         <div className="page-wrapper">
           <Loader />
         </div>
-      </Default>
-    );
+      );
+    }
   }
 }
 

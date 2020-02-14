@@ -59,7 +59,7 @@ class CustomSelect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== '' && this.state.value.id !== nextProps.value.id) {
+    if (nextProps.value !== undefined && this.state.value.id !== nextProps.value.id) {
       const { setFieldValue, field } = this.props;
       setFieldValue(field.name, nextProps.value);
       this.setDropdownValue(nextProps.value);

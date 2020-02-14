@@ -7,7 +7,7 @@ import slugify from "slugify";
 import styles from "./product-tiles.style";
 
 import ProductBookingForm from "../product-booking-components/product-booking-form";
-import ProductBookingSummary from  "../product-booking-components/product-booking-summary";
+import ProductBookingSummary from "../product-booking-components/product-booking-summary";
 
 class ProductTiles extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class ProductTiles extends Component {
     this.setState({
       modalIsOpen: true,
       requestedProduct: item,
-      step: 1,
+      step: 1
     });
   }
 
@@ -92,6 +92,11 @@ class ProductTiles extends Component {
                         >
                           <Link>
                             <a
+                              // href="#"
+                              // onClick={e => {
+                              //   e.preventDefault();
+                              //   this.onProductClick(item);
+                              // }}
                               href={`/product?id=${item.id}&slug=${slugify(
                                 item.name
                               )}`}
@@ -111,7 +116,7 @@ class ProductTiles extends Component {
                                       : "/static/images/flyboard.png"
                                   }
                                 />
-                                {item.rates[0].quantityAvailable == 0 && (
+                                {/* {item.rates[0].quantityAvailable == 0 && (
                                   <div
                                     style={{
                                       position: "absolute",
@@ -123,7 +128,7 @@ class ProductTiles extends Component {
                                   >
                                     Currently unavailable
                                   </div>
-                                )}
+                                )} */}
                               </div>
                             </a>
                           </Link>
@@ -146,7 +151,7 @@ class ProductTiles extends Component {
                             ></div>
                           </div>
 
-                          <div className="tag-line">tagline</div>
+                          {item.tagline && <div className="tag-line">{item.tagline}</div>}
 
                           <div>
                             <strong>€ {item.rates[0].price}</strong>EUR
@@ -197,10 +202,21 @@ class ProductTiles extends Component {
           portalClassName="product-tile-modal"
         >
           {this.state.requestedProduct && this.state.step === 1 && (
-            <ProductBookingForm setCartItemIndex={this.setCartItemIndex.bind(this)} closeModal={this.closeModal.bind(this)} setStep={this.setStep.bind(this)} product={this.state.requestedProduct} cartItemIndex={this.state.cartItemIndex}/>
+            <ProductBookingForm
+              setCartItemIndex={this.setCartItemIndex.bind(this)}
+              closeModal={this.closeModal.bind(this)}
+              setStep={this.setStep.bind(this)}
+              product={this.state.requestedProduct}
+              cartItemIndex={this.state.cartItemIndex}
+            />
           )}
           {this.state.requestedProduct && this.state.step === 2 && (
-            <ProductBookingSummary closeModal={this.closeModal.bind(this)} setStep={this.setStep.bind(this)} product={this.state.requestedProduct} cartItemIndex={this.state.cartItemIndex}/>
+            <ProductBookingSummary
+              closeModal={this.closeModal.bind(this)}
+              setStep={this.setStep.bind(this)}
+              product={this.state.requestedProduct}
+              cartItemIndex={this.state.cartItemIndex}
+            />
           )}
         </Modal>
       </div>

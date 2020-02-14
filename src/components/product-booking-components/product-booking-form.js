@@ -398,7 +398,7 @@ class ProductBookingForm extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-5 equal-height-columns">
+        <div className="col-md-5 equal-height-columns" style={{background: "white"}}>
           <div className="white-bg h-100 p-5">
             <h3>Recommended Accessories</h3>
             <RecommendedAccessoryView
