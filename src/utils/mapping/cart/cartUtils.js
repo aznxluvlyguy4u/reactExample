@@ -34,6 +34,14 @@ export default class CartUtils {
     return 0;
   }
 
+  getItemTotal(period, quantity, item) {
+    let days = this.dayCount({period});
+    if(days > 0 && item.quantity > 0 && item.rates.length > 0){
+      return (days * quantity * parseFloat(item.rates[0].price)).toFixed(2);
+    }
+    return (0).toFixed(2);
+  }
+
   getCartItemTotal(cartItem) {
     let days = this.dayCount(cartItem);
     let total = 0;
@@ -44,5 +52,14 @@ export default class CartUtils {
     });
 
     return total.toFixed(2);
+  }
+
+  getItemCount(cartItem) {
+    let products = cartItem.products.length;
+    let accessories = 0;
+    cartItem.products.map((product) => {
+      accessories += product.accessories.length;
+    });
+    return products + accessories;
   }
 }

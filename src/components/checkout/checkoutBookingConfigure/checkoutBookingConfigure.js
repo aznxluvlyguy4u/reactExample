@@ -4,6 +4,8 @@ import CartUtils from "../../../utils/mapping/cart/cartUtils";
 import Modal from "react-modal";
 import styles from "./checkoutBookingConfigure.style";
 import LocalStorageUtil from "../../../utils/localStorageUtil";
+import BasicCounter from "../../formComponents/number-input/basic-counter";
+import CheckoutBookingConfigureGridRow from "./checkoutBookingConfigureGridRow";
 
 class CheckoutBookingConfigure extends Component {
   constructor(props) {
@@ -36,6 +38,7 @@ class CheckoutBookingConfigure extends Component {
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.removeFromCartAndClose = this.removeFromCartAndClose.bind(this);
+    console.log(this.state.cartItem);
   }
 
   removeFromCartAndClose() {
@@ -71,6 +74,14 @@ class CheckoutBookingConfigure extends Component {
     this.setState({ modalIsOpen: false });
   }
 
+  updateProductCounter(pIndex, value) {
+    console.log(pIndex, value);
+  }
+
+  updateAccessoryCounter(pIndex, aIndex, value) {
+    console.log(pIndex, aIndex, value);
+  }
+
   render() {
     if (this.props.cart) {
       return (
@@ -85,46 +96,55 @@ class CheckoutBookingConfigure extends Component {
             </h1>
             <div className="paragraph">
               {this.state.cartItem &&
-                this.state.cartItem.products.map((product, index) => (
+                this.state.cartItem.products.map((product, pIndex) => (
                   <div>
-                    <div className="row mb-2">
+                    <div className="row my-2">
                       <div className="col-6">Product</div>
                       <div className="col-2">Qty</div>
                       <div className="col-2">Price</div>
                       <div className="col-2">Availability</div>
                     </div>
 
-                    <div className="row mb-2">
-                      <div className="col-1 align-self-center">
-                        <a onClick={() => this.openModalAndSetItem(index)}>
-                          <img src="static/images/delete.png" />
-                        </a>
-                      </div>
-                      <div className="col-5 align-items-center">
-                        <div>
-                        <div className="left">
-                          {product.details && product.details.images && product.details.images.length > 0 && (
-                            <img className="product-item" src={product.details.images[0].url} />
-                          )}
-                        </div>
-                        <div className="left">
-                            <h3>{product.details.name}</h3>
-                            {product.details && product.details.rates && product.details.rates.length > 0 && (
-                              <span class="grey">from € {product.details.rates[0].price}</span>
-                            )}
-                        </div>
-                        </div>
-                      </div>
-                      <div className="col-2">
+                    <div className="divider my-3"></div>
 
-                      </div>
-                      <div className="col-2">
-
-                      </div>
-                      <div className="col-2">
-
-                      </div>
-                    </div>
+                    <CheckoutBookingConfigureGridRow
+                      rowItem={{
+                        index: pIndex,
+                        images: product.details.images,
+                        rates: product.details.rates,
+                        quantity: product.quantity,
+                        name: product.details.name,
+                        period: this.state.cartItem.period,
+                        stock: product.details,
+                      }}
+                      counterUpdate={value =>
+                        this.updateProductCounter(pIndex, value)
+                      }
+                      openModalAndSetItem={() =>
+                        this.openModalAndSetItem(pIndex)
+                      }
+                    />
+                    <div className="divider my-3"></div>
+                    {product.accessories &&
+                      product.accessories.map((accessory, aIndex) => (
+                        <CheckoutBookingConfigureGridRow
+                          rowItem={{
+                            index: aIndex,
+                            images: accessory.images,
+                            rates: accessory.rates,
+                            quantity: accessory.quantity,
+                            name: accessory.name,
+                            period: this.state.cartItem.period,
+                            stock: product.details.accessories.filter(x => x.id === accessory.id).length > 0 ? product.details.accessories.filter(x => x.id === accessory.id)[0] : undefined,
+                          }}
+                          counterUpdate={value =>
+                            this.updateAccessoryCounter(pIndex, aIndex, value)
+                          }
+                          openModalAndSetItem={() =>
+                            this.openModalAndSetItem(pIndex)
+                          }
+                        />
+                      ))}
                   </div>
                 ))}
             </div>

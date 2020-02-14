@@ -27,6 +27,7 @@ import { emptyCart, setCart } from "../../actions/cartActions";
 import Script from "react-load-script";
 import CheckoutBookingsOverview from "../../components/checkout/checkoutBookingsOverview/checkoutBookingsOverview";
 import CheckoutBookingConfigure from "../../components/checkout/checkoutBookingConfigure/checkoutBookingConfigure";
+import CheckoutBookingConfigureSummary from "../../components/checkout/checkoutBookingConfigure/checkoutBookingConfigureSummary";
 
 const customStyles = {
   content: {
@@ -51,7 +52,7 @@ class CheckoutPage extends Component {
       loading: false,
       bookingsOverview: true,
       configure: false,
-      configureIndex: 1,
+      configureIndex: undefined,
       configureAll: false,
       orderFailed: false,
       orderSuccess: false,
@@ -147,7 +148,7 @@ class CheckoutPage extends Component {
             ),
             end: moment(orderItem.period.end).format("YYYY-MM-DDTHH:mm:ss.000Z")
           },
-          accesories: product.accessories
+          accessories: product.accessories
         });
         return;
       });
@@ -645,7 +646,11 @@ class CheckoutPage extends Component {
   };
 
   setConfigureItem(cartItemIndex) {
-    this.setState({ bookingsOverview: false, configure: true, configureIndex: cartItemIndex });
+    this.setState({
+      bookingsOverview: false,
+      configure: true,
+      configureIndex: cartItemIndex,
+    });
   }
 
   setConfigureAll() {
@@ -668,7 +673,7 @@ class CheckoutPage extends Component {
         this.props.cartReducer.items.length > 0 ? (
           <CheckoutBookingsOverview
             setConfigureAll={this.setConfigureAll.bind(this)}
-            setConfigureItem={this.setConfigureItem.bind(this)}
+            setConfigureItem={ (cartItemIndex) => this.setConfigureItem(cartItemIndex)}
             updateCart={this.updateCart}
             cart={this.state.cart}
             products={this.state.products}
@@ -682,13 +687,23 @@ class CheckoutPage extends Component {
         )}
         {this.state.loading ? <Loader /> : null}
 
-        {!this.state.loading && this.state.configure && this.state.configureIndex && (
-          <div>
-            <CheckoutBookingConfigure
-              cart={this.state.cart}
-              products={this.state.products}
-              configureIndex={this.state.configureIndex}
-            />
+        {
+          !this.state.loading 
+          && this.state.configure 
+          && this.state.configureIndex !== undefined 
+          && this.state.cart[this.state.configureIndex]  
+          && (
+          <div className="row">
+            <div className="col-8">
+              <CheckoutBookingConfigure
+                cart={this.state.cart}
+                products={this.state.products}
+                configureIndex={this.state.configureIndex}
+              />
+            </div>
+            <div className="col-4">
+              <CheckoutBookingConfigureSummary cartItem={this.state.cart[this.state.configureIndex]}/>
+            </div>
           </div>
         )}
 

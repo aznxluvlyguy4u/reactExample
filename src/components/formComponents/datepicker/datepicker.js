@@ -53,7 +53,7 @@ class DatePicker extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ startDate: moment.utc(nextProps.startDate), endDate: moment.utc(nextProps.endDate) });
+    //this.setState({ startDate: moment.utc(nextProps.startDate), endDate: moment.utc(nextProps.endDate) });
   }
 
   onChange(startDate, endDate) {
