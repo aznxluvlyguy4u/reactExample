@@ -45,18 +45,12 @@ class CheckoutBookingConfigure extends Component {
     let cart = this.state.cart;
     console.log(this.state.cartItem);
     if(this.state.cartIndex.aIndex){
-      console.log('remove accessory');
-      
-      console.log(this.cart[this.cartItemIndex].products[this.state.cartIndex.pIndex].accessories[this.state.cartIndex.aIndex]);
+      cart[this.state.cartItemIndex].products[this.state.cartIndex.pIndex].accessories.splice(this.state.cartIndex.aIndex, 1);
     }else{
-      console.log(this.cartItem.products[this.state.cartIndex.pIndex]);
+      cart[this.state.cartItemIndex].products.splice(this.state.cartIndex.pIndex, 1);
     }
-    /*
-    
-    cart.splice(this.state.cartIndex, 1);
-    this.props.updateCart(cart);
     LocalStorageUtil.setCart(cart);
-    this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });*/
+    this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
   }
 
   configureAll() {
@@ -173,7 +167,7 @@ class CheckoutBookingConfigure extends Component {
               <h1>Remove Item</h1>
               <p>Are you sure you want to remove this item from your cart?</p>
               <button
-                onClick={this.removeFromCartAndClose}
+                onClick={this.removeFromCartAndClose.bind(this)}
                 className="grey-button-outline"
               >
                 Yes! Please remove this booking.
