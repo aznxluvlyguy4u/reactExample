@@ -427,28 +427,28 @@ class DetailPage extends Component {
                       </div>
                     </div>
                   </div>
-                  {product.description.section1 &&
-                  product.description.section1.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/tag.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
-                        {product.description.section1.head}
-                      </h2>
+                  {Object.keys(product.description).map((item, index) => (
+                    <div>
+                      <div style={{ display: "flex" }}>
+                        <img
+                          style={{ height: "35px" }}
+                          src="/static/images/tag.png"
+                        ></img>
+                        <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                          {product.description[item].head}
+                        </h2>
+                      </div>
+
+                      <div
+                        style={{ marginBottom: "32px" }}
+                        dangerouslySetInnerHTML={{
+                          __html: product.description[item].paragraph
+                        }}
+                      />
                     </div>
-                  ) : null}
-                  {product.description.section1 &&
-                  product.description.section1.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section1.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section2 &&
+                  ))}
+
+                  {/* {product.description.section2 &&
                   product.description.section2.head ? (
                     <div style={{ display: "flex" }}>
                       <img
@@ -612,7 +612,7 @@ class DetailPage extends Component {
                         __html: product.description.section9.paragraph
                       }}
                     />
-                  ) : null}
+                  ) : null} */}
                 </div>
                 &nbsp;
               </div>

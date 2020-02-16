@@ -16,19 +16,23 @@ import Pagination from "../../components/pagination";
 import SearchEdit from "../../components/searchComponents/searchedit/searchEdit";
 import ProductTiles from "../../components/product-tiles/product-tiles";
 import CategoryTiles from "../../components/category/categoryTiles";
+import RecommendedProducts from "../../components/recommended-products/recommendedProducts";
 
 // Utils:
 import { CreateQueryParams } from "../../utils/queryparams";
-import { getProducts } from "../../utils/rest/requests/products";
-import { getCategories } from "../../utils/rest/requests/categories";
+import {
+  getProducts,
+  getRecomendedProductsByGroupIds
+} from "../../utils/rest/requests/products";
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 
 class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      categories: [],
+      // categories: [],
       products: [],
+      recomendedProducts: [],
       total_page_count: 0,
       current_page: 0,
       loading: true,
@@ -93,7 +97,7 @@ class SearchPage extends Component {
     if (deliveryLocation !== "" && collectionLocation !== "") {
       this.setState({ notFound: false });
       await this.getProducts("update");
-      await this.getCategories();
+      // await this.getCategories();
     } else {
       this.setState({ notFound: true, loading: false });
     }
@@ -193,10 +197,14 @@ class SearchPage extends Component {
       );
 
       const products = response.data;
+      const recomendedProducts = await getRecomendedProductsByGroupIds(
+        products.map(x => x.productGroup.id)
+      );
       this.setState({
         notFound: false,
         loading: false,
         products: products,
+        recomendedProducts: recomendedProducts.data,
         total_page_count: Math.ceil(
           response.meta.totalRowCount / response.meta.perPage
         ),
@@ -213,12 +221,12 @@ class SearchPage extends Component {
     }
   }
 
-  async getCategories() {
-    const response = await getCategories();
-    this.setState({
-      categories: response.data
-    });
-  }
+  // async getCategories() {
+  //   const response = await getCategories();
+  //   this.setState({
+  //     categories: response.data
+  //   });
+  // }
 
   async getMoreProducts() {
     await this.getProducts("append");
@@ -232,8 +240,9 @@ class SearchPage extends Component {
 
   render() {
     const {
-      categories,
+      // categories,
       products,
+      recomendedProducts,
       loading,
       notFound,
       total_page_count,
@@ -271,11 +280,19 @@ class SearchPage extends Component {
                   <div className="row products">
                     <ProductTiles products={products} />
                   </div>
-                  {categories.length && (
+                  {/* {categories.length && (
                     <div style={{ position: "relative", top: "-65px" }}>
-                      <CategoryTiles categories={categories} />
+                      <CategoryTiles categories={recomendedProducts} />
+                    </div>
+
+                    RecommendedProducts
+                  )} */}
+                  {recomendedProducts.length && (
+                    <div style={{ position: "relative", top: "-65px" }}>
+                      <RecommendedProducts products={recomendedProducts} />
                     </div>
                   )}
+
                   <div className="row">
                     <div className="col banner">
                       <div

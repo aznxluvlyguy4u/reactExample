@@ -51,6 +51,16 @@ export function getProducts(
   }).then(handleRestResponse);
 }
 
+export function getRecomendedProductsByGroupIds(groupIds) {
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/groups?q[recommended_by_product_group_ids_in]=${groupIds}`;
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: "application/json"
+    }
+  }).then(handleRestResponse);
+}
+
 // export function getFirstProducts(category) {
 //   const per_page = 8;
 //   const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_id_eq]=${category}&?page=1&per_page=${per_page}`;
