@@ -1,0 +1,112 @@
+.checkout-overview {
+
+  h1 {
+    position: relative;
+  }
+
+  h1 > button {
+    float: right;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12.7348px;
+    line-height: 18px;
+    font-weight: bold;
+    width: 250px;
+  }
+
+  .pricing {
+    text-align: right;
+  }
+  .pricing p{
+    font-size: 10px;
+    line-height: 14px;
+  }
+  .pricing h2 {
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 27px;
+  }
+  button.configure-solid-yellow{
+    height: 29.31px;
+    background: $yellow;
+    border: 1.17241px solid $yellow;;
+    box-sizing: border-box;
+    border-radius: 1.17241px;
+    width: 100%;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    width: 160px;
+  }
+
+  .itemwrapper {
+    height: 80px;
+  }
+
+  .pluscontainer {
+    height: 80px;
+    position: relative;
+    float: left;
+    margin-right: 10px;
+    width: auto;
+  }
+
+  .pluscontainer > img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+}
+
+.checkout-overview-modal {
+
+  font-size: 24px;
+
+
+  .close {
+    color: white;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    cursor: pointer;
+  }
+  .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+  }
+  .grey-button-outline {
+    background: #FFFFFF;
+    border: 2px solid $grey;
+    color: $grey;
+    box-sizing: border-box;
+    border-radius: 2px;
+    font-size: 18px;
+    line-height: 25px;
+    cursor: pointer;
+    width: 100%;
+    padding: 4px;
+    margin-bottom: 20px;
+  }
+  .yellow-outline-button {
+    background: #FFFFFF;
+    border: 2px solid $yellow;
+    color: $yellow;
+    box-sizing: border-box;
+    border-radius: 2px;
+    font-size: 18px;
+    line-height: 25px;
+    cursor: pointer;
+    padding: 4px;
+    width: 100%;
+  }
+}

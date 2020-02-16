@@ -40,13 +40,13 @@ class MyApp extends App {
     if (cart && cart !== "" && cart !== undefined && cart !== null) {
       let filteredItemsInCart = [];
       if (cart && cart.filter) {
-        filteredItemsInCart = cart.filter(item => {
+        filteredItemsInCart = cart.filter((item) => {
           const now = moment().format('YYYY-MM-DDTHH:mm:ss.ssZ');
           if (item && item !== null && item !== undefined && !moment(item.period.start).isBefore(now, 'day')) {
             store.dispatch(addToCart(item));
             return item;
           }
-        })
+        });
         LocalStorageUtil.setCart(filteredItemsInCart);
       }
     }
@@ -57,7 +57,7 @@ class MyApp extends App {
       const response = await getLocations();
       if (response.data) {
         store.dispatch(setLocations(response.data));
-        const selectboxLocations = response.data.map(selectboxLocation => {
+        const selectboxLocations = response.data.map((selectboxLocation) => {
           const selectLocation = new SelectboxLocation(selectboxLocation);
           return selectLocation;
         })

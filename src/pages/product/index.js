@@ -1,5 +1,6 @@
 import { cloneDeep, isEmpty } from "lodash";
 import Router from "next/router";
+import Modal from "react-modal";
 import React, { Component, Fragment } from "react";
 import slugify from "slugify";
 import Link from "next/link";
@@ -32,6 +33,9 @@ import {
 } from "../../actions/localSearchActions";
 import { updateCart, addToCart, setCart } from "../../actions/cartActions";
 
+import ProductBookingForm from "../../components/product-booking-components/product-booking-form";
+import ProductBookingSummary from "../../components/product-booking-components/product-booking-summary";
+
 class DetailPage extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +43,8 @@ class DetailPage extends Component {
       accessories: [],
       product: undefined,
       configurations: [],
-      total: undefined
+      total: undefined,
+      selectedProductUrl: null
     };
 
     this.addToCart = this.addToCart.bind(this);
@@ -117,7 +122,12 @@ class DetailPage extends Component {
 
       response.data.qty = 0;
 
-      this.setState({ product: response.data });
+      let initialUrl = null;
+      if (response.data.images && response.data.images.length > 0) {
+        initialUrl = response.data.images[0].url;
+      }
+
+      this.setState({ product: response.data, selectedProductUrl: initialUrl });
       this.props.setSelectedProduct(response.data);
 
       if (response.data.accessories) {
@@ -177,52 +187,92 @@ class DetailPage extends Component {
     this.props.setCurrentStep(currentStep);
   }
 
+  // eslint-disable-next-line max-len
+  /* eslint class-methods-use-this: ["error", { "exceptMethods": ["productForDateRangeAndLocationsExist","cartItemHasProductForDateRangeAndLocations"] }] */
+  productForDateRangeAndLocationsExist(existingCartItems, orderDetails) {
+    return existingCartItems.some(
+      cartItem =>
+        cartItem.products.findIndex(
+          cartProduct => cartProduct.id === orderDetails.selectedProduct.id
+        ) >= 0 &&
+        moment(cartItem.period.start).isSame(
+          moment(orderDetails.deliveryDate),
+          "day"
+        ) &&
+        moment(cartItem.period.end).isSame(
+          moment(orderDetails.collectionDate),
+          "day"
+        ) &&
+        cartItem.location.collection.name ===
+          orderDetails.collectionLocation.label &&
+        cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    );
+  }
+
+  // eslint-disable-next-line max-len
+  cartItemHasProductForDateRangeAndLocations(cartItem, orderDetails) {
+    return (
+      cartItem.products.findIndex(
+        cartItemProduct =>
+          cartItemProduct.id === orderDetails.selectedProduct.id
+      ) >= 0 &&
+      moment(cartItem.period.start).isSame(
+        moment(orderDetails.deliveryDate),
+        "day"
+      ) &&
+      moment(cartItem.period.end).isSame(
+        moment(orderDetails.collectionDate),
+        "day"
+      ) &&
+      cartItem.location.collection.name ===
+        orderDetails.collectionLocation.label &&
+      cartItem.location.delivery.name === orderDetails.deliveryLocation.label
+    );
+  }
+
   addToCart() {
     const order = new Order().returnOrder();
 
     let existingItems = this.props.cartReducer.items;
+
     let mergedItems = [];
-    if (
-      existingItems.some(someItem => {
-        return (
-          someItem.id === order.selectedProduct.id &&
-          moment(someItem.period.start).isSame(
-            moment(order.deliveryDate),
-            "day"
-          ) &&
-          moment(someItem.period.end).isSame(
-            moment(order.collectionDate),
-            "day"
-          ) &&
-          someItem.location.collection.name ===
-            order.collectionLocation.label &&
-          someItem.location.delivery.name === order.deliveryLocation.label
-        );
-      })
-    ) {
-      mergedItems = existingItems.map(item => {
-        if (
-          item.id === order.selectedProduct.id &&
-          moment(item.period.start).isSame(moment(order.deliveryDate), "day") &&
-          moment(item.period.end).isSame(moment(order.collectionDate), "day") &&
-          item.location.collection.name === order.collectionLocation.label &&
-          item.location.delivery.name === order.deliveryLocation.label
-        ) {
-          item.quantity = item.quantity + order.productQuantity;
-          if (item.accessories) {
-            item.accessories.map(existingAccessory => {
-              order.productOptionalAccessories.map(newAccessory => {
-                if (existingAccessory.id === newAccessory.id) {
-                  existingAccessory.quantity =
-                    existingAccessory.quantity + newAccessory.quantity;
-                }
-              });
-            });
-          }
-          return item;
-        } else {
-          return item;
+    if (this.productForDateRangeAndLocationsExist(existingItems, order)) {
+      mergedItems = existingItems.map(cartItem => {
+        if (this.cartItemHasProductForDateRangeAndLocations(cartItem, order)) {
+          cartItem.products.map(cartItemProduct => {
+            if (cartItemProduct.id === order.selectedProduct.id) {
+              cartItemProduct.quantity += order.productQuantity;
+              if (cartItemProduct.accessories) {
+                order.productOptionalAccessories.map(productAccessory => {
+                  if (
+                    productAccessory.quantity > 0 &&
+                    cartItemProduct.accessories.some(
+                      accessory => accessory.id === productAccessory.id
+                    )
+                  ) {
+                    cartItemProduct.accessories.map(existingAccessory => {
+                      if (existingAccessory.id === productAccessory.id) {
+                        existingAccessory.quantity += productAccessory.quantity;
+                      }
+                    });
+                  } else if (productAccessory.quantity > 0) {
+                    cartItemProduct.accessories.push(productAccessory);
+                  }
+                });
+              } else {
+                cartItemProduct.accessories.push(
+                  order.productOptionalAccessories.map(
+                    accessory => accessory.quantity > 0
+                  )
+                );
+              }
+            } else {
+              return cartItemProduct;
+            }
+          });
+          return cartItem;
         }
+        return cartItem;
       });
     }
 
@@ -297,11 +347,65 @@ class DetailPage extends Component {
     });
   }
 
+  onImageClicked(selectedProductUrl) {
+    this.setState({
+      selectedProductUrl
+    });
+  }
+
+  openModal() {
+    this.setState({ modalIsOpen: true });
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //this.subtitle.style.color = "#f00";
+  }
+
+  closeModal() {
+    this.setState({ modalIsOpen: false });
+  }
+
+  setStep(step) {
+    this.setState({ step });
+  }
+
+  setCartItemIndex(cartItemIndex) {
+    this.setState({ cartItemIndex });
+  }
+
+  setRequestedAndOpenModal(item) {
+    console.log(item);
+    this.setState({
+      modalIsOpen: true,
+      requestedProduct: item,
+      step: 1
+    });
+  }
+
   render() {
     const { product, accessories } = this.state;
     if (product) {
       return (
         <div>
+          <a
+            href={`/product-group?id=${product.productGroup.id}&slug=${slugify(
+              product.productGroup.name
+            )}`}
+            as={`/product-group/${product.id}/${slugify(
+              product.productGroup.name
+            )}`}
+            style={{ position: "absolute", left: "25px", top: "65px" }}
+          >
+            <img
+              style={{
+                height: "35px",
+                position: "relative",
+                cursor: "pointer"
+              }}
+              src="/static/images/back.png"
+            ></img>
+          </a>
           {product.images &&
             product.images.length > 0 &&
             product.images[0].fullImageUrl && (
@@ -313,87 +417,79 @@ class DetailPage extends Component {
               ></div>
             )}
           <div className="container">
-            {/* <div className="row">
-              <div className="col">
-                {product.rates &&
-                  product.rates.length > 0 &&
-                  product.rates[0].price && (
-                    <Fragment>
-                      <span className="main-title-price">
-                        {product.rates &&
-                        product.rates.length > 0 &&
-                        parseFloat(product.rates[0].quantityAvailable) > 0.0 ? (
-                          <Fragment>
-                            <strong>from</strong> €{product.rates[0].price}
-                          </Fragment>
-                        ) : (
-                          <strong>Currently not available</strong>
-                        )}
-                      </span>
-                    </Fragment>
-                  )}
-              </div>
-            </div> */}
-            <div className="row">
+            <div className="row" style={{ marginTop: "60px" }}>
               <div
                 style={{ maxHeight: "100vh" }}
-                className="col-lg-1 col-sm-12"
-              >
-                <img
-                  style={{
-                    height: "35px",
-                    position: "relative",
-                    top: "25px",
-                    left: "25px",
-                    cursor: "pointer"
-                  }}
-                  src="/static/images/back.png"
-                ></img>
-              </div>
-              <div
-                style={{ maxHeight: "100vh" }}
-                className="col-lg-7 col-sm-12"
+                className="col-lg-8 col-sm-12"
               >
                 <div className="images">
                   <div className="main-image">
-                    {/* <img [src]="selectedImage" /> */}
-                    <img src={product.images[0].url}></img>
+                    <img
+                      src={
+                        this.state.selectedProductUrl
+                          ? this.state.selectedProductUrl
+                          : ""
+                      }
+                    />
+                    {/* <img src={product.images[0].url}></img> */}
                   </div>
                   <div className="small-images">
-                    {/* <img *ngFor="let imageUrl of product.imageUrls" [src]="imageUrl" (click)="selectedImage = imageUrl"
-                [ngClass]="{ 'active': selectedImage == imageUrl}" /> */}
-                    <img src={product.images[0].url} />
-                    <img src={product.images[0].url} />
-                    <img src={product.images[0].url} />
+                    {product.images &&
+                      product.images.map(productImage => {
+                        return (
+                          <img
+                            src={productImage.url}
+                            onClick={e => {
+                              this.onImageClicked(productImage.url);
+                            }}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
               </div>
               <div
                 style={{
-                  maxHeight: "100vh",
-                  overflow: "hidden",
-                  position: "relative"
+                  overflow: "scroll"
                 }}
                 className="col-lg-4 col-sm-12 product-detail-description"
               >
                 <div
                   style={{
-                    maxHeight: "100vh",
-                    overflow: "auto",
-                    width: "110%",
+                    maxHeight: "70vh",
                     paddingBottom: "25px"
                   }}
                 >
-                  <h2>Rental > JetSkis > SeeDoo GTR X 230</h2>
+                  <h2>
+                    <a style={{ color: "black" }} href="/">
+                      Rental
+                    </a>{" "}
+                    >{" "}
+                    <a
+                      style={{ color: "black" }}
+                      href={`/product-group?id=${
+                        product.productGroup.id
+                      }&slug=${slugify(product.productGroup.name)}`}
+                      as={`/product-group/${product.id}/${slugify(
+                        product.productGroup.name
+                      )}`}
+                    >
+                      {" "}
+                      {product.productGroup.name}
+                    </a>{" "}
+                    >{" "}
+                    <span style={{ color: "#FAB900", fontSize: "20px" }}>
+                      {product.name}
+                    </span>
+                  </h2>
                   <h1 className="main-title">{product.name}</h1>
-                  <p>
-                    Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry.
-                  </p>
-                  <div className="tag-line">tagline</div>
+                  <p>{product.description && product.description.summary}</p>
+                  <div className="tag-line">
+                    {product.description && product.description.tagline}
+                  </div>
 
                   <div>
-                    <strong>€ {product.rates[0].price}</strong>EUR
+                    <strong>€ {product.rates[0].price}</strong> EUR
                     <div className="per-day-text">per day</div>
                   </div>
                   <div
@@ -421,9 +517,11 @@ class DetailPage extends Component {
                       </div>
                     </div>
                     <div className="col-md-8">
-                      <div onClick={this.openModal} className="add-btn">
-                        <i className="icon-cart"></i>
-                        Add to booking
+                      <div
+                        onClick={() => this.setRequestedAndOpenModal(product)}
+                        className="add-btn"
+                      >
+                        <i className="icon-cart"></i> Add to booking
                       </div>
                     </div>
                   </div>
@@ -455,7 +553,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/note.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section2.head}
                       </h2>
                     </div>
@@ -476,7 +574,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/question.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section3.head}
                       </h2>
                     </div>
@@ -497,7 +595,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/attention.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section4.head}
                       </h2>
                     </div>
@@ -515,7 +613,7 @@ class DetailPage extends Component {
                   product.description.section5.head ? (
                     <div style={{ display: "flex" }}>
                       <h1 style={{ lineHeight: "7px" }}>+</h1>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section5.head}
                       </h2>
                     </div>
@@ -536,7 +634,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/award.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section6.head}
                       </h2>
                     </div>
@@ -557,7 +655,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/dimensions.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section7.head}
                       </h2>
                     </div>
@@ -578,7 +676,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/tag.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section8.head}
                       </h2>
                     </div>
@@ -599,7 +697,7 @@ class DetailPage extends Component {
                         style={{ height: "35px" }}
                         src="/static/images/tag.png"
                       ></img>
-                      <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
+                      <h2 style={{ lineHeight: "7px" }}>
                         {product.description.section9.head}
                       </h2>
                     </div>
@@ -616,198 +714,54 @@ class DetailPage extends Component {
                 </div>
                 &nbsp;
               </div>
-              {/* {product.rates && product.rates.length > 0 && parseFloat(product.rates[0].quantityAvailable)  0.0 && */}
-              {/* <div className="col-lg-5 col-sm-12 product-detail-form">
-                STEP SEARCH / ITINERARY
-                {this.props.localSearchReducer.currentStep === 1 ? (
-                  <SearchView
-                    configurationsstate={this.state.configurations}
-                    onChangeConfiguration={this.onChangeConfiguration}
-                    _prev={this._prev}
-                    _next={this._next}
-                    data={product}
-                    resetDeliveryLocation={deliveryLocation => {
-                      this.getProduct(deliveryLocation);
-                    }}
-                  />
-                ) : null}
-
-                STEP SELECT QUANTITY
-                {this.props.localSearchReducer.currentStep === 2 ? (
-                  <div className={"form active quantity-wrapper"}>
-                    <div className="titlewrapper">
-                      <h3 className="localSearchTitle">Product Quantity</h3>
-                      <Steps />
-                    </div>
-                    <div className="item-wrap">
-                      <div className="big-counter">
-                        <button
-                          className="subtract-button"
-                          onClick={e => {
-                            if (
-                              this.props.localSearchReducer.productQuantity > 0
-                            ) {
-                              this.props.updateLocalSearchProductQuantity(
-                                this.props.localSearchReducer.productQuantity -
-                                  1
-                              );
-                            }
-                          }}
-                        >
-                          &minus;
-                        </button>
-                        <span className="center">
-                          <span className="quantity">
-                            {this.props.localSearchReducer.productQuantity}
-                          </span>
-                          <br />
-                          {this.props.localSearchReducer.selectedProduct
-                            .rates && (
-                            <Fragment>
-                              €{" "}
-                              {parseFloat(
-                                this.props.localSearchReducer.selectedProduct
-                                  .rates[0].price *
-                                  this.props.localSearchReducer.productQuantity
-                              ).toFixed(2)}
-                              <br />
-                              <span className="pricePerDayLabel">
-                                price per day
-                              </span>
-                            </Fragment>
-                          )}
-                        </span>
-
-                        <button
-                          className="add-button"
-                          onClick={e => {
-                            this.props.updateLocalSearchProductQuantity(
-                              this.props.localSearchReducer.productQuantity + 1
-                            );
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <div className="button-wrapper">
-                      {this.previousButton(this.state.currentStep)}
-                      {this.nextButton(this.state.currentStep)}
-                    </div>
-                  </div>
-                ) : null}
-
-                STEP OPTIONAL ACCESSORIES
-                {this.props.localSearchReducer.currentStep === 3 &&
-                this.props.localSearchReducer.totalSteps === 4 ? (
-                  <div className={"form active accessories-wrapper"}>
-                    <div className="titlewrapper">
-                      <h3 className="localSearchTitle">Optional Accessories</h3>
-                      <Steps />
-                    </div>
-                    <div className="item-wrap">
-                      <OptionalAccessoryView onChange={this.changeAccesoire} />
-                    </div>
-                    <div className="button-wrapper">
-                      {this.previousButton()}
-                      {this.nextButton()}
-                    </div>
-                  </div>
-                ) : null}
-
-                STEP SUMMARY
-                {(this.props.localSearchReducer.currentStep === 3 &&
-                  this.props.localSearchReducer.totalSteps === 3) ||
-                this.props.localSearchReducer.currentStep === 4 ? (
-                  <SummaryView
-                    total={this.state.total}
-                    _prev={this._prev}
-                    accessories={this.state.accessories}
-                    handleSubmit={this.addToCart}
-                    accessories={accessories.filter(
-                      val => val.type !== "mandatory"
-                    )}
-                  />
-                ) : null}
-
-                STEP CONTINUE SHOPPING?
-                {this.props.localSearchReducer.currentStep === 5 ? (
-                  <div className="form active confirmationview">
-                    <div className="titlewrapper"> </div>
-                    <div className="subview">
-                      <img
-                        src="/static/images/success.png"
-                        height="100"
-                        width="100"
-                      />
-                      <button
-                        className="search-button-full"
-                        type="button"
-                        onClick={e => {
-                          this.continueShopping();
-                        }}
-                      >
-                        Continue Shopping
-                      </button>
-                      <span>or</span>
-                      <Link
-                        onClick={e => {
-                          this.props.resetLocalSearch();
-                        }}
-                        href="/checkout"
-                      >
-                        <a className="search-button-border">Go To Cart</a>
-                      </Link>
-                    </div>
-                  </div>
-                ) : null}
-              </div> */}
             </div>
-
-            {/* {product.similarToys && product.similarToys.length > 0 && (
-              <ScrollableAnchor id="similar">
-                <div className="row similar-toys">
-                  <div className="col">
-                    <h3>Similar toys</h3>
-                  </div>
-                </div>
-              </ScrollableAnchor>
-            )} */}
-
-            {/* {product.similarToys && product.similarToys.length > 0 && (
-              <div className="row products">
-                {product.similarToys.map((item, index) => {
-                  return (
-                    <div className="col-lg-3 col-md-4 col-sm-6">
-                      <Link
-                        key={index}
-                        href={`/detail?id=${item.id}&slug=${slugify(
-                          item.name
-                        )}`}
-                        as={`/detail/${item.id}/${slugify(item.name)}`}
-                      >
-                        <a>
-                          <div className="product">
-                            <img
-                              alt={item.name}
-                              src={
-                                item.images[0].fullImageUrl
-                                  ? item.images[0].fullImageUrl
-                                  : "/static/images/flyboard.png"
-                              }
-                            />
-                            <h4>{item.name}</h4>
-                            <span>{`from € ${item.fromPrice}`}</span>
-                          </div>
-                        </a>
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-            )} */}
           </div>
-          {/* {this.state.loading && <Loader />} */}
+
+          <Modal
+            isOpen={this.state.modalIsOpen}
+            onAfterOpen={this.afterOpenModal.bind(this)}
+            onRequestClose={this.closeModal.bind(this)}
+            style={{
+              overlay: {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "#19303b",
+                zIndex: 4002
+              },
+              content: {
+                top: "50%",
+                left: "50%",
+                right: "auto",
+                bottom: "auto",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "transparent",
+                border: "none",
+                width: "80%"
+              }
+            }}
+            portalClassName="product-tile-modal"
+          >
+            {this.state.requestedProduct && this.state.step === 1 && (
+              <ProductBookingForm
+                setCartItemIndex={this.setCartItemIndex.bind(this)}
+                closeModal={this.closeModal.bind(this)}
+                setStep={this.setStep.bind(this)}
+                product={this.state.requestedProduct}
+                cartItemIndex={this.state.cartItemIndex}
+              />
+            )}
+            {this.state.requestedProduct && this.state.step === 2 && (
+              <ProductBookingSummary
+                closeModal={this.closeModal.bind(this)}
+                setStep={this.setStep.bind(this)}
+                product={this.state.requestedProduct}
+                cartItemIndex={this.state.cartItemIndex}
+              />
+            )}
+          </Modal>
         </div>
       );
     } else {

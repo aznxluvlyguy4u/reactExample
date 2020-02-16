@@ -4,32 +4,38 @@ import Modal from "react-modal";
 import Link from "next/link";
 import slugify from "slugify";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
-};
+import styles from "./product-tiles.style";
+
+import ProductBookingForm from "../product-booking-components/product-booking-form";
+import ProductBookingSummary from "../product-booking-components/product-booking-summary";
 
 class ProductTiles extends Component {
   constructor(props) {
     super(props);
+
     this.props.products.forEach(product => {
       product.qty = 0;
     });
+
     this.state = {
+      step: undefined,
       products: this.props.products,
-      modalIsOpen: false
+      modalIsOpen: false,
+      requestedProduct: undefined
     };
 
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  setRequestedAndOpenModal(item) {
+    this.setState({
+      modalIsOpen: true,
+      requestedProduct: item,
+      step: 1
+    });
   }
 
   addProdcut(product) {
@@ -61,6 +67,14 @@ class ProductTiles extends Component {
     this.setState({ modalIsOpen: false });
   }
 
+  setStep(step) {
+    this.setState({ step });
+  }
+
+  setCartItemIndex(cartItemIndex) {
+    this.setState({ cartItemIndex });
+  }
+
   render() {
     return (
       <div>
@@ -78,6 +92,11 @@ class ProductTiles extends Component {
                         >
                           <Link>
                             <a
+                              // href="#"
+                              // onClick={e => {
+                              //   e.preventDefault();
+                              //   this.onProductClick(item);
+                              // }}
                               href={`/product?id=${item.id}&slug=${slugify(
                                 item.name
                               )}`}
@@ -97,7 +116,7 @@ class ProductTiles extends Component {
                                       : "/static/images/flyboard.png"
                                   }
                                 />
-                                {item.rates[0].quantityAvailable == 0 && (
+                                {/* {item.rates[0].quantityAvailable == 0 && (
                                   <div
                                     style={{
                                       position: "absolute",
@@ -109,7 +128,7 @@ class ProductTiles extends Component {
                                   >
                                     Currently unavailable
                                   </div>
-                                )}
+                                )} */}
                               </div>
                             </a>
                           </Link>
@@ -118,7 +137,7 @@ class ProductTiles extends Component {
                           <div className="description">
                             {item.description.section1
                               ? item.description.section1.paragraph
-                              : "Test description"}
+                              : "--"}
                             <div
                               style={{
                                 position: "absolute",
@@ -132,7 +151,7 @@ class ProductTiles extends Component {
                             ></div>
                           </div>
 
-                          <div className="tag-line">tagline</div>
+                          {item.tagline && <div className="tag-line">{item.tagline}</div>}
 
                           <div>
                             <strong>€ {item.rates[0].price}</strong>EUR
@@ -155,7 +174,12 @@ class ProductTiles extends Component {
                               </div>
                             </div>
                             <div className="col-md-8">
-                              <div onClick={this.openModal} className="add-btn">
+                              <div
+                                onClick={() =>
+                                  this.setRequestedAndOpenModal(item)
+                                }
+                                className="add-btn"
+                              >
                                 <i className="icon-cart"></i>
                                 Add to booking
                               </div>
@@ -174,14 +198,26 @@ class ProductTiles extends Component {
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
-          style={customStyles}
+          style={styles}
+          portalClassName="product-tile-modal"
         >
-          <div>
-            <h2>Feature coming soon!</h2>
-          </div>
-          <button className="add-btn" onClick={this.closeModal}>
-            Close
-          </button>
+          {this.state.requestedProduct && this.state.step === 1 && (
+            <ProductBookingForm
+              setCartItemIndex={this.setCartItemIndex.bind(this)}
+              closeModal={this.closeModal.bind(this)}
+              setStep={this.setStep.bind(this)}
+              product={this.state.requestedProduct}
+              cartItemIndex={this.state.cartItemIndex}
+            />
+          )}
+          {this.state.requestedProduct && this.state.step === 2 && (
+            <ProductBookingSummary
+              closeModal={this.closeModal.bind(this)}
+              setStep={this.setStep.bind(this)}
+              product={this.state.requestedProduct}
+              cartItemIndex={this.state.cartItemIndex}
+            />
+          )}
         </Modal>
       </div>
     );
