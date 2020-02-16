@@ -37,6 +37,16 @@ import ProductBookingForm from "../../components/product-booking-components/prod
 import ProductBookingSummary from "../../components/product-booking-components/product-booking-summary";
 
 class DetailPage extends Component {
+  iconMapping = {
+    section1: "tag.png",
+    section2: "note.png",
+    section3: "question.png",
+    section4: "attention.png",
+    section5: "plus.png",
+    section6: "award.png",
+    section7: "dimensions.png"
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -525,192 +535,32 @@ class DetailPage extends Component {
                       </div>
                     </div>
                   </div>
-                  {Object.keys(product.description).map((item, index) => (
-                    <div>
-                      <div style={{ display: "flex" }}>
-                        <img
-                          style={{ height: "35px" }}
-                          src="/static/images/tag.png"
-                        ></img>
-                        <h2 style={{ lineHeight: "7px", paddingLeft: "14px" }}>
-                          {product.description[item].head}
-                        </h2>
-                      </div>
+                  {Object.keys(product.description).map(item => {
+                    return (
+                      item != "dimensions" && (
+                        <div>
+                          <div style={{ display: "flex" }}>
+                            <img
+                              style={{ height: "35px" }}
+                              src={"/static/images/" + this.iconMapping[item]}
+                            ></img>
+                            <h2
+                              style={{ lineHeight: "7px", paddingLeft: "14px" }}
+                            >
+                              {product.description[item].head}
+                            </h2>
+                          </div>
 
-                      <div
-                        style={{ marginBottom: "32px" }}
-                        dangerouslySetInnerHTML={{
-                          __html: product.description[item].paragraph
-                        }}
-                      />
-                    </div>
-                  ))}
-
-                  {/* {product.description.section2 &&
-                  product.description.section2.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/note.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section2.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section2 &&
-                  product.description.section2.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section2.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section3 &&
-                  product.description.section3.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/question.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section3.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section3 &&
-                  product.description.section3.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section3.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section4 &&
-                  product.description.section4.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/attention.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section4.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section4 &&
-                  product.description.section4.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section4.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section5 &&
-                  product.description.section5.head ? (
-                    <div style={{ display: "flex" }}>
-                      <h1 style={{ lineHeight: "7px" }}>+</h1>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section5.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section5 &&
-                  product.description.section5.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section5.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section6 &&
-                  product.description.section6.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/award.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section6.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section6 &&
-                  product.description.section6.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section6.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section7 &&
-                  product.description.section7.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/dimensions.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section7.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section7 &&
-                  product.description.section7.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section7.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section8 &&
-                  product.description.section8.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/tag.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section8.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section8 &&
-                  product.description.section8.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section8.paragraph
-                      }}
-                    />
-                  ) : null}
-                  {product.description.section9 &&
-                  product.description.section9.head ? (
-                    <div style={{ display: "flex" }}>
-                      <img
-                        style={{ height: "35px" }}
-                        src="/static/images/tag.png"
-                      ></img>
-                      <h2 style={{ lineHeight: "7px" }}>
-                        {product.description.section9.head}
-                      </h2>
-                    </div>
-                  ) : null}
-                  {product.description.section9 &&
-                  product.description.section9.paragraph ? (
-                    <div
-                      style={{ marginBottom: "32px" }}
-                      dangerouslySetInnerHTML={{
-                        __html: product.description.section9.paragraph
-                      }}
-                    />
-                  ) : null} */}
+                          <div
+                            style={{ marginBottom: "32px" }}
+                            dangerouslySetInnerHTML={{
+                              __html: product.description[item].paragraph
+                            }}
+                          />
+                        </div>
+                      )
+                    );
+                  })}
                 </div>
                 &nbsp;
               </div>
