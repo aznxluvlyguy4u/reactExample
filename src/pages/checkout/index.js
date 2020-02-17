@@ -26,8 +26,6 @@ import PaymentMethodForm from "../../components/checkout/paymentMethodForm";
 import { emptyCart, setCart } from "../../actions/cartActions";
 import Script from "react-load-script";
 import CheckoutBookingsOverview from "../../components/checkout/checkoutBookingsOverview/checkoutBookingsOverview";
-import CheckoutBookingConfigure from "../../components/checkout/checkoutBookingConfigure/checkoutBookingConfigure";
-import CheckoutBookingConfigureSummary from "../../components/checkout/checkoutBookingConfigure/checkoutBookingConfigureSummary";
 
 const customStyles = {
   content: {
@@ -41,6 +39,7 @@ const customStyles = {
 };
 
 import { addToCart, removeFromCart } from "../../actions/cartActions";
+import CheckoutOverviewControl from "../../components/checkout/checkoutBookingConfigure/overview/checkoutOverviewControl";
 
 class CheckoutPage extends Component {
   constructor(props) {
@@ -54,6 +53,8 @@ class CheckoutPage extends Component {
       configure: false,
       configureIndex: undefined,
       configureAll: false,
+      captureCheckoutRequirements: false,
+      captureCheckoutLogistics: false,
       orderFailed: false,
       orderSuccess: false,
       isMobile: false,
@@ -381,6 +382,7 @@ class CheckoutPage extends Component {
     const orderJson = JSON.stringify(order);
     sessionStorage.setItem("order", orderJson);
   };
+
   getOrder = () => {
     const orderJson = sessionStorage.getItem("order");
     let order = null;
@@ -616,7 +618,8 @@ class CheckoutPage extends Component {
   }
 
   updateCart(cart) {
-    console.log("update cart", cart);
+    this.setState({cart});
+    LocalStorageUtil.setCart(cart);
   }
 
   itemPrice = item => {
@@ -657,6 +660,23 @@ class CheckoutPage extends Component {
     this.setState({ bookingsOverview: false, configureAll: true });
   }
 
+  revertToCartBookingsOverview() {
+    this.setState( { 
+      bookingsOverview: true,
+      configure: false,
+      configureAll: false,
+      configureIndex: undefined,
+    });
+  }
+
+  captureCheckoutRequirements() {
+    this.setState( { 
+      configure: false,
+      configureAll: false,
+      captureCheckoutRequirements: true,
+      captureCheckoutLogistics: true,
+    });
+  }
   render() {
     return (
       <Default
@@ -674,7 +694,7 @@ class CheckoutPage extends Component {
           <CheckoutBookingsOverview
             setConfigureAll={this.setConfigureAll.bind(this)}
             setConfigureItem={ (cartItemIndex) => this.setConfigureItem(cartItemIndex)}
-            updateCart={this.updateCart}
+            updateCart={(cart) => this.updateCart(cart).bind(this)}
             cart={this.state.cart}
             products={this.state.products}
           />
@@ -693,19 +713,15 @@ class CheckoutPage extends Component {
           && this.state.configureIndex !== undefined 
           && this.state.cart[this.state.configureIndex]  
           && (
-          <div className="row">
-            <div className="col-8">
-              <CheckoutBookingConfigure
-                cart={this.state.cart}
-                products={this.state.products}
-                configureIndex={this.state.configureIndex}
-              />
-            </div>
-            <div className="col-4">
-              <CheckoutBookingConfigureSummary cartItem={this.state.cart[this.state.configureIndex]}/>
-            </div>
-          </div>
-        )}
+            <CheckoutOverviewControl 
+              cart={this.state.cart}
+              products={this.state.products}
+              configureIndex={this.state.configureIndex}
+              configure={true}
+              configureAll={false}
+              updateCart={this.updateCart.bind(this)}
+            />
+          )}
 
         {this.state.orderSuccess && (
           <Modal

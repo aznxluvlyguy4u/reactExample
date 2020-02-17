@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import CartUtils from "../../../utils/mapping/cart/cartUtils";
-import LocalStorageUtil from "../../../utils/localStorageUtil";
-import BasicCounter from "../../formComponents/number-input/basic-counter";
+import CartUtils from "../../../../utils/mapping/cart/cartUtils";
+import LocalStorageUtil from "../../../../utils/localStorageUtil";
+import BasicCounter from "../../../formComponents/number-input/basic-counter";
 
 class CheckoutBookingConfigureGridRow extends Component {
   constructor(props) {

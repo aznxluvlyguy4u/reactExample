@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import moment from "moment";
-import CartUtils from "../../../utils/mapping/cart/cartUtils";
+import CartUtils from "../../../../utils/mapping/cart/cartUtils";
 import Modal from "react-modal";
 import styles from "./checkoutBookingConfigure.style";
-import LocalStorageUtil from "../../../utils/localStorageUtil";
-import BasicCounter from "../../formComponents/number-input/basic-counter";
+import LocalStorageUtil from "../../../../utils/localStorageUtil";
 import CheckoutBookingConfigureGridRow from "./checkoutBookingConfigureGridRow";
 
 class CheckoutBookingConfigure extends Component {
@@ -43,11 +41,15 @@ class CheckoutBookingConfigure extends Component {
 
   removeFromCartAndClose() {
     let cart = this.state.cart;
-    console.log(this.state.cartItem);
-    if(this.state.cartIndex.aIndex){
-      cart[this.state.cartItemIndex].products[this.state.cartIndex.pIndex].accessories.splice(this.state.cartIndex.aIndex, 1);
-    }else{
-      cart[this.state.cartItemIndex].products.splice(this.state.cartIndex.pIndex, 1);
+    if (this.state.cartIndex.aIndex) {
+      cart[this.state.cartItemIndex].products[
+        this.state.cartIndex.pIndex
+      ].accessories.splice(this.state.cartIndex.aIndex, 1);
+    } else {
+      cart[this.state.cartItemIndex].products.splice(
+        this.state.cartIndex.pIndex,
+        1
+      );
     }
     LocalStorageUtil.setCart(cart);
     this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
@@ -86,73 +88,77 @@ class CheckoutBookingConfigure extends Component {
     console.log(pIndex, aIndex, value);
   }
 
+  revertToCartBookingsOverview() {
+    this.props.revertToCartBookingsOverview();
+  }
+
+  captureCheckoutRequirements() {
+    this.props.captureCheckoutRequirements();
+  }
+
   render() {
     if (this.props.cart) {
       return (
-        <div className="page-wrapper checkout-configure">
-          <div className="checkout-wrapper">
-            <h1>
-              Overview{" "}
-              <span>
-                {" "}
-                / <a> Checkout </a>/ <a> Pay </a>{" "}
-              </span>
-            </h1>
-            <div className="paragraph">
-              {this.state.cartItem &&
-                this.state.cartItem.products.map((product, pIndex) => (
-                  <div>
-                    <div className="row my-2">
-                      <div className="col-6">Product</div>
-                      <div className="col-2">Qty</div>
-                      <div className="col-2">Price</div>
-                      <div className="col-2">Availability</div>
-                    </div>
+        <div className="paragraph">
+          {this.state.cartItem &&
+            this.state.cartItem.products.map((product, pIndex) => (
+              <div>
+                <div className="row my-2">
+                  <div className="col-6">Product</div>
+                  <div className="col-2">Qty</div>
+                  <div className="col-2">Price</div>
+                  <div className="col-2">Availability</div>
+                </div>
 
-                    <div className="divider my-3"></div>
+                <div className="divider my-3"></div>
 
+                <CheckoutBookingConfigureGridRow
+                  rowItem={{
+                    index: pIndex,
+                    images: product.details.images,
+                    rates: product.details.rates,
+                    quantity: product.quantity,
+                    name: product.details.name,
+                    period: this.state.cartItem.period,
+                    stock: product.details
+                  }}
+                  counterUpdate={value =>
+                    this.updateProductCounter(pIndex, value)
+                  }
+                  openModalAndSetItem={() =>
+                    this.openModalAndSetItem({ pIndex })
+                  }
+                />
+                <div className="divider my-3"></div>
+                {product.accessories &&
+                  product.accessories.map((accessory, aIndex) => (
                     <CheckoutBookingConfigureGridRow
                       rowItem={{
-                        index: pIndex,
-                        images: product.details.images,
-                        rates: product.details.rates,
-                        quantity: product.quantity,
-                        name: product.details.name,
+                        index: aIndex,
+                        images: accessory.images,
+                        rates: accessory.rates,
+                        quantity: accessory.quantity,
+                        name: accessory.name,
                         period: this.state.cartItem.period,
-                        stock: product.details,
+                        stock:
+                          product.details.accessories.filter(
+                            x => x.id === accessory.id
+                          ).length > 0
+                            ? product.details.accessories.filter(
+                                x => x.id === accessory.id
+                              )[0]
+                            : undefined
                       }}
                       counterUpdate={value =>
-                        this.updateProductCounter(pIndex, value)
+                        this.updateAccessoryCounter(pIndex, aIndex, value)
                       }
                       openModalAndSetItem={() =>
-                        this.openModalAndSetItem({pIndex})
+                        this.openModalAndSetItem({ pIndex, aIndex })
                       }
                     />
-                    <div className="divider my-3"></div>
-                    {product.accessories &&
-                      product.accessories.map((accessory, aIndex) => (
-                        <CheckoutBookingConfigureGridRow
-                          rowItem={{
-                            index: aIndex,
-                            images: accessory.images,
-                            rates: accessory.rates,
-                            quantity: accessory.quantity,
-                            name: accessory.name,
-                            period: this.state.cartItem.period,
-                            stock: product.details.accessories.filter(x => x.id === accessory.id).length > 0 ? product.details.accessories.filter(x => x.id === accessory.id)[0] : undefined,
-                          }}
-                          counterUpdate={value =>
-                            this.updateAccessoryCounter(pIndex, aIndex, value)
-                          }
-                          openModalAndSetItem={() =>
-                            this.openModalAndSetItem({pIndex, aIndex})
-                          }
-                        />
-                      ))}
-                  </div>
-                ))}
-            </div>
-          </div>
+                  ))}
+              </div>
+            ))}
           <Modal
             isOpen={this.state.modalIsOpen}
             onAfterOpen={this.afterOpenModal}

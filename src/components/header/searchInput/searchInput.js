@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { updateSearchKeyword } from '../../../actions/searchActions';
 import searchReducer from '../../../reducers/searchReducer';
 import { generateSearchQueryParameterString } from '../../../utils/queryparams';
-import CustomInputComponent from '../../signup/customInputComponent';
+import CustomInputComponent from '../../formComponents/customInputComponent/customInputComponent';
 
 class SearchInput extends Component {
 

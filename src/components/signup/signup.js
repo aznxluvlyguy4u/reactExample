@@ -4,8 +4,8 @@ import {
 } from 'formik';
 import { Component } from 'react';
 import { toast } from 'react-toastify';
-import CustomInputComponent from './customInputComponent';
-import countrySelectComponent from './countrySelectComponent';
+import CustomInputComponent from '../formComponents/customInputComponent/customInputComponent';
+import countrySelectComponent from '../formComponents/countrySelectComponent/countrySelectComponent';
 import validate from './signupValidation';
 import SignupSchema from './signupSchema';
 import { registerUser } from '../../utils/rest/requests/authRest';

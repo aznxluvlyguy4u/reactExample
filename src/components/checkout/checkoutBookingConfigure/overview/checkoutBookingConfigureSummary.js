@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CartUtils from "../../../utils/mapping/cart/cartUtils";
+import CartUtils from "../../../../utils/mapping/cart/cartUtils";
 
 class CheckoutBookingConfigureSummary extends Component {
   constructor(props) {
@@ -72,7 +72,7 @@ class CheckoutBookingConfigureSummary extends Component {
                 style={{
                   width: "10px",
                   height: "10px",
-                  "margin-right": "5px"
+                  marginRight: "5px"
                 }}
               />
               Transport Costs

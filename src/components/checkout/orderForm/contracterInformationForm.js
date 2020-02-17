@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import {
   Formik, Field, Form, ErrorMessage
 } from 'formik';
-import CustomInputComponent from '../../signup/customInputComponent';
+import CustomInputComponent from '../../formComponents/customInputComponent/customInputComponent';
 import CustomTextArea from '../../formComponents/customTextArea/customTextArea';
 import ContracterInformationFormSchema from './contracterInformationSchema';
 import CustomSelect from '../../formComponents/select/customSelect';
