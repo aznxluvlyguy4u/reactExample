@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import CheckoutLogistics from "./checkoutLogistics";
+import CheckoutContactInformationForm from "./checkoutContactInformationForm";
+import CheckoutBillingInformationForm from "./checkoutBillingInformation";
 
 class CheckoutControl extends Component {
   constructor(props) {
@@ -13,7 +15,7 @@ class CheckoutControl extends Component {
         logistics: true,
         contactInformation: false,
         billingInformation: false
-      },
+      }
     };
   }
 
@@ -23,12 +25,23 @@ class CheckoutControl extends Component {
         logistics: section === "logistics",
         contactInformation: section === "contactInformation",
         billingInformation: section === "billingInformation"
-      },
+      }
     });
+    this.props.checkoutState(section);
   }
 
   updateCartItem(cartItem) {
     this.props.updateCartItem(cartItem);
+  }
+
+  moveToContactInformation(cartItem) {
+    this.updateCartItem(cartItem);
+    this.goToSection("contactInformation");
+  }
+
+  moveToBillingInformation(cartItem) {
+    this.updateCartItem(cartItem);
+    this.goToSection("billingInformation");
   }
 
   render() {
@@ -66,10 +79,24 @@ class CheckoutControl extends Component {
             </h2>
           )}
           {this.state.displaySection.logistics && (
-            <CheckoutLogistics cartItem={this.props.cartItem} updateCartItemLogistics={(cartItem) => this.updateCartItem(cartItem)}/>
+            <CheckoutLogistics
+              cartItem={this.props.cartItem}
+              updateCartItemLogistics={cartItem =>
+                this.moveToContactInformation(cartItem)
+              }
+            />
           )}
-          {this.state.displaySection.contactInformation && <h1>contactInformation</h1>}
-          {this.state.displaySection.billingInformation && <h1>billingInformation</h1>}
+          {this.state.displaySection.contactInformation && (
+            <CheckoutContactInformationForm
+              cartItem={this.props.cartItem}
+              updateCartItemContactInformation={cartItem =>
+                this.moveToBillingInformation(cartItem)
+              }
+            />
+          )}
+          {this.state.displaySection.billingInformation && (
+            <CheckoutBillingInformationForm cartItem={this.props.cartItem}/>
+          )}
         </div>
       );
     }

@@ -31,6 +31,7 @@ class CheckoutOverviewControl extends Component {
         checkout: false,
         pay: false
       },
+      checkoutState: 'logistics',
       configure: props.configure,
       configureAll: props.configureAll
     };
@@ -49,8 +50,12 @@ class CheckoutOverviewControl extends Component {
   updateCartItem(cartItemIndex, cartItem) {
     let cart = this.state.cart;
     cart[cartItemIndex] = cartItem;
-    this.setState({cart});
+    this.setState({ cart });
     this.props.updateCart(cart);
+  }
+
+  setCheckoutState(state) {
+    this.setState({ checkoutState: state });
   }
 
   render() {
@@ -102,7 +107,10 @@ class CheckoutOverviewControl extends Component {
                     <CheckoutControl
                       cartItem={this.state.cartItem}
                       displayHeading={true}
-                      updateCartItem={(cartItem) => this.updateCartItem(this.state.cartItemIndex,cartItem)}
+                      updateCartItem={cartItem =>
+                        this.updateCartItem(this.state.cartItemIndex, cartItem)
+                      }
+                      checkoutState={state => this.setCheckoutState(state)}
                     />
                   )}
                   {this.state.displaySection.pay && <h1>pay</h1>}
@@ -112,7 +120,16 @@ class CheckoutOverviewControl extends Component {
                     cartItem={this.state.cart[this.props.configureIndex]}
                   />
                   <div className="px-2">
-                    <button type="submit" className="search-button-full" form="logistics-form" value="Submit">Next</button>
+                    {this.state.displaySection.checkout && (
+                        <button
+                          type="submit"
+                          className="search-button-full"
+                          form={`${this.state.checkoutState}-form`}
+                          value="Submit"
+                        >
+                          Next
+                        </button>
+                      )}
                   </div>
                 </div>
               </div>

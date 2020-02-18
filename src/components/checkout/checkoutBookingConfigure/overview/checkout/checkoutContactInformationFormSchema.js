@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-const ContactInformationFormSchema = Yup.object().shape({
+const CheckoutContactInformationFormSchema = Yup.object().shape({
   firstName: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
@@ -19,4 +19,4 @@ const ContactInformationFormSchema = Yup.object().shape({
     .required('This is a required field'),
 });
 
-export default ContactInformationFormSchema;
+export default CheckoutContactInformationFormSchema;

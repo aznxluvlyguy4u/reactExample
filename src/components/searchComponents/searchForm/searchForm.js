@@ -12,7 +12,7 @@ import {
 import { generateSearchQueryParameterString } from "../../../utils/queryparams";
 import DatePicker from "../../formComponents/datepicker/datepicker";
 import CustomSelect from "../../formComponents/select/customSelect";
-import CustomInputComponent from "../../signup/customInputComponent";
+import CustomInputComponent from "../../formComponents/customInputComponent";
 import searchValidation from "./searchValidation";
 
 class SearchForm extends Component {

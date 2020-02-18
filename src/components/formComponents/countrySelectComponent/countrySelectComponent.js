@@ -54,7 +54,6 @@ function CountrySelectComponent({
     if (typeof setFieldValue === "function")
       setFieldValue("phonePrefix", `+${value.phone}`);
     setDropdownValue(value);
-    console.log(errors);
   }
 
   return field.name.indexOf("[") === -1 ? (
@@ -64,9 +63,18 @@ function CountrySelectComponent({
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null
         }}
+        className={touched[field.name] && errors[field.name] ? "error" : ""}
         styles={colourStyles}
         onChange={onChange}
         options={options}
+        value={
+          dropdownValue &&
+          dropdownValue.value
+            ? options.filter(option => option.value === dropdownValue.value)
+            : dropdownValue
+            ? options.filter(option => option.value === dropdownValue)
+            : dropdownValue
+        }
       />
       {touched[field.name] && errors[field.name] && (
         <span>{errors[field.name]}</span>
@@ -74,7 +82,7 @@ function CountrySelectComponent({
       <input
         name={field.name}
         type="hidden"
-        value={dropdownValue.value ? dropdownValue.value : dropdownValue}
+        value={dropdownValue && dropdownValue.value ? dropdownValue.value : dropdownValue}
       />
     </>
   ) : (
@@ -85,8 +93,30 @@ function CountrySelectComponent({
           IndicatorSeparator: () => null
         }}
         styles={colourStyles}
+        className={(touched[field.name.substr(0, field.name.indexOf("["))] &&
+        touched[field.name.substr(0, field.name.indexOf("["))][
+          field.name.substring(
+            field.name.indexOf("[") + 1,
+            field.name.indexOf("]")
+          )
+        ] &&
+        errors[field.name.substr(0, field.name.indexOf("["))] &&
+        errors[field.name.substr(0, field.name.indexOf("["))][
+          field.name.substring(
+            field.name.indexOf("[") + 1,
+            field.name.indexOf("]")
+          )
+        ]) ? "error" : ""}
         onChange={onChange}
         options={options}
+        value={
+          dropdownValue &&
+          dropdownValue.value
+            ? options.filter(option => option.value === dropdownValue.value)
+            : dropdownValue
+            ? options.filter(option => option.value === dropdownValue)
+            : dropdownValue
+        }
       />
       {touched[field.name.substr(0, field.name.indexOf("["))] &&
         touched[field.name.substr(0, field.name.indexOf("["))][
@@ -116,7 +146,7 @@ function CountrySelectComponent({
       <input
         name={field.name}
         type="hidden"
-        value={dropdownValue.value ? dropdownValue.value : dropdownValue}
+        value={dropdownValue && dropdownValue.value ? dropdownValue.value : dropdownValue}
       />
     </>
   );
