@@ -144,30 +144,25 @@ class ProductGroupPage extends Component {
           <div name="scroll-to-element"></div>
           <div className="container">
             <div className="products-container">
-              <h1 className="product-group-heading">{(productGroup && productGroup.name) || slug} Rentals</h1>
+              <h1 className="product-group-heading">
+                {(productGroup && productGroup.name) || slug} Rentals
+              </h1>
               <div className="row">
                 <div className="col-sm-12 col-md-6 product-group-text">
                   <div className="text-group">
-                  {(productGroup && productGroup.description) || ""}
+                    {(productGroup && productGroup.description) || ""}
                   </div>
-                  {/* <div className="text-group">
-                    At Ocean Premium we make your life easier. With our own
-                    fine-tuned logistics network we can deliver the Jetskis on
-                    board your yacht anywhere at anytime along the Mediterranean
-                    coast.
-                  </div>
-                  <div className="text-group">
-                    Jetski Rental is available on a daily or weekly basis.
-                  </div> */}
                 </div>
                 <div className="col-sm-12 col-md-6">
-                  {productGroup && productGroup.video && <Iframe
-                    url={productGroup.video.url}
-                    width="100%"
-                    height="355px"
-                    display="initial"
-                    position="relative"
-                  />}
+                  {productGroup && productGroup.video && (
+                    <Iframe
+                      url={productGroup.video.url}
+                      width="100%"
+                      height="355px"
+                      display="initial"
+                      position="relative"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -178,7 +173,7 @@ class ProductGroupPage extends Component {
               <ProductTiles products={products} />
             </div>
           </div>
-          {/* <div className="container">
+          <div className="container mb-5">
             <h1 className="product-group-heading">Gallery</h1>
             <div className="row">
               <div className="col-sm-12 col-md-6 product-group-text">
@@ -198,14 +193,28 @@ class ProductGroupPage extends Component {
                   sheets containing Lorem Ipsum passages.
                 </div>
               </div>
-              <div class="container">
-                <div class="row">
-                  
+              <div class="col-sm-12 col-md-6">
+                <div
+                  style={{
+                    position: "relative",
+                    display: "grid",
+                    gridTemplateColumns: "auto auto auto"
+                  }}
+                >
+                  {products.map(product => (
+                    <img
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "130px"
+                      }}
+                      src={product.images[0].url}
+                    />
+                  ))}
                 </div>
               </div>
-              
             </div>
-          </div> */}
+          </div>
 
           <div className="container">
             <div className="row">
