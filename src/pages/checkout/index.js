@@ -772,7 +772,7 @@ class CheckoutPage extends Component {
             <h1>Order Sent</h1>
             <p>
               Thanks for your inquiry! We will get back to you as quickly as
-              possible±!
+              possible!
             </p>
             <p>Please check your Email inbox for the details</p>
             <a
