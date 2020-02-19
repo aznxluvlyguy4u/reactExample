@@ -29,6 +29,10 @@ const CheckoutBillingInformationFormSchema = Yup.object().shape({
     .required('This is a required field'),
   country: Yup.string()
     .required('This is a required field'),
+  securityDepositConsent: Yup.boolean()
+    .oneOf([true], "Please ensure you understand the security charge desposit"),
+  termsAndConditionsConsent: Yup.boolean()
+    .oneOf([true], "Please accept terms and conditions"),
 });
 
 export default CheckoutBillingInformationFormSchema;

@@ -1,5 +1,11 @@
-import React, {Component} from 'react';
-import {CardElement, injectStripe, CardNumberElement, CardCvcElement, CardExpiryElement} from 'react-stripe-elements';
+import React, { Component } from "react";
+import {
+  CardElement,
+  injectStripe,
+  CardNumberElement,
+  CardCvcElement,
+  CardExpiryElement
+} from "react-stripe-elements";
 
 class StripeForm extends Component {
   constructor(props) {
@@ -8,32 +14,34 @@ class StripeForm extends Component {
 
   render() {
     return (
-      <div className="signup checkout">
-        <h1>Payment</h1>
-        <p>Please fill in your creditcard details</p>
+      <div>
         <div className="form-block">
           <div className="form-block">
             <div className="input-wrapper">
+              <label>Card Number</label>
               <CardNumberElement onReady={this.props.onReady} />
               <br />
-              <CardCvcElement onReady={this.props.onReady} />
-              <br />
-              <CardExpiryElement onReady={this.props.onReady} />
+              <div className="form-inline">
+                <div className="form-block px-0 mr-1" style={{width: '50%'}}>
+                  <label>Expiration Date</label>
+                  <CardExpiryElement onReady={this.props.onReady} />
+                </div>
+                <div className="form-block px-0 ml-1" style={{width: '50%'}}>
+                  <label>Security Code</label>
+                  <CardCvcElement onReady={this.props.onReady} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <span>
-          <a
-            className="button-border fullwidth"
-            onClick={() => this.props.cancel()}>
-              Back
-          </a>
+        <div className="mr-3">
           <button
             className="fullwidth-button"
-            onClick={() => this.props.handleSubmit()}>
-            Purchase
+            onClick={() => this.props.handleSubmit()}
+          >
+            Pay
           </button>
-        </span>
+        </div>
       </div>
     );
   }

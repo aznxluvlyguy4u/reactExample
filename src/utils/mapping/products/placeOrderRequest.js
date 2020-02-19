@@ -1,19 +1,27 @@
 export default class PlaceOrderRequest {
-  constructor(products, contactInformation, contracterInformation, paymentMethod) {
+  constructor(location, period, products, contactInformation, contracterInformation, paymentMethod) {
     this.paymentMethod = paymentMethod;
-    this.products = products;
+    this.products = products.map((product) => {
+      return {
+        id: product.id,
+        accessories: product.accessories,
+        quantity: product.quantity,
+        location,
+        period,
+      };
+    });
     this.securityDepositConsent = contracterInformation.securityDepositConsent;
     this.termsAndConditionsConsent = contracterInformation.termsAndConditionsConsent;
     this.contactDetails = {
       firstName: contactInformation.firstName,
-      surName: contactInformation.surName,
+      surName: contactInformation.surname,
       emailAddress: contactInformation.emailAddress,
       phoneNumber: contactInformation.phoneNumber, //contactInformation.phonePrefix +
-      type: contactInformation.affiliation.value
-    }
+      type: contactInformation.affiliation.value,
+    };
     this.contracterDetails = {
       firstName: contracterInformation.firstName,
-      surName: contracterInformation.surName,
+      surName: contracterInformation.surname,
       emailAddress: contracterInformation.emailAddress,
       billing: {
         companyName: contracterInformation.company,
@@ -23,10 +31,10 @@ export default class PlaceOrderRequest {
           streetNumber: contracterInformation.streetNumber,
           streetNumberBlock: contracterInformation.streetNumberBlock,
           postalCode: contracterInformation.postalCode,
-          country: contracterInformation.country
-        }
-      }
-    }
+          country: contracterInformation.country,
+        },
+      },
+    };
     this.affiliation = contactInformation.affiliation.value;
     this.comment = contactInformation.comment;
     this.yachtName = contactInformation.yachtname;

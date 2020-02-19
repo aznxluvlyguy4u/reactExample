@@ -18,6 +18,14 @@ class LocalStorageUtil {
   emptyCart() {
     localStorage.setItem('cart', JSON.stringify([]));
   }
-}
+
+  setCartItemPaid(cartItem) {
+    localStorage.setItem('cartPaid', JSON.stringify(cartItem));
+  }
+
+  setCartItemPendingPayment(cartItem) {
+    localStorage.setItem('cartPendingPaid', JSON.stringify(cartItem));
+  }
+ }
 
 export default new LocalStorageUtil();

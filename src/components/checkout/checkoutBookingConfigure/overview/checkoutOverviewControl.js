@@ -1,7 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import CheckoutBookingConfigure from "./checkoutBookingConfigure";
 import CheckoutBookingConfigureSummary from "./checkoutBookingConfigureSummary";
 import CheckoutControl from "./checkout/checkoutControl";
+import CheckoutPayForm from "../pay/checkoutPayForm";
+import CartUtils from "../../../../utils/mapping/cart/cartUtils";
+
+const cartUtils = new CartUtils();
 
 class CheckoutOverviewControl extends Component {
   constructor(props) {
@@ -31,20 +35,27 @@ class CheckoutOverviewControl extends Component {
         checkout: false,
         pay: false
       },
-      checkoutState: 'logistics',
+      validated: {
+        overview: cartUtils.cartItemsAllAvailable(cartItem),
+        checkout: cartItem.logistics && cartItem.contactInformation && cartItem.billingInformation,
+        pay: false
+      },
+      checkoutState: "logistics",
       configure: props.configure,
       configureAll: props.configureAll
     };
   }
 
-  goToSection(section) {
-    this.setState({
-      displaySection: {
-        overview: section === "overview",
-        checkout: section === "checkout",
-        pay: section === "pay"
-      }
-    });
+  goToSection(section, cango) {
+    if (cango) {
+      this.setState({
+        displaySection: {
+          overview: section === "overview",
+          checkout: section === "checkout",
+          pay: section === "pay"
+        }
+      });
+    }
   }
 
   updateCartItem(cartItemIndex, cartItem) {
@@ -58,42 +69,68 @@ class CheckoutOverviewControl extends Component {
     this.setState({ checkoutState: state });
   }
 
+  updateSelectedPaymentMethod(value) {
+    this.setState({selectedPaymentMethod : value})
+  }
+
   render() {
     if (this.props.cart) {
       return (
-        <div className="page-wrapper checkout-configure overview">
-          <div className="checkout-wrapper">
+        <div className="page-wrapper checkout checkout-configure overview">
+          <div className="checkout-wrapper container">
             {this.state.configure ? (
               <div className="row">
                 <div className="col-8">
-                  <h1>
+                  <h1 className="overview-sections">
                     <a
                       onClick={() => {
-                        this.goToSection("overview");
+                        this.goToSection("overview", true);
                       }}
                     >
-                      Overview
-                    </a>{" "}
-                    <span>
-                      {" "}
-                      /{" "}
+                      Overview{" "}
+                      {this.state.validated.overview && (
+                        <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                      )}
+                    </a>
+                    <span className="inactive"> / </span>
+                    <span
+                      className={
+                        this.state.displaySection.checkout ||
+                        this.state.displaySection.pay
+                          ? "active"
+                          : "inactive"
+                      }
+                    >
                       <a
                         onClick={() => {
-                          this.goToSection("checkout");
+                          this.goToSection(
+                            "checkout",
+                            this.state.validated.overview
+                          );
                         }}
                       >
-                        {" "}
-                        Checkout{" "}
-                      </a>{" "}
-                      /{" "}
+                        Checkout
+                      </a>
+                      {this.state.validated.checkout && (
+                        <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                      )}
+                    </span>
+                    <span className="inactive"> / </span>
+                    <span
+                      className={
+                        this.state.displaySection.pay ? "active" : "inactive"
+                      }
+                    >
                       <a
                         onClick={() => {
-                          this.goToSection("pay");
+                          this.goToSection(
+                            "pay",
+                            this.state.validated.checkout
+                          );
                         }}
                       >
-                        {" "}
-                        Pay{" "}
-                      </a>{" "}
+                        Pay
+                      </a>
                     </span>
                   </h1>
                   {this.state.displaySection.overview && (
@@ -111,25 +148,65 @@ class CheckoutOverviewControl extends Component {
                         this.updateCartItem(this.state.cartItemIndex, cartItem)
                       }
                       checkoutState={state => this.setCheckoutState(state)}
+                      moveToPayment={() => this.goToSection("pay", this.state.cartItem.billingInformation)}
                     />
                   )}
-                  {this.state.displaySection.pay && <h1>pay</h1>}
+                  {this.state.displaySection.pay && (
+                    <CheckoutPayForm
+                      cartItem={this.state.cartItem}
+                      handleSubmit={this.handlePaymentMethod}
+                      updateSelectedPaymentMethod={(value) => this.updateSelectedPaymentMethod(value)}
+                      completeBooking={() => this.props.completeBooking(this.state.cartItemIndex, false)}
+                    />
+                  )}
                 </div>
                 <div className="col-4">
-                  <CheckoutBookingConfigureSummary
-                    cartItem={this.state.cart[this.props.configureIndex]}
-                  />
-                  <div className="px-2">
-                    {this.state.displaySection.checkout && (
+                  <div className="bordered-container">
+                    <CheckoutBookingConfigureSummary
+                      cartItem={this.state.cart[this.props.configureIndex]}
+                    />
+                  </div>
+                  <div className="mt-3">
+                    {this.state.displaySection.overview && (
+                      <Fragment>
                         <button
-                          type="submit"
-                          className="search-button-full"
-                          form={`${this.state.checkoutState}-form`}
-                          value="Submit"
+                          className="solid-grey"
+                          type="button"
+                          onClick={this.props.backToBookings}
                         >
-                          Next
+                          Update Booking
                         </button>
-                      )}
+                        <button
+                          type="button"
+                          className="search-button-full mt-3"
+                          onClick={() => {
+                            this.goToSection("checkout", this.state.validated.overview);
+                          }}
+                          disabled={!this.state.validated.overview}
+                        >
+                          Checkout
+                        </button>
+                      </Fragment>
+                    )}
+                    {this.state.displaySection.checkout && (
+                      <button
+                        type="submit"
+                        className="search-button-full"
+                        form={`${this.state.checkoutState}-form`}
+                        value="Submit"
+                      >
+                        Next
+                      </button>
+                    )}
+                    {this.state.displaySection.pay && this.state.selectedPaymentMethod === 'BANK_TRANSFER' && (
+                      <button
+                        type="text"
+                        className="yellow-outline-button mt-3"
+                        onClick={() => this.props.completeBooking(this.state.cartItemIndex, true)}
+                      >
+                        Complete Booking
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

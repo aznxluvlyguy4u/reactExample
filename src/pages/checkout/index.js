@@ -55,6 +55,7 @@ class CheckoutPage extends Component {
       configureAll: false,
       captureCheckoutRequirements: false,
       captureCheckoutLogistics: false,
+      pay: false,
       orderFailed: false,
       orderSuccess: false,
       isMobile: false,
@@ -618,7 +619,7 @@ class CheckoutPage extends Component {
   }
 
   updateCart(cart) {
-    this.setState({cart});
+    this.setState({ cart });
     LocalStorageUtil.setCart(cart);
   }
 
@@ -652,7 +653,7 @@ class CheckoutPage extends Component {
     this.setState({
       bookingsOverview: false,
       configure: true,
-      configureIndex: cartItemIndex,
+      configureIndex: cartItemIndex
     });
   }
 
@@ -660,23 +661,58 @@ class CheckoutPage extends Component {
     this.setState({ bookingsOverview: false, configureAll: true });
   }
 
+  backToBookings() {
+    this.setState({
+      bookingsOverview: true,
+      configure: false,
+      configureIndex: undefined
+    });
+  }
+
   revertToCartBookingsOverview() {
-    this.setState( { 
+    this.setState({
       bookingsOverview: true,
       configure: false,
       configureAll: false,
-      configureIndex: undefined,
+      configureIndex: undefined
     });
   }
 
   captureCheckoutRequirements() {
-    this.setState( { 
+    this.setState({
       configure: false,
       configureAll: false,
       captureCheckoutRequirements: true,
-      captureCheckoutLogistics: true,
+      captureCheckoutLogistics: true
     });
   }
+
+  completeBooking(cartItemIndex, pending) {
+    this.setState({
+      configure: false,
+      configureAll: false,
+      captureCheckoutRequirements: false,
+      captureCheckoutLogistics: false,
+      bookingsOverview: true,
+      loading: true,
+    });
+    if(cartItemIndex !== undefined) {
+      let cartItem = this.state.cart[cartItemIndex];
+      let cart = this.state.cart;
+      cart.splice(cartItemIndex, 1);
+      if(pending){
+        LocalStorageUtil.setCartItemPendingPayment(cartItem);
+      } else {
+        LocalStorageUtil.setCartItemPaid(cartItem);
+      }
+      LocalStorageUtil.setCart(cart);
+      this.setState({
+        loading: false,
+        orderSuccess: true
+      });
+    }
+  }
+
   render() {
     return (
       <Default
@@ -693,8 +729,10 @@ class CheckoutPage extends Component {
         this.props.cartReducer.items.length > 0 ? (
           <CheckoutBookingsOverview
             setConfigureAll={this.setConfigureAll.bind(this)}
-            setConfigureItem={ (cartItemIndex) => this.setConfigureItem(cartItemIndex)}
-            updateCart={(cart) => this.updateCart(cart).bind(this)}
+            setConfigureItem={cartItemIndex =>
+              this.setConfigureItem(cartItemIndex)
+            }
+            updateCart={cart => this.updateCart(cart).bind(this)}
             cart={this.state.cart}
             products={this.state.products}
           />
@@ -707,19 +745,19 @@ class CheckoutPage extends Component {
         )}
         {this.state.loading ? <Loader /> : null}
 
-        {
-          !this.state.loading 
-          && this.state.configure 
-          && this.state.configureIndex !== undefined 
-          && this.state.cart[this.state.configureIndex]  
-          && (
-            <CheckoutOverviewControl 
+        {!this.state.loading &&
+          this.state.configure &&
+          this.state.configureIndex !== undefined &&
+          this.state.cart[this.state.configureIndex] && (
+            <CheckoutOverviewControl
               cart={this.state.cart}
               products={this.state.products}
               configureIndex={this.state.configureIndex}
               configure={true}
               configureAll={false}
+              backToBookings={this.backToBookings.bind(this)}
               updateCart={this.updateCart.bind(this)}
+              completeBooking={this.completeBooking.bind(this)}
             />
           )}
 
@@ -771,97 +809,6 @@ class CheckoutPage extends Component {
             </a>
           </Modal>
         )}
-
-        {this.state.modalIsOpen && (
-          <Modal
-            isOpen={this.state.modalIsOpen}
-            shouldCloseOnOverlayClick={false}
-            onAfterOpen={this.afterOpenModal}
-            onRequestClose={this.closeModal}
-            style={customStyles}
-          >
-            <div className="order-form">
-              {this.state.orderFormStep === 1 && (
-                <ContactInformationForm
-                  initialValues={this.state.contactInformation}
-                  cancel={() => {
-                    this.closeModal();
-                  }}
-                  loading={this.state.loading}
-                  handleSubmit={this.handleContactInformationForm}
-                />
-              )}
-
-              {this.state.orderFormStep === 2 && (
-                <ContracterInformationForm
-                  initialValues={this.state.contracterInformation}
-                  cancel={() => {
-                    this.setState({
-                      orderFormStep: 1
-                    });
-                  }}
-                  loading={this.state.loading}
-                  handleSubmit={this.handleContracterInformationForm}
-                />
-              )}
-
-              {this.state.orderFormStep === 3 && (
-                <PaymentMethodForm
-                  handleSubmit={this.handlePaymentMethod}
-                  cancel={() =>
-                    this.setState({
-                      orderFormStep: 2
-                    })
-                  }
-                />
-              )}
-
-              {this.state.orderFormStep === 4 &&
-                this.state.paymentMethod === "BANK_TRANSFER" && (
-                  <Fragment>
-                    <p>
-                      Thank you for your order. Please transfer the fee to the
-                      following bank account with payment id{" "}
-                      <strong>{this.state.originalOrder.orderId}</strong>
-                    </p>
-                    <button
-                      className="button-border fullwidth"
-                      onClick={this.closeModal}
-                    >
-                      Close
-                    </button>
-                  </Fragment>
-                )}
-
-              {this.state.orderFormStep === 4 &&
-                this.state.paymentMethod === "CARD" && (
-                  <StripeProvider stripe={this.state.stripe}>
-                    <Elements>
-                      <Fragment>
-                        <StripeForm
-                          onReady={this.handleReady}
-                          paymentIntent={this.getPaymentIntent()}
-                          cancel={() => {
-                            this.setState({
-                              orderFormStep: 3
-                            });
-                          }}
-                          handleSubmit={() => {
-                            this.handleStripePayment();
-                          }}
-                        />
-                      </Fragment>
-                    </Elements>
-                  </StripeProvider>
-                )}
-            </div>
-          </Modal>
-        )}
-
-        <Script
-          url="https://js.stripe.com/v3/"
-          onLoad={() => this.onStripeLoad()}
-        />
       </Default>
     );
   }

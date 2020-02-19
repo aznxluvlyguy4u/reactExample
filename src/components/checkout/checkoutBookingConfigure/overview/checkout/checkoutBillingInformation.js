@@ -50,7 +50,9 @@ class CheckoutBillingInformationForm extends Component {
         streetNumber: "",
         streetNumberBlock: "",
         postalCode: "",
-        country: ""
+        country: "",
+        securityDepositConsent: false,
+        termsAndConditionsConsent: false,
       };
     }
 
@@ -58,7 +60,9 @@ class CheckoutBillingInformationForm extends Component {
   }
 
   handleSubmit(billingInformation) {
-    console.log(billingInformation);
+    let cartItem = this.props.cartItem;
+    cartItem.billingInformation = billingInformation;
+    this.props.updateCartItemBillingInformation(cartItem);
   }
 
   setFromContactInformation(event) {

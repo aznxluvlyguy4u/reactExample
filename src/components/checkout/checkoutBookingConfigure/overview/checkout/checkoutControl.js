@@ -44,37 +44,65 @@ class CheckoutControl extends Component {
     this.goToSection("billingInformation");
   }
 
+  moveToPayment(cartItem) {
+    this.updateCartItem(cartItem);
+    this.props.moveToPayment();
+  }
+
   render() {
     if (this.props.cartItem) {
       return (
         <div className="checkout-control">
           {this.props.displayHeading && (
-            <h2>
+            <h2 className="flow-control">
               <a
                 onClick={() => {
                   this.goToSection("logistics");
                 }}
               >
                 Logistics
-              </a>{" "}
-              <span>
-                {" "}
-                /{" "}
+                {this.props.cartItem.logistics && (
+                  <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                )}
+              </a>
+              <span className="inactive"> / </span>
+              <span
+                className={
+                  this.state.displaySection.contactInformation ||
+                  this.state.displaySection.billingInformation
+                    ? "active"
+                    : "inactive"
+                }
+              >
                 <a
                   onClick={() => {
                     this.goToSection("contactInformation");
                   }}
                 >
                   Contact Information
-                </a>{" "}
-                /{" "}
+                  {this.props.cartItem.contactInformation && (
+                    <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                  )}
+                </a>
+              </span>
+              <span className="inactive"> / </span>
+              <span
+                className={
+                  this.state.displaySection.billingInformation
+                    ? "active"
+                    : "inactive"
+                }
+              >
                 <a
                   onClick={() => {
                     this.goToSection("billingInformation");
                   }}
                 >
                   Billing Information
-                </a>{" "}
+                  {this.props.cartItem.billingInformation && (
+                    <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                  )}
+                </a>
               </span>
             </h2>
           )}
@@ -95,7 +123,12 @@ class CheckoutControl extends Component {
             />
           )}
           {this.state.displaySection.billingInformation && (
-            <CheckoutBillingInformationForm cartItem={this.props.cartItem}/>
+            <CheckoutBillingInformationForm
+              cartItem={this.props.cartItem}
+              updateCartItemBillingInformation={cartItem =>
+                this.moveToPayment(cartItem)
+              }
+            />
           )}
         </div>
       );

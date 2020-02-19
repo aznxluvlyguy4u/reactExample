@@ -71,15 +71,15 @@ class CheckoutBookingsOverview extends Component {
   render() {
     if (this.props.cart) {
       return (
-        <div className="page-wrapper checkout-overview">
+        <div className="page-wrapper checkout checkout-overview">
           <div className="checkout-wrapper">
-            <h1>
+            <h1 className="px-0">
               Bookings
               <button onClick={ () => this.configureAll() } className="yellow-button-outline">Configure All</button>
             </h1>
-            <div className="paragraph">
+            <div className="container">
               {this.state.cart.map((cartItem, index) => (
-                <div className="row mb-2 equal-height-columns">
+                <div className="row mb-2 equal-height-columns bottom-bordered">
                   <div className="col-1 align-self-center">
                     <a onClick={() => this.openModalAndSetItem(index)}>
                       <img src="static/images/delete.png" />
@@ -123,7 +123,7 @@ class CheckoutBookingsOverview extends Component {
                       </table>
                     ))}
                   </div>
-                  <div className="col-3 align-self-end pricing">
+                  <div className="col-3 align-self-end pricing pr-0">
                     <h2>€ {this.state.cartUtils.getCartItemTotal(cartItem)}</h2>
                     <p>Excl. VAT & Security Deposit</p>
                     <button onClick={ () => this.configure(index) } type="button" className="configure-solid-yellow">

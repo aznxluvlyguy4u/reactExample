@@ -33,10 +33,8 @@ class CheckoutBookingConfigure extends Component {
     };
 
     this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.removeFromCartAndClose = this.removeFromCartAndClose.bind(this);
-    console.log(this.state.cartItem);
   }
 
   removeFromCartAndClose() {
@@ -69,11 +67,6 @@ class CheckoutBookingConfigure extends Component {
 
   openModalAndSetItem(index) {
     this.setState({ modalIsOpen: true, cartIndex: index });
-  }
-
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    //this.subtitle.style.color = "#f00";
   }
 
   closeModal() {

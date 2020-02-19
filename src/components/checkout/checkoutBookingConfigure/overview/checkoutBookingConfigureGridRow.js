@@ -12,13 +12,12 @@ class CheckoutBookingConfigureGridRow extends Component {
   }
 
   returnAvailabilityIcon(item) {
-    console.log(item);
     if (item.quantityAvailable === 0) {
       return <img className="availabilityImage" src="/static/images/unavailable.png" />
     }
 
     if (item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
-      return <img className="availabilityImage" src="/static/images/unavailable.png" />
+      return <img className="availabilityImage" src="/static/images/alert.png" />
     }
 
     if (item.quantityAvailable !== 0 && item.quantity <= item.quantityAvailable) {
