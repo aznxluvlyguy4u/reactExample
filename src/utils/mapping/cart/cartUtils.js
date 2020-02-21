@@ -72,7 +72,6 @@ export default class CartUtils {
 
   cartItemsAllAvailable(cartItem) {
     return cartItem.products.every((product) => {
-      console.log(product.details);
       if (!product.accessories || product.accessories.length === 0) {
         return product.quantity <= product.details.quantityAvailable;
       } else {
