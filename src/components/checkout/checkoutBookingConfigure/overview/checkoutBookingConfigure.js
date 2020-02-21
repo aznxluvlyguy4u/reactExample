@@ -95,7 +95,7 @@ class CheckoutBookingConfigure extends Component {
         <div className="paragraph">
           {this.state.cartItem &&
             this.state.cartItem.products.map((product, pIndex) => (
-              <div>
+              <div key={`${this.state.cartItem.id}_${product.id}`}>
                 <div className="row my-2">
                   <div className="col-6">Product</div>
                   <div className="col-2">Qty</div>
@@ -126,6 +126,7 @@ class CheckoutBookingConfigure extends Component {
                 {product.accessories &&
                   product.accessories.map((accessory, aIndex) => (
                     <CheckoutBookingConfigureGridRow
+                      key={`${this.state.cartItem.id}_${product.id}+${accessory.id}`}
                       rowItem={{
                         index: aIndex,
                         images: accessory.images,

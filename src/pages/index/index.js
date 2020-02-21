@@ -108,7 +108,7 @@ class IndexPage extends Component {
         <div className="container">
           {this.state.categories.map((category, index) => {
             return (
-              <Fragment>
+              <Fragment key={category}>
                 {index === 0 && (
                   <Banner
                     title="One-way Rentals"

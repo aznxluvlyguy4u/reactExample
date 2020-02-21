@@ -37,7 +37,7 @@ class CheckoutBookingsOverview extends Component {
 
   removeFromCartAndClose() {
     let cart = this.state.cart;
-    cart.splice(this.state.cartIndex,1);
+    cart.splice(this.state.cartIndex, 1);
     this.props.updateCart(cart);
     LocalStorageUtil.setCart(cart);
     this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
@@ -75,58 +75,81 @@ class CheckoutBookingsOverview extends Component {
           <div className="checkout-wrapper">
             <h1 className="px-0">
               Bookings
-              <button onClick={ () => this.configureAll() } className="yellow-button-outline">Configure All</button>
+              <button
+                onClick={() => this.configureAll()}
+                className="yellow-button-outline"
+              >
+                Configure All
+              </button>
             </h1>
             <div className="container">
               {this.state.cart.map((cartItem, index) => (
-                <div className="row mb-2 equal-height-columns bottom-bordered">
+                <div
+                  key={cartItem.id}
+                  className="row mb-2 equal-height-columns bottom-bordered"
+                >
                   <div className="col-1 align-self-center">
                     <a onClick={() => this.openModalAndSetItem(index)}>
                       <img src="static/images/delete.png" />
                     </a>
                   </div>
                   <div className="col-3">
-                    <h3>{cartItem.location.delivery.name} {cartItem.location.collection.name}</h3>
+                    <h3>
+                      {cartItem.location.delivery.name}{" "}
+                      {cartItem.location.collection.name}
+                    </h3>
                     <br />
                     {moment(cartItem.period.start).format("DD.MM.YYYY")} -{" "}
                     {moment(cartItem.period.end).format("DD.MM.YYYY")}
                   </div>
                   <div className="col-5 align-self-center">
                     {cartItem.products.map((product, pIndex) => (
-                      <table>
-                        <tr>
-                          <td>
-                            <img
-                              className="img-fluid"
-                              src={product.details.images[0].url}
-                              style={{ maxHeight: "80px" }}
-                            />
-                          </td>
-                          {product.accessories.length > 0 && (
-                            <td className="pluscontainer">
-                              <img src="static/images/add.png" />
-                            </td>
-                          )}
-                          {product.accessories.map((accessory, aIndex) => ([
+                      <table key={`product_${product.id}`}>
+                        <tbody>
+                          <tr>
                             <td>
                               <img
-                              className="img-fluid"
-                                src={accessory.images[0].url}
+                                className="img-fluid"
+                                src={product.details.images[0].url}
                                 style={{ maxHeight: "80px" }}
                               />
-                            </td>,
-                            <td className={(aIndex + 1) < product.accessories.length ? '' : 'd-none'}>
-                              <img src="static/images/add.png" />
                             </td>
-                          ]))}
-                        </tr>
+                            {product.accessories.length > 0 && (
+                              <td className="pluscontainer">
+                                <img src="static/images/add.png" />
+                              </td>
+                            )}
+                            {product.accessories.map((accessory, aIndex) => [
+                              <td key={`accessory_image${accessory.id}`}>
+                                <img
+                                  className="img-fluid"
+                                  src={accessory.images[0].url}
+                                  style={{ maxHeight: "80px" }}
+                                />
+                              </td>,
+                              <td key={`accessory_more${accessory.id}`}
+                                className={
+                                  aIndex + 1 < product.accessories.length
+                                    ? ""
+                                    : "d-none"
+                                }
+                              >
+                                <img src="static/images/add.png" />
+                              </td>
+                            ])}
+                          </tr>
+                        </tbody>
                       </table>
                     ))}
                   </div>
                   <div className="col-3 align-self-end pricing pr-0">
                     <h2>€ {this.state.cartUtils.getCartItemTotal(cartItem)}</h2>
                     <p>Excl. VAT & Security Deposit</p>
-                    <button onClick={ () => this.configure(index) } type="button" className="configure-solid-yellow">
+                    <button
+                      onClick={() => this.configure(index)}
+                      type="button"
+                      className="configure-solid-yellow"
+                    >
                       Configure
                     </button>
                   </div>
@@ -154,7 +177,10 @@ class CheckoutBookingsOverview extends Component {
                 Yes! Please remove this booking.
               </button>
               <br />
-              <button onClick={this.closeModal} className="yellow-outline-button">
+              <button
+                onClick={this.closeModal}
+                className="yellow-outline-button"
+              >
                 Keep Booking
               </button>
             </div>
