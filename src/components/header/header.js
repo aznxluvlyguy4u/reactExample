@@ -119,9 +119,10 @@ Header.propTypes = {
 
 Header.defaultProps = { search: false };
 
-const mapStateToProps = ({ cartReducer }) => {
+const mapStateToProps = ({ localSearchReducer, cartReducer }) => {
   return {
-    cartReducer,
+    localSearchReducer,
+    cartReducer
   };
 };
 

@@ -205,7 +205,7 @@ class DatePicker extends Component {
                 return moment(availability.date).isSame(dateMoment, "day");
               }
             );
-            if (!existingAvailability) return true;
+            if (!existingAvailability) return false;
             return !existingAvailability.available;
           }}
           numberOfMonths={1}

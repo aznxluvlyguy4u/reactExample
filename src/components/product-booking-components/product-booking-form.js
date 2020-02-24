@@ -12,6 +12,7 @@ import { getProductById } from "../../utils/rest/requests/products";
 import { setProductOptionalAccessories } from "../../actions/localSearchActions";
 import moment from "moment";
 import { checkAvailabilityGraph } from "../../utils/rest/requests/cart";
+import { setCart } from "../../actions/cartActions";
 
 class ProductBookingForm extends Component {
   constructor(props) {
@@ -98,6 +99,7 @@ class ProductBookingForm extends Component {
       values.bookingItem.id = cartItem.id;
       cart.push(cartItem);
     }
+    this.props.setCart(cart);
     LocalStorageUtil.setCart(cart);
     const cartItemIndex = cart.findIndex(
       cartItem => cartItem.id === values.bookingItem.id
@@ -544,6 +546,7 @@ const mapStateToProps = ({ locationReducer, localSearchReducer }) => {
   };
 };
 
-export default connect(mapStateToProps, { setProductOptionalAccessories })(
-  ProductBookingForm
-);
+export default connect(mapStateToProps, {
+  setProductOptionalAccessories,
+  setCart
+})(ProductBookingForm);
