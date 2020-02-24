@@ -1,35 +1,20 @@
 import React, { Component } from "react";
-import CartUtils from "../../../../utils/mapping/cart/cartUtils";
 import Modal from "react-modal";
 import styles from "./checkoutBookingConfigure.style";
 import LocalStorageUtil from "../../../../utils/localStorageUtil";
 import CheckoutBookingConfigureGridRow from "./checkoutBookingConfigureGridRow";
+import CartUtils from "../../../../utils/mapping/cart/cartUtils";
 
+const cartUtils = new CartUtils();
 class CheckoutBookingConfigure extends Component {
   constructor(props) {
     super(props);
 
-    let cart = props.cart;
-    let ct = cart;
-    let cartItem;
-
-    if (cart) {
-      ct = cart.map((cartItem, index) => {
-        cartItem.products.map((product, pIndex) => {
-          product.details = props.products.filter(x => x.id == product.id)[0];
-          return product;
-        });
-        return cartItem;
-      });
-      cartItem = cart[props.configureIndex];
-    }
-
     this.state = {
       modalIsOpen: false,
-      cart: ct,
-      cartUtils: new CartUtils(),
+      cart: props.cart,
       cartItemIndex: props.configureIndex,
-      cartItem
+      cartItem: props.cart[props.configureIndex]
     };
 
     this.openModal = this.openModal.bind(this);
@@ -108,39 +93,58 @@ class CheckoutBookingConfigure extends Component {
                 <CheckoutBookingConfigureGridRow
                   rowItem={{
                     index: pIndex,
-                    images: product.details.images,
-                    rates: product.details.rates,
                     quantity: product.quantity,
-                    name: product.details.name,
                     period: this.state.cartItem.period,
-                    stock: product.details
+                    item: cartUtils.getProductDetailsAndAvailability(
+                      this.props.productBookingMap,
+                      this.props.cart[this.props.configureIndex].id,
+                      product.id
+                    ),
+                    itemDetails: cartUtils.getProductDetailsAndAvailability(
+                      this.props.productBookingMap,
+                      this.props.cart[this.props.configureIndex].id,
+                      product.id
+                    )
                   }}
                   counterUpdate={value =>
-                    this.updateProductCounter(pIndex, value)
+                    this.props.updateProductCounter(
+                      this.state.cartItem.id,
+                      product.id,
+                      value
+                    )
                   }
                   openModalAndSetItem={() =>
                     this.openModalAndSetItem({ pIndex })
                   }
                 />
-                <div className="divider my-3"></div>
+                <div className="divider my-3" />
                 {product.accessories &&
                   product.accessories.map((accessory, aIndex) => (
                     <CheckoutBookingConfigureGridRow
                       key={`${this.state.cartItem.id}_${product.id}+${accessory.id}`}
                       rowItem={{
                         index: aIndex,
-                        images: accessory.images,
-                        rates: accessory.rates,
                         quantity: accessory.quantity,
-                        name: accessory.name,
                         period: this.state.cartItem.period,
-                        stock:
-                          product.details.accessories.filter(
-                            x => x.id === accessory.id
-                          ).length > 0
-                            ? product.details.accessories.filter(
-                                x => x.id === accessory.id
-                              )[0]
+                        item: accessory,
+                        itemDetails:
+                          cartUtils
+                            .getProductDetailsAndAvailability(
+                              this.props.productBookingMap,
+                              this.props.cart[this.props.configureIndex].id,
+                              product.id
+                            )
+                            .accessories.filter(x => x.id === accessory.id)
+                            .length > 0
+                            ? cartUtils
+                                .getProductDetailsAndAvailability(
+                                  this.props.productBookingMap,
+                                  this.props.cart[this.props.configureIndex].id,
+                                  product.id
+                                )
+                                .accessories.filter(
+                                  x => x.id === accessory.id
+                                )[0]
                             : undefined
                       }}
                       counterUpdate={value =>

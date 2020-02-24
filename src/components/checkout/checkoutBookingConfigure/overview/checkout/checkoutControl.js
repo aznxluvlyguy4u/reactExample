@@ -11,21 +11,13 @@ class CheckoutControl extends Component {
 
     this.state = {
       cartItem,
-      displaySection: {
-        logistics: true,
-        contactInformation: false,
-        billingInformation: false
-      }
+      checkoutControlState: props.checkoutControlState,
     };
   }
 
   goToSection(section) {
     this.setState({
-      displaySection: {
-        logistics: section === "logistics",
-        contactInformation: section === "contactInformation",
-        billingInformation: section === "billingInformation"
-      }
+      checkoutControlState: section
     });
     this.props.checkoutState(section);
   }
@@ -68,8 +60,8 @@ class CheckoutControl extends Component {
               <span className="inactive"> / </span>
               <span
                 className={
-                  this.state.displaySection.contactInformation ||
-                  this.state.displaySection.billingInformation
+                  this.state.checkoutControlState === "contactInformation" ||
+                  this.state.checkoutControlState === "billingInformation"
                     ? "active"
                     : "inactive"
                 }
@@ -88,7 +80,7 @@ class CheckoutControl extends Component {
               <span className="inactive"> / </span>
               <span
                 className={
-                  this.state.displaySection.billingInformation
+                  this.state.checkoutControlState === "billingInformation"
                     ? "active"
                     : "inactive"
                 }
@@ -106,7 +98,7 @@ class CheckoutControl extends Component {
               </span>
             </h2>
           )}
-          {this.state.displaySection.logistics && (
+          {this.state.checkoutControlState === "logistics" && (
             <CheckoutLogistics
               cartItem={this.props.cartItem}
               updateCartItemLogistics={cartItem =>
@@ -114,7 +106,7 @@ class CheckoutControl extends Component {
               }
             />
           )}
-          {this.state.displaySection.contactInformation && (
+          {this.state.checkoutControlState === "contactInformation" && (
             <CheckoutContactInformationForm
               cartItem={this.props.cartItem}
               updateCartItemContactInformation={cartItem =>
@@ -122,7 +114,7 @@ class CheckoutControl extends Component {
               }
             />
           )}
-          {this.state.displaySection.billingInformation && (
+          {this.state.checkoutControlState === "billingInformation" && (
             <CheckoutBillingInformationForm
               cartItem={this.props.cartItem}
               updateCartItemBillingInformation={cartItem =>

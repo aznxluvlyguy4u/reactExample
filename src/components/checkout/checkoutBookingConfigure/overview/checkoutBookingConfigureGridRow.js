@@ -35,20 +35,20 @@ class CheckoutBookingConfigureGridRow extends Component {
             </a>
           </div>
           <div className="col-2 align-self-center">
-            {this.props.rowItem.images 
-            && this.props.rowItem.images.length > 0 && (
+            {this.props.rowItem.item.images 
+            && this.props.rowItem.item.images.length > 0 && (
                 <img
                   className="product-item"
-                  src={this.props.rowItem.images[0].url}
+                  src={this.props.rowItem.item.images[0].url}
                 />
               )}
           </div>
           <div className="col-3 align-self-center">
-            <h3>{this.props.rowItem.name}</h3>
-            {this.props.rowItem.rates &&
-              this.props.rowItem.rates.length > 0 && (
+            <h3>{this.props.rowItem.item.name}</h3>
+            {this.props.rowItem.item.rates &&
+              this.props.rowItem.item.rates.length > 0 && (
                 <p className="from-price">
-                  from € {this.props.rowItem.rates[0].price}
+                  from € {this.props.rowItem.item.rates[0].price}
                 </p>
               )}
           </div>
@@ -62,10 +62,10 @@ class CheckoutBookingConfigureGridRow extends Component {
             />
           </div>
           <div className="col-2 align-self-center">
-          € {this.state.cartUtils.getItemTotal(this.props.rowItem.period, this.props.rowItem.quantity, this.props.rowItem)}
+          € {this.state.cartUtils.getItemTotal(this.props.rowItem.period, this.props.rowItem.quantity, this.props.rowItem.item)}
           </div>
           <div className="col-2 align-self-center text-center">
-            {this.props.rowItem.stock && (this.returnAvailabilityIcon(this.props.rowItem.stock))}
+            {this.props.rowItem.itemDetails && (this.returnAvailabilityIcon(this.props.rowItem.itemDetails))}
           </div>
         </div>
       );

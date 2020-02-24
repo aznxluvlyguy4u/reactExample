@@ -36,7 +36,7 @@ class StripeForm extends Component {
         </div>
         <div className="mr-3">
           <button
-            className="fullwidth-button"
+            className={this.props.loading ? "d-none" : "fullwidth-button"}
             onClick={() => this.props.handleSubmit()}
           >
             Pay

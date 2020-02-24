@@ -1,31 +1,20 @@
 import moment from "moment";
 import React, { Component, Fragment } from "react";
 import Router from "next/router";
-import classnames from "classnames";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import ContactInformationForm from "../../components/checkout/orderForm/contactInformationForm";
-import ContracterInformationForm from "../../components/checkout/orderForm/contracterInformationForm";
-import Counter from "../../components/detailSubViews/counter";
 import Loader from "../../components/loader";
 import Default from "../../layouts/default";
 import { checkCartAvailability } from "../../utils/rest/requests/cart";
-import PlaceOrderRequest from "../../utils/mapping/products/placeOrderRequest";
-import UpdatedPlaceOrderRequest from "../../utils/mapping/products/UpdatedPlaceOrderRequest";
-import {
-  orderCartItems,
-  updateOrderCartItems
-} from "../../utils/rest/requests/orders";
-import { handlePaymentError } from "../../utils/rest/error/toastHandler";
 import LocalStorageUtil from "../../utils/localStorageUtil";
-import { Elements, StripeProvider } from "react-stripe-elements";
-import StripeForm from "../../components/checkout/StripeForm";
-import PaymentMethodForm from "../../components/checkout/paymentMethodForm";
-
-import { emptyCart, setCart } from "../../actions/cartActions";
-import Script from "react-load-script";
+import {
+  emptyCart,
+  setCart,
+  addToCart,
+  removeFromCart
+} from "../../actions/cartActions";
 import CheckoutBookingsOverview from "../../components/checkout/checkoutBookingsOverview/checkoutBookingsOverview";
+import CheckoutOverviewControl from "../../components/checkout/checkoutBookingConfigure/overview/checkoutOverviewControl";
 
 const customStyles = {
   content: {
@@ -38,107 +27,44 @@ const customStyles = {
   }
 };
 
-import { addToCart, removeFromCart } from "../../actions/cartActions";
-import CheckoutOverviewControl from "../../components/checkout/checkoutBookingConfigure/overview/checkoutOverviewControl";
-
 class CheckoutPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      products: [],
-      modalIsOpen: false,
       loading: false,
       bookingsOverview: true,
       configure: false,
       configureIndex: undefined,
       configureAll: false,
-      captureCheckoutRequirements: false,
-      captureCheckoutLogistics: false,
-      pay: false,
       orderFailed: false,
-      orderSuccess: false,
-      isMobile: false,
-      orderFormStep: 1,
-      cartUuid: null,
-      contactInformation: null,
-      contracterInformation: null,
-      paymentIntent: null,
-      paymentMethod: null
+      orderSuccess: false
     };
-
-    this.updateProductQuantity = this.updateProductQuantity.bind(this);
-    this.updateAccessoryQuantity = this.updateAccessoryQuantity.bind(this);
-    this.returnWarningMessage = this.returnWarningMessage.bind(this);
   }
 
-  onStripeLoad() {
-    if (window.Stripe) {
-      this.setState({
-        stripe: window.Stripe("pk_test_AOFhYRn5ibpkET6D6wghnmpj00AmrMn2js")
+  async componentDidMount() {
+    window.addEventListener("resize", this.resize.bind(this));
+    this.resize();
+
+    await this.setState({ cart: LocalStorageUtil.getCart() });
+
+    if (this.state.cart && this.state.cart.length > 0) {
+      this.setState({ loading: true });
+      const orderRequests = await this.getProductsFromCartItems();
+      await checkCartAvailability(orderRequests).then(response => {
+        this.setBookingAvailabilityMap(response.data.products);
       });
-    }
-  }
-
-  formatDate(date) {
-    return moment(date).format("MM.DD.YYYY");
-  }
-
-  dayCount(item) {
-    const collectionDate = moment(item.period.end).endOf("day");
-    const deliveryDate = moment(item.period.start).startOf("day");
-    return collectionDate.diff(deliveryDate, "days");
-  }
-
-  openAccessories = item => {
-    item.collapsed = false;
-    this.forceUpdate();
-  };
-
-  collapse(item) {
-    if (item.collapsed) {
-      item.collapsed = !item.collapsed;
     } else {
-      item.collapsed = true;
+      
     }
-    this.forceUpdate();
   }
 
-  openMobileExtra = item => {
-    item.mobileCollapsed = true;
-    this.forceUpdate();
-  };
-
-  collapseMobile = item => {
-    if (item.mobileCollapsed) {
-      item.mobileCollapsed = !item.mobileCollapsed;
-    } else {
-      item.mobileCollapsed = true;
-    }
-    this.setState({
-      state: this.state
-    });
-    this.forceUpdate();
-  };
-
-  async getOrderRequsts() {
-    return Promise.all(
-      this.props.cartReducer.items.map(item => {
-        item = item.orderRequest;
-        return item;
-      })
-    );
-  }
-
-  async componentDidUpdate(prevProps) {}
-
-  resize() {
-    this.setState({ isMobile: window.innerWidth <= 760 });
-  }
-
-  async getProductsFromCartItems(orderRequest) {
+  async getProductsFromCartItems() {
     const orderRequests = [];
-    orderRequest.map(orderItem => {
+    if (!this.state.cart) {
+      return [];
+    }
+    this.state.cart.map(orderItem => {
       orderItem.products.map(product => {
         orderRequests.push({
           id: product.id,
@@ -159,127 +85,45 @@ class CheckoutPage extends Component {
     return orderRequests;
   }
 
-  async componentDidMount() {
-    window.addEventListener("resize", this.resize.bind(this));
-    this.resize();
-
-    const items = LocalStorageUtil.getCart();
-    if (items && items.length > 0) {
-      this.setState({ loading: true });
-      const orderRequest = items;
-      if (orderRequest.length > 0) {
-        const orderRequests = await this.getProductsFromCartItems(orderRequest);
-        let response = await checkCartAvailability(orderRequests).then(
-          response => {
-            //LocalStorageUtil.setCart(response.data.products);
-            //this.props.setCart(response.data.products);
-            this.setState({
-              cart: orderRequest,
-              products: response.data.products,
-              loading: false
-            });
+  async setBookingAvailabilityMap(productAvailability) {
+    const productBookingMap = [];
+    this.state.cart.map(booking => {
+      booking.products.map(product => {
+        const availabilityIndex = productAvailability.findIndex(
+          productLookup => {
+            return (
+              productLookup.id === product.id &&
+              moment(productLookup.period.start).isSame(
+                moment(booking.period.start)
+              ) &&
+              moment(productLookup.period.end).isSame(
+                moment(booking.period.end)
+              ) &&
+              productLookup.location.delivery.id ===
+                booking.location.delivery.id &&
+              productLookup.location.collection.id ===
+                booking.location.collection.id
+            );
           }
         );
-      }
-    }
-  }
-
-  returnWarningMessage(item) {
-    if (item) {
-      switch (item.availabilityState) {
-        case "AVAILABLE_BUT_DELAYED":
-          return (
-            <div className="warning-message">
-              Items are available but might not reach selected Delivery location
-              on time. Please contact/call the office to arrange a dedicated
-              delivery on-board’
-            </div>
+        if (availabilityIndex > -1) {
+          const mapIndex = productBookingMap.findIndex(
+            bookingMap => bookingMap.id === booking.id
           );
-        case "AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE":
-          return (
-            <div className="warning-message">
-              Items are available but not all accesories are available. Please
-              contact/call the office to arrange a solution’
-            </div>
-          );
-        case "NOT_AVAILABLE":
-          return (
-            <div className="warning-message">
-              This item is unfortunately no longer available at your chosen time
-              frame
-            </div>
-          );
-        default:
-          return null;
-      }
-    }
-  }
-
-  returnAvailabilityIcon(item) {
-    if (item.quantityAvailable === 0) {
-      return (
-        <img
-          className="availabilityImage"
-          src="/static/images/unavailable.png"
-        />
-      );
-    }
-
-    if (
-      item.quantityAvailable !== 0 &&
-      item.quantity > item.quantityAvailable
-    ) {
-      return (
-        <img
-          className="availabilityImage"
-          src="/static/images/unavailable.png"
-        />
-      );
-    }
-
-    if (
-      item.quantityAvailable !== 0 &&
-      item.quantity <= item.quantityAvailable
-    ) {
-      return (
-        <img className="availabilityImage" src="/static/images/available.png" />
-      );
-    }
-  }
-
-  calculateTotalAccessoires(accessories) {
-    let price = 0;
-
-    accessories.map(item => {
-      if (item.rates && item.rates.length > 0) {
-        price +=
-          this.dayCount(item) * Number(item.rates[0].price) * item.quantity;
-      }
+          if (mapIndex > -1) {
+            productBookingMap[mapIndex].availability.push(
+              productAvailability[availabilityIndex]
+            );
+          } else {
+            productBookingMap.push({
+              id: booking.id,
+              availability: [productAvailability[availabilityIndex]]
+            });
+          }
+        }
+      });
     });
-    return price;
-  }
-
-  calculateTotalPrice() {
-    let productPrice = 0;
-    let accessoryPrice = 0;
-
-    this.state.products.map(product => {
-      if (product.rates && product.rates.length > 0) {
-        productPrice +=
-          this.dayCount(product) *
-          Number(product.rates[0].price) *
-          product.quantity;
-      }
-      accessoryPrice += this.calculateTotalAccessoires(product.accessories);
-      product.totalCostAccessories = accessoryPrice;
-      product.totalCostProducts = productPrice;
-    });
-
-    return parseFloat((productPrice + accessoryPrice).toFixed(2));
-  }
-
-  openModal() {
-    this.setState({ modalIsOpen: true });
+    await this.setState({ productBookingMap, loading: false });
   }
 
   afterOpenModal() {
@@ -291,264 +135,6 @@ class CheckoutPage extends Component {
       modalIsOpen: false,
       orderFormStep: 1
     });
-  };
-
-  updateProductQuantity(result) {
-    if (result.quantity > 0) {
-      result.item.quantity = result.quantity;
-      this.setState({ state: this.state });
-      LocalStorageUtil.setCart(this.state.products);
-      this.props.setCart(this.state.products);
-    }
-    this.setState();
-  }
-
-  updateAccessoryQuantity(result) {
-    if (result.quantity > 0) {
-      result.item.quantity = result.quantity;
-      this.setState({ state: this.state });
-      LocalStorageUtil.setCart(this.state.products);
-      this.props.setCart(this.state.products);
-    }
-  }
-
-  removeProductFromCart(product) {
-    const index = this.state.products.findIndex(item => {
-      if (
-        item.id === product.id &&
-        moment(item.period.start).isSame(moment(product.period.start), "day") &&
-        moment(item.period.end).isSame(moment(product.period.end), "day") &&
-        item.location.collection.label === product.location.collection.label &&
-        item.location.delivery.label === product.location.delivery.label
-      ) {
-        return item;
-      }
-    });
-
-    const products = [
-      ...this.state.products.slice(0, index),
-      ...this.state.products.slice(index + 1)
-    ];
-
-    this.setState({
-      products: products
-    });
-
-    LocalStorageUtil.setCart(products);
-    this.props.setCart(products);
-  }
-
-  removeAccessoryFromCart(product, accessory) {
-    const products = this.state.products.map(item => {
-      if (
-        item.id === product.id &&
-        moment(item.period.start).isSame(moment(product.period.start), "day") &&
-        moment(item.period.end).isSame(moment(product.period.end), "day") &&
-        item.location.collection.label === product.location.collection.label &&
-        item.location.delivery.label === product.location.delivery.label
-      ) {
-        const index = item.accessories.findIndex(acc => {
-          if (acc.id === accessory.id) {
-            return acc;
-          }
-        });
-        const newAccessories = [
-          ...item.accessories.slice(0, index),
-          ...item.accessories.slice(index + 1)
-        ];
-        item.accesories = [];
-        item.accessories = newAccessories;
-        return item;
-      } else {
-        return item;
-      }
-    });
-
-    this.setState({
-      products: products
-    });
-    LocalStorageUtil.setCart(products);
-    this.props.setCart(products);
-  }
-
-  handleContactInformationForm = values => {
-    this.setState({
-      orderFormStep: 2,
-      contactInformation: values
-    });
-    return;
-  };
-
-  setOrder = order => {
-    const orderJson = JSON.stringify(order);
-    sessionStorage.setItem("order", orderJson);
-  };
-
-  getOrder = () => {
-    const orderJson = sessionStorage.getItem("order");
-    let order = null;
-    if (orderJson !== "") {
-      order = JSON.parse(orderJson);
-    }
-    return order;
-  };
-
-  setPaymentIntent = paymentIntent => {
-    const paymentIntentJson = JSON.stringify(paymentIntent);
-    sessionStorage.setItem("paymentIntent", paymentIntentJson);
-  };
-
-  getPaymentIntent = () => {
-    const paymentIntentJson = sessionStorage.getItem("paymentIntent");
-    let paymentIntent = null;
-    if (paymentIntentJson !== "") {
-      paymentIntent = JSON.parse(paymentIntentJson);
-    }
-    return paymentIntent;
-  };
-
-  handleContracterInformationForm = values => {
-    this.setState({
-      contracterInformation: values,
-      orderFormStep: 3
-    });
-  };
-
-  handlePaymentMethod = values => {
-    this.setState({
-      paymentMethod: values.paymentMethod.value
-      // loading: true,
-    });
-
-    if (this.state.paymentMethod === "CARD") {
-      if (this.getOrder() !== null && this.getPaymentIntent() !== null) {
-        // UPDATE existing order / payment intent
-        const request = new UpdatedPlaceOrderRequest(
-          this.getOrder(),
-          this.state.products,
-          this.state.contactInformation,
-          this.state.contracterInformation,
-          this.state.paymentMethod
-        ).returnUpdatedOrder();
-        this.setState({ loading: true });
-        const response = updateOrderCartItems(request)
-          .then(res => {
-            if (res.code === 200) {
-              this.setState({
-                orderFormStep: 4,
-                loading: false,
-                originalOrder: res.data
-              });
-              this.setOrder(res.data);
-              this.setPaymentIntent(res.data.paymentIntent);
-            }
-          })
-          .catch(err => {
-            this.setState({
-              loading: false,
-              orderFormStep: 3
-            });
-          });
-      } else {
-        // New order/ payment intent
-        const request = new PlaceOrderRequest(
-          this.state.products,
-          this.state.contactInformation,
-          this.state.contracterInformation,
-          this.state.paymentMethod
-        ).returnOrder();
-        this.setState({ loading: true });
-        const response = orderCartItems(request)
-          .then(res => {
-            if (res.code === 201) {
-              this.setState({
-                orderFormStep: 4,
-                loading: false,
-                originalOrder: res.data
-              });
-              this.setOrder(res.data);
-              this.setPaymentIntent(res.data.paymentIntent);
-            }
-          })
-          .catch(err => {
-            this.setState({
-              loading: false,
-              orderFormStep: 3
-            });
-          });
-      }
-    } else if (this.state.paymentMethod === "BANK_TRANSFER") {
-      // alert('Show loader, call api send order, and receive betalings kenmerk');
-      const request = new PlaceOrderRequest(
-        this.state.products,
-        this.state.contactInformation,
-        this.state.contracterInformation,
-        this.state.paymentMethod
-      ).returnOrder();
-      this.setState({ loading: true });
-      const response = orderCartItems(request)
-        .then(res => {
-          if (res.code === 201) {
-            this.setState({
-              orderFormStep: 4,
-              loading: false,
-              originalOrder: res.data
-            });
-            this.setOrder(res.data);
-          }
-        })
-        .catch(err => {
-          this.setState({
-            loading: false,
-            orderFormStep: 3
-          });
-        });
-    }
-  };
-
-  handleReady = element => {
-    this.element = element;
-  };
-
-  handleStripePayment = e => {
-    this.setState({
-      loading: true
-    });
-
-    // const splitSecret = getPaymentIntent().clientSecret.split('_secret_')[0];
-    if (this.state.stripe && this.getPaymentIntent() !== null) {
-      this.state.stripe
-        .handleCardPayment(this.getPaymentIntent().clientSecret, this.element, {
-          payment_method_data: {
-            billing_details: {
-              name: "Jenny Rosen"
-            }
-          }
-        })
-        .then(payload => {
-          if (payload.error) {
-            this.setState({
-              loading: false,
-              orderFormStep: 3
-            });
-            handlePaymentError(payload.error);
-          } else {
-            this.setState({
-              loading: false,
-              orderSuccess: true,
-              orderFormStep: 1,
-              paymentIntent: null
-            });
-            // Clear and reset all;
-            this.props.emptyCart();
-            LocalStorageUtil.emptyCart();
-          }
-        });
-    } else {
-      this.setState({
-        loading: false
-      });
-    }
   };
 
   quantityText(item) {
@@ -590,57 +176,26 @@ class CheckoutPage extends Component {
     }
   }
 
-  setQuantityToAvailableQuantity(item) {
-    item.quantity = item.quantityAvailable;
-    this.setState({
-      state: this.state
-    });
-  }
-
-  resetQuantityButton(item) {
-    if (
-      item.quantityAvailable !== 0 &&
-      item.quantity > item.quantityAvailable
-    ) {
-      return (
-        <a
-          href="#"
-          className="button-border"
-          onClick={e => {
-            this.setQuantityToAvailableQuantity(item);
-          }}
-        >
-          Yes
-        </a>
-      );
-    } else {
-      return null;
-    }
-  }
-
   updateCart(cart) {
     this.setState({ cart });
     LocalStorageUtil.setCart(cart);
   }
 
-  itemPrice = item => {
-    if (item.rates && item.rates.length > 0) {
-      return (
-        <Fragment>
-          €
-          {parseFloat(
-            Number(item.rates[0].price) * item.quantity * this.dayCount(item)
-          ).toFixed(2)}
-        </Fragment>
-      );
-    }
-  };
-
   closeSuccessModal = () => {
-    this.setState({
-      orderSuccess: false
-    });
-    Router.push({ pathname: "/" });
+    if (this.state.configureAll && this.state.cart.length > 0) {
+      this.setConfigureAll();
+      this.setState({
+        orderSuccess: false,
+      });
+    } else {
+      this.setState({
+        bookingsOverview: true,
+        orderSuccess: false,
+        configureAll: false,
+        configure: false,
+        configureIndex: undefined,
+      });
+    }
   };
 
   closeFailedModal = () => {
@@ -648,6 +203,10 @@ class CheckoutPage extends Component {
       orderFailed: false
     });
   };
+
+  resize() {
+    this.setState({ isMobile: window.innerWidth <= 760 });
+  }
 
   setConfigureItem(cartItemIndex) {
     this.setState({
@@ -658,7 +217,12 @@ class CheckoutPage extends Component {
   }
 
   setConfigureAll() {
-    this.setState({ bookingsOverview: false, configureAll: true });
+    this.setState({
+      bookingsOverview: false,
+      configure: true,
+      configureIndex: 0,
+      configureAll: true,
+    });
   }
 
   backToBookings() {
@@ -674,42 +238,55 @@ class CheckoutPage extends Component {
       bookingsOverview: true,
       configure: false,
       configureAll: false,
-      configureIndex: undefined
+      configureIndex: undefined,
     });
   }
 
   captureCheckoutRequirements() {
     this.setState({
       configure: false,
-      configureAll: false,
-      captureCheckoutRequirements: true,
-      captureCheckoutLogistics: true
+      configureAll: false
     });
   }
 
-  completeBooking(cartItemIndex, pending) {
+  async completeBooking(cartItemIndex, pending) {
     this.setState({
-      configure: false,
-      configureAll: false,
-      captureCheckoutRequirements: false,
-      captureCheckoutLogistics: false,
-      bookingsOverview: true,
       loading: true,
     });
-    if(cartItemIndex !== undefined) {
+    if (cartItemIndex !== undefined) {
       let cartItem = this.state.cart[cartItemIndex];
       let cart = this.state.cart;
-      cart.splice(cartItemIndex, 1);
-      if(pending){
+      await cart.splice(cartItemIndex, 1);
+      if (pending) {
         LocalStorageUtil.setCartItemPendingPayment(cartItem);
       } else {
         LocalStorageUtil.setCartItemPaid(cartItem);
       }
       LocalStorageUtil.setCart(cart);
-      this.setState({
+      await this.setState({
         loading: false,
-        orderSuccess: true
+        orderSuccess: true,
       });
+    }
+  }
+
+  async updateProductCounter(cartId, productId, productCount) {
+    this.setState({ loading: true });
+    const cart = this.state.cart;
+    const pIndex = cart
+      .find(c => c.id === cartId)
+      .products.findIndex(p => p.id === productId);
+    if (pIndex > -1) {
+      cart.find(c => c.id === cartId).products[pIndex].quantity = productCount;
+      await this.setState({ cart });
+      LocalStorageUtil.setCart(cart);
+      const orderRequests = await this.getProductsFromCartItems();
+      await checkCartAvailability(orderRequests).then(response => {
+        this.setBookingAvailabilityMap(response.data.products);
+      });
+      this.setState({ loading: false });
+    } else {
+      this.setState({ loading: false });
     }
   }
 
@@ -726,38 +303,47 @@ class CheckoutPage extends Component {
       >
         {!this.state.loading &&
         this.state.bookingsOverview &&
+        this.state.productBookingMap &&
         this.props.cartReducer.items.length > 0 ? (
           <CheckoutBookingsOverview
             setConfigureAll={this.setConfigureAll.bind(this)}
             setConfigureItem={cartItemIndex =>
               this.setConfigureItem(cartItemIndex)
             }
-            updateCart={cart => this.updateCart(cart).bind(this)}
+            updateCart={this.updateCart.bind(this)}
             cart={this.state.cart}
-            products={this.state.products}
+            productBookingMap={this.state.productBookingMap}
           />
         ) : (
           <Fragment>
-            {!this.state.loading && (
-              <span style={{ textAlign: "center" }}>Your cart is empty</span>
+            {!this.state.loading && this.props.cartReducer.items.length === 0 && (
+              <div className="page-wrapper checkout checkout-overview">
+                <div className="checkout-wrapper">
+                  <p style={{ textAlign: "center" }}>
+                    Your cart is empty
+                  </p>
+                </div>
+              </div>
             )}
           </Fragment>
         )}
+
         {this.state.loading ? <Loader /> : null}
 
         {!this.state.loading &&
           this.state.configure &&
           this.state.configureIndex !== undefined &&
-          this.state.cart[this.state.configureIndex] && (
+          this.state.cart[this.state.configureIndex] &&
+          this.state.productBookingMap && (
             <CheckoutOverviewControl
               cart={this.state.cart}
-              products={this.state.products}
               configureIndex={this.state.configureIndex}
               configure={true}
-              configureAll={false}
               backToBookings={this.backToBookings.bind(this)}
               updateCart={this.updateCart.bind(this)}
               completeBooking={this.completeBooking.bind(this)}
+              updateProductCounter={this.updateProductCounter.bind(this)}
+              productBookingMap={this.state.productBookingMap}
             />
           )}
 

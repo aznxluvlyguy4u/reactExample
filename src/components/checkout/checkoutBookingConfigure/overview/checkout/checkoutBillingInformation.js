@@ -1,38 +1,9 @@
-import React, { Component, Fragment } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import React, { Component } from "react";
+import { Formik, Field, Form } from "formik";
 import CustomInputComponent from "../../../../formComponents/customInputComponent/customInputComponent";
 import CountrySelectComponent from "../../../../formComponents/countrySelectComponent/countrySelectComponent";
+import CustomCheckboxComponent from "../../../../formComponents/customCheckboxComponent/customCheckboxCompnent";
 import CheckoutBillingInformationFormSchema from "./checkoutBillingInformationFormSchema";
-
-// Input feedback
-const InputFeedback = ({ error }) => (error ? <span>{error}</span> : null);
-
-const Checkbox = ({
-  field: { name, value, onChange, onBlur },
-  form: { errors, touched, setFieldValue },
-  id,
-  label,
-  className,
-  ...props
-}) => {
-  return (
-    <Fragment>
-      <input
-        style={{ width: "auto" }}
-        name={name}
-        id={id}
-        type="checkbox"
-        value={value}
-        checked={value}
-        onChange={onChange}
-        onBlur={onBlur}
-      />{" "}
-      <span style={{ color: "#000" }}>{label}</span>
-      <br />
-      {touched[name] && <InputFeedback error={errors[name]} />}
-    </Fragment>
-  );
-};
 
 class CheckoutBillingInformationForm extends Component {
   constructor(props) {
@@ -82,8 +53,8 @@ class CheckoutBillingInformationForm extends Component {
         <div className="form-block">
           <input
             style={{ width: "auto" }}
-            name=""
-            id=""
+            name="useinfo"
+            id="useinfo"
             type="checkbox"
             value={this.state.contactInfoSelect}
             onChange={this.setFromContactInformation.bind(this)}
@@ -208,7 +179,8 @@ class CheckoutBillingInformationForm extends Component {
 
               <div className="form-block">
                 <Field
-                  component={Checkbox}
+                  key="securityDepositConsent"
+                  component={CustomCheckboxComponent}
                   name="securityDepositConsent"
                   id="securityDepositConsent"
                   label={
@@ -219,7 +191,8 @@ class CheckoutBillingInformationForm extends Component {
 
               <div className="form-block">
                 <Field
-                  component={Checkbox}
+                  key="termsAndConditionsConsent"
+                  component={CustomCheckboxComponent}
                   name="termsAndConditionsConsent"
                   id="termsAndConditionsConsent"
                   label={[

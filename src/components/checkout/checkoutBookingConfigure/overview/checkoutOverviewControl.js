@@ -11,33 +11,18 @@ class CheckoutOverviewControl extends Component {
   constructor(props) {
     super(props);
 
-    let cart = props.cart;
-    let ct = cart;
-    let cartItem;
-
-    if (cart) {
-      ct = cart.map((cartItem, index) => {
-        cartItem.products.map((product, pIndex) => {
-          product.details = props.products.filter(x => x.id == product.id)[0];
-          return product;
-        });
-        return cartItem;
-      });
-      cartItem = cart[props.configureIndex];
-    }
-
     this.state = {
-      cart: ct,
+      cart: props.cart,
       cartItemIndex: props.configureIndex,
-      cartItem,
+      cartItem: props.cart[props.configureIndex],
       displaySection: {
         overview: true,
         checkout: false,
         pay: false
       },
       validated: {
-        overview: cartUtils.cartItemsAllAvailable(cartItem),
-        checkout: cartItem.logistics && cartItem.contactInformation && cartItem.billingInformation,
+        overview: cartUtils.cartItemsAllAvailable(props.cart[props.configureIndex], props.productBookingMap),
+        checkout: props.cart[props.configureIndex].logistics && props.cart[props.configureIndex].contactInformation && props.cart[props.configureIndex].billingInformation,
         pay: false
       },
       checkoutState: "logistics",
@@ -53,7 +38,7 @@ class CheckoutOverviewControl extends Component {
           overview: section === "overview",
           checkout: section === "checkout",
           pay: section === "pay"
-        }
+        },
       });
     }
   }
@@ -138,6 +123,8 @@ class CheckoutOverviewControl extends Component {
                       cart={this.state.cart}
                       products={this.props.products}
                       configureIndex={this.props.configureIndex}
+                      updateProductCounter={this.props.updateProductCounter}
+                      productBookingMap={this.props.productBookingMap}
                     />
                   )}
                   {this.state.displaySection.checkout && (
@@ -148,6 +135,7 @@ class CheckoutOverviewControl extends Component {
                         this.updateCartItem(this.state.cartItemIndex, cartItem)
                       }
                       checkoutState={state => this.setCheckoutState(state)}
+                      checkoutControlState={this.state.checkoutState}
                       moveToPayment={() => this.goToSection("pay", this.state.cartItem.billingInformation)}
                     />
                   )}
@@ -157,14 +145,18 @@ class CheckoutOverviewControl extends Component {
                       handleSubmit={this.handlePaymentMethod}
                       updateSelectedPaymentMethod={(value) => this.updateSelectedPaymentMethod(value)}
                       completeBooking={() => this.props.completeBooking(this.state.cartItemIndex, false)}
+                      productBookingMap={this.props.productBookingMap.find(p => p.id === this.state.cartItem.id)}
                     />
                   )}
                 </div>
                 <div className="col-4">
                   <div className="bordered-container">
-                    <CheckoutBookingConfigureSummary
-                      cartItem={this.state.cart[this.props.configureIndex]}
-                    />
+                    {this.props.productBookingMap && (
+                        <CheckoutBookingConfigureSummary
+                        cartItem={this.state.cart[this.props.configureIndex]}
+                        productBookingMap={this.props.productBookingMap}
+                      />
+                    )}
                   </div>
                   <div className="mt-3">
                     {this.state.displaySection.overview && (

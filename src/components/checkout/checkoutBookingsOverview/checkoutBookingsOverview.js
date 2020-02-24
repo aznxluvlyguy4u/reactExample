@@ -3,30 +3,17 @@ import moment from "moment";
 import CartUtils from "../../../utils/mapping/cart/cartUtils";
 import Modal from "react-modal";
 import styles from "./checkout-overview-modal.style";
-import LocalStorageUtil from "../../../utils/localStorageUtil";
 
 class CheckoutBookingsOverview extends Component {
   constructor(props) {
     super(props);
-
-    let cart = props.cart;
-    let ct = cart;
-
-    if (cart) {
-      ct = cart.map((cartItem, index) => {
-        cartItem.products.map((product, pIndex) => {
-          product.details = props.products.filter(x => x.id == product.id)[0];
-          return product;
-        });
-        return cartItem;
-      });
-    }
+    this.cartUtils = new CartUtils();
 
     this.state = {
       modalIsOpen: false,
-      cart: ct,
-      cartUtils: new CartUtils(),
-      cartIndex: undefined
+      cart: props.cart,
+      cartIndex: undefined,
+      productBookingMap: props.productBookingMap
     };
 
     this.openModal = this.openModal.bind(this);
@@ -39,7 +26,6 @@ class CheckoutBookingsOverview extends Component {
     let cart = this.state.cart;
     cart.splice(this.state.cartIndex, 1);
     this.props.updateCart(cart);
-    LocalStorageUtil.setCart(cart);
     this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
   }
 
@@ -77,7 +63,7 @@ class CheckoutBookingsOverview extends Component {
               Bookings
               <button
                 onClick={() => this.configureAll()}
-                className="yellow-button-outline"
+                className={this.props.cart.length > 1 ? 'yellow-button-outline' : 'd-none'}
               >
                 Configure All
               </button>
@@ -103,14 +89,17 @@ class CheckoutBookingsOverview extends Component {
                     {moment(cartItem.period.end).format("DD.MM.YYYY")}
                   </div>
                   <div className="col-5 align-self-center">
-                    {cartItem.products.map((product, pIndex) => (
+                    {cartItem.products.map((product) => (
                       <table key={`product_${product.id}`}>
                         <tbody>
                           <tr>
                             <td>
                               <img
-                                className="img-fluid"
-                                src={product.details.images[0].url}
+                                className="img-fluid"src={this.cartUtils.getProductDetailsAndAvailability(
+                                  this.state.productBookingMap,
+                                  cartItem.id,
+                                  product.id
+                                ).images[0].url}
                                 style={{ maxHeight: "80px" }}
                               />
                             </td>
@@ -127,7 +116,8 @@ class CheckoutBookingsOverview extends Component {
                                   style={{ maxHeight: "80px" }}
                                 />
                               </td>,
-                              <td key={`accessory_more${accessory.id}`}
+                              <td
+                                key={`accessory_more${accessory.id}`}
                                 className={
                                   aIndex + 1 < product.accessories.length
                                     ? ""
@@ -143,7 +133,7 @@ class CheckoutBookingsOverview extends Component {
                     ))}
                   </div>
                   <div className="col-3 align-self-end pricing pr-0">
-                    <h2>€ {this.state.cartUtils.getCartItemTotal(cartItem)}</h2>
+                    <h2>€ {this.cartUtils.getCartItemTotal(cartItem, this.state.productBookingMap.find(x => x.id === cartItem.id))}</h2>
                     <p>Excl. VAT & Security Deposit</p>
                     <button
                       onClick={() => this.configure(index)}

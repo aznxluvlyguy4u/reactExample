@@ -1,17 +1,19 @@
 import React, { Component, Fragment } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form } from "formik";
 import Script from "react-load-script";
+import { Elements, StripeProvider } from "react-stripe-elements";
 import RadioButton from "../../../formComponents/radioButton/radioButton";
 import RadioButtonGroup from "../../../formComponents/radioButton/radioButtonGroup";
 import CheckoutPayFormSchema from "./checkoutPayFormSchema";
 import StripeForm from "../../StripeForm";
-import { Elements, StripeProvider } from "react-stripe-elements";
 import PlaceOrderRequest from "../../../../utils/mapping/products/placeOrderRequest";
-import { handlePaymentError } from "../../../../utils/rest/error/toastHandler";
 import {
-  orderCartItems,
-} from "../../../../utils/rest/requests/orders";
+  handleGeneralError,
+  handlePaymentError
+} from "../../../../utils/rest/error/toastHandler";
+import { orderCartItems } from "../../../../utils/rest/requests/orders";
 import CartUtils from "../../../../utils/mapping/cart/cartUtils";
+import Loader from "../../../../components/loader";
 
 const options = [
   {
@@ -33,21 +35,15 @@ const cartUtils = new CartUtils();
 class CheckoutPayForm extends Component {
   constructor(props) {
     super(props);
-    let cartItem = props.cartItem;
 
     let order = null;
-
-    const orderJson = sessionStorage.getItem(`order_${cartItem.id}`);
+    const orderJson = sessionStorage.getItem(`order_${props.cartItem.id}`);
     if (orderJson !== "") {
       order = JSON.parse(orderJson);
     }
 
-    if (!order) {
-      this.setNewOrder(cartItem, "CARD");
-    }
-
     this.state = {
-      cartItem,
+      cartItem: props.cartItem,
       initialValues: {
         creditCard: {
           cardNumber: "",
@@ -58,6 +54,20 @@ class CheckoutPayForm extends Component {
       paymentMethod: "",
       order
     };
+  }
+
+  async componentDidMount() {
+    if (!this.state.order) {
+      this.setNewOrder(this.props.cartItem, "CARD");
+    }
+  }
+
+  onStripeLoad() {
+    if (window.Stripe) {
+      this.setState({
+        stripe: window.Stripe("pk_test_SPrjeYdGu3H0tTOVIIb8ZXAz00DaImy6UI")
+      });
+    }
   }
 
   setNewOrder(cartItem, paymentMethod) {
@@ -83,19 +93,11 @@ class CheckoutPayForm extends Component {
         }
       })
       .catch(err => {
+        handleGeneralError(err);
         this.setState({
-          loading: false,
-          orderFormStep: 3
+          loading: false
         });
       });
-  }
-
-  onStripeLoad() {
-    if (window.Stripe) {
-      this.setState({
-        stripe: window.Stripe("pk_test_SPrjeYdGu3H0tTOVIIb8ZXAz00DaImy6UI")
-      });
-    }
   }
 
   setOrder = order => {
@@ -138,6 +140,7 @@ class CheckoutPayForm extends Component {
   };
 
   handleStripePayment = e => {
+    this.setState({ loading: true });
     //Show Loader
     this.state.stripe
       .confirmCardPayment(this.getPaymentIntent().clientSecret, {
@@ -147,25 +150,21 @@ class CheckoutPayForm extends Component {
             address: {
               country: this.state.cartItem.billingInformation.country.name,
               line1: this.state.cartItem.billingInformation.streetName,
-              postal_code: this.state.cartItem.billingInformation.postalCode,
+              postal_code: this.state.cartItem.billingInformation.postalCode
             },
             email: this.state.cartItem.billingInformation.emailAddress,
             name: this.state.cartItem.billingInformation.firstName,
-            phone: this.state.cartItem.billingInformation.phoneNumber,
-          } 
+            phone: this.state.cartItem.billingInformation.phoneNumber
+          }
         }
       })
       .then(payload => {
         if (payload.error) {
-          //Set stuff for loader
-          //Hide Loader
+          this.setState({ loading: false });
           handlePaymentError(payload.error);
         } else {
-          console.log("aweh");
+          this.setState({ loading: false });
           this.props.completeBooking();
-          //Set states
-          //Remove Item from cart
-          //Hide Loader
         }
       });
   };
@@ -173,6 +172,8 @@ class CheckoutPayForm extends Component {
   render() {
     return (
       <div className="checkout">
+        {this.state.loading ? <Loader /> : null}
+
         <div className="row">
           <div className="col-6">
             <Formik
@@ -195,7 +196,10 @@ class CheckoutPayForm extends Component {
                       touched={touched.paymentMethod}
                     >
                       {options.map(option => (
-                        <div className="row align-items-center">
+                        <div
+                          key={`radio_group${option.value}`}
+                          className="row align-items-center"
+                        >
                           <div className="col-8 text-center">
                             <img
                               onClick={() => this.setSelected(option.value)}
@@ -214,7 +218,7 @@ class CheckoutPayForm extends Component {
                               id={option.value}
                               label=""
                               value={option.value}
-                              selectedValue={this.state.paymentMethod}
+                              selectedvalue={this.state.paymentMethod}
                               onChange={this.updateSelectedPaymentMethod.bind(
                                 this
                               )}
@@ -236,32 +240,40 @@ class CheckoutPayForm extends Component {
                   <Fragment>
                     <h2 className="mt-0 divider">Credit Card</h2>
                     <table>
-                      <tr>
-                        <td>4% Credit Card Fee</td>
-                        <td className="text-right">
-                          €{" "}
-                          {cartUtils.getCartItemPercentage(
-                            this.props.cartItem,
-                            4
-                          )}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Rental Fee</td>
-                        <td className="text-right">
-                          € {cartUtils.getCartItemTotal(this.props.cartItem)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Total Costs</td>
-                        <td className="text-right">
-                          €{" "}
-                          {cartUtils.getCartItemTotalWithFee(
-                            this.props.cartItem,
-                            4
-                          )}
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr>
+                          <td>4% Credit Card Fee</td>
+                          <td className="text-right">
+                            €{" "}
+                            {cartUtils.getCartItemPercentage(
+                              this.props.cartItem,
+                              this.props.productBookingMap,
+                              4
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Rental Fee</td>
+                          <td className="text-right">
+                            €{" "}
+                            {cartUtils.getCartItemTotal(
+                              this.props.cartItem,
+                              this.props.productBookingMap
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Total Costs</td>
+                          <td className="text-right">
+                            €{" "}
+                            {cartUtils.getCartItemTotalWithFee(
+                              this.props.cartItem,
+                              this.props.productBookingMap,
+                              4
+                            )}
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
                     <div className="divider py-2 mb-4"></div>
                     <StripeProvider stripe={this.state.stripe}>
@@ -273,6 +285,7 @@ class CheckoutPayForm extends Component {
                             handleSubmit={() => {
                               this.handleStripePayment();
                             }}
+                            loading={this.state.loading}
                           />
                         </Fragment>
                       </Elements>
@@ -292,13 +305,16 @@ class CheckoutPayForm extends Component {
                     <div>
                       <p>
                         <strong>Total Amount</strong>
-                        <br />
-                        € {cartUtils.getCartItemTotal(this.props.cartItem)}
+                        <br />€{" "}
+                        {cartUtils.getCartItemTotal(
+                          this.props.cartItem,
+                          this.props.productBookingMap
+                        )}
                       </p>
                       <p>
                         <strong>Bank Account</strong>
                         <br />
-                        NL19  ABCD  1234 9876  01
+                        NL19 ABCD 1234 9876 01
                       </p>
                       <p>
                         <strong>BIC / SWIFT Code</strong>
@@ -313,7 +329,9 @@ class CheckoutPayForm extends Component {
                     </div>
                   </Fragment>
                 )}
-                {this.state.paymentMethod === "" && <p>Please select a payment method</p>}
+              {this.state.paymentMethod === "" && (
+                <p>Please select a payment method</p>
+              )}
             </div>
             <Script
               url="https://js.stripe.com/v3/"
