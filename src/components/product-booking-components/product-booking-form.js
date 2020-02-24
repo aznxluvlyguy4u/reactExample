@@ -11,6 +11,7 @@ import LocalStorageUtil from "../../utils/localStorageUtil";
 import { getProductById } from "../../utils/rest/requests/products";
 import { setProductOptionalAccessories } from "../../actions/localSearchActions";
 import moment from "moment";
+import { checkAvailabilityGraph } from "../../utils/rest/requests/cart";
 
 class ProductBookingForm extends Component {
   constructor(props) {
@@ -31,12 +32,24 @@ class ProductBookingForm extends Component {
         qty: props.product.qty,
         accessories: []
       },
+      availabilityGraphRequest: {
+        id: this.props.product.id,
+        quantity: 0,
+        period: {
+          start: null,
+          end: null
+        },
+        location: {
+          delivery: null,
+          collection: null
+        }
+      },
+      availabilityGraph: [],
       cart
     };
   }
 
   onSubmit(values) {
-
     if (this.state.productBookingForm.qty === 0) {
       return;
     }
@@ -44,20 +57,32 @@ class ProductBookingForm extends Component {
     let cart = this.state.cart;
     const period = { start: values.deliveryDate, end: values.collectionDate };
     const location = {
-      collection: { id: values.collectionLocation.id, name: values.collectionLocation.name },
-      delivery: { id: values.deliveryLocation.id, name: values.deliveryLocation.name },
+      collection: {
+        id: values.collectionLocation.id,
+        name: values.collectionLocation.name
+      },
+      delivery: {
+        id: values.deliveryLocation.id,
+        name: values.deliveryLocation.name
+      }
     };
     const product = {
       id: this.props.product.id,
       accessories: this.state.accessories || [],
-      quantity: this.state.productBookingForm.qty,
+      quantity: this.state.productBookingForm.qty
     };
 
     if (values.bookingItem.id !== undefined) {
-      const cartItemIndex = cart.findIndex(cartItem => cartItem.id === values.bookingItem.id && cartItem.name === values.bookingItem.name);
+      const cartItemIndex = cart.findIndex(
+        cartItem =>
+          cartItem.id === values.bookingItem.id &&
+          cartItem.name === values.bookingItem.name
+      );
       cart[cartItemIndex].period = period;
       cart[cartItemIndex].location = location;
-      const productIndex = cart[cartItemIndex].products.findIndex(product => product.id === this.props.product.id);
+      const productIndex = cart[cartItemIndex].products.findIndex(
+        product => product.id === this.props.product.id
+      );
       if (productIndex >= 0) {
         cart[cartItemIndex].products[productIndex] = product;
       } else {
@@ -68,13 +93,15 @@ class ProductBookingForm extends Component {
         id: moment().unix(),
         period,
         location,
-        products: [product],
+        products: [product]
       };
       values.bookingItem.id = cartItem.id;
       cart.push(cartItem);
     }
     LocalStorageUtil.setCart(cart);
-    const cartItemIndex = cart.findIndex(cartItem => cartItem.id === values.bookingItem.id);
+    const cartItemIndex = cart.findIndex(
+      cartItem => cartItem.id === values.bookingItem.id
+    );
     this.props.setCartItemIndex(cartItemIndex);
     this.props.setStep(2);
   }
@@ -135,9 +162,9 @@ class ProductBookingForm extends Component {
   async setFormFromBooking(cartItem) {
     this.setState({ accessories: [] });
 
-    this.props.localSearchReducer.productOptionalAccessories.map(
-      accessory => { accessory.selected = false; }
-    );
+    this.props.localSearchReducer.productOptionalAccessories.map(accessory => {
+      accessory.selected = false;
+    });
 
     if (cartItem.id !== undefined) {
       let productBookingForm = this.state.productBookingForm;
@@ -165,17 +192,15 @@ class ProductBookingForm extends Component {
       productBookingForm.period = cartItem.period;
 
       this.props.localSearchReducer.productOptionalAccessories.map(
-        (accessory) => {
-          const index = bookingAccessories.findIndex(
-            x => x.id == accessory.id
-          );
+        accessory => {
+          const index = bookingAccessories.findIndex(x => x.id == accessory.id);
           if (index >= 0) {
             // eslint-disable-next-line no-param-reassign
             accessory.selected = true;
           }
           return accessory;
-      });
-      
+        }
+      );
 
       this.setState({ accessories: bookingAccessories });
       this.setState({ productBookingForm: productBookingForm });
@@ -185,7 +210,16 @@ class ProductBookingForm extends Component {
   setQty(value) {
     const productBookingForm = this.state.productBookingForm;
     productBookingForm.qty = value;
-    this.setState({ productBookingForm });
+
+    const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
+    currentAvailabilityGraphRequest.quantity = value;
+
+    this.setState({
+      productBookingForm,
+      availabilityGraphRequest: currentAvailabilityGraphRequest
+    });
+
+    this.calculateAvailabilityGraph(currentAvailabilityGraphRequest);
   }
 
   handleDateChange = e => {
@@ -215,6 +249,40 @@ class ProductBookingForm extends Component {
     this.setState({ accessories: bookingAccessories });
   }
 
+  calculateAvailabilityGraph(availabilityGraphRequest) {
+    availabilityGraphRequest.period.start =
+      moment
+        .utc(
+          availabilityGraphRequest.period.start ||
+            this.state.productBookingForm.period.start
+        )
+        .format("YYYY-MM-DDTHH:mm:ss") + ".000+0000";
+    availabilityGraphRequest.period.end =
+      moment
+        .utc(
+          availabilityGraphRequest.period.end ||
+            this.state.productBookingForm.period.end
+        )
+        .add(14, "days")
+        .format("YYYY-MM-DDTHH:mm:ss") + ".000+0000";
+
+    if (availabilityGraphRequest.quantity < 1) return;
+    if (availabilityGraphRequest.location == null) return;
+    if (availabilityGraphRequest.location.delivery == null) return;
+    if (availabilityGraphRequest.location.collection == null) return;
+
+    checkAvailabilityGraph(availabilityGraphRequest)
+      .then(res => {
+        if (!res.data) return;
+        if (!res.data.availabilityGraph) return;
+
+        this.setState({
+          availabilityGraph: res.data.availabilityGraph
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
   render() {
     return (
       <div className="row">
@@ -224,7 +292,7 @@ class ProductBookingForm extends Component {
               <img
                 src="static/images/back-arrow-white.svg"
                 alt="previous"
-                onClick={ () => this.props.closeModal() }
+                onClick={() => this.props.closeModal()}
               />
             </div>
             <div className="col-md-11 equal-height-columns">
@@ -268,7 +336,9 @@ class ProductBookingForm extends Component {
                           <Form>
                             <div>
                               <div className="bookingItem form-block">
-                                <label htmlFor="bookingItem">Add to Booking</label>
+                                <label htmlFor="bookingItem">
+                                  Add to Booking
+                                </label>
                                 <Field
                                   options={this.state.bookingDropDown}
                                   name="bookingItem"
@@ -295,6 +365,19 @@ class ProductBookingForm extends Component {
                                       this.state.productBookingForm.location
                                         .delivery
                                     }
+                                    onChange={e => {
+                                      const currentAvailabilityGraphRequest = this
+                                        .state.availabilityGraphRequest;
+                                      currentAvailabilityGraphRequest.location.delivery =
+                                        e.deliveryLocation;
+                                      this.setState({
+                                        availabilityGraphRequest: currentAvailabilityGraphRequest
+                                      });
+
+                                      this.calculateAvailabilityGraph(
+                                        currentAvailabilityGraphRequest
+                                      );
+                                    }}
                                     setFieldValue={setFieldValue}
                                     component={CustomSelect}
                                   />
@@ -314,6 +397,19 @@ class ProductBookingForm extends Component {
                                       this.state.productBookingForm.location
                                         .collection
                                     }
+                                    onChange={e => {
+                                      const currentAvailabilityGraphRequest = this
+                                        .state.availabilityGraphRequest;
+                                      currentAvailabilityGraphRequest.location.collection =
+                                        e.collectionLocation;
+                                      this.setState({
+                                        availabilityGraphRequest: currentAvailabilityGraphRequest
+                                      });
+
+                                      this.calculateAvailabilityGraph(
+                                        currentAvailabilityGraphRequest
+                                      );
+                                    }}
                                     setFieldValue={setFieldValue}
                                     component={CustomSelect}
                                   />
@@ -338,6 +434,30 @@ class ProductBookingForm extends Component {
                                   }
                                   endDate={
                                     this.state.productBookingForm.period.end
+                                  }
+                                  onChange={e => {
+                                    const currentAvailabilityGraphRequest = this
+                                      .state.availabilityGraphRequest;
+                                    if (e.deliveryDate) {
+                                      currentAvailabilityGraphRequest.period.start =
+                                        e.deliveryDate;
+                                    }
+
+                                    if (e.collectionDate) {
+                                      currentAvailabilityGraphRequest.period.end =
+                                        e.collectionDate;
+                                    }
+
+                                    this.setState({
+                                      availabilityGraphRequest: currentAvailabilityGraphRequest
+                                    });
+
+                                    this.calculateAvailabilityGraph(
+                                      currentAvailabilityGraphRequest
+                                    );
+                                  }}
+                                  availabilityGraph={
+                                    this.state.availabilityGraph
                                   }
                                   component={DatePicker}
                                 />
@@ -398,7 +518,10 @@ class ProductBookingForm extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-5 equal-height-columns" style={{background: "white"}}>
+        <div
+          className="col-md-5 equal-height-columns"
+          style={{ background: "white" }}
+        >
           <div className="white-bg h-100 p-5">
             <h3>Recommended Accessories</h3>
             <RecommendedAccessoryView
@@ -417,10 +540,10 @@ class ProductBookingForm extends Component {
 const mapStateToProps = ({ locationReducer, localSearchReducer }) => {
   return {
     locationReducer,
-    localSearchReducer,
+    localSearchReducer
   };
 };
 
 export default connect(mapStateToProps, { setProductOptionalAccessories })(
-  ProductBookingForm,
+  ProductBookingForm
 );
