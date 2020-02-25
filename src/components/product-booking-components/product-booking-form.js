@@ -75,7 +75,9 @@ class ProductBookingForm extends Component {
     const product = {
       id: this.props.product.id,
       accessories: this.state.accessories || [],
-      quantity: this.state.productBookingForm.qty
+      quantity: this.state.productBookingForm.qty,
+      images: this.props.product.images,
+      rates: this.props.product.rates 
     };
 
     if (values.bookingItem.id !== undefined) {

@@ -124,6 +124,7 @@ class CheckoutOverviewControl extends Component {
                       products={this.props.products}
                       configureIndex={this.props.configureIndex}
                       updateProductCounter={this.props.updateProductCounter}
+                      updateAccessoryCounter={this.props.updateAccessoryCounter}
                       productBookingMap={this.props.productBookingMap}
                     />
                   )}

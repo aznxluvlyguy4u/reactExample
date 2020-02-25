@@ -58,14 +58,6 @@ class CheckoutBookingConfigure extends Component {
     this.setState({ modalIsOpen: false });
   }
 
-  updateProductCounter(pIndex, value) {
-    console.log(pIndex, value);
-  }
-
-  updateAccessoryCounter(pIndex, aIndex, value) {
-    console.log(pIndex, aIndex, value);
-  }
-
   revertToCartBookingsOverview() {
     this.props.revertToCartBookingsOverview();
   }
@@ -148,7 +140,12 @@ class CheckoutBookingConfigure extends Component {
                             : undefined
                       }}
                       counterUpdate={value =>
-                        this.updateAccessoryCounter(pIndex, aIndex, value)
+                        this.props.updateAccessoryCounter(
+                          this.state.cartItem.id,
+                          product.id,
+                          accessory.id,
+                          value
+                        )
                       }
                       openModalAndSetItem={() =>
                         this.openModalAndSetItem({ pIndex, aIndex })

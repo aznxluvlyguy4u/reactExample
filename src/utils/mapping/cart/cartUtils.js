@@ -1,7 +1,6 @@
 import moment from "moment";
 
 export default class CartUtils {
-
   constructor() {}
 
   getProductDetailsAndAvailability(availability, cartItemId, productId) {
@@ -10,10 +9,17 @@ export default class CartUtils {
       .availability.find(product => product.id === productId);
   }
 
-  getProductImage(availability, cartItemId, productId) {
-    return availability
-      .find(item => item.id === cartItemId)
-      .availability.find(product => product.id === productId).images[0].url;
+  getProductImage(availability, cartItemId, product) {
+    const available = availability
+      ? availability.find(item => item.id === cartItemId)
+      : undefined;
+
+    if (available) {
+      return available.availability.find(p => p.id === product.id).images[0]
+        .url;
+    } else {
+      return product.images && product.images.length > 0 ? product.images[0].url : "";
+    }
   }
 
   dayCount(cartItem) {
@@ -37,9 +43,9 @@ export default class CartUtils {
     return accessoryTotal;
   }
 
-  getProductTotal(days, quantity, product) {
-    if (days > 0 && quantity > 0 && product.rates.length > 0) {
-      return days * quantity * parseFloat(product.rates[0].price);
+  getProductTotal(days, quantity, rates) {
+    if (days > 0 && quantity > 0 && rates.length > 0) {
+      return days * quantity * parseFloat(rates[0].price);
     }
     return 0;
   }
@@ -60,11 +66,15 @@ export default class CartUtils {
       total += this.getProductTotal(
         days,
         product.quantity,
-        availability.availability.find(p => p.id === product.id)
+        availability
+          ? availability.availability.find(p => p.id === product.id).rates
+          : product.rates
       );
       total += this.getAccessoriesTotal(
         days,
-        availability.availability.find(p => p.id === product.id).accessories
+        availability
+          ? availability.availability.find(p => p.id === product.id).accessories
+          : product.accessories
       );
     });
 
@@ -72,13 +82,18 @@ export default class CartUtils {
   }
 
   getCartItemPercentage(cartItem, availability, percetage) {
-    return (this.getCartItemTotal(cartItem, availability) * (percetage / 100)).toFixed(2);
+    return (
+      this.getCartItemTotal(cartItem, availability) *
+      (percetage / 100)
+    ).toFixed(2);
   }
 
   getCartItemTotalWithFee(cartItem, availability, percetage) {
     const total =
       parseFloat(this.getCartItemTotal(cartItem, availability)) +
-      parseFloat(this.getCartItemTotal(cartItem, availability) * (percetage / 100));
+      parseFloat(
+        this.getCartItemTotal(cartItem, availability) * (percetage / 100)
+      );
     return total.toFixed(2);
   }
 
@@ -93,13 +108,21 @@ export default class CartUtils {
 
   cartItemsAllAvailable(cartItem, availability) {
     return cartItem.products.every(product => {
-      const productAvailability = this.getProductDetailsAndAvailability(availability, cartItem.id, product.id);
+      const productAvailability = this.getProductDetailsAndAvailability(
+        availability,
+        cartItem.id,
+        product.id
+      );
       if (!product.accessories || product.accessories.length === 0) {
         return product.quantity <= productAvailability.quantityAvailable;
       } else {
         const validAccessories = product.accessories.every(accessory => {
-          const accAvailable = productAvailability.accessories.find(availableAccessory => availableAccessory.id === accessory.id);
-          return accAvailable && accessory.quantity <= accAvailable.quantityAvailable;
+          const accAvailable = productAvailability.accessories.find(
+            availableAccessory => availableAccessory.id === accessory.id
+          );
+          return (
+            accAvailable && accessory.quantity <= accAvailable.quantityAvailable
+          );
         });
         return (
           product.quantity <= productAvailability.quantityAvailable &&

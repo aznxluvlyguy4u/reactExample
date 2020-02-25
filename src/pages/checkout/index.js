@@ -11,7 +11,7 @@ import {
   emptyCart,
   setCart,
   addToCart,
-  removeFromCart
+  removeFromCart,
 } from "../../actions/cartActions";
 import CheckoutBookingsOverview from "../../components/checkout/checkoutBookingsOverview/checkoutBookingsOverview";
 import CheckoutOverviewControl from "../../components/checkout/checkoutBookingConfigure/overview/checkoutOverviewControl";
@@ -23,8 +23,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 class CheckoutPage extends Component {
@@ -38,7 +38,7 @@ class CheckoutPage extends Component {
       configureIndex: undefined,
       configureAll: false,
       orderFailed: false,
-      orderSuccess: false
+      orderSuccess: false,
     };
   }
 
@@ -60,7 +60,7 @@ class CheckoutPage extends Component {
     }
   }
 
-  async getValidatedCartItems(){
+  async getValidatedCartItems() {
     const cart = LocalStorageUtil.getCart();
     if (cart) {
       await cart.map((booking) => {
@@ -197,6 +197,7 @@ class CheckoutPage extends Component {
 
   updateCart(cart) {
     this.setState({ cart });
+    this.props.setCart(cart);
     LocalStorageUtil.setCart(cart);
   }
 
@@ -281,6 +282,7 @@ class CheckoutPage extends Component {
       } else {
         LocalStorageUtil.setCartItemPaid(cartItem);
       }
+      this.props.setCart(cart);
       LocalStorageUtil.setCart(cart);
       await this.setState({
         loading: false,
@@ -292,12 +294,34 @@ class CheckoutPage extends Component {
   async updateProductCounter(cartId, productId, productCount) {
     this.setState({ loading: true });
     const cart = this.state.cart;
-    const pIndex = cart
-      .find(c => c.id === cartId)
-      .products.findIndex(p => p.id === productId);
-    if (pIndex > -1) {
-      cart.find(c => c.id === cartId).products[pIndex].quantity = productCount;
+    const cartItem = cart.find(c => c.id === cartId);
+    const product = cartItem && cartItem.products ? cartItem.products.find(p => p.id === productId) : undefined;
+    if (product) {
+      product.quantity = productCount;
       await this.setState({ cart });
+      this.props.setCart(cart);
+      LocalStorageUtil.setCart(cart);
+      const orderRequests = await this.getProductsFromCartItems();
+      await checkCartAvailability(orderRequests).then(response => {
+        this.setBookingAvailabilityMap(response.data.products);
+      });
+      this.setState({ loading: false });
+    } else {
+      this.setState({ loading: false });
+    }
+  }
+
+  async updateAccessoryCounter(cartId, productId, accessoryId, accessoryCount) {
+    this.setState({ loading: true });
+    const cart = this.state.cart;
+    const cartItem = cart.find(c => c.id === cartId);
+    const product = cartItem && cartItem.products ? cartItem.products.find(p => p.id === productId) : undefined;
+    const accessory = product && product.accessories ? product.accessories.find(a => a.id === accessoryId) : undefined;
+
+    if (accessory) {
+      accessory.quantity = accessoryCount;
+      await this.setState({ cart });
+      this.props.setCart(cart);
       LocalStorageUtil.setCart(cart);
       const orderRequests = await this.getProductsFromCartItems();
       await checkCartAvailability(orderRequests).then(response => {
@@ -362,6 +386,7 @@ class CheckoutPage extends Component {
               updateCart={this.updateCart.bind(this)}
               completeBooking={this.completeBooking.bind(this)}
               updateProductCounter={this.updateProductCounter.bind(this)}
+              updateAccessoryCounter={this.updateAccessoryCounter.bind(this)}
               productBookingMap={this.state.productBookingMap}
             />
           )}

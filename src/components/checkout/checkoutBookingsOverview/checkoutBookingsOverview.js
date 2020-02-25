@@ -38,7 +38,7 @@ class CheckoutBookingsOverview extends Component {
           this.cartUtils.getProductImage(
             this.state.productBookingMap,
             booking.id,
-            product.id
+            product
           )
         );
         product.accessories.map(accessory => {
@@ -103,6 +103,7 @@ class CheckoutBookingsOverview extends Component {
                 onClick={() => this.configureAll()}
                 className={
                   this.props.cart.length > 1
+                  && this.props.cart.find(c => !c.isAvailable) === undefined
                     ? "yellow-button-outline"
                     : "d-none"
                 }
@@ -154,12 +155,12 @@ class CheckoutBookingsOverview extends Component {
                                       />
                                     </td>,
                                     <td
+                                      key={`accessory_more${item}${iIndex}`}
                                       className={
                                         iIndex + 1 < row.length
                                           ? ""
                                           : "d-none"
                                       }
-                                      key={`accessory_more${item}${iIndex}`}
                                     >
                                       <img src="static/images/add.png" />
                                     </td>
@@ -183,10 +184,11 @@ class CheckoutBookingsOverview extends Component {
                       <button
                         onClick={() => this.configure(index)}
                         type="button"
-                        className="configure-solid-yellow"
+                        className={cartItem.isAvailable ? "configure-solid-yellow" : "d-none"}
                       >
                         Configure
                       </button>
+                      <img className={cartItem.isAvailable ? "d-none" : "img-fluid"} src="static/images/unavailable.png" style={{maxHeight: '20px'}}/>
                     </div>
                   </div>
                 ))}
