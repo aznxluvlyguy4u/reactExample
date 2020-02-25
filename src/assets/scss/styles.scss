@@ -44,6 +44,10 @@
 @import "modules/pages/productGroup.scss";
 @import "modules/pages/product.scss";
 
+.DateInput_input, .DateInput .DateInput_input::placeholder {
+  font-size: 11px;
+}
+
 // Override stripe form elements
 .StripeElement {
   box-sizing: border-box !important;

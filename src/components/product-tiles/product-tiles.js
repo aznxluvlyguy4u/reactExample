@@ -163,7 +163,7 @@ class ProductTiles extends Component {
                                 onClick={() => this.removeProdcut(item)}
                                 className="plus-minus"
                               >
-                                -
+                               {item.qty > 0 ? "-" : " "}
                               </div>
                               <div className="value">{item.qty}</div>
                               <div

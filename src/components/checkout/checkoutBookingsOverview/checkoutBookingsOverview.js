@@ -13,13 +13,51 @@ class CheckoutBookingsOverview extends Component {
       modalIsOpen: false,
       cart: props.cart,
       cartIndex: undefined,
-      productBookingMap: props.productBookingMap
+      productBookingMap: props.productBookingMap,
+      cartRows: []
     };
 
+    this.setCartDisplay();
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.removeFromCartAndClose = this.removeFromCartAndClose.bind(this);
+  }
+
+  async setCartDisplay() {
+    const cartRows = [];
+    await this.state.cart.map(booking => {
+      const productAccessoryRows = [];
+      let row = [];
+      booking.products.map(product => {
+        if (row.length !== 0 && row.length % 3 === 0) {
+          productAccessoryRows.push(row);
+          row = [];
+        }
+        row.push(
+          this.cartUtils.getProductImage(
+            this.state.productBookingMap,
+            booking.id,
+            product.id
+          )
+        );
+        product.accessories.map(accessory => {
+          if (row.length !== 0 && row.length % 3 === 0) {
+            productAccessoryRows.push(row);
+            row = [];
+          }
+          row.push(accessory.images[0].url);
+        });
+      });
+      if (row.length > 0) {
+        productAccessoryRows.push(row);
+      }
+
+      cartRows.push({ id: booking.id, productAccessoryRows });
+      return;
+    });
+
+    this.setState({ cartRows });
   }
 
   removeFromCartAndClose() {
@@ -63,88 +101,95 @@ class CheckoutBookingsOverview extends Component {
               Bookings
               <button
                 onClick={() => this.configureAll()}
-                className={this.props.cart.length > 1 ? 'yellow-button-outline' : 'd-none'}
+                className={
+                  this.props.cart.length > 1
+                    ? "yellow-button-outline"
+                    : "d-none"
+                }
               >
                 Configure All
               </button>
             </h1>
             <div className="container">
-              {this.state.cart.map((cartItem, index) => (
-                <div
-                  key={cartItem.id}
-                  className="row mb-2 equal-height-columns bottom-bordered"
-                >
-                  <div className="col-1 align-self-center">
-                    <a onClick={() => this.openModalAndSetItem(index)}>
-                      <img src="static/images/delete.png" />
-                    </a>
-                  </div>
-                  <div className="col-3">
-                    <h3>
-                      {cartItem.location.delivery.name}{" "}
-                      {cartItem.location.collection.name}
-                    </h3>
-                    <br />
-                    {moment(cartItem.period.start).format("DD.MM.YYYY")} -{" "}
-                    {moment(cartItem.period.end).format("DD.MM.YYYY")}
-                  </div>
-                  <div className="col-5 align-self-center">
-                    {cartItem.products.map((product) => (
-                      <table key={`product_${product.id}`}>
+              {this.state.cartRows &&
+                this.state.cart.map((cartItem, index) => (
+                  <div
+                    key={cartItem.id}
+                    className="row mb-2 equal-height-columns bottom-bordered"
+                  >
+                    <div className="col-1 align-self-center">
+                      <a onClick={() => this.openModalAndSetItem(index)}>
+                        <img src="static/images/delete.png" />
+                      </a>
+                    </div>
+                    <div className="col-3">
+                      <h3>
+                        {cartItem.location.delivery.name}{" "}
+                        {cartItem.location.collection.name}
+                      </h3>
+                      <br />
+                      {moment(cartItem.period.start).format(
+                        "DD.MM.YYYY"
+                      )} - {moment(cartItem.period.end).format("DD.MM.YYYY")}
+                    </div>
+                    <div className="col-5 align-self-center">
+                      <table>
                         <tbody>
-                          <tr>
-                            <td>
-                              <img
-                                className="img-fluid"src={this.cartUtils.getProductDetailsAndAvailability(
-                                  this.state.productBookingMap,
-                                  cartItem.id,
-                                  product.id
-                                ).images[0].url}
-                                style={{ maxHeight: "80px" }}
-                              />
-                            </td>
-                            {product.accessories.length > 0 && (
-                              <td className="pluscontainer">
-                                <img src="static/images/add.png" />
-                              </td>
-                            )}
-                            {product.accessories.map((accessory, aIndex) => [
-                              <td key={`accessory_image${accessory.id}`}>
-                                <img
-                                  className="img-fluid"
-                                  src={accessory.images[0].url}
-                                  style={{ maxHeight: "80px" }}
-                                />
-                              </td>,
-                              <td
-                                key={`accessory_more${accessory.id}`}
-                                className={
-                                  aIndex + 1 < product.accessories.length
-                                    ? ""
-                                    : "d-none"
-                                }
-                              >
-                                <img src="static/images/add.png" />
-                              </td>
-                            ])}
-                          </tr>
+                          {this.state.cartRows &&
+                            this.state.cartRows.length > 0 &&
+                            this.state.cartRows.find(
+                              x => x.id === cartItem.id
+                            ) &&
+                            this.state.cartRows
+                              .find(x => x.id === cartItem.id)
+                              .productAccessoryRows.map(row => (
+                                <tr>
+                                  {row.map((item, iIndex) => [
+                                    <td key={`accessory_image${item}${iIndex}`}>
+                                      <img
+                                        className="img-fluid"
+                                        src={item}
+                                        alt="Item image"
+                                        style={{ maxHeight: "80px" }}
+                                      />
+                                    </td>,
+                                    <td
+                                      className={
+                                        iIndex + 1 < row.length
+                                          ? ""
+                                          : "d-none"
+                                      }
+                                      key={`accessory_more${item}${iIndex}`}
+                                    >
+                                      <img src="static/images/add.png" />
+                                    </td>
+                                  ])}
+                                </tr>
+                              ))}
                         </tbody>
                       </table>
-                    ))}
+                    </div>
+                    <div className="col-3 align-self-end pricing pr-0">
+                      <h2>
+                        €{" "}
+                        {this.cartUtils.getCartItemTotal(
+                          cartItem,
+                          this.state.productBookingMap.find(
+                            x => x.id === cartItem.id
+                          )
+                        )}
+                      </h2>
+                      <p>Excl. VAT & Security Deposit</p>
+                      <button
+                        onClick={() => this.configure(index)}
+                        type="button"
+                        className="configure-solid-yellow"
+                      >
+                        Configure
+                      </button>
+                    </div>
                   </div>
-                  <div className="col-3 align-self-end pricing pr-0">
-                    <h2>€ {this.cartUtils.getCartItemTotal(cartItem, this.state.productBookingMap.find(x => x.id === cartItem.id))}</h2>
-                    <p>Excl. VAT & Security Deposit</p>
-                    <button
-                      onClick={() => this.configure(index)}
-                      type="button"
-                      className="configure-solid-yellow"
-                    >
-                      Configure
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           <Modal

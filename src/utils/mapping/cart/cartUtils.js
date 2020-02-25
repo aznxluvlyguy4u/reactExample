@@ -10,6 +10,12 @@ export default class CartUtils {
       .availability.find(product => product.id === productId);
   }
 
+  getProductImage(availability, cartItemId, productId) {
+    return availability
+      .find(item => item.id === cartItemId)
+      .availability.find(product => product.id === productId).images[0].url;
+  }
+
   dayCount(cartItem) {
     const collectionDate = moment(cartItem.period.end).endOf("day");
     const deliveryDate = moment(cartItem.period.start).startOf("day");

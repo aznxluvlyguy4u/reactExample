@@ -193,16 +193,17 @@ class ProductGroupPage extends Component {
                   sheets containing Lorem Ipsum passages.
                 </div>
               </div>
-              <div class="col-sm-12 col-md-6">
+              <div className="col-sm-12 col-md-6">
                 <div
                   style={{
                     position: "relative",
                     display: "grid",
-                    gridTemplateColumns: "auto auto auto"
+                    gridTemplateColumns: "auto auto auto",
                   }}
                 >
                   {products.map(product => (
                     <img
+                      key={product.id}
                       style={{
                         position: "relative",
                         width: "100%",

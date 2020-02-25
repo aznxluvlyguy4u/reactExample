@@ -28,7 +28,9 @@ import "react-dates/initialize";
 class DatePicker extends Component {
   constructor(props) {
     super(props);
+    let visibleYearMonth = moment.utc(new Date().setDate(1));
     this.state = {
+      visibleYearMonth,
       startDate: null,
       endDate: null,
       focusedInput: null,
@@ -39,7 +41,7 @@ class DatePicker extends Component {
   componentDidMount() {
     const { startDate, endDate } = this.props;
     if (startDate !== null && startDate !== undefined) {
-      this.setState({ startDate: moment.utc(startDate) });
+      this.setState({ startDate: moment.utc(startDate), visibleYearMonth: moment.utc(new Date(startDate).setDate(1))});
     }
     if (endDate !== null && endDate !== undefined) {
       this.setState({ endDate: moment.utc(endDate) });
@@ -66,34 +68,6 @@ class DatePicker extends Component {
     ) {
       this.setState({ endDate: endDateMoment });
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    //this.setState({ startDate: moment.utc(nextProps.startDate), endDate: moment.utc(nextProps.endDate) });
-  }
-
-  onChange(startDate, endDate) {
-    // const { onChange, setFieldValue } = this.props;
-    // console.log('onchange props = ', this.props);
-    // console.log('onChange = ', onChange);
-    // this.setState({ startDate, endDate });
-    // if (startDate !== null) {
-    //   // this.setState({ startDate: moment.utc(startDate) });
-    //   // onChange ? onChange({ collectionDate: startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null;
-    //   this.props.setFieldValue('collectionDate', startDate.format('YYYY-MM-DDTHH:mm:ss.ssZ'));
-    // }
-    // if (endDate !== null) {
-    //   // this.setState({ endDate: moment.utc(endDate) });
-    //   // onChange ? onChange({ deliveryDate: endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null;
-    //   this.props.setFieldValue('deliveryDate', endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ'));
-    // }
-    // if (endDate === null && startDate !== null) {
-    //   let addedDay = moment(startDate).add(1, 'd');
-    //   this.setState({ startDate: moment.utc(startDate) });
-    //   this.setState({ endDate: moment.utc(addedDay) });
-    //   // onChange ? onChange({ collectionDate: addedDay.format('YYYY-MM-DDTHH:mm:ss.ssZ') }) : null;
-    //   this.props.setFieldValue('collectionDate', addedDay.format('YYYY-MM-DDTHH:mm:ss.ssZ'));
-    // }
   }
 
   handleChange = (startDate, endDate) => {
@@ -144,6 +118,15 @@ class DatePicker extends Component {
     }
   };
 
+  updateVisibleMonth(val) {
+    let visibleYearMonth = this.state.visibleYearMonth;
+    visibleYearMonth = moment(visibleYearMonth).add(val, "M");
+    this.setState({ visibleYearMonth });
+    if (this.props.updateVisibleMonth) {
+      this.props.updateVisibleMonth(visibleYearMonth);
+    }
+  }
+
   returnValidation() {
     const { validation, form } = this.props;
     const { startDate, endDate } = this.state;
@@ -174,6 +157,7 @@ class DatePicker extends Component {
     return (
       <div>
         <DateRangePicker
+          disabled={this.props.disabled === undefined ? false : this.props.disabled}
           readOnly
           startDatePlaceholderText={placeholders[0]}
           endDatePlaceholderText={placeholders[1]}
@@ -191,15 +175,16 @@ class DatePicker extends Component {
               ? "error"
               : "collectionDate"
           } // PropTypes.string.isRequired,
-          onDatesChange={({ startDate, endDate }) =>
-            this.handleChange(startDate, endDate)
-          } // PropTypes.func.isRequired,
+          onDatesChange={({ startDate, endDate }) => {
+            this.handleChange(startDate, endDate);
+          }} // PropTypes.func.isRequired,
           focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
           onFocusChange={pickerFocusedInput => {
             this.setState({ focusedInput: pickerFocusedInput });
           }}
           block
           isDayBlocked={dateMoment => {
+            if(!this.props.availabilityGraph) return false;
             const existingAvailability = this.props.availabilityGraph.find(
               availability => {
                 return moment(availability.date).isSame(dateMoment, "day");
@@ -209,6 +194,8 @@ class DatePicker extends Component {
             return !existingAvailability.available;
           }}
           numberOfMonths={1}
+          onPrevMonthClick={() => this.updateVisibleMonth(-1)}
+          onNextMonthClick={() => this.updateVisibleMonth(1)}
         />
         {this.returnValidation()}
       </div>

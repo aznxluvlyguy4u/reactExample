@@ -44,7 +44,7 @@ class RecommendedAccessoryView extends Component {
       <div className="recommended-accessories" style={{maxHeight: "400px", overflow: "scroll"}}>
         {this.state.productOptionalAccessories.length > 0
           ? this.state.productOptionalAccessories.map((item, index) => (
-              <div className="row mb-2 align-items-center">
+              <div key={item.id} className="row mb-2 align-items-center">
                 <div className="col-6">
                   {!item.selected && (
                     <div className="accessory-thumb">

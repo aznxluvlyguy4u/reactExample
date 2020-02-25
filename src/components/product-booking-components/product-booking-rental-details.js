@@ -122,7 +122,7 @@ class ProductBookingRentalDetails extends Component {
             <div className="col-8">
               <img
                 src="static/images/down.png"
-                style={{ width: "10px", height: "10px", "margin-right": "5px" }}
+                style={{ width: "10px", height: "10px", marginRight: "5px" }}
               />
               Transport Costs
             </div>
@@ -149,7 +149,7 @@ class ProductBookingRentalDetails extends Component {
             }}
             href="/checkout"
           >
-            <a className="search-button-full" style={{'text-align': 'center'}}>Checkout</a>
+            <a className="search-button-full" style={{textAlign: 'center'}}>Checkout</a>
           </Link>
         </div>
       </div>

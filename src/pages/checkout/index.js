@@ -46,7 +46,8 @@ class CheckoutPage extends Component {
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
 
-    await this.setState({ cart: LocalStorageUtil.getCart() });
+    let cart = await this.getValidatedCartItems();
+    await this.setState({ cart });
 
     if (this.state.cart && this.state.cart.length > 0) {
       this.setState({ loading: true });
@@ -59,28 +60,46 @@ class CheckoutPage extends Component {
     }
   }
 
+  async getValidatedCartItems(){
+    const cart = LocalStorageUtil.getCart();
+    if (cart) {
+      await cart.map((booking) => {
+        if (moment(booking.period.start).isSameOrBefore(moment(new Date()))) {
+          booking.isAvailable = false;
+        } else {
+          booking.isAvailable = true;
+        }
+      });
+    }
+    return cart;
+  }
+
   async getProductsFromCartItems() {
     const orderRequests = [];
     if (!this.state.cart) {
       return [];
     }
     this.state.cart.map(orderItem => {
-      orderItem.products.map(product => {
-        orderRequests.push({
-          id: product.id,
-          quantity: product.quantity,
-          location: orderItem.location,
-          period: {
-            start: moment(orderItem.period.start).format(
-              "YYYY-MM-DDTHH:mm:ss.000Z"
-            ),
-            end: moment(orderItem.period.end).format("YYYY-MM-DDTHH:mm:ss.000Z")
-          },
-          accessories: product.accessories
+      if (orderItem.isAvailable) {
+        orderItem.products.map(product => {
+          orderRequests.push({
+            id: product.id,
+            quantity: product.quantity,
+            location: orderItem.location,
+            period: {
+              start: moment(orderItem.period.start).format(
+                "YYYY-MM-DDTHH:mm:ss.000Z"
+              ),
+              end: moment(orderItem.period.end).format("YYYY-MM-DDTHH:mm:ss.000Z")
+            },
+            accessories: product.accessories
+          });
+          return;
         });
         return;
-      });
-      return;
+      } else {
+        return;
+      }
     });
     return orderRequests;
   }

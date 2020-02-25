@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
-import Router from "next/router";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import RecommendedAccessoryView from "../../components/product-booking-components/recommended-accessories";
 import DatePicker from "../formComponents/datepicker/datepicker";
 import CustomSelect from "../formComponents/select/customSelect";
@@ -10,7 +10,6 @@ import productBookingFormValidation from "./product-booking-form-validation";
 import LocalStorageUtil from "../../utils/localStorageUtil";
 import { getProductById } from "../../utils/rest/requests/products";
 import { setProductOptionalAccessories } from "../../actions/localSearchActions";
-import moment from "moment";
 import { checkAvailabilityGraph } from "../../utils/rest/requests/cart";
 import { setCart } from "../../actions/cartActions";
 
@@ -21,21 +20,27 @@ class ProductBookingForm extends Component {
 
     const bookingDropDown = this.setUpCartItemSelection(cart);
     this.state = {
+      dateRangeAvailability: {
+        collection: false,
+        delivery: false,
+        booking: false,
+        quantity: true,
+      },
       accessories: [],
       bookingDropDown,
       productBookingForm: {
-        booking: "",
-        location: { delivery: "", collection: "" },
+        booking: undefined,
+        location: { delivery: undefined, collection: undefined },
         period: {
-          start: new Date(),
-          end: new Date(new Date().setDate(new Date().getDate() + 1))
+          start: new Date(new Date().setDate(new Date().getDate() + 1)),
+          end: new Date(new Date().setDate(new Date().getDate() + 2)),
         },
-        qty: props.product.qty,
+        qty: props.product.qty === 0 ? 1 : props.product.qty,
         accessories: []
       },
       availabilityGraphRequest: {
         id: this.props.product.id,
-        quantity: 0,
+        quantity: 1,
         period: {
           start: null,
           end: null
@@ -137,8 +142,8 @@ class ProductBookingForm extends Component {
       this.getProduct();
     }
 
-    const start = new Date();
-    const end = new Date(new Date().setDate(new Date().getDate() + 1));
+    const start = new Date(new Date().setDate(new Date().getDate() + 1));
+    const end = new Date(new Date().setDate(new Date().getDate() + 2));
 
     const bookingDropDown = [
       {
@@ -162,6 +167,9 @@ class ProductBookingForm extends Component {
   }
 
   async setFormFromBooking(cartItem) {
+    this.updateDateRangeAvailability("booking", true);
+    this.updateDateRangeAvailability("delivery", true);
+    this.updateDateRangeAvailability("collection", true);
     this.setState({ accessories: [] });
 
     this.props.localSearchReducer.productOptionalAccessories.map(accessory => {
@@ -169,6 +177,7 @@ class ProductBookingForm extends Component {
     });
 
     if (cartItem.id !== undefined) {
+      let availabilityGraphRequest = this.state.availabilityGraphRequest;
       let productBookingForm = this.state.productBookingForm;
       productBookingForm.booking = cartItem;
       productBookingForm.qty =
@@ -204,12 +213,21 @@ class ProductBookingForm extends Component {
         }
       );
 
+      availabilityGraphRequest.location.collection = { name: cartItem.location.collection.name, id: cartItem.location.collection.id };
+      availabilityGraphRequest.location.delivery = { name: cartItem.location.delivery.name, id: cartItem.location.delivery.id };
+      availabilityGraphRequest.quantity = productBookingForm.qty;
+
+      const start = moment.utc(new Date(cartItem.period.start).setDate(1));
+      const end = moment(start).add(1, "M");
+      availabilityGraphRequest.period = { start, end };
+      this.calculateAvailabilityGraph(availabilityGraphRequest);
       this.setState({ accessories: bookingAccessories });
-      this.setState({ productBookingForm: productBookingForm });
+      this.setState({ productBookingForm, availabilityGraphRequest });
     }
   }
 
   setQty(value) {
+    this.updateDateRangeAvailability("quantity", value);
     const productBookingForm = this.state.productBookingForm;
     productBookingForm.qty = value;
 
@@ -223,10 +241,15 @@ class ProductBookingForm extends Component {
 
     this.calculateAvailabilityGraph(currentAvailabilityGraphRequest);
   }
-
-  handleDateChange = e => {
-    console.log("date change", e);
-  };
+  
+  async updateDateRangeAvailability(field, elementVal) {
+    const dateRangeAvailability = this.state.dateRangeAvailability;
+    dateRangeAvailability[field] = false;
+    if (elementVal) {
+      dateRangeAvailability[field] = true;
+    }
+    await this.setState({ dateRangeAvailability });
+  }
 
   changeAccesoire(toggledAccessory) {
     const bookingAccessories = this.state.accessories;
@@ -265,7 +288,6 @@ class ProductBookingForm extends Component {
           availabilityGraphRequest.period.end ||
             this.state.productBookingForm.period.end
         )
-        .add(14, "days")
         .format("YYYY-MM-DDTHH:mm:ss") + ".000+0000";
 
     if (availabilityGraphRequest.quantity < 1) return;
@@ -273,16 +295,22 @@ class ProductBookingForm extends Component {
     if (availabilityGraphRequest.location.delivery == null) return;
     if (availabilityGraphRequest.location.collection == null) return;
 
+
     checkAvailabilityGraph(availabilityGraphRequest)
-      .then(res => {
+      .then((res) => {
         if (!res.data) return;
         if (!res.data.availabilityGraph) return;
-
-        this.setState({
-          availabilityGraph: res.data.availabilityGraph
-        });
+        this.setState({ availabilityGraph: res.data.availabilityGraph });
       })
       .catch(err => console.log(err));
+  }
+
+  updateAvailabilityGraph(date) {
+    const start = moment.utc(date);
+    const end = moment(start).add(1, "M");
+    const availabilityGraphRequest = this.state.availabilityGraphRequest;
+    availabilityGraphRequest.period = { start, end };
+    this.calculateAvailabilityGraph(availabilityGraphRequest);
   }
 
   render() {
@@ -368,6 +396,7 @@ class ProductBookingForm extends Component {
                                         .delivery
                                     }
                                     onChange={e => {
+                                      this.updateDateRangeAvailability("delivery", e.deliveryLocation);
                                       const currentAvailabilityGraphRequest = this
                                         .state.availabilityGraphRequest;
                                       currentAvailabilityGraphRequest.location.delivery =
@@ -399,7 +428,8 @@ class ProductBookingForm extends Component {
                                       this.state.productBookingForm.location
                                         .collection
                                     }
-                                    onChange={e => {
+                                    onChange={(e) => {
+                                      this.updateDateRangeAvailability("collection", e.collectionLocation);
                                       const currentAvailabilityGraphRequest = this
                                         .state.availabilityGraphRequest;
                                       currentAvailabilityGraphRequest.location.collection =
@@ -426,7 +456,13 @@ class ProductBookingForm extends Component {
                                     Drop-off Date
                                   </label>
                                 </div>
+                                
                                 <Field
+                                  disabled={
+                                    !(this.state.dateRangeAvailability.collection
+                                      && this.state.dateRangeAvailability.delivery
+                                      && this.state.dateRangeAvailability.booking
+                                      && this.state.dateRangeAvailability.quantity > 0) }
                                   placeholders={["Date", "Date"]}
                                   setFieldValue={setFieldValue}
                                   name="collectionDate"
@@ -461,6 +497,7 @@ class ProductBookingForm extends Component {
                                   availabilityGraph={
                                     this.state.availabilityGraph
                                   }
+                                  updateVisibleMonth={this.updateAvailabilityGraph.bind(this)}
                                   component={DatePicker}
                                 />
                               </div>
