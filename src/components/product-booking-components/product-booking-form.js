@@ -343,7 +343,25 @@ class ProductBookingForm extends Component {
       .then(res => {
         if (!res.data) return;
         if (!res.data.availabilityGraph) return;
+
+        const productBookingForm = this.state.productBookingForm;
+        const startAvailable = res.data.availabilityGraph.find(
+          x =>
+            moment(x.date).isSame(
+              moment(availabilityGraphRequest.period.start),
+              "day"
+            ) && x.available
+        );
+        const endAvailable = res.data.availabilityGraph.find(
+          x =>
+            moment(x.date).isSame(availabilityGraphRequest.period.end, "day") &&
+            x.available
+        );
+        if (!startAvailable) productBookingForm.period.start = null;
+        if (!endAvailable) productBookingForm.period.end = null;
+
         this.setState({
+          productBookingForm,
           availabilityGraph: res.data.availabilityGraph,
           loadingAvailabilityGraph: false
         });
@@ -458,6 +476,27 @@ class ProductBookingForm extends Component {
                                         .state.availabilityGraphRequest;
                                       currentAvailabilityGraphRequest.location.delivery =
                                         e.deliveryLocation;
+
+                                      currentAvailabilityGraphRequest.period.start = this
+                                        .state.productBookingForm.period.start
+                                        ? moment.utc(
+                                            new Date(
+                                              this.state.productBookingForm.period.start
+                                            ).setDate(1)
+                                          )
+                                        : currentAvailabilityGraphRequest.period
+                                            .start;
+                                      currentAvailabilityGraphRequest.period.end = this
+                                        .state.productBookingForm.period.end
+                                        ? moment
+                                            .utc(
+                                              new Date(
+                                                this.state.productBookingForm.period.end
+                                              )
+                                            )
+                                            .add(1, "M")
+                                        : currentAvailabilityGraphRequest.period
+                                            .end;
                                       this.setState({
                                         availabilityGraphRequest: currentAvailabilityGraphRequest
                                       });
@@ -494,6 +533,27 @@ class ProductBookingForm extends Component {
                                         .state.availabilityGraphRequest;
                                       currentAvailabilityGraphRequest.location.collection =
                                         e.collectionLocation;
+
+                                      currentAvailabilityGraphRequest.period.start = this
+                                        .state.productBookingForm.period.start
+                                        ? moment.utc(
+                                            new Date(
+                                              this.state.productBookingForm.period.start
+                                            ).setDate(1)
+                                          )
+                                        : currentAvailabilityGraphRequest.period
+                                            .start;
+                                      currentAvailabilityGraphRequest.period.end = this
+                                        .state.productBookingForm.period.end
+                                        ? moment
+                                            .utc(
+                                              new Date(
+                                                this.state.productBookingForm.period.end
+                                              )
+                                            )
+                                            .add(1, "M")
+                                        : this.state.productBookingForm.period
+                                            .end;
                                       this.setState({
                                         availabilityGraphRequest: currentAvailabilityGraphRequest
                                       });
@@ -544,13 +604,15 @@ class ProductBookingForm extends Component {
                                     const currentAvailabilityGraphRequest = this
                                       .state.availabilityGraphRequest;
                                     if (e.deliveryDate) {
-                                      currentAvailabilityGraphRequest.period.start =
-                                        e.deliveryDate;
+                                      currentAvailabilityGraphRequest.period.start = moment.utc(
+                                        new Date(e.deliveryDate).setDate(1)
+                                      );
                                     }
 
                                     if (e.collectionDate) {
-                                      currentAvailabilityGraphRequest.period.end =
-                                        e.collectionDate;
+                                      currentAvailabilityGraphRequest.period.end = moment
+                                        .utc(new Date(e.collectionDate))
+                                        .add(1, "M");
                                     }
 
                                     this.setState({
