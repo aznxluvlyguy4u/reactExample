@@ -1,56 +1,56 @@
 .CalendarDay__selected_span {
   background: $yellow;
   color: #fff;
-  border:$yellow;
+  border: $yellow;
   &:hover {
-  background: $yellow;
-  color: #fff;
-  border:$yellow;
+    background: $yellow;
+    color: #fff;
+    border: $yellow;
   }
 }
 
 .CalendarDay__hovered_span {
   background: $yellow;
   color: #fff;
-  border:$yellow;
+  border: $yellow;
   &:hover {
-  background: $yellow;
-  color: #fff;
-  border:$yellow;
+    background: $yellow;
+    color: #fff;
+    border: $yellow;
   }
 }
 
-.CalendarDay__default{
-  &:hover{
+.CalendarDay__default {
+  &:hover {
     background: $yellow;
     color: #fff;
-    border:$yellow;
+    border: $yellow;
   }
 }
 
 .CalendarDay__selected_start {
   background: $yellow;
-  border:$yellow;
+  border: $yellow;
   color: #fff;
 }
 
 .CalendarDay__selected_end {
   background: $yellow;
-  border:$yellow;
+  border: $yellow;
   color: #fff;
 }
 .CalendarDay__selected {
   background: $yellow;
   color: #fff;
-  border:$yellow;
+  border: $yellow;
   &:hover {
-  background: $yellow;
-  color: #fff;
-  border:$yellow;
+    background: $yellow;
+    color: #fff;
+    border: $yellow;
   }
 }
 
-.DateRangePicker{
+.DateRangePicker {
   font-family: $font-stack !important;
 }
 
@@ -62,15 +62,17 @@
 .DateInput {
   width: 49%;
   font-size: 11px;
-      font-weight:bold;
-      color: $blue;
-      font-family: $font-stack;
-  input{height:38px;}
-  .DateInput_input{
+  font-weight: bold;
+  color: $blue;
+  font-family: $font-stack;
+  input {
+    height: 38px;
+  }
+  .DateInput_input {
     @include placeholder {
       font-size: 11px;
-      font-weight:normal;
-      color: #D3D3D3;
+      font-weight: normal;
+      color: #d3d3d3;
       font-family: $font-stack;
     }
   }
@@ -78,23 +80,27 @@
 
 .DateRangePickerInput_arrow_svg {
   display: none;
-
 }
 
 .DateRangePickerInput__withBorder {
   border: none;
 }
 
-.DateInput_fang{
+.DateInput_fang {
   top: 56px !important;
 }
 
 .validationWrapper {
-  display:flex;
+  display: flex;
   justify-content: space-between;
-  div{
+  div {
     width: 48%;
-    font-size:12px;
-    color:red;
+    font-size: 12px;
+    color: red;
   }
+}
+
+table tr td {
+  padding-right: 0px !important;
+  font-size: 16px;
 }
