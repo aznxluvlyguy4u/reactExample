@@ -364,6 +364,13 @@ class ProductBookingForm extends Component {
         if (!startAvailable) productBookingForm.period.start = null;
         if (!endAvailable) productBookingForm.period.end = null;
 
+        productBookingForm.location.collection =
+          productBookingForm.location.collection ||
+          this.props.searchReducer.search.collectionLocation;
+        productBookingForm.location.delivery =
+          productBookingForm.location.delivery ||
+          this.props.searchReducer.search.deliveryLocation;
+
         this.setState({
           productBookingForm,
           availabilityGraph: res.data.availabilityGraph,
