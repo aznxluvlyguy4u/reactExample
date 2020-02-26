@@ -91,7 +91,7 @@ class CategoryPage extends Component {
           ></div>
           <div className="category-text">
             <h1 style={{ color: "white" }}>{category.name}</h1>
-            <h3></h3>
+            <h3>{category.subtitle || ''}</h3>
           </div>
           <div>
             <div

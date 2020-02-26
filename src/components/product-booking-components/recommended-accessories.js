@@ -32,83 +32,107 @@ class RecommendedAccessoryView extends Component {
 
   toggleSelect(index) {
     let productOptionalAccessories = this.state.productOptionalAccessories;
-    productOptionalAccessories[index].selected = !this.state.productOptionalAccessories[index].selected;
+    productOptionalAccessories[index].selected = !this.state
+      .productOptionalAccessories[index].selected;
     this.setState({ productOptionalAccessories });
-    if (this.props.onSetSelectedUnselected) { 
-      this.props.onSetSelectedUnselected(this.state.productOptionalAccessories[index]);
+    if (this.props.onSetSelectedUnselected) {
+      this.props.onSetSelectedUnselected(
+        this.state.productOptionalAccessories[index]
+      );
     }
   }
 
   render() {
     return (
-      <div className="recommended-accessories" style={{maxHeight: "400px", overflow: "scroll"}}>
+      <div
+        className="recommended-accessories"
+        style={{ maxHeight: "400px", overflow: "scroll" }}
+      >
         {this.state.productOptionalAccessories.length > 0
-          ? this.state.productOptionalAccessories.map((item, index) => (
-              <div key={item.id} className="row mb-2 align-items-center">
-                <div className="col-6">
-                  {!item.selected && (
-                    <div className="accessory-thumb">
-                      <img
-                        className="img-fluid"
-                        src={
-                          item.images && item.images[0].url
-                            ? item.images[0].url
-                            : item.imageThumbnail
-                        }
-                      />
-                    </div>
-                  )}
-                  {item.selected && (
-                    <div className="accessory-thumb active">
-                      <img
-                        className="img-fluid"
-                        src={
-                          item.images && item.images[0].url
-                            ? item.images[0].url
-                            : item.imageThumbnail
-                        }
-                      />
-                      <img
-                        className="tick"
-                        src="/static/images/Selected-Yellow.png"
-                      />
-                      <p>Added to Booking</p>
-                    </div>
-                  )}
-                </div>
-                <div className="col-6">
-                  <p className="title">{item.name}</p>
-                  {item.rates.length > 0 && item.rates[0].price && (
-                    <Fragment>
-                      <p className="from">
-                        From €{item.rates[0].price} {item.rates[0].chargePeriod.toLowerCase()}
-                      </p>
-                    </Fragment>
-                  )}
-                  {item.description &&
-                    item.description.section1 &&
-                    item.description.section1.paragraph && (
+          ? this.state.productOptionalAccessories.map((item, index) => {
+              if (item.rates.length == 0) return null;
+
+              if (item.rates[0].quantityAvailable != "0.00") {
+                <div key={item.id} className="row mb-2 align-items-center">
+                  <div className="col-6">
+                    {!item.selected && (
+                      <div className="accessory-thumb">
+                        <img
+                          className="img-fluid"
+                          src={
+                            item.images && item.images[0].url
+                              ? item.images[0].url
+                              : item.imageThumbnail
+                          }
+                        />
+                      </div>
+                    )}
+                    {item.selected && (
+                      <div className="accessory-thumb active">
+                        <img
+                          className="img-fluid"
+                          src={
+                            item.images && item.images[0].url
+                              ? item.images[0].url
+                              : item.imageThumbnail
+                          }
+                        />
+                        <img
+                          className="tick"
+                          src="/static/images/Selected-Yellow.png"
+                        />
+                        <p>Added to Booking</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="col-6">
+                    <p className="title">{item.name}</p>
+                    {item.rates.length > 0 && item.rates[0].price && (
                       <Fragment>
-                        <p>{item.description.section1.paragraph}</p>
+                        <p className="from">
+                          From €{item.rates[0].price}{" "}
+                          {item.rates[0].chargePeriod.toLowerCase()}
+                        </p>
                       </Fragment>
                     )}
                     {item.description &&
-                    item.description.dimensions && (
+                      item.description.section1 &&
+                      item.description.section1.paragraph && (
+                        <Fragment>
+                          <p>{item.description.section1.paragraph}</p>
+                        </Fragment>
+                      )}
+                    {item.description && item.description.dimensions && (
                       <Fragment>
                         <p>{item.description.dimensions}</p>
                       </Fragment>
                     )}
 
                     {!item.selected && (
-                      <button type="button" className="yellow-button-outline" onClick={() => this.toggleSelect(index)}>Select</button>
+                      <button
+                        type="button"
+                        className="yellow-button-outline"
+                        onClick={() => this.toggleSelect(index)}
+                      >
+                        Select
+                      </button>
                     )}
 
                     {item.selected && (
-                      <button type="button" className="yellow-button-outline active" onClick={() => this.toggleSelect(index)}>Remove</button>
+                      <button
+                        type="button"
+                        className="yellow-button-outline active"
+                        onClick={() => this.toggleSelect(index)}
+                      >
+                        Remove
+                      </button>
                     )}
-                </div>
-              </div>
-            ))
+                  </div>
+                </div>;
+              } else {
+                return null;
+              }
+            })
           : null}
       </div>
     );
@@ -117,10 +141,10 @@ class RecommendedAccessoryView extends Component {
 
 const mapStateToProps = ({ localSearchReducer }) => {
   return {
-    localSearchReducer,
+    localSearchReducer
   };
 };
 
 export default connect(mapStateToProps, {
-  updateAccessoryQuantityById,
+  updateAccessoryQuantityById
 })(RecommendedAccessoryView);

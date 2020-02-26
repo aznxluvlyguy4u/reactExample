@@ -64,10 +64,12 @@ class ProductBookingForm extends Component {
       const dateRangeAvailability = this.state.dateRangeAvailability;
       dateRangeAvailability.delivery = true;
 
-      this.setState({
-        productBookingForm,
-        dateRangeAvailability
-      });
+      setTimeout(() => {
+        this.setState({
+          productBookingForm,
+          dateRangeAvailability
+        });
+      }, 100);
     }
 
     if (this.props.searchReducer.search.collectionLocation) {
@@ -77,10 +79,12 @@ class ProductBookingForm extends Component {
       const dateRangeAvailability = this.state.dateRangeAvailability;
       dateRangeAvailability.collection = true;
 
-      this.setState({
-        productBookingForm,
-        dateRangeAvailability
-      });
+      setTimeout(() => {
+        this.setState({
+          productBookingForm,
+          dateRangeAvailability
+        });
+      }, 100);
     }
   }
 

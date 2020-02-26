@@ -494,9 +494,11 @@ class DetailPage extends Component {
                   </h2>
                   <h1 className="main-title">{product.name}</h1>
                   <p>{product.description && product.description.summary}</p>
-                  <div className="tag-line">
-                    {product.description && product.description.tagline}
-                  </div>
+                  {product.description && product.description.tagline && (
+                    <div className="tag-line">
+                      {product.description && product.description.tagline}
+                    </div>
+                  )}
 
                   <div>
                     <strong>€ {product.rates[0].price}</strong> EUR
