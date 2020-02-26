@@ -170,8 +170,6 @@ class ProductBookingForm extends Component {
 
   async setFormFromBooking(cartItem) {
     this.updateDateRangeAvailability("booking", true);
-    this.updateDateRangeAvailability("delivery", true);
-    this.updateDateRangeAvailability("collection", true);
     this.setState({ accessories: [] });
 
     this.props.localSearchReducer.productOptionalAccessories.map(accessory => {
@@ -218,6 +216,9 @@ class ProductBookingForm extends Component {
       availabilityGraphRequest.location.collection = { name: cartItem.location.collection.name, id: cartItem.location.collection.id };
       availabilityGraphRequest.location.delivery = { name: cartItem.location.delivery.name, id: cartItem.location.delivery.id };
       availabilityGraphRequest.quantity = productBookingForm.qty;
+
+      if (availabilityGraphRequest.location.delivery.name) this.updateDateRangeAvailability("delivery", true);
+      if (availabilityGraphRequest.location.collection.name) this.updateDateRangeAvailability("collection", true);
 
       const start = moment.utc(new Date(cartItem.period.start).setDate(1));
       const end = moment(start).add(1, "M");
