@@ -56,7 +56,7 @@ class SearchEdit extends Component {
               <Form>
                 <div className="container">
                   <div className="row">
-                    <div className="col">
+                    <div className="col-lg-12">
                       <div className="form-inline">
                         <div className="edit-row">
                           <label htmlFor="deliveryLocation">Pick up</label>

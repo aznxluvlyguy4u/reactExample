@@ -6,7 +6,12 @@ import { isEmpty } from "lodash";
 import moment from "moment";
 
 // Actions:
-import { updateSearch, updateSearchObject } from "../../actions/searchActions";
+import {
+  updateSearch,
+  updateSearchObject,
+  updateSearchCollectionLocation,
+  updateSearchDeliveryLocation
+} from "../../actions/searchActions";
 import { updateLocalSearch } from "../../actions/localSearchActions";
 
 // Components:
@@ -233,9 +238,23 @@ class SearchPage extends Component {
   }
 
   mergeObj(obj) {
-    this.props.updateSearchObject(this.props.searchReducer.search, obj);
-    const params = CreateQueryParams(this.props.searchReducer.search);
-    Router.push({ pathname: "/search", query: params });
+    //this.props.updateSearchObject(obj);
+    if (obj.deliveryLocation) {
+      setTimeout(() => {
+        this.props.updateSearchDeliveryLocation(obj.deliveryLocation);
+      }, 100);
+    }
+
+    if (obj.collectionLocation) {
+      setTimeout(() => {
+        this.props.updateSearchCollectionLocation(obj.collectionLocation);
+      }, 100);
+    }
+
+    setTimeout(() => {
+      const params = CreateQueryParams(this.props.searchReducer.search);
+      Router.push({ pathname: "/search", query: params });
+    }, 500);
   }
 
   render() {
@@ -351,5 +370,7 @@ const mapStateToProps = ({ searchReducer, locationReducer }) => {
 export default connect(mapStateToProps, {
   updateSearch,
   updateSearchObject,
-  updateLocalSearch
+  updateLocalSearch,
+  updateSearchDeliveryLocation,
+  updateSearchCollectionLocation
 })(SearchPage);

@@ -56,6 +56,34 @@ class ProductBookingForm extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.props.searchReducer.search.deliveryLocation) {
+      const productBookingForm = this.state.productBookingForm;
+      productBookingForm.location.delivery = this.props.searchReducer.search.deliveryLocation;
+
+      const dateRangeAvailability = this.state.dateRangeAvailability;
+      dateRangeAvailability.delivery = true;
+
+      this.setState({
+        productBookingForm,
+        dateRangeAvailability
+      });
+    }
+
+    if (this.props.searchReducer.search.collectionLocation) {
+      const productBookingForm = this.state.productBookingForm;
+      productBookingForm.location.collection = this.props.searchReducer.search.collectionLocation;
+
+      const dateRangeAvailability = this.state.dateRangeAvailability;
+      dateRangeAvailability.collection = true;
+
+      this.setState({
+        productBookingForm,
+        dateRangeAvailability
+      });
+    }
+  }
+
   onSubmit(values) {
     if (this.state.productBookingForm.qty === 0) {
       return;
@@ -620,10 +648,15 @@ class ProductBookingForm extends Component {
   }
 }
 
-const mapStateToProps = ({ locationReducer, localSearchReducer }) => {
+const mapStateToProps = ({
+  locationReducer,
+  localSearchReducer,
+  searchReducer
+}) => {
   return {
     locationReducer,
-    localSearchReducer
+    localSearchReducer,
+    searchReducer
   };
 };
 

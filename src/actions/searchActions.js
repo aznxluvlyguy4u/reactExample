@@ -24,7 +24,6 @@ export function updateSearchCollectionDate(collectionDate) {
   return { type: 'UPDATE_SEARCH_COLLECTION_DATE', payload: collectionDate };
 }
 
-export function updateSearchObject(search, updatedsearch) {
-  const newobj = merge(search, updatedsearch);
-  return { type: 'UPDATE_SEARCH', search };
+export function updateSearchObject(updatedsearch) {
+  return { type: 'UPDATE_SEARCH', updatedsearch };
 }

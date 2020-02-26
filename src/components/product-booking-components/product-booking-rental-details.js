@@ -116,7 +116,7 @@ class ProductBookingRentalDetails extends Component {
           </div>
           <div className="row">
             <div className="col-8">Rental Fee</div>
-            <div className="col-4 text-right">€ {this.state.rentalFee}</div>
+            <div className="col-4 text-right">€ {this.state.rentalFee * this.state.dayCount}</div>
           </div>
           <div className="row">
             <div className="col-8">
