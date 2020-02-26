@@ -41,7 +41,10 @@ class DatePicker extends Component {
   componentDidMount() {
     const { startDate, endDate } = this.props;
     if (startDate !== null && startDate !== undefined) {
-      this.setState({ startDate: moment.utc(startDate), visibleYearMonth: moment.utc(new Date(startDate).setDate(1))});
+      this.setState({
+        startDate: moment.utc(startDate),
+        visibleYearMonth: moment.utc(new Date(startDate).setDate(1))
+      });
     }
     if (endDate !== null && endDate !== undefined) {
       this.setState({ endDate: moment.utc(endDate) });
@@ -157,7 +160,9 @@ class DatePicker extends Component {
     return (
       <div>
         <DateRangePicker
-          disabled={this.props.disabled === undefined ? false : this.props.disabled}
+          disabled={
+            this.props.disabled === undefined ? false : this.props.disabled
+          }
           readOnly
           startDatePlaceholderText={placeholders[0]}
           endDatePlaceholderText={placeholders[1]}
@@ -184,7 +189,9 @@ class DatePicker extends Component {
           }}
           block
           isDayBlocked={dateMoment => {
-            if(!this.props.availabilityGraph) return false;
+            if (this.props.loadingAvailabilityGraph == true) return true;
+
+            if (!this.props.availabilityGraph) return false;
             const existingAvailability = this.props.availabilityGraph.find(
               availability => {
                 return moment(availability.date).isSame(dateMoment, "day");
@@ -198,6 +205,8 @@ class DatePicker extends Component {
           onNextMonthClick={() => this.updateVisibleMonth(1)}
         />
         {this.returnValidation()}
+        {console.log(this.props.loadingAvailabilityGraph)}
+        {this.props.loadingAvailabilityGraph == true && "Checking Availability..."}
       </div>
     );
   }

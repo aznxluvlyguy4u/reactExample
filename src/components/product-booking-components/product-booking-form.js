@@ -24,7 +24,7 @@ class ProductBookingForm extends Component {
         collection: false,
         delivery: false,
         booking: false,
-        quantity: true,
+        quantity: true
       },
       accessories: [],
       bookingDropDown,
@@ -33,7 +33,7 @@ class ProductBookingForm extends Component {
         location: { delivery: undefined, collection: undefined },
         period: {
           start: new Date(new Date().setDate(new Date().getDate() + 1)),
-          end: new Date(new Date().setDate(new Date().getDate() + 2)),
+          end: new Date(new Date().setDate(new Date().getDate() + 2))
         },
         qty: props.product.qty === 0 ? 1 : props.product.qty,
         accessories: []
@@ -51,6 +51,7 @@ class ProductBookingForm extends Component {
         }
       },
       availabilityGraph: [],
+      loadingAvailabilityGraph: false,
       cart
     };
   }
@@ -77,7 +78,7 @@ class ProductBookingForm extends Component {
       accessories: this.state.accessories || [],
       quantity: this.state.productBookingForm.qty,
       images: this.props.product.images,
-      rates: this.props.product.rates 
+      rates: this.props.product.rates
     };
 
     if (values.bookingItem.id !== undefined) {
@@ -213,12 +214,20 @@ class ProductBookingForm extends Component {
         }
       );
 
-      availabilityGraphRequest.location.collection = { name: cartItem.location.collection.name, id: cartItem.location.collection.id };
-      availabilityGraphRequest.location.delivery = { name: cartItem.location.delivery.name, id: cartItem.location.delivery.id };
+      availabilityGraphRequest.location.collection = {
+        name: cartItem.location.collection.name,
+        id: cartItem.location.collection.id
+      };
+      availabilityGraphRequest.location.delivery = {
+        name: cartItem.location.delivery.name,
+        id: cartItem.location.delivery.id
+      };
       availabilityGraphRequest.quantity = productBookingForm.qty;
 
-      if (availabilityGraphRequest.location.delivery.name) this.updateDateRangeAvailability("delivery", true);
-      if (availabilityGraphRequest.location.collection.name) this.updateDateRangeAvailability("collection", true);
+      if (availabilityGraphRequest.location.delivery.name)
+        this.updateDateRangeAvailability("delivery", true);
+      if (availabilityGraphRequest.location.collection.name)
+        this.updateDateRangeAvailability("collection", true);
 
       const start = moment.utc(new Date(cartItem.period.start).setDate(1));
       const end = moment(start).add(1, "M");
@@ -244,7 +253,7 @@ class ProductBookingForm extends Component {
 
     this.calculateAvailabilityGraph(currentAvailabilityGraphRequest);
   }
-  
+
   async updateDateRangeAvailability(field, elementVal) {
     const dateRangeAvailability = this.state.dateRangeAvailability;
     dateRangeAvailability[field] = false;
@@ -278,6 +287,10 @@ class ProductBookingForm extends Component {
   }
 
   calculateAvailabilityGraph(availabilityGraphRequest) {
+    this.setState({
+      loadingAvailabilityGraph: true
+    });
+
     availabilityGraphRequest.period.start =
       moment
         .utc(
@@ -298,17 +311,27 @@ class ProductBookingForm extends Component {
     if (availabilityGraphRequest.location.delivery == null) return;
     if (availabilityGraphRequest.location.collection == null) return;
 
-
     checkAvailabilityGraph(availabilityGraphRequest)
-      .then((res) => {
+      .then(res => {
         if (!res.data) return;
         if (!res.data.availabilityGraph) return;
-        this.setState({ availabilityGraph: res.data.availabilityGraph });
+        this.setState({
+          availabilityGraph: res.data.availabilityGraph,
+          loadingAvailabilityGraph: false
+        });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          loadingAvailabilityGraph: false
+        });
+      });
   }
 
   updateAvailabilityGraph(date) {
+    this.setState({
+      loadingAvailabilityGraph: true
+    });
     const start = moment.utc(date);
     const end = moment(start).add(1, "M");
     const availabilityGraphRequest = this.state.availabilityGraphRequest;
@@ -399,7 +422,10 @@ class ProductBookingForm extends Component {
                                         .delivery
                                     }
                                     onChange={e => {
-                                      this.updateDateRangeAvailability("delivery", e.deliveryLocation);
+                                      this.updateDateRangeAvailability(
+                                        "delivery",
+                                        e.deliveryLocation
+                                      );
                                       const currentAvailabilityGraphRequest = this
                                         .state.availabilityGraphRequest;
                                       currentAvailabilityGraphRequest.location.delivery =
@@ -431,8 +457,11 @@ class ProductBookingForm extends Component {
                                       this.state.productBookingForm.location
                                         .collection
                                     }
-                                    onChange={(e) => {
-                                      this.updateDateRangeAvailability("collection", e.collectionLocation);
+                                    onChange={e => {
+                                      this.updateDateRangeAvailability(
+                                        "collection",
+                                        e.collectionLocation
+                                      );
                                       const currentAvailabilityGraphRequest = this
                                         .state.availabilityGraphRequest;
                                       currentAvailabilityGraphRequest.location.collection =
@@ -459,13 +488,20 @@ class ProductBookingForm extends Component {
                                     Drop-off Date
                                   </label>
                                 </div>
-                                
+
                                 <Field
                                   disabled={
-                                    !(this.state.dateRangeAvailability.collection
-                                      && this.state.dateRangeAvailability.delivery
-                                      && this.state.dateRangeAvailability.booking
-                                      && this.state.dateRangeAvailability.quantity > 0) }
+                                    !(
+                                      this.state.dateRangeAvailability
+                                        .collection &&
+                                      this.state.dateRangeAvailability
+                                        .delivery &&
+                                      this.state.dateRangeAvailability
+                                        .booking &&
+                                      this.state.dateRangeAvailability
+                                        .quantity > 0
+                                    )
+                                  }
                                   placeholders={["Date", "Date"]}
                                   setFieldValue={setFieldValue}
                                   name="collectionDate"
@@ -500,7 +536,12 @@ class ProductBookingForm extends Component {
                                   availabilityGraph={
                                     this.state.availabilityGraph
                                   }
-                                  updateVisibleMonth={this.updateAvailabilityGraph.bind(this)}
+                                  updateVisibleMonth={this.updateAvailabilityGraph.bind(
+                                    this
+                                  )}
+                                  loadingAvailabilityGraph={
+                                    this.state.loadingAvailabilityGraph
+                                  }
                                   component={DatePicker}
                                 />
                               </div>
