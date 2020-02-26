@@ -26,6 +26,8 @@
     "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "classnames": "^2.2.6",
+    "@contentful/rich-text-html-renderer": "^13.4.0",
+    "contentful": "^7.10.0",
     "countries-list": "^2.4.2",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
@@ -73,6 +75,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "contentful-cli": "^1.1.5",
     "dotenv": "^7.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
