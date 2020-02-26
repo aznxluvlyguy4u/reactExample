@@ -55,20 +55,21 @@ class DatePicker extends Component {
   componentDidUpdate(prevProps) {
     const { startDate, endDate } = this.props;
 
-    const startDateMoment = moment.utc(startDate);
-    const endDateMoment = moment.utc(endDate);
     if (
       prevProps.startDate !== startDate &&
-      startDate !== undefined &&
-      startDate !== null
+      prevProps.endDate &&
+      (startDate == null || endDate == null)
     ) {
+      this.setState({ startDate: null, endDate: null });
+      return;
+    }
+
+    const startDateMoment = moment.utc(startDate);
+    const endDateMoment = moment.utc(endDate);
+    if (prevProps.startDate !== startDate) {
       this.setState({ startDate: startDateMoment });
     }
-    if (
-      prevProps.endDate !== endDate &&
-      endDate !== undefined &&
-      endDate !== null
-    ) {
+    if (prevProps.endDate !== endDate) {
       this.setState({ endDate: endDateMoment });
     }
   }
@@ -152,7 +153,6 @@ class DatePicker extends Component {
     }
     return null;
   }
-
   render() {
     const { placeholders, form } = this.props;
     const { focusedInput } = this.state;
@@ -206,7 +206,8 @@ class DatePicker extends Component {
         />
         {this.returnValidation()}
         {console.log(this.props.loadingAvailabilityGraph)}
-        {this.props.loadingAvailabilityGraph == true && "Checking Availability..."}
+        {this.props.loadingAvailabilityGraph == true &&
+          "Checking Availability..."}
       </div>
     );
   }
