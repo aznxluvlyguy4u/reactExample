@@ -430,7 +430,7 @@ class ProductBookingForm extends Component {
                     <div>
                       <Formik
                         validationSchema={productBookingFormValidation}
-                        enableReinitialize
+                        //enableReinitialize
                         initialValues={{
                           bookingItem: this.state.productBookingForm.booking,
                           deliveryLocation: this.state.productBookingForm
