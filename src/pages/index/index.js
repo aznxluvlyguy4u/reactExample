@@ -57,7 +57,7 @@ class IndexPage extends Component {
     });
   };
 
-  addProducts() {
+  async addProducts() {
     this.state.categories.forEach((category, index) => {
       category.products = [];
     });

@@ -319,10 +319,6 @@ class ProductBookingForm extends Component {
   }
 
   calculateAvailabilityGraph(availabilityGraphRequest) {
-    this.setState({
-      loadingAvailabilityGraph: true
-    });
-
     availabilityGraphRequest.period.start =
       moment
         .utc(
@@ -342,6 +338,10 @@ class ProductBookingForm extends Component {
     if (availabilityGraphRequest.location == null) return;
     if (availabilityGraphRequest.location.delivery == null) return;
     if (availabilityGraphRequest.location.collection == null) return;
+
+    this.setState({
+      loadingAvailabilityGraph: true
+    });
 
     checkAvailabilityGraph(availabilityGraphRequest)
       .then(res => {
