@@ -43,8 +43,10 @@
 @import "modules/pages/category";
 @import "modules/pages/productGroup.scss";
 @import "modules/pages/product.scss";
+@import "modules/pages/special-products.scss";
 
-.DateInput_input, .DateInput .DateInput_input::placeholder {
+.DateInput_input,
+.DateInput .DateInput_input::placeholder {
   font-size: 11px;
 }
 
@@ -160,7 +162,9 @@
   color: $yellow;
 }
 
-h1.main-title, h2.main-title, h3.main-title {
+h1.main-title,
+h2.main-title,
+h3.main-title {
   border-bottom: solid 0.3px $grey;
   padding-bottom: 20px;
 }
@@ -287,7 +291,7 @@ h2.section-title {
 }
 
 .white-bg {
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 .h-100 {

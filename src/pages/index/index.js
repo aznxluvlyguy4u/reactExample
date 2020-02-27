@@ -85,7 +85,6 @@ class IndexPage extends Component {
         content_type: "specialPageBannerModel",
         order: "-fields.orderNumber"
       });
-
       this.setState({ bannerContent: entries.items });
     } catch (error) {
       this.setState({

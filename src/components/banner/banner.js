@@ -1,5 +1,6 @@
-import Link from "next/link";
 import React, { Component } from "react";
+import Link from "next/link";
+import slugify from "slugify";
 
 class Banner extends Component {
   constructor(props) {
@@ -23,7 +24,15 @@ class Banner extends Component {
                 <img src={this.props.data.fields.bannerImage.fields.file.url} />
               </div>
               <Link>
-                <a className="yellow-button">
+                <a
+                  className="yellow-button"
+                  href={`/special-products?id=${
+                    this.props.data.fields.linkUrl.sys.id
+                  }&slug=${slugify(this.props.data.fields.title)}`}
+                  as={`/special-products/${
+                    this.props.data.fields.linkUrl.sys.id
+                  }/${slugify(this.props.data.fields.title)}`}
+                >
                   {this.props.data.fields.buttonText}
                 </a>
               </Link>
