@@ -56,11 +56,24 @@ class MyApp extends App {
     try {
       const response = await getLocations();
       if (response.data) {
+        const locations = response.data;
         store.dispatch(setLocations(response.data));
         const selectboxLocations = response.data.map((selectboxLocation) => {
           const selectLocation = new SelectboxLocation(selectboxLocation);
           return selectLocation;
-        })
+        });
+
+        const emptyLocation = {
+          id: null,
+          label: "",
+          name: "",
+          value: {
+            id: null,
+            name: ""
+          },
+        }
+
+        selectboxLocations.unshift(new SelectboxLocation(emptyLocation));
         store.dispatch(setSelectLocations(selectboxLocations));
       }
     } catch (error) {

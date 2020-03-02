@@ -149,13 +149,15 @@ class ProductBookingForm extends Component {
   }
 
   async getProduct() {
-    let response = await getProductById(this.props.product.id);
+    
+    const deliveryLocation = this.state ? this.state.availabilityGraphRequest.location.delivery : null;
+    let response = await getProductById(this.props.product.id, deliveryLocation);
+    this.props.product.rates = response.data.rates;
     this.props.product.accessories = response.data.accessories;
 
-    const accessories = this.props.product.accessories.filter(
+    const accessories = response.data.accessories.filter(
       val => val.type === "OPTIONAL"
     );
-
     accessories.map(accessory => {
       const index = this.state.accessories.findIndex(x => x.id == accessory.id);
       if (index >= 0) {
@@ -163,7 +165,6 @@ class ProductBookingForm extends Component {
         accessory.selected = true;
       }
     });
-
     this.props.setProductOptionalAccessories(accessories);
   }
 
@@ -295,7 +296,6 @@ class ProductBookingForm extends Component {
         availabilityGraph,
         loadingAvailabilityGraph: false,
       });
-      console.log(availabilityGraph);
     } else {
       await this.setState({loadingAvailabilityGraph: false});
     }
@@ -310,7 +310,6 @@ class ProductBookingForm extends Component {
   }
 
   async setFormFromBooking(cartItem) {
-    console.log("Set booking", cartItem);
     this.updateDateRangeAvailability("booking", true);
     this.setState({ accessories: [] });
 
@@ -377,18 +376,19 @@ class ProductBookingForm extends Component {
     }
   }
 
-  async handlePickupChange(e) {
-    this.updateDateRangeAvailability("delivery", e.deliveryLocation);
+  async handlePickupChange(e) {    
+    this.updateDateRangeAvailability("delivery", !!e.deliveryLocation);
     const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
-    currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation;
+    currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation ? e.deliveryLocation.id : null;
     await this.setState({
       availabilityGraphRequest: currentAvailabilityGraphRequest,
       availabilityGraph: [],
     });
+    this.getProduct();
   }
 
   async handleDropOffChange(e) {
-    this.updateDateRangeAvailability("collection", e.collectionLocation);
+    this.updateDateRangeAvailability("collection", !!e.collectionLocation);
     const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
     currentAvailabilityGraphRequest.location.collection = e.collectionLocation;
     await this.setState({
