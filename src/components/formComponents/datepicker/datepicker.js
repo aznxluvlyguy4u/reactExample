@@ -28,9 +28,7 @@ import "react-dates/initialize";
 class DatePicker extends Component {
   constructor(props) {
     super(props);
-    let visibleYearMonth = moment.utc(new Date().setDate(1));
     this.state = {
-      visibleYearMonth,
       startDate: null,
       endDate: null,
       focusedInput: null,
@@ -43,12 +41,10 @@ class DatePicker extends Component {
     if (startDate !== null && startDate !== undefined) {
       this.setState({
         startDate: moment.utc(startDate),
-        visibleYearMonth: moment.utc(new Date(startDate).setDate(1))
       });
     }
     if (endDate !== null && endDate !== undefined) {
       this.setState({ endDate: moment.utc(endDate) });
-      // this.props.setFieldValue('deliveryDate', this.state.endDate.format('YYYY-MM-DDTHH:mm:ss.ssZ'));
     }
   }
 
@@ -61,11 +57,9 @@ class DatePicker extends Component {
       (startDate == null || endDate == null)
     ) {
       this.setState({ startDate: null, endDate: null });
-      return;
     } else {
       if (!startDate) return;
       if (!endDate) return;
-
       const startDateMoment = moment.utc(startDate);
       const endDateMoment = moment.utc(endDate);
       if (prevProps.startDate !== startDate && startDate) {
@@ -77,9 +71,22 @@ class DatePicker extends Component {
     }
   }
 
+  async onFocusChange(pickerFocusedInput) {
+    await this.setState({ focusedInput: pickerFocusedInput });
+    if (this.state.startDate !== null && !this.state.visibleYearMonth) {
+      const visibleYearMonth = moment.utc(new Date(this.state.startDate).setDate(1));
+      await this.setState({ visibleYearMonth });
+      this.props.updateVisibleMonth(visibleYearMonth);
+    } else if (!this.state.visibleYearMonth) {
+      console.log("date not set");
+      const visibleYearMonth = moment.utc(new Date().setDate(1));
+      await this.setState({ visibleYearMonth });
+      this.props.updateVisibleMonth(visibleYearMonth);
+    }
+  }
+
   handleChange = (startDate, endDate) => {
     if (startDate !== null) {
-      // alert('start not null so set start date');
       this.setState({ startDate: moment.utc(startDate) });
       this.props.onChange
         ? this.props.onChange({
@@ -90,11 +97,9 @@ class DatePicker extends Component {
         "deliveryDate",
         startDate.format("YYYY-MM-DDTHH:mm:ss.ssZ")
       );
-      // alert('start date is set');
     }
 
     if (endDate !== null) {
-      // alert('end not null set end date' + endDate);
       this.setState({ endDate: moment.utc(endDate) });
       this.props.onChange
         ? this.props.onChange({
@@ -105,32 +110,31 @@ class DatePicker extends Component {
         "collectionDate",
         endDate.format("YYYY-MM-DDTHH:mm:ss.ssZ")
       );
-      // alert('end date is set')
     }
 
     if (endDate === null && startDate !== null) {
-      // alert('start !== null && end === null so end should be the next day ');
       let addedDay = moment(startDate).add(1, "d");
       this.setState({ endDate: moment.utc(addedDay) });
       this.props.onChange
         ? this.props.onChange({
-            collectionDate: addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ")
+            collectionDate: addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ"),
           })
         : null;
       this.props.setFieldValue(
         "collectionDate",
-        addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ")
+        addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ"),
       );
-      // alert('end date is set to tomorrow')
     }
   };
 
   updateVisibleMonth(val) {
     let visibleYearMonth = this.state.visibleYearMonth;
-    visibleYearMonth = moment(visibleYearMonth).add(val, "M");
-    this.setState({ visibleYearMonth });
-    if (this.props.updateVisibleMonth) {
-      this.props.updateVisibleMonth(visibleYearMonth);
+    if (visibleYearMonth) {
+      visibleYearMonth = moment(visibleYearMonth).add(val, "M");
+      this.setState({ visibleYearMonth });
+      if (this.props.updateVisibleMonth) {
+        this.props.updateVisibleMonth(visibleYearMonth);
+      }
     }
   }
 
@@ -156,6 +160,7 @@ class DatePicker extends Component {
     }
     return null;
   }
+
   render() {
     const { placeholders, form } = this.props;
     const { focusedInput } = this.state;
@@ -187,9 +192,7 @@ class DatePicker extends Component {
             this.handleChange(startDate, endDate);
           }} // PropTypes.func.isRequired,
           focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-          onFocusChange={pickerFocusedInput => {
-            this.setState({ focusedInput: pickerFocusedInput });
-          }}
+          onFocusChange={this.onFocusChange.bind(this)}
           block
           isDayBlocked={dateMoment => {
             if (this.props.loadingAvailabilityGraph == true) return true;
