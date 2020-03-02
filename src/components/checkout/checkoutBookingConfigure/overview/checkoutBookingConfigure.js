@@ -90,12 +90,12 @@ class CheckoutBookingConfigure extends Component {
                     item: cartUtils.getProductDetailsAndAvailability(
                       this.props.productBookingMap,
                       this.props.cart[this.props.configureIndex].id,
-                      product.id
+                      product
                     ),
                     itemDetails: cartUtils.getProductDetailsAndAvailability(
                       this.props.productBookingMap,
                       this.props.cart[this.props.configureIndex].id,
-                      product.id
+                      product
                     )
                   }}
                   counterUpdate={value =>
@@ -124,7 +124,7 @@ class CheckoutBookingConfigure extends Component {
                             .getProductDetailsAndAvailability(
                               this.props.productBookingMap,
                               this.props.cart[this.props.configureIndex].id,
-                              product.id
+                              product
                             )
                             .accessories.filter(x => x.id === accessory.id)
                             .length > 0
@@ -132,7 +132,7 @@ class CheckoutBookingConfigure extends Component {
                                 .getProductDetailsAndAvailability(
                                   this.props.productBookingMap,
                                   this.props.cart[this.props.configureIndex].id,
-                                  product.id
+                                  product
                                 )
                                 .accessories.filter(
                                   x => x.id === accessory.id

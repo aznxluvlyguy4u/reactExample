@@ -143,8 +143,8 @@ class CheckoutBookingsOverview extends Component {
                             ) &&
                             this.state.cartRows
                               .find(x => x.id === cartItem.id)
-                              .productAccessoryRows.map(row => (
-                                <tr>
+                              .productAccessoryRows.map((row, rIndex) => (
+                                <tr key={`containerrow${rIndex}`}>
                                   {row.map((item, iIndex) => [
                                     <td key={`accessory_image${item}${iIndex}`}>
                                       <img

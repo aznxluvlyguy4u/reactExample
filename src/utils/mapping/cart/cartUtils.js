@@ -3,10 +3,18 @@ import moment from "moment";
 export default class CartUtils {
   constructor() {}
 
-  getProductDetailsAndAvailability(availability, cartItemId, productId) {
-    return availability
+  getProductDetailsAndAvailability(availability, cartItemId, product) {
+    const available = availability
+      ? availability.find(item => item.id === cartItemId)
+      : undefined;
+
+    if (available) {
+      return availability
       .find(item => item.id === cartItemId)
-      .availability.find(product => product.id === productId);
+      .availability.find(p => p.id === product.id);
+    }else{
+      return product;
+    }
   }
 
   getProductImage(availability, cartItemId, product) {
@@ -111,7 +119,7 @@ export default class CartUtils {
       const productAvailability = this.getProductDetailsAndAvailability(
         availability,
         cartItem.id,
-        product.id
+        product
       );
       if (!product.accessories || product.accessories.length === 0) {
         return product.quantity <= productAvailability.quantityAvailable;

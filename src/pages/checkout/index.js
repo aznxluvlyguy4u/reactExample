@@ -380,7 +380,7 @@ class CheckoutPage extends Component {
         )}
 
         {this.state.loading ? (
-          <div class="page-wrapper">
+          <div className="page-wrapper">
             <Loader />
           </div>
         ) : null}

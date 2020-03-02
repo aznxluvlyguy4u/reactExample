@@ -1,5 +1,5 @@
 export default class PlaceOrderRequest {
-  constructor(location, period, products, contactInformation, contracterInformation, paymentMethod) {
+  constructor(location, period, products, contactInformation, contracterInformation, logistics, paymentMethod) {
     this.paymentMethod = paymentMethod;
     this.products = products.map((product) => {
       return {
@@ -16,8 +16,10 @@ export default class PlaceOrderRequest {
       firstName: contactInformation.firstName,
       surName: contactInformation.surname,
       emailAddress: contactInformation.emailAddress,
-      phoneNumber: contactInformation.phoneNumber, //contactInformation.phonePrefix +
+      phoneNumber: `${logistics.phonePrefix} ${contactInformation.phoneNumber}`,
       type: contactInformation.affiliation.value,
+      pickupAddress: logistics.pickUp,
+      dropoffAddress: logistics.dropOff,
     };
     this.contracterDetails = {
       firstName: contracterInformation.firstName,

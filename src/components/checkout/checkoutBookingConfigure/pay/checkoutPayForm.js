@@ -78,7 +78,8 @@ class CheckoutPayForm extends Component {
       cartItem.products,
       cartItem.contactInformation,
       cartItem.billingInformation,
-      paymentMethod
+      cartItem.logistics,
+      paymentMethod,
     ).returnOrder();
     this.setState({ loading: true });
     orderCartItems(request)

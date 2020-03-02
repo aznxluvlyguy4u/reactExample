@@ -9,10 +9,6 @@ class CheckoutLogisticsFormPart extends Component {
     super(props);
   }
 
-  handleSubmit(values) {
-    console.log("sometimes life is a ball", values);
-  }
-
   render() {
     const {
       form,
