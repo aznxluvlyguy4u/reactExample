@@ -8,18 +8,20 @@ class Tiles extends Component {
     super(props);
     const from = [];
     props.category.productGroups.map(element => {
-      return getByGroupId(element.id).then(response => {
-        let minimum = 0;
-        response.data.map(data => {
-          if (data.rates && data.rates.length > 0) {
-            if (minimum === 0 || data.rates[0].price < minimum) {
-              minimum = data.rates[0].price;
+      return getByGroupId(element.id)
+        .then(response => {
+          let minimum = 0;
+          response.data.map(data => {
+            if (data.rates && data.rates.length > 0) {
+              if (minimum === 0 || data.rates[0].price < minimum) {
+                minimum = data.rates[0].price;
+              }
             }
-          }
-          return;
-        });
-        from.push({ id: element.id, minimum });
-      });
+            return;
+          });
+          from.push({ id: element.id, minimum });
+        })
+        .catch(err => console.log(err));
     });
 
     this.state = {
@@ -83,9 +85,27 @@ class Tiles extends Component {
                                     }
                                   />
                                   <h4>{item.name}</h4>
-                                  {this.state.from && this.state.from.find(from => from.id === item.id) && (
-                                    <span className={this.state.from.find(from => from.id === item.id).minimum === 0 ? "d-none" : ""}>from €{this.state.from.find(from => from.id === item.id).minimum}</span>
-                                  )}
+                                  {this.state.from &&
+                                    this.state.from.find(
+                                      from => from.id === item.id
+                                    ) && (
+                                      <span
+                                        className={
+                                          this.state.from.find(
+                                            from => from.id === item.id
+                                          ).minimum === 0
+                                            ? "d-none"
+                                            : ""
+                                        }
+                                      >
+                                        from €
+                                        {
+                                          this.state.from.find(
+                                            from => from.id === item.id
+                                          ).minimum
+                                        }
+                                      </span>
+                                    )}
                                 </div>
                               </a>
                             </Link>

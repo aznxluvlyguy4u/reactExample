@@ -319,10 +319,6 @@ class ProductBookingForm extends Component {
   }
 
   calculateAvailabilityGraph(availabilityGraphRequest) {
-    this.setState({
-      loadingAvailabilityGraph: true
-    });
-
     availabilityGraphRequest.period.start =
       moment
         .utc(
@@ -342,6 +338,10 @@ class ProductBookingForm extends Component {
     if (availabilityGraphRequest.location == null) return;
     if (availabilityGraphRequest.location.delivery == null) return;
     if (availabilityGraphRequest.location.collection == null) return;
+
+    this.setState({
+      loadingAvailabilityGraph: true
+    });
 
     checkAvailabilityGraph(availabilityGraphRequest)
       .then(res => {
@@ -363,6 +363,13 @@ class ProductBookingForm extends Component {
         );
         if (!startAvailable) productBookingForm.period.start = null;
         if (!endAvailable) productBookingForm.period.end = null;
+
+        productBookingForm.location.collection =
+          productBookingForm.location.collection ||
+          this.props.searchReducer.search.collectionLocation;
+        productBookingForm.location.delivery =
+          productBookingForm.location.delivery ||
+          this.props.searchReducer.search.deliveryLocation;
 
         this.setState({
           productBookingForm,
@@ -423,7 +430,7 @@ class ProductBookingForm extends Component {
                     <div>
                       <Formik
                         validationSchema={productBookingFormValidation}
-                        enableReinitialize
+                        //enableReinitialize
                         initialValues={{
                           bookingItem: this.state.productBookingForm.booking,
                           deliveryLocation: this.state.productBookingForm

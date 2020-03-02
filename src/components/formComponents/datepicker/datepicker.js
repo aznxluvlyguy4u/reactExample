@@ -57,20 +57,23 @@ class DatePicker extends Component {
 
     if (
       prevProps.startDate !== startDate &&
-      prevProps.endDate &&
+      prevProps.endDate !== endDate &&
       (startDate == null || endDate == null)
     ) {
       this.setState({ startDate: null, endDate: null });
       return;
-    }
+    } else {
+      if (!startDate) return;
+      if (!endDate) return;
 
-    const startDateMoment = moment.utc(startDate);
-    const endDateMoment = moment.utc(endDate);
-    if (prevProps.startDate !== startDate) {
-      this.setState({ startDate: startDateMoment });
-    }
-    if (prevProps.endDate !== endDate) {
-      this.setState({ endDate: endDateMoment });
+      const startDateMoment = moment.utc(startDate);
+      const endDateMoment = moment.utc(endDate);
+      if (prevProps.startDate !== startDate && startDate) {
+        this.setState({ startDate: startDateMoment });
+      }
+      if (prevProps.endDate !== endDate) {
+        this.setState({ endDate: endDateMoment });
+      }
     }
   }
 
@@ -205,7 +208,6 @@ class DatePicker extends Component {
           onNextMonthClick={() => this.updateVisibleMonth(1)}
         />
         {this.returnValidation()}
-        {console.log(this.props.loadingAvailabilityGraph)}
         {this.props.loadingAvailabilityGraph == true &&
           "Checking Availability..."}
       </div>

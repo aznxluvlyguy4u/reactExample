@@ -11,7 +11,7 @@ import {
   emptyCart,
   setCart,
   addToCart,
-  removeFromCart,
+  removeFromCart
 } from "../../actions/cartActions";
 import CheckoutBookingsOverview from "../../components/checkout/checkoutBookingsOverview/checkoutBookingsOverview";
 import CheckoutOverviewControl from "../../components/checkout/checkoutBookingConfigure/overview/checkoutOverviewControl";
@@ -23,8 +23,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
+    transform: "translate(-50%, -50%)"
+  }
 };
 
 class CheckoutPage extends Component {
@@ -38,7 +38,7 @@ class CheckoutPage extends Component {
       configureIndex: undefined,
       configureAll: false,
       orderFailed: false,
-      orderSuccess: false,
+      orderSuccess: false
     };
   }
 
@@ -56,14 +56,13 @@ class CheckoutPage extends Component {
         this.setBookingAvailabilityMap(response.data.products);
       });
     } else {
-      
     }
   }
 
   async getValidatedCartItems() {
     const cart = LocalStorageUtil.getCart();
     if (cart) {
-      await cart.map((booking) => {
+      await cart.map(booking => {
         if (moment(booking.period.start).isSameOrBefore(moment(new Date()))) {
           booking.isAvailable = false;
         } else {
@@ -90,7 +89,9 @@ class CheckoutPage extends Component {
               start: moment(orderItem.period.start).format(
                 "YYYY-MM-DDTHH:mm:ss.000Z"
               ),
-              end: moment(orderItem.period.end).format("YYYY-MM-DDTHH:mm:ss.000Z")
+              end: moment(orderItem.period.end).format(
+                "YYYY-MM-DDTHH:mm:ss.000Z"
+              )
             },
             accessories: product.accessories
           });
@@ -205,7 +206,7 @@ class CheckoutPage extends Component {
     if (this.state.configureAll && this.state.cart.length > 0) {
       this.setConfigureAll();
       this.setState({
-        orderSuccess: false,
+        orderSuccess: false
       });
     } else {
       this.setState({
@@ -213,7 +214,7 @@ class CheckoutPage extends Component {
         orderSuccess: false,
         configureAll: false,
         configure: false,
-        configureIndex: undefined,
+        configureIndex: undefined
       });
     }
   };
@@ -241,7 +242,7 @@ class CheckoutPage extends Component {
       bookingsOverview: false,
       configure: true,
       configureIndex: 0,
-      configureAll: true,
+      configureAll: true
     });
   }
 
@@ -258,7 +259,7 @@ class CheckoutPage extends Component {
       bookingsOverview: true,
       configure: false,
       configureAll: false,
-      configureIndex: undefined,
+      configureIndex: undefined
     });
   }
 
@@ -271,7 +272,7 @@ class CheckoutPage extends Component {
 
   async completeBooking(cartItemIndex, pending) {
     this.setState({
-      loading: true,
+      loading: true
     });
     if (cartItemIndex !== undefined) {
       let cartItem = this.state.cart[cartItemIndex];
@@ -286,7 +287,7 @@ class CheckoutPage extends Component {
       LocalStorageUtil.setCart(cart);
       await this.setState({
         loading: false,
-        orderSuccess: true,
+        orderSuccess: true
       });
     }
   }
@@ -295,7 +296,10 @@ class CheckoutPage extends Component {
     this.setState({ loading: true });
     const cart = this.state.cart;
     const cartItem = cart.find(c => c.id === cartId);
-    const product = cartItem && cartItem.products ? cartItem.products.find(p => p.id === productId) : undefined;
+    const product =
+      cartItem && cartItem.products
+        ? cartItem.products.find(p => p.id === productId)
+        : undefined;
     if (product) {
       product.quantity = productCount;
       await this.setState({ cart });
@@ -315,8 +319,14 @@ class CheckoutPage extends Component {
     this.setState({ loading: true });
     const cart = this.state.cart;
     const cartItem = cart.find(c => c.id === cartId);
-    const product = cartItem && cartItem.products ? cartItem.products.find(p => p.id === productId) : undefined;
-    const accessory = product && product.accessories ? product.accessories.find(a => a.id === accessoryId) : undefined;
+    const product =
+      cartItem && cartItem.products
+        ? cartItem.products.find(p => p.id === productId)
+        : undefined;
+    const accessory =
+      product && product.accessories
+        ? product.accessories.find(a => a.id === accessoryId)
+        : undefined;
 
     if (accessory) {
       accessory.quantity = accessoryCount;
@@ -362,16 +372,18 @@ class CheckoutPage extends Component {
             {!this.state.loading && this.props.cartReducer.items.length === 0 && (
               <div className="page-wrapper checkout checkout-overview">
                 <div className="checkout-wrapper">
-                  <p style={{ textAlign: "center" }}>
-                    Your cart is empty
-                  </p>
+                  <p style={{ textAlign: "center" }}>Your cart is empty</p>
                 </div>
               </div>
             )}
           </Fragment>
         )}
 
-        {this.state.loading ? <Loader /> : null}
+        {this.state.loading ? (
+          <div class="page-wrapper">
+            <Loader />
+          </div>
+        ) : null}
 
         {!this.state.loading &&
           this.state.configure &&
