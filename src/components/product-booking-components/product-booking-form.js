@@ -340,7 +340,7 @@ class ProductBookingForm extends Component {
     if (availabilityGraphRequest.location.collection == null) return;
 
     this.setState({
-      loadingAvailabilityGraph: true
+      loadingAvailabilityGraph: true,
     });
 
     checkAvailabilityGraph(availabilityGraphRequest)
@@ -349,20 +349,25 @@ class ProductBookingForm extends Component {
         if (!res.data.availabilityGraph) return;
 
         const productBookingForm = this.state.productBookingForm;
-        const startAvailable = res.data.availabilityGraph.find(
+
+        console.log(res.data.availabilityGraph);
+        const rangeUnavailable = res.data.availabilityGraph.find(
           x =>
-            moment(x.date).isSame(
+            moment(x.date).isSameOrAfter(
               moment(availabilityGraphRequest.period.start),
               "day"
-            ) && x.available
+            )
+            && moment(x.date).isSameOrBefore(
+              moment(availabilityGraphRequest.period.end),
+              "day"
+            )
+            && !x.available
         );
-        const endAvailable = res.data.availabilityGraph.find(
-          x =>
-            moment(x.date).isSame(availabilityGraphRequest.period.end, "day") &&
-            x.available
-        );
-        if (!startAvailable) productBookingForm.period.start = null;
-        if (!endAvailable) productBookingForm.period.end = null;
+
+        if (rangeUnavailable) {
+          productBookingForm.period.start = null;
+          productBookingForm.period.end = null;
+        }
 
         productBookingForm.location.collection =
           productBookingForm.location.collection ||
