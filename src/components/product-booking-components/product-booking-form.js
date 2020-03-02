@@ -437,9 +437,9 @@ class ProductBookingForm extends Component {
                             .location.delivery,
                           collectionLocation: this.state.productBookingForm
                             .location.collection,
-                          collectionDate: this.state.productBookingForm.period
-                            .start,
                           deliveryDate: this.state.productBookingForm.period
+                            .start,
+                          collectionDate: this.state.productBookingForm.period
                             .end,
                           qty: this.props.product.qty
                         }}
