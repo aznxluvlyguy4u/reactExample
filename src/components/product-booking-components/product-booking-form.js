@@ -89,6 +89,7 @@ class ProductBookingForm extends Component {
   }
 
   onSubmit(values) {
+    console.log("values",values);
     if (this.state.productBookingForm.qty === 0) {
       return;
     }
@@ -139,6 +140,7 @@ class ProductBookingForm extends Component {
       values.bookingItem.id = cartItem.id;
       cart.push(cartItem);
     }
+    console.log(cart);
     this.props.setCart(cart);
     LocalStorageUtil.setCart(cart);
     const cartItemIndex = cart.findIndex(
@@ -333,11 +335,17 @@ class ProductBookingForm extends Component {
       });
 
       cartItem.location.delivery = cartItem.location.delivery;
-      cartItem.location.delivery.value = cartItem.location.delivery;
+      cartItem.location.delivery.value = {
+        id: cartItem.location.delivery.id,
+        name: cartItem.location.delivery.name
+      };
       cartItem.location.delivery.label = cartItem.location.delivery.name;
 
       cartItem.location.collection = cartItem.location.collection;
-      cartItem.location.collection.value = cartItem.location.collection;
+      cartItem.location.collection.value = {
+        id: cartItem.location.collection.id,
+        name: cartItem.location.collection.name
+      };
       cartItem.location.collection.label = cartItem.location.collection.name;
 
       productBookingForm.location = cartItem.location;
@@ -376,7 +384,8 @@ class ProductBookingForm extends Component {
     }
   }
 
-  async handlePickupChange(e) {    
+  async handlePickupChange(e) {
+    console.log(e);
     this.updateDateRangeAvailability("delivery", !!e.deliveryLocation);
     const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
     currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation ? e.deliveryLocation.id : null;

@@ -37,16 +37,14 @@ const colourStyles = {
 class CustomSelect extends Component {
   constructor(props) {
     super(props);
-    // Don't call this.setState() here!
     this.state = { value: this.props.value };
     this.onChange = this.onChange.bind(this);
   }
 
   
   onChange(value) {
-    
+    console.log("change", value);
     value = value.id === null ? null : value;
-
     const { setFieldValue, field, onChange } = this.props;
     setFieldValue(field.name, value);
     this.setDropdownValue(value);
@@ -69,7 +67,7 @@ class CustomSelect extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.value !== '' && nextProps.value !== undefined && (!this.state.value || this.state.value.id !== nextProps.value.id)) {
+    if (nextProps.value && !this.state.value) {
       const { setFieldValue, field } = this.props;
       setFieldValue(field.name, nextProps.value);
       this.setDropdownValue(nextProps.value);
