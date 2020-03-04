@@ -11,7 +11,7 @@ const CheckoutLogisticsFormSchema = Yup.object().shape({
       .max(50, "Too Long!")
       .required("This is a required field"),
     suffix: Yup.string()
-      .min(2, "Too Short!")
+      .min(1, "Too Short!")
       .max(50, "Too Long!")
       .required("This is a required field"),
     postalCode: Yup.string()
@@ -30,7 +30,7 @@ const CheckoutLogisticsFormSchema = Yup.object().shape({
       .max(50, "Too Long!")
       .required("This is a required field"),
     suffix: Yup.string()
-      .min(2, "Too Short!")
+      .min(1, "Too Short!")
       .max(50, "Too Long!")
       .required("This is a required field"),
     postalCode: Yup.string()

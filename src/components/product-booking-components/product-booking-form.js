@@ -86,10 +86,44 @@ class ProductBookingForm extends Component {
         });
       }, 100);
     }
+
+    if (this.props.searchReducer.search.collectionDate) {
+      const productBookingForm = this.state.productBookingForm;
+      productBookingForm.period.end = moment(
+        this.props.searchReducer.search.collectionDate
+      );
+
+      const dateRangeAvailability = this.state.dateRangeAvailability;
+      dateRangeAvailability.collectionDate = true;
+
+      setTimeout(() => {
+        this.setState({
+          productBookingForm,
+          dateRangeAvailability
+        });
+      }, 100);
+    }
+
+    if (this.props.searchReducer.search.deliveryDate) {
+      const productBookingForm = this.state.productBookingForm;
+      productBookingForm.period.start = moment(
+        this.props.searchReducer.search.deliveryDate
+      );
+
+      const dateRangeAvailability = this.state.dateRangeAvailability;
+      dateRangeAvailability.deliveryDate = true;
+
+      setTimeout(() => {
+        this.setState({
+          productBookingForm,
+          dateRangeAvailability
+        });
+      }, 100);
+    }
   }
 
   onSubmit(values) {
-    console.log("values",values);
+    console.log("values", values);
     if (this.state.productBookingForm.qty === 0) {
       return;
     }
@@ -151,9 +185,13 @@ class ProductBookingForm extends Component {
   }
 
   async getProduct() {
-    
-    const deliveryLocation = this.state ? this.state.availabilityGraphRequest.location.delivery : null;
-    let response = await getProductById(this.props.product.id, deliveryLocation);
+    const deliveryLocation = this.state
+      ? this.state.availabilityGraphRequest.location.delivery
+      : null;
+    let response = await getProductById(
+      this.props.product.id,
+      deliveryLocation
+    );
     this.props.product.rates = response.data.rates;
     this.props.product.accessories = response.data.accessories;
 
@@ -254,10 +292,11 @@ class ProductBookingForm extends Component {
         moment(x.date).isSame(
           moment(availabilityGraphRequest.period.start),
           "day"
-        ))
+        )
+      )
     ) {
       const availabilityResult = await checkAvailabilityGraph(
-        availabilityGraphRequest,
+        availabilityGraphRequest
       )
         .then(res => res)
         .catch(err => err);
@@ -267,12 +306,12 @@ class ProductBookingForm extends Component {
         !availabilityResult.data.availabilityGraph
       ) {
         await this.setState({
-          loadingAvailabilityGraph: false,
+          loadingAvailabilityGraph: false
         });
         return;
       }
 
-      const {productBookingForm} = this.state;
+      const { productBookingForm } = this.state;
       const rangeUnavailable = availabilityResult.data.availabilityGraph.find(
         x =>
           moment(x.date).isSameOrAfter(
@@ -296,18 +335,21 @@ class ProductBookingForm extends Component {
       await this.setState({
         productBookingForm,
         availabilityGraph,
-        loadingAvailabilityGraph: false,
+        loadingAvailabilityGraph: false
       });
     } else {
-      await this.setState({loadingAvailabilityGraph: false});
+      await this.setState({ loadingAvailabilityGraph: false });
     }
   }
 
   updateAvailabilityGraph(date) {
     const start = moment.utc(date);
-    const end = moment(start).endOf('month');
-    const {availabilityGraphRequest} = this.state;
-    availabilityGraphRequest.period = { start: start.format("YYYY-MM-DDTHH:mm:ss.000+0000"), end: end.format("YYYY-MM-DDTHH:mm:ss.000+0000") };
+    const end = moment(start).endOf("month");
+    const { availabilityGraphRequest } = this.state;
+    availabilityGraphRequest.period = {
+      start: start.format("YYYY-MM-DDTHH:mm:ss.000+0000"),
+      end: end.format("YYYY-MM-DDTHH:mm:ss.000+0000")
+    };
     this.calculateAvailabilityGraph(availabilityGraphRequest);
   }
 
@@ -379,8 +421,16 @@ class ProductBookingForm extends Component {
 
       const start = moment.utc(new Date(cartItem.period.start).setDate(1));
       const end = moment(start).endOf("month");
-      availabilityGraphRequest.period = { start: start.format("YYYY-MM-DDTHH:mm:ss.000+0000"), end: end.format("YYYY-MM-DDTHH:mm:ss.000+0000") };
-      await this.setState({ accessories: bookingAccessories, productBookingForm, availabilityGraph: [], availabilityGraphRequest });
+      availabilityGraphRequest.period = {
+        start: start.format("YYYY-MM-DDTHH:mm:ss.000+0000"),
+        end: end.format("YYYY-MM-DDTHH:mm:ss.000+0000")
+      };
+      await this.setState({
+        accessories: bookingAccessories,
+        productBookingForm,
+        availabilityGraph: [],
+        availabilityGraphRequest
+      });
     }
   }
 
@@ -388,10 +438,12 @@ class ProductBookingForm extends Component {
     console.log(e);
     this.updateDateRangeAvailability("delivery", !!e.deliveryLocation);
     const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
-    currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation ? e.deliveryLocation.id : null;
+    currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation
+      ? e.deliveryLocation.id
+      : null;
     await this.setState({
       availabilityGraphRequest: currentAvailabilityGraphRequest,
-      availabilityGraph: [],
+      availabilityGraph: []
     });
     this.getProduct();
   }
@@ -402,7 +454,7 @@ class ProductBookingForm extends Component {
     currentAvailabilityGraphRequest.location.collection = e.collectionLocation;
     await this.setState({
       availabilityGraphRequest: currentAvailabilityGraphRequest,
-      availabilityGraph: [],
+      availabilityGraph: []
     });
   }
 
