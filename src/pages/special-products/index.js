@@ -26,25 +26,19 @@ class SpecialProducts extends Component {
 
   static async getInitialProps({ query }) {
     return {
-      id: parseInt(query.id)
+      id: query.id
     };
   }
 
   async componentDidMount() {
-    const entries = await client.getEntries({
-      content_type: "specialPageBannerModel",
-      order: "-fields.orderNumber"
-    });
-    this.setData(entries.items);
+    const id = this.props.id;
+    const entry = await client.getEntry(id);
+    this.setData(entry);
   }
 
   setData(data) {
-    data.forEach(item => {
-      if ((item.fields.linkUrl.sys.id = this.props.id)) {
-        this.setState({ content: item.fields.linkUrl });
-        console.log(item.fields.linkUrl);
-      }
-    });
+    this.setState({ content: data });
+    console.log(data);
   }
 
   render() {
@@ -77,9 +71,65 @@ class SpecialProducts extends Component {
               </Link>
             </div>
             <div className="container">
-              <div className="mt-5 mb-5">
-                <h1>{content.fields.title}</h1>
-                {content.fields.mainContent}
+              <div id="rich-text-body" className="mt-5 mb-5">
+                <div>
+                  <h1 className="section-title heading">
+                    {content.fields.mainContentHead1}
+                  </h1>
+                  <p>{content.fields.mainContentParagraph1}</p>
+                  <div>
+                    <div>
+                      <div className="mb-3">
+                        <h5 className="sub-heading">
+                          {content.fields.mainContentImageTitle1}
+                        </h5>
+                      </div>
+                      <div className="row">
+                        <div className="col banner">
+                          <div className="banner-container">
+                            <div className="img-container">
+                              <img
+                                src={
+                                  content.fields.mainContentImage1.fields.file
+                                    .url
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h1 className="section-title heading">
+                    {content.fields.mainContentHead2}
+                  </h1>
+                  <p>{content.fields.mainContentParagraph2}</p>
+                  <div>
+                    <div>
+                      <div className="mb-3">
+                        <h5 className="sub-heading">
+                          {content.fields.mainContentImageTitle2}
+                        </h5>
+                      </div>
+                      <div className="row">
+                        <div className="col banner">
+                          <div className="banner-container">
+                            <div className="img-container">
+                              <img
+                                src={
+                                  content.fields.mainContentImage2.fields.file
+                                    .url
+                                }
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
