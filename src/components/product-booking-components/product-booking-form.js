@@ -64,10 +64,14 @@ class ProductBookingForm extends Component {
       const dateRangeAvailability = this.state.dateRangeAvailability;
       dateRangeAvailability.delivery = true;
 
+      const availabilityGraphRequest = this.state.availabilityGraphRequest;
+      availabilityGraphRequest.location.delivery = this.props.searchReducer.search.deliveryLocation;
+
       setTimeout(() => {
         this.setState({
           productBookingForm,
-          dateRangeAvailability
+          dateRangeAvailability,
+          availabilityGraphRequest
         });
       }, 100);
     }
@@ -79,6 +83,9 @@ class ProductBookingForm extends Component {
       const dateRangeAvailability = this.state.dateRangeAvailability;
       dateRangeAvailability.collection = true;
 
+      const availabilityGraphRequest = this.state.availabilityGraphRequest;
+      availabilityGraphRequest.location.collection = this.props.searchReducer.search.collectionLocation;
+
       setTimeout(() => {
         this.setState({
           productBookingForm,
@@ -89,7 +96,6 @@ class ProductBookingForm extends Component {
   }
 
   onSubmit(values) {
-    console.log("values",values);
     if (this.state.productBookingForm.qty === 0) {
       return;
     }
@@ -140,7 +146,6 @@ class ProductBookingForm extends Component {
       values.bookingItem.id = cartItem.id;
       cart.push(cartItem);
     }
-    console.log(cart);
     this.props.setCart(cart);
     LocalStorageUtil.setCart(cart);
     const cartItemIndex = cart.findIndex(
@@ -153,7 +158,7 @@ class ProductBookingForm extends Component {
   async getProduct() {
     
     const deliveryLocation = this.state ? this.state.availabilityGraphRequest.location.delivery : null;
-    let response = await getProductById(this.props.product.id, deliveryLocation);
+    let response = await getProductById(this.props.product.id, deliveryLocation ? deliveryLocation.id : null);
     this.props.product.rates = response.data.rates;
     this.props.product.accessories = response.data.accessories;
 
@@ -385,24 +390,33 @@ class ProductBookingForm extends Component {
   }
 
   async handlePickupChange(e) {
-    console.log(e);
     this.updateDateRangeAvailability("delivery", !!e.deliveryLocation);
     const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
-    currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation ? e.deliveryLocation.id : null;
+    const productBookingForm = this.state.productBookingForm;
+    productBookingForm.location.delivery = e.deliveryLocation;
+    if (e.deliveryLocation) {
+      productBookingForm.location.delivery.label = e.deliveryLocation.name;
+    }
+
+    currentAvailabilityGraphRequest.location.delivery = e.deliveryLocation;
     await this.setState({
       availabilityGraphRequest: currentAvailabilityGraphRequest,
       availabilityGraph: [],
+      productBookingForm,
     });
     this.getProduct();
   }
 
   async handleDropOffChange(e) {
     this.updateDateRangeAvailability("collection", !!e.collectionLocation);
+    const productBookingForm = this.state.productBookingForm;
+    productBookingForm.location.collection = e.collectionLocation;
     const currentAvailabilityGraphRequest = this.state.availabilityGraphRequest;
     currentAvailabilityGraphRequest.location.collection = e.collectionLocation;
     await this.setState({
       availabilityGraphRequest: currentAvailabilityGraphRequest,
       availabilityGraph: [],
+      productBookingForm,
     });
   }
 

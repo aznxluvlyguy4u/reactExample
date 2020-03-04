@@ -43,8 +43,9 @@ class CustomSelect extends Component {
 
   
   onChange(value) {
-    console.log("change", value);
+    //set the value to null for empty option
     value = value.id === null ? null : value;
+    
     const { setFieldValue, field, onChange } = this.props;
     setFieldValue(field.name, value);
     this.setDropdownValue(value);
@@ -63,19 +64,24 @@ class CustomSelect extends Component {
       const obj = {};
       obj[field.name] = null;
       onChange(obj);
+
+      if(this.props.onSelect){ 
+        this.props.onSelect(null);
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
+    const { setFieldValue, field } = this.props;
+
     if (nextProps.value && !this.state.value) {
-      const { setFieldValue, field } = this.props;
       setFieldValue(field.name, nextProps.value);
       this.setDropdownValue(nextProps.value);
     }
   }
 
-  setDropdownValue(value) {
-    this.setState({ value });
+  async setDropdownValue(value) {
+    await this.setState({ value });
   }
 
   render() {
