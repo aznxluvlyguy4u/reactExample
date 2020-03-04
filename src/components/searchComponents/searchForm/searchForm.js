@@ -92,6 +92,11 @@ class SearchForm extends Component {
                     <Field
                       options={this.props.locationReducer.selectboxLocations}
                       onChange={e => {
+                        if (!e.deliveryLocation) {
+                          this.props.updateSearchDeliveryLocation(null);
+                          return;
+                        }
+
                         this.props.updateSearchDeliveryLocation({
                           label: e.deliveryLocation.name,
                           value: e.deliveryLocation
@@ -115,6 +120,11 @@ class SearchForm extends Component {
                     <Field
                       options={this.props.locationReducer.selectboxLocations}
                       onChange={e => {
+                        if (!e.collectionLocation) {
+                          this.props.updateSearchCollectionLocation(null);
+                          return;
+                        }
+
                         this.props.updateSearchCollectionLocation({
                           label: e.collectionLocation.name,
                           value: e.collectionLocation

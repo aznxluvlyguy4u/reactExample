@@ -40,7 +40,7 @@ class DatePicker extends Component {
     const { startDate, endDate } = this.props;
     if (startDate !== null && startDate !== undefined) {
       this.setState({
-        startDate: moment.utc(startDate),
+        startDate: moment.utc(startDate)
       });
     }
     if (endDate !== null && endDate !== undefined) {
@@ -74,14 +74,20 @@ class DatePicker extends Component {
   async onFocusChange(pickerFocusedInput) {
     await this.setState({ focusedInput: pickerFocusedInput });
     if (this.state.startDate !== null && !this.state.visibleYearMonth) {
-      const visibleYearMonth = moment.utc(new Date(this.state.startDate).setDate(1));
+      const visibleYearMonth = moment.utc(
+        new Date(this.state.startDate).setDate(1)
+      );
       await this.setState({ visibleYearMonth });
-      this.props.updateVisibleMonth(visibleYearMonth);
+      if (this.props.updateVisibleMonth) {
+        this.props.updateVisibleMonth(visibleYearMonth);
+      }
     } else if (!this.state.visibleYearMonth) {
       console.log("date not set");
       const visibleYearMonth = moment.utc(new Date().setDate(1));
       await this.setState({ visibleYearMonth });
-      this.props.updateVisibleMonth(visibleYearMonth);
+      if (this.props.updateVisibleMonth) {
+        this.props.updateVisibleMonth(visibleYearMonth);
+      }
     }
   }
 
@@ -117,12 +123,12 @@ class DatePicker extends Component {
       this.setState({ endDate: moment.utc(addedDay) });
       this.props.onChange
         ? this.props.onChange({
-            collectionDate: addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ"),
+            collectionDate: addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ")
           })
         : null;
       this.props.setFieldValue(
         "collectionDate",
-        addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ"),
+        addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ")
       );
     }
   };
