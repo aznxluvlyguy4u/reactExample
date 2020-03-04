@@ -1,5 +1,8 @@
 import classnames from "classnames";
 
+const InputFeedback = ({ error }) =>
+  error ? <span>{error}</span> : null;
+
 const RadioButtonGroup = ({
   value,
   error,
