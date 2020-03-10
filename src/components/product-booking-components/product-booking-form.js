@@ -24,7 +24,7 @@ class ProductBookingForm extends Component {
         collection: false,
         delivery: false,
         booking: false,
-        quantity: true
+        quantity: true,
       },
       accessories: [],
       bookingDropDown,
@@ -126,6 +126,7 @@ class ProductBookingForm extends Component {
           dateRangeAvailability
         });
       }, 100);
+      this.getProduct();
     }
   }
 
@@ -214,10 +215,6 @@ class ProductBookingForm extends Component {
       val => val.type === "OPTIONAL"
     );
     this.props.setProductOptionalAccessories(accessories);
-
-    if (this.props.product.accessories.length === 0) {
-      this.getProduct();
-    }
 
     const start = new Date(new Date().setDate(new Date().getDate() + 1));
     const end = new Date(new Date().setDate(new Date().getDate() + 2));
