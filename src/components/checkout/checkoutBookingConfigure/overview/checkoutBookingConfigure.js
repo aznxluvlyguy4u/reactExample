@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
+import { connect } from "react-redux";
 import styles from "./checkoutBookingConfigure.style";
 import LocalStorageUtil from "../../../../utils/localStorageUtil";
 import CheckoutBookingConfigureGridRow from "./checkoutBookingConfigureGridRow";
 import CartUtils from "../../../../utils/mapping/cart/cartUtils";
+import { setCart } from "../../../../actions/cartActions";
 
 const cartUtils = new CartUtils();
 class CheckoutBookingConfigure extends Component {
@@ -34,8 +36,24 @@ class CheckoutBookingConfigure extends Component {
         1
       );
     }
-    LocalStorageUtil.setCart(cart);
-    this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
+    
+    console.log("cart length", cart[this.state.cartItemIndex].products.length);
+    if (cart[this.state.cartItemIndex].products.length === 0) {
+      this.props.backToBookings();
+      cart.splice(this.state.cartItemIndex,1);
+
+      if (cart.length === 0) {
+        LocalStorageUtil.emptyCart();
+      } else {
+        LocalStorageUtil.setCart(cart);
+      }
+      this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
+      this.props.setCart(cart);
+    } else {
+      LocalStorageUtil.setCart(cart);
+      this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
+      this.props.setCart(cart);
+    }
   }
 
   configureAll() {
@@ -188,5 +206,6 @@ class CheckoutBookingConfigure extends Component {
     return null;
   }
 }
-
-export default CheckoutBookingConfigure;
+export default connect(null, {
+  setCart
+})(CheckoutBookingConfigure);

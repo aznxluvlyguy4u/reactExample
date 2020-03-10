@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
-import CartUtils from "../../../utils/mapping/cart/cartUtils";
 import Modal from "react-modal";
+import CartUtils from "../../../utils/mapping/cart/cartUtils";
 import styles from "./checkout-overview-modal.style";
 
 class CheckoutBookingsOverview extends Component {
@@ -84,8 +84,6 @@ class CheckoutBookingsOverview extends Component {
   }
 
   afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    //this.subtitle.style.color = "#f00";
   }
 
   closeModal() {

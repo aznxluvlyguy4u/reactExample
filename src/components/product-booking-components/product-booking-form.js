@@ -145,7 +145,7 @@ class ProductBookingForm extends Component {
       delivery: {
         id: values.deliveryLocation.id,
         name: values.deliveryLocation.name
-      }
+      },
     };
     const product = {
       id: this.props.product.id,
@@ -352,6 +352,7 @@ class ProductBookingForm extends Component {
   }
 
   async setFormFromBooking(cartItem) {
+    console.log("aweh", cartItem);
     this.updateDateRangeAvailability("booking", true);
     this.setState({ accessories: [] });
 
@@ -423,6 +424,7 @@ class ProductBookingForm extends Component {
         start: start.format("YYYY-MM-DDTHH:mm:ss.000+0000"),
         end: end.format("YYYY-MM-DDTHH:mm:ss.000+0000")
       };
+      console.log(productBookingForm);
       await this.setState({
         accessories: bookingAccessories,
         productBookingForm,
@@ -721,5 +723,5 @@ const mapStateToProps = ({
 
 export default connect(mapStateToProps, {
   setProductOptionalAccessories,
-  setCart
+  setCart,
 })(ProductBookingForm);

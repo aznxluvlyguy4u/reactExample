@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { Component, Fragment } from "react";
-import Router from "next/router";
 import Modal from "react-modal";
 import { connect } from "react-redux";
 import Loader from "../../components/loader";
