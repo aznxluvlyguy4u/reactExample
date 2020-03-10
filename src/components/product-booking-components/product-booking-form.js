@@ -534,7 +534,7 @@ class ProductBookingForm extends Component {
                         {({ setFieldValue }) => (
                           <Form>
                             <div>
-                              <div className="bookingItem form-block">
+                              <div className="bookingItem form-block mx-0 px-0">
                                 <label htmlFor="bookingItem">
                                   Add to Booking
                                 </label>
@@ -548,8 +548,8 @@ class ProductBookingForm extends Component {
                                   onSelect={this.setFormFromBooking.bind(this)}
                                 />
                               </div>
-                              <div className="form-inline">
-                                <div className="location form-block">
+                              <div className="form-inline mx-0 px-0">
+                                <div className="location form-block pr-1">
                                   <label htmlFor="deliveryLocation uppercase">
                                     Pick-up Location
                                   </label>
@@ -569,7 +569,7 @@ class ProductBookingForm extends Component {
                                     component={CustomSelect}
                                   />
                                 </div>
-                                <div className="location form-block">
+                                <div className="location form-block ml-2 px-0">
                                   <label htmlFor="collectionLocation uppercase">
                                     Drop-Off Location
                                   </label>
@@ -590,7 +590,7 @@ class ProductBookingForm extends Component {
                                   />
                                 </div>
                               </div>
-                              <div className="date form-block">
+                              <div className="date form-block search-form-wrap px-0">
                                 <div className="label-wrapper">
                                   <label htmlFor="collectionDateRange uppercase">
                                     Pick-up Date

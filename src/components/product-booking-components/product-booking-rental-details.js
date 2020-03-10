@@ -21,19 +21,20 @@ class ProductBookingRentalDetails extends Component {
     const accessories = cartItemProduct.accessories.filter(x => x.quantity > 0);
 
     let rentalFee =
-      Number(props.product.rates[0].price) * parseInt(cartItemProduct.quantity);
-    accessories.map(item => {
-      if (item.rates) {
-        rentalFee += dayCount * Number(item.rates[0].price) * item.quantity;
-      }
-    });
+      (Number(props.product.rates[0].price) * parseInt(cartItemProduct.quantity)) * dayCount;
+      accessories.map(item => {
+        if (item.rates) {
+          let itemRateFee = (dayCount * Number(item.rates[0].price) * item.quantity);
+          rentalFee += itemRateFee;
+        }
+      });
 
     this.state = {
       dayCount,
       cartItem,
       cartItemProduct,
       accessories,
-      rentalFee
+      rentalFee,
     };
   }
 
@@ -93,7 +94,7 @@ class ProductBookingRentalDetails extends Component {
                 : this.props.product.name}
               <br />
               {this.state.accessories.map(accessory => (
-                <div>
+                <div key={accessory.id}>
                   {accessory.quantity} x {accessory.name}
                 </div>
               ))}
@@ -114,7 +115,7 @@ class ProductBookingRentalDetails extends Component {
           </div>
           <div className="row">
             <div className="col-8">Rental Fee</div>
-            <div className="col-4 text-right">€ {this.state.rentalFee * this.state.dayCount}</div>
+            <div className="col-4 text-right">€ {this.state.rentalFee}</div>
           </div>
           <div className="row">
             <div className="col-8">

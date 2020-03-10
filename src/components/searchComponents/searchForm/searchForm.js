@@ -7,7 +7,7 @@ import {
   updateSearchDeliveryLocation,
   updateSearchCollectionLocation,
   updateSearchDeliveryDate,
-  updateSearchCollectionDate
+  updateSearchCollectionDate,
 } from "../../../actions/searchActions";
 import { generateSearchQueryParameterString } from "../../../utils/queryparams";
 import DatePicker from "../../formComponents/datepicker/datepicker";
@@ -75,7 +75,7 @@ class SearchForm extends Component {
           {({ setFieldValue, values }) => (
             <Form>
               <div>
-                <div className="keyword form-block">
+                <div className="keyword form-block mx-0 px-0">
                   <label htmlFor="keyword">I am looking for</label>
                   <Field
                     name="keyword"
@@ -86,8 +86,8 @@ class SearchForm extends Component {
                     component={CustomInputComponent}
                   />
                 </div>
-                <div className="form-inline">
-                  <div className="location form-block">
+                <div className="form-inline mx-0 px-0">
+                  <div className="location form-block pr-1">
                     <label htmlFor="deliveryLocation">Pick up</label>
                     <Field
                       options={this.props.locationReducer.selectboxLocations}
@@ -115,7 +115,7 @@ class SearchForm extends Component {
                       component={CustomSelect}
                     />
                   </div>
-                  <div className="location form-block">
+                  <div className="location form-block ml-2 px-0">
                     <label htmlFor="collectionLocation">Return</label>
                     <Field
                       options={this.props.locationReducer.selectboxLocations}
@@ -138,7 +138,7 @@ class SearchForm extends Component {
                     />
                   </div>
                 </div>
-                <div className="date form-block">
+                <div className="date form-block search-form-wrap px-0">
                   <div className="label-wrapper">
                     <label htmlFor="collectionDateRange">Pick up Date</label>
                     <label htmlFor="collectionDateRange">Return Date</label>

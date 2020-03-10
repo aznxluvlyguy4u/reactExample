@@ -50,6 +50,9 @@
   font-size: 11px;
 }
 
+.search-form-wrap .DateRangePickerInput div.DateInput:nth-child(1) {
+  padding-right: 0.25rem!important;
+}
 // Override stripe form elements
 .StripeElement {
   box-sizing: border-box !important;
