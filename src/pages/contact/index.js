@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import classnames from "classnames";
 import Default from "../../layouts/default";
 import rootReducer from "../../reducers/rootReducer";
-import CustomInputComponent from "../../components/signup/customInputComponent";
+import CustomInputComponent from "../../components/formComponents/customInputComponent/customInputComponent";
 import { postContactMessage } from "../../utils/rest/requests/contact";
 import Loader from "../../components/loader";
 import Accordion from "../../components/accordion/accordion";
