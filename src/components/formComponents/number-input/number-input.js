@@ -7,6 +7,16 @@ class NumberInput extends Component {
     this.state = { value: props.value };
   }
 
+  componentDidMount() {
+    const { selectRef } = this.props;
+    if (selectRef) selectRef(this);
+  }
+
+  componentWillUnmount() {
+   const { selectRef } = this.props;
+   if (selectRef) selectRef(undefined);
+  }
+
   changeValue(number) {
     let newval = parseInt(this.state.value) + parseInt(number);
     newval = newval > 0 ? newval : 0;
@@ -17,8 +27,8 @@ class NumberInput extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ value: nextProps.value });
+  updateStateValue(value) {
+    this.setState({value});
   }
 
   render() {

@@ -37,10 +37,23 @@ const colourStyles = {
 class CustomSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = { value: this.props.value };
+    this.state = { value: props.value };
     this.onChange = this.onChange.bind(this);
   }
 
+  componentDidMount() {
+    const { selectRef } = this.props;
+    if (selectRef) selectRef(this);
+  }
+
+  componentWillUnmount() {
+   const { selectRef } = this.props;
+   if (selectRef) selectRef(undefined);
+  }
+
+  updateStateValue(value) {
+    this.setState({value});
+  }
   
   onChange(value) {
     //set the value to null for empty option
@@ -71,22 +84,13 @@ class CustomSelect extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { setFieldValue, field } = this.props;
-
-    if (nextProps.value && !this.state.value) {
-      setFieldValue(field.name, nextProps.value);
-      this.setDropdownValue(nextProps.value);
-    }
-  }
-
   async setDropdownValue(value) {
     await this.setState({ value });
   }
 
   render() {
     const {
-      form, field, options, placeholder, isSearchable, arrow,
+      form, field, options, placeholder, isSearchable
     } = this.props;
     const { value } = this.state;
     return (

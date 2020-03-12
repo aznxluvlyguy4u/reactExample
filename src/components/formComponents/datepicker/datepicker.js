@@ -37,6 +37,8 @@ class DatePicker extends Component {
   }
 
   componentDidMount() {
+    const { selectRef } = this.props;
+    if (selectRef) selectRef(this);
     const { startDate, endDate } = this.props;
     if (startDate !== null && startDate !== undefined) {
       this.setState({
@@ -46,6 +48,11 @@ class DatePicker extends Component {
     if (endDate !== null && endDate !== undefined) {
       this.setState({ endDate: moment.utc(endDate) });
     }
+  }
+
+  componentWillUnmount() {
+   const { selectRef } = this.props;
+   if (selectRef) selectRef(undefined);
   }
 
   componentDidUpdate(prevProps) {
@@ -132,6 +139,22 @@ class DatePicker extends Component {
       );
     }
   };
+
+  updateStartDate(startDate) {
+    const startDateMoment = startDate ? moment.utc(startDate) : null;
+    this.setState({ startDate: startDateMoment });
+  }
+
+  updateEndDate(endDate) {
+    const endDateMoment = endDate ? moment.utc(endDate) : null;
+    this.setState({ endDate: endDateMoment });
+  }
+
+  updateDateRange(startDate, endDate) {
+    const startDateMoment = startDate ? moment.utc(startDate) : null;
+    const endDateMoment = endDate ? moment.utc(endDate) : null;
+    this.setState({ startDate: startDateMoment, endDate: endDateMoment });
+  }
 
   updateVisibleMonth(val) {
     let visibleYearMonth = this.state.visibleYearMonth;

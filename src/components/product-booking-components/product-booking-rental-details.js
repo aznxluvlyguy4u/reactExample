@@ -139,7 +139,7 @@ class ProductBookingRentalDetails extends Component {
         <br />
         <button
           onClick={() => this.props.closeModal()}
-          class="search-button-border"
+          className="search-button-border"
         >
           Continue Shopping
         </button>

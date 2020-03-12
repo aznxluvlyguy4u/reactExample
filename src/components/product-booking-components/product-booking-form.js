@@ -17,6 +17,10 @@ class ProductBookingForm extends Component {
   constructor(props) {
     super(props);
     const cart = LocalStorageUtil.getCart() || [];
+    this.deliveryLocationSelectElement = React.createRef();
+    this.collectionLocationSelectElement = React.createRef();
+    this.datePickerSelectElement = React.createRef();
+    this.quantityInputElement = React.createRef();
 
     const bookingDropDown = [];
     this.state = {
@@ -72,6 +76,7 @@ class ProductBookingForm extends Component {
       productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
       dateRangeAvailability.delivery = true;
       availabilityGraphRequest.location.delivery = searchReducer.search.deliveryLocation;
+      this.deliveryLocationSelectElement.updateStateValue(searchReducer.search.deliveryLocation);
       await this.setState({
         productBookingForm,
         dateRangeAvailability,
@@ -81,6 +86,7 @@ class ProductBookingForm extends Component {
 
     if (searchReducer.search.collectionLocation) {
       productBookingForm.location.collection = searchReducer.search.collectionLocation;
+      this.collectionLocationSelectElement.updateStateValue(searchReducer.search.collectionLocation);
       dateRangeAvailability.collection = true;
       availabilityGraphRequest.location.collection = searchReducer.search.collectionLocation;
 
@@ -95,6 +101,7 @@ class ProductBookingForm extends Component {
         searchReducer.search.collectionDate
       );
       dateRangeAvailability.collectionDate = true;
+      this.datePickerSelectElement.updateEndDate(searchReducer.search.collectionDate);
 
       await this.setState({
         productBookingForm,
@@ -106,6 +113,7 @@ class ProductBookingForm extends Component {
       productBookingForm.period.start = moment(
         searchReducer.search.deliveryDate
       );
+      this.datePickerSelectElement.updateStartDate(searchReducer.search.deliveryDate);
       dateRangeAvailability.deliveryDate = true;
       await this.setState({
         productBookingForm,
@@ -358,22 +366,12 @@ class ProductBookingForm extends Component {
           bookingAccessories = product.accessories || [];
         }
       });
+      const location = this.getSelectLocationFromCartItemLocation(cartItem.location);
 
-      cartItem.location.delivery = cartItem.location.delivery;
-      cartItem.location.delivery.value = {
-        id: cartItem.location.delivery.id,
-        name: cartItem.location.delivery.name
-      };
-      cartItem.location.delivery.label = cartItem.location.delivery.name;
+      this.deliveryLocationSelectElement.updateStateValue(location.delivery);
+      this.collectionLocationSelectElement.updateStateValue(location.collection);
 
-      cartItem.location.collection = cartItem.location.collection;
-      cartItem.location.collection.value = {
-        id: cartItem.location.collection.id,
-        name: cartItem.location.collection.name
-      };
-      cartItem.location.collection.label = cartItem.location.collection.name;
-
-      productBookingForm.location = cartItem.location;
+      productBookingForm.location = location;
       productBookingForm.period = cartItem.period;
 
       this.props.localSearchReducer.productOptionalAccessories.map(
@@ -396,6 +394,7 @@ class ProductBookingForm extends Component {
         id: cartItem.location.delivery.id
       };
       availabilityGraphRequest.quantity = productBookingForm.qty;
+      this.quantityInputElement.updateStateValue(productBookingForm.qty);
 
       if (availabilityGraphRequest.location.delivery.name)
         this.updateDateRangeAvailability("delivery", true);
@@ -415,6 +414,29 @@ class ProductBookingForm extends Component {
         availabilityGraph: [],
         availabilityGraphRequest
       });
+    }
+  }
+
+  getSelectLocationFromCartItemLocation(cartItemLocation) {
+    return {
+      delivery: {
+        id: cartItemLocation.delivery.id,
+        name: cartItemLocation.delivery.name,
+        label: cartItemLocation.delivery.name,
+        value: {
+          id: cartItemLocation.delivery.id,
+        name: cartItemLocation.delivery.name,
+        }
+      },
+      collection: {
+        id: cartItemLocation.collection.id,
+        name: cartItemLocation.collection.name,
+        label: cartItemLocation.collection.name,
+        value: {
+          id: cartItemLocation.collection.id,
+        name: cartItemLocation.collection.name,
+        }
+      }
     }
   }
 
@@ -499,19 +521,6 @@ class ProductBookingForm extends Component {
                     <div>
                       <Formik
                         validationSchema={productBookingFormValidation}
-                        //enableReinitialize
-                        initialValues={{
-                          bookingItem: this.state.productBookingForm.booking,
-                          deliveryLocation: this.state.productBookingForm
-                            .location.delivery,
-                          collectionLocation: this.state.productBookingForm
-                            .location.collection,
-                          deliveryDate: this.state.productBookingForm.period
-                            .start,
-                          collectionDate: this.state.productBookingForm.period
-                            .end,
-                          qty: this.props.product.qty
-                        }}
                         onSubmit={this.onSubmit.bind(this)}
                       >
                         {({ setFieldValue }) => (
@@ -550,6 +559,7 @@ class ProductBookingForm extends Component {
                                     onChange={e => this.handlePickupChange(e)}
                                     setFieldValue={setFieldValue}
                                     component={CustomSelect}
+                                    selectRef={ ref => (this.deliveryLocationSelectElement = ref)}
                                   />
                                 </div>
                                 <div className="location form-block ml-2 px-0">
@@ -570,6 +580,7 @@ class ProductBookingForm extends Component {
                                     onChange={e => this.handleDropOffChange(e)}
                                     setFieldValue={setFieldValue}
                                     component={CustomSelect}
+                                    selectRef={ ref => (this.collectionLocationSelectElement = ref)}
                                   />
                                 </div>
                               </div>
@@ -615,6 +626,7 @@ class ProductBookingForm extends Component {
                                   loadingAvailabilityGraph={
                                     this.state.loadingAvailabilityGraph
                                   }
+                                  selectRef={ ref => (this.datePickerSelectElement = ref)}
                                   component={DatePicker}
                                 />
                               </div>
@@ -650,6 +662,7 @@ class ProductBookingForm extends Component {
                                       setFieldValue={setFieldValue}
                                       changeValue={this.setQty.bind(this)}
                                       component={NumberInput}
+                                      selectRef={ ref => (this.quantityInputElement = ref)}
                                     />
                                   </div>
                                 </div>
