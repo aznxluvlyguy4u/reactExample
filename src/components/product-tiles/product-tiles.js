@@ -93,13 +93,12 @@ class ProductTiles extends Component {
                           key={index}
                           className="col-lg-4 col-md-4 col-sm-6 product-tile"
                         >
-                          <Link>
+                          <Link
+                            href={`/product?id=${item.id}&slug=${slugify(
+                              item.name
+                            )}`}
+                          >
                             <a
-                              // href="#"
-                              // onClick={e => {
-                              //   e.preventDefault();
-                              //   this.onProductClick(item);
-                              // }}
                               href={`/product?id=${item.id}&slug=${slugify(
                                 item.name
                               )}`}
@@ -154,7 +153,9 @@ class ProductTiles extends Component {
                             ></div>
                           </div>
 
-                          {item.tagline && <div className="tag-line">{item.tagline}</div>}
+                          {item.tagline && (
+                            <div className="tag-line">{item.tagline}</div>
+                          )}
 
                           <div>
                             <strong>€ {item.rates[0].price}</strong>EUR
@@ -166,7 +167,7 @@ class ProductTiles extends Component {
                                 onClick={() => this.removeProdcut(item)}
                                 className="plus-minus"
                               >
-                               {item.qty > 0 ? "-" : " "}
+                                {item.qty > 0 ? "-" : " "}
                               </div>
                               <div className="value">{item.qty}</div>
                               <div
