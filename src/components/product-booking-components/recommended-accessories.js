@@ -49,7 +49,7 @@ class RecommendedAccessoryView extends Component {
       >
         {this.state.productOptionalAccessories.length > 0
           && (this.state.productOptionalAccessories.map((item, index) => 
-            <div>
+            <div key={item.id}>
               {item.rates && (
                 <div key={item.id} className="row mb-2 align-items-center">
                 <div className="col-6">
