@@ -57,80 +57,61 @@ class ProductBookingForm extends Component {
   }
 
   async componentDidMount() {
-    const { cart } = this.state;
+    const {
+      cart,
+      productBookingForm,
+      dateRangeAvailability,
+      availabilityGraphRequest,
+    } = this.state;
     const bookingDropDown = await this.setUpCartItemSelection(cart);
     await this.setState({ bookingDropDown });
 
-    if (this.props.searchReducer.search.deliveryLocation) {
-      const productBookingForm = this.state.productBookingForm;
-      productBookingForm.location.delivery = this.props.searchReducer.search.deliveryLocation;
+    const { searchReducer } = this.props;
 
-      const dateRangeAvailability = this.state.dateRangeAvailability;
+    if (searchReducer.search.deliveryLocation) {
+      productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
       dateRangeAvailability.delivery = true;
-
-      const availabilityGraphRequest = this.state.availabilityGraphRequest;
-      availabilityGraphRequest.location.delivery = this.props.searchReducer.search.deliveryLocation;
-
-      setTimeout(() => {
-        this.setState({
-          productBookingForm,
-          dateRangeAvailability,
-          availabilityGraphRequest
-        });
-      }, 100);
+      availabilityGraphRequest.location.delivery = searchReducer.search.deliveryLocation;
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+        availabilityGraphRequest,
+      });
     }
 
-    if (this.props.searchReducer.search.collectionLocation) {
-      const productBookingForm = this.state.productBookingForm;
-      productBookingForm.location.collection = this.props.searchReducer.search.collectionLocation;
-
-      const dateRangeAvailability = this.state.dateRangeAvailability;
+    if (searchReducer.search.collectionLocation) {
+      productBookingForm.location.collection = searchReducer.search.collectionLocation;
       dateRangeAvailability.collection = true;
+      availabilityGraphRequest.location.collection = searchReducer.search.collectionLocation;
 
-      const availabilityGraphRequest = this.state.availabilityGraphRequest;
-      availabilityGraphRequest.location.collection = this.props.searchReducer.search.collectionLocation;
-
-      setTimeout(() => {
-        this.setState({
-          productBookingForm,
-          dateRangeAvailability
-        });
-      }, 100);
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+      });
     }
 
-    if (this.props.searchReducer.search.collectionDate) {
-      const productBookingForm = this.state.productBookingForm;
+    if (searchReducer.search.collectionDate) {
       productBookingForm.period.end = moment(
-        this.props.searchReducer.search.collectionDate
+        searchReducer.search.collectionDate
       );
-
-      const dateRangeAvailability = this.state.dateRangeAvailability;
       dateRangeAvailability.collectionDate = true;
 
-      setTimeout(() => {
-        this.setState({
-          productBookingForm,
-          dateRangeAvailability
-        });
-      }, 100);
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+      });
     }
 
-    if (this.props.searchReducer.search.deliveryDate) {
-      const productBookingForm = this.state.productBookingForm;
+    if (searchReducer.search.deliveryDate) {
       productBookingForm.period.start = moment(
-        this.props.searchReducer.search.deliveryDate
+        searchReducer.search.deliveryDate
       );
-
-      const dateRangeAvailability = this.state.dateRangeAvailability;
       dateRangeAvailability.deliveryDate = true;
-
-      setTimeout(() => {
-        this.setState({
-          productBookingForm,
-          dateRangeAvailability
-        });
-      }, 100);
-      this.getProduct();
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+      });
+      await this.getProduct();
     }
   }
 

@@ -45,7 +45,7 @@ class ProductBookingRentalDetails extends Component {
     return (
       <div>
         <div className="form rental-details">
-          <h3 class="main-title">Rental Details</h3>
+          <h3 className="main-title">Rental Details</h3>
           <div className="row">
             <div className="col-4">
               <strong>Rental Period</strong>
