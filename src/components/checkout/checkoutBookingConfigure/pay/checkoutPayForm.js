@@ -58,7 +58,7 @@ class CheckoutPayForm extends Component {
 
   async componentDidMount() {
     if (!this.state.order) {
-      this.setNewOrder(this.props.cartItem, "CARD");
+      //this.setNewOrder(this.props.cartItem, "CARD");
     }
   }
 
@@ -70,7 +70,7 @@ class CheckoutPayForm extends Component {
     }
   }
 
-  setNewOrder(cartItem, paymentMethod) {
+  async setNewOrder(cartItem, paymentMethod) {
     // New order/ payment intent
     const request = new PlaceOrderRequest(
       cartItem.location,
@@ -108,21 +108,24 @@ class CheckoutPayForm extends Component {
   };
 
   updateSelectedPaymentMethod(event) {
+    this.setNewOrder(this.props.cartItem, event.currentTarget.value);
     this.setState({ paymentMethod: event.currentTarget.value });
     this.props.updateSelectedPaymentMethod(event.currentTarget.value);
   }
 
   setSelected(value) {
+    this.setNewOrder(this.props.cartItem, value);
     this.setState({ paymentMethod: value });
     this.props.updateSelectedPaymentMethod(value);
   }
 
-  setPaymentIntent = paymentIntent => {
+  async setPaymentIntent(paymentIntent) {
     const paymentIntentJson = JSON.stringify(paymentIntent);
-    sessionStorage.setItem(
+    await sessionStorage.setItem(
       `paymentIntent${this.state.cartItem.id}`,
       paymentIntentJson
     );
+    await this.setState({ paymentIntent });
   };
 
   getPaymentIntent = () => {
@@ -130,7 +133,7 @@ class CheckoutPayForm extends Component {
       `paymentIntent${this.state.cartItem.id}`
     );
     let paymentIntent = null;
-    if (paymentIntentJson !== "") {
+    if (paymentIntentJson && paymentIntentJson !== "undefined") {
       paymentIntent = JSON.parse(paymentIntentJson);
     }
     return paymentIntent;
@@ -236,7 +239,9 @@ class CheckoutPayForm extends Component {
           <div className="col-6">
             <div className="bordered-container">
               {this.state.paymentMethod === "CARD" &&
+                this.state.order &&
                 this.state.stripe &&
+                !this.state.loading &&
                 this.getPaymentIntent() && (
                   <Fragment>
                     <h2 className="mt-0 divider">Credit Card</h2>
@@ -295,8 +300,8 @@ class CheckoutPayForm extends Component {
                 )}
               {this.state.paymentMethod === "BANK_TRANSFER" &&
                 this.state.order &&
-                this.state.stripe &&
-                this.getPaymentIntent() && (
+                this.state.stripe && 
+                !this.state.loading && (
                   <Fragment>
                     <h2 className="mt-0 divider">Bank Transfer</h2>
                     <p className="divider pb-4">
