@@ -18,7 +18,7 @@ class ProductBookingForm extends Component {
     super(props);
     const cart = LocalStorageUtil.getCart() || [];
 
-    const bookingDropDown = this.setUpCartItemSelection(cart);
+    const bookingDropDown = [];
     this.state = {
       dateRangeAvailability: {
         collection: false,
@@ -56,7 +56,12 @@ class ProductBookingForm extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+
+    console.log("mounted product booking form");
+    const bookingDropDown = await this.setUpCartItemSelection(this.state.cart);
+    await this.setState({bookingDropDown});
+
     if (this.props.searchReducer.search.deliveryLocation) {
       const productBookingForm = this.state.productBookingForm;
       productBookingForm.location.delivery = this.props.searchReducer.search.deliveryLocation;
@@ -210,7 +215,7 @@ class ProductBookingForm extends Component {
     this.props.setProductOptionalAccessories(accessories);
   }
 
-  setUpCartItemSelection(cart) {
+  async setUpCartItemSelection(cart) {
     const accessories = this.props.product.accessories.filter(
       val => val.type === "OPTIONAL"
     );
