@@ -23,11 +23,14 @@ class ProductTiles extends Component {
       modalIsOpen: false,
       requestedProduct: undefined
     };
-
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    Modal.setAppElement("#openAddToBooking");
   }
 
   setRequestedAndOpenModal(item) {
@@ -175,6 +178,7 @@ class ProductTiles extends Component {
                             </div>
                             <div className="col-md-8">
                               <div
+                                id="openAddToBooking"
                                 onClick={() =>
                                   this.setRequestedAndOpenModal(item)
                                 }

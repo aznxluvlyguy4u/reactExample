@@ -352,7 +352,6 @@ class ProductBookingForm extends Component {
   }
 
   async setFormFromBooking(cartItem) {
-    console.log("aweh", cartItem);
     this.updateDateRangeAvailability("booking", true);
     this.setState({ accessories: [] });
 
