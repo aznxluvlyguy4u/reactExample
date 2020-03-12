@@ -10,10 +10,10 @@ const Footer = () => (
         <h2>Site</h2>
         <ul>
           <li>
-            <Link href="/"><a>Explore</a></Link>
+            <Link href="/"><a href="/">Explore</a></Link>
           </li>
           <li>
-            <Link href="https://www.oceanpremium.com/shop/">Shop</Link>
+            <Link href="https://www.oceanpremium.com/shop/"><a href="https://www.oceanpremium.com/shop/">Shop</a></Link>
           </li>
         </ul>
       </div>
@@ -24,7 +24,7 @@ const Footer = () => (
             <a target="_blank" href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>
           </li>
           <li>
-            <Link href="/privacy-policy"><a>Privacy Policy</a></Link>
+            <Link href="/privacy-policy"><a href="/privacy-policy">Privacy Policy</a></Link>
           </li>
         </ul>
       </div>
@@ -32,10 +32,10 @@ const Footer = () => (
         <h2>Help</h2>
         <ul>
           <li>
-            <Link href="/about"><a>About</a></Link>
+            <Link href="/about"><a href="/about">About</a></Link>
           </li>
           <li>
-            <Link href="/contact"><a>Contact</a></Link>
+            <Link href="/contact"><a href="/contact">Contact</a></Link>
           </li>
         </ul>
       </div>

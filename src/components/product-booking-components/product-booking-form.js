@@ -57,10 +57,9 @@ class ProductBookingForm extends Component {
   }
 
   async componentDidMount() {
-
-    console.log("mounted product booking form");
-    const bookingDropDown = await this.setUpCartItemSelection(this.state.cart);
-    await this.setState({bookingDropDown});
+    const { cart } = this.state;
+    const bookingDropDown = await this.setUpCartItemSelection(cart);
+    await this.setState({ bookingDropDown });
 
     if (this.props.searchReducer.search.deliveryLocation) {
       const productBookingForm = this.state.productBookingForm;

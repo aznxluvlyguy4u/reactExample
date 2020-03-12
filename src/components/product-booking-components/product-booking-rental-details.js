@@ -21,20 +21,23 @@ class ProductBookingRentalDetails extends Component {
     const accessories = cartItemProduct.accessories.filter(x => x.quantity > 0);
 
     let rentalFee =
-      (Number(props.product.rates[0].price) * parseInt(cartItemProduct.quantity)) * dayCount;
-      accessories.map(item => {
-        if (item.rates) {
-          let itemRateFee = (dayCount * Number(item.rates[0].price) * item.quantity);
-          rentalFee += itemRateFee;
-        }
-      });
+      Number(props.product.rates[0].price) *
+      parseInt(cartItemProduct.quantity) *
+      dayCount;
+    accessories.map(item => {
+      if (item.rates) {
+        let itemRateFee =
+          dayCount * Number(item.rates[0].price) * item.quantity;
+        rentalFee += itemRateFee;
+      }
+    });
 
     this.state = {
       dayCount,
       cartItem,
       cartItemProduct,
       accessories,
-      rentalFee,
+      rentalFee
     };
   }
 
@@ -142,13 +145,17 @@ class ProductBookingRentalDetails extends Component {
         </button>
         <br />
         <div className="confirmationview">
-          <Link
-            onClick={e => {
-              this.props.resetLocalSearch();
-            }}
-            href="/checkout"
-          >
-            <a className="search-button-full" style={{textAlign: 'center'}}>Checkout</a>
+          <Link href="/checkout">
+            <a
+              href="/checkout"
+              className="search-button-full"
+              style={{ textAlign: "center" }}
+              onClick={e => {
+                this.props.resetLocalSearch();
+              }}
+            >
+              Checkout
+            </a>
           </Link>
         </div>
       </div>

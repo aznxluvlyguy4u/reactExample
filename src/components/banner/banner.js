@@ -23,7 +23,11 @@ class Banner extends Component {
               <div className="img-container">
                 <img src={this.props.data.fields.bannerImage.fields.file.url} />
               </div>
-              <Link>
+              <Link
+                href={`/special-products?id=${
+                  this.props.data.fields.linkUrl.sys.id
+                }&slug=${slugify(this.props.data.fields.title)}`}
+              >
                 <a
                   className="yellow-button"
                   href={`/special-products?id=${
