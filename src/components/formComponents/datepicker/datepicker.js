@@ -79,17 +79,21 @@ class DatePicker extends Component {
   }
 
   async onFocusChange(pickerFocusedInput) {
+
     await this.setState({ focusedInput: pickerFocusedInput });
-    if (this.state.startDate !== null && !this.state.visibleYearMonth) {
+    if (!pickerFocusedInput) {
+      this.setState({ visibleYearMonth: null });
+    }
+    else if (this.state.startDate !== null && !this.state.visibleYearMonth) {
       const visibleYearMonth = moment.utc(
         new Date(this.state.startDate).setDate(1)
       );
       await this.setState({ visibleYearMonth });
       if (this.props.updateVisibleMonth) {
+        console.log("updatey");
         this.props.updateVisibleMonth(visibleYearMonth);
       }
     } else if (!this.state.visibleYearMonth) {
-      console.log("date not set");
       const visibleYearMonth = moment.utc(new Date().setDate(1));
       await this.setState({ visibleYearMonth });
       if (this.props.updateVisibleMonth) {
@@ -142,18 +146,31 @@ class DatePicker extends Component {
 
   updateStartDate(startDate) {
     const startDateMoment = startDate ? moment.utc(startDate) : null;
-    this.setState({ startDate: startDateMoment });
+    let { visibleYearMonth } = this.state;
+    if (startDateMoment === null) {
+      visibleYearMonth = null;
+    }
+    this.setState({ startDate: startDateMoment, visibleYearMonth });
   }
 
   updateEndDate(endDate) {
     const endDateMoment = endDate ? moment.utc(endDate) : null;
-    this.setState({ endDate: endDateMoment });
+    let { visibleYearMonth } = this.state;
+    if (endDateMoment === null) {
+      visibleYearMonth = null;
+    }
+    this.setState({ endDate: endDateMoment, visibleYearMonth });
   }
 
   updateDateRange(startDate, endDate) {
     const startDateMoment = startDate ? moment.utc(startDate) : null;
     const endDateMoment = endDate ? moment.utc(endDate) : null;
-    this.setState({ startDate: startDateMoment, endDate: endDateMoment });
+    let { visibleYearMonth } = this.state;
+
+    if (startDateMoment === null || endDateMoment === null) {
+      visibleYearMonth = null;
+    }
+    this.setState({ startDate: startDateMoment, endDate: endDateMoment, visibleYearMonth });
   }
 
   updateVisibleMonth(val) {
