@@ -52,6 +52,8 @@ class CustomSelect extends Component {
   }
 
   updateStateValue(value) {
+    const { setFieldValue, field } = this.props;
+    setFieldValue(field.name, value);
     this.setState({value});
   }
   
