@@ -145,11 +145,14 @@ class CheckoutPayForm extends Component {
 
   handleStripePayment = e => {
     this.setState({ loading: true });
+
+    const cardElement = this.props.elements.getElement('card');
+
     //Show Loader
     this.state.stripe
       .confirmCardPayment(this.getPaymentIntent().clientSecret, {
         payment_method: {
-          card: this.element,
+          card: cardElement, //this.element,
           billing_details: {
             address: {
               country: this.state.cartItem.billingInformation.country.name,
@@ -285,14 +288,14 @@ class CheckoutPayForm extends Component {
                     <StripeProvider stripe={this.state.stripe}>
                       <Elements>
                         <Fragment>
-                          <StripeForm
+                          {this.getPaymentIntent() && <StripeForm
                             onReady={this.handleReady}
                             paymentIntent={this.getPaymentIntent()}
                             handleSubmit={() => {
                               this.handleStripePayment();
                             }}
                             loading={this.state.loading}
-                          />
+                          />}
                         </Fragment>
                       </Elements>
                     </StripeProvider>
