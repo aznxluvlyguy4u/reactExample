@@ -42,7 +42,6 @@ class CheckoutPayForm extends Component {
     if (orderJson !== "") {
       order = JSON.parse(orderJson);
     }
-
     this.state = {
       cartItem: props.cartItem,
       initialValues: {
@@ -150,14 +149,11 @@ class CheckoutPayForm extends Component {
 
   handleStripePayment = e => {
     this.setState({ loading: true });
-
-    const cardElement = this.props.elements.getElement('card');
-
     //Show Loader
     this.state.stripe
       .confirmCardPayment(this.getPaymentIntent().clientSecret, {
         payment_method: {
-          card: cardElement, //this.element,
+          card: this.element,
           billing_details: {
             address: {
               country: this.state.cartItem.billingInformation.country.name,
@@ -249,7 +245,6 @@ class CheckoutPayForm extends Component {
               {this.state.paymentMethod === "CARD" &&
                 this.state.order &&
                 this.state.stripe &&
-                !this.state.loading &&
                 this.getPaymentIntent() && (
                   <Fragment>
                     <h2 className="mt-0 divider">Credit Card</h2>
