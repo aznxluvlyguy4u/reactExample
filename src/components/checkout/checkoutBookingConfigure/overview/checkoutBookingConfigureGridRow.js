@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import CartUtils from "../../../../utils/mapping/cart/cartUtils";
-import LocalStorageUtil from "../../../../utils/localStorageUtil";
 import BasicCounter from "../../../formComponents/number-input/basic-counter";
 
 class CheckoutBookingConfigureGridRow extends Component {
@@ -13,15 +12,15 @@ class CheckoutBookingConfigureGridRow extends Component {
 
   returnAvailabilityIcon(item) {
     if (item.quantityAvailable === 0) {
-      return <img className="availabilityImage" src="/static/images/unavailable.png" />
+      return <img className="availabilityImage" src="/static/images/unavailable.png" alt="unavailable" title="The product is unavialable"/>
     }
 
-    if (item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
-      return <img className="availabilityImage" src="/static/images/alert.png" />
+    else if (item.quantityAvailable !== 0 && item.quantity > item.quantityAvailable) {
+      return <img className="availabilityImage" src="/static/images/alert.png" alt="unavailable" title="Quantity requested exceeds available"/>
     }
 
-    if (item.quantityAvailable !== 0 && item.quantity <= item.quantityAvailable) {
-      return <img className="availabilityImage" src="/static/images/available.png" />
+    else if (item.quantityAvailable !== 0 && item.quantity <= item.quantityAvailable) {
+      return <img className="availabilityImage" src="/static/images/available.png" alt="available" title="Available"/>
     }
   }
 

@@ -113,10 +113,10 @@ class CheckoutPage extends Component {
             return (
               productLookup.id === product.id &&
               moment(productLookup.period.start).isSame(
-                moment(booking.period.start)
+                moment(booking.period.start), "day"
               ) &&
               moment(productLookup.period.end).isSame(
-                moment(booking.period.end)
+                moment(booking.period.end), "day"
               ) &&
               productLookup.location.delivery.id ===
                 booking.location.delivery.id &&

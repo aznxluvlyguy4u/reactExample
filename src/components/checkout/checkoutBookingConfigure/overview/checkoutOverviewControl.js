@@ -170,6 +170,11 @@ class CheckoutOverviewControl extends Component {
                         >
                           Update Booking
                         </button>
+                      </Fragment>
+                    )}
+                    {this.state.displaySection.overview && this.state.validated.overview
+                    && (
+                      <Fragment>
                         <button
                           type="button"
                           className="search-button-full mt-3"

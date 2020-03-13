@@ -7,7 +7,6 @@ export default class CartUtils {
     const available = availability
       ? availability.find(item => item.id === cartItemId)
       : undefined;
-
     if (available) {
       return availability
       .find(item => item.id === cartItemId)
