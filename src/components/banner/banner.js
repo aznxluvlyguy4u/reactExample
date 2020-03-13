@@ -10,7 +10,7 @@ class Banner extends Component {
   render() {
     return (
       <div>
-        <div className="mb-3">
+        <div className="bannerTitle">
           <h2 className="section-title heading">
             {this.props.data.fields.title}
           </h2>

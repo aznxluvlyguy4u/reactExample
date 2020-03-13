@@ -73,7 +73,7 @@ class SpecialProducts extends Component {
             <div className="container">
               <div id="rich-text-body" className="mt-5 mb-5">
                 <div>
-                  <h1 className="section-title heading">
+                  <h1 className="section-title heading tilesHeading">
                     {content.fields.mainContentHead1}
                   </h1>
                   <p>{content.fields.mainContentParagraph1}</p>

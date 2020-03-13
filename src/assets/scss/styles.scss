@@ -13,7 +13,7 @@
 @import "modules/components/datepicker";
 @import "modules/components/categoryTiles";
 @import "modules/components/banner";
-@import "modules/components/tiles";
+@import "modules/components/tiles.scss";
 @import "modules/components/checkoutitem";
 @import "modules/components/finalcheckout";
 @import "modules/components/footer";
@@ -192,6 +192,7 @@ hr.page-divide {
 }
 
 h2.section-title {
+  font-size: 36px;
   margin-bottom: 1px;
   overflow: hidden;
 }

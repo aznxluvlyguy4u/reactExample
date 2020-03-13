@@ -20,7 +20,7 @@ class Tiles extends Component {
               <div className="col">
                 <div className="row">
                   <div className="col-md-12">
-                    <h2 className="section-title heading">
+                    <h2 className="section-title heading tilesHeading">
                       {this.toUpperCase(this.props.category.name)}
                     </h2>
                     {this.props.subHeading ? (

@@ -17,6 +17,8 @@
     margin-right: auto;
     position: relative;
     z-index: 3;
+    font-weight: bold;
+    font-size: 18px;
   }
 }
 
@@ -41,6 +43,9 @@
   height: 260px;
 }
 
+.bannerTitle {
+  margin-bottom: 40px;
+}
 
 
 @media (max-width: 678px) {
