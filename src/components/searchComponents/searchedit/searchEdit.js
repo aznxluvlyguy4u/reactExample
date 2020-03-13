@@ -35,9 +35,16 @@ class SearchEdit extends Component {
       });
     }
 
-    if(this.state.bookingDropDown && this.bookingSelectElement.updateStateValue && !this.state.setup) {
-      const { searchReducer } = this.props;
-      const { search } = searchReducer;
+    const { searchReducer } = this.props;
+    const { search } = searchReducer;
+
+    if(this.state.bookingDropDown 
+      && this.bookingSelectElement.updateStateValue 
+      && search.deliveryLocation
+      && search.collectionLocation
+      && search.deliveryDate
+      && search.collectionDate
+      && !this.state.setup) {
       const matchBookingCriteria = this.state.bookingDropDown.find(x =>
         x.location.delivery.id === search.deliveryLocation.id &&
         x.location.collection.id === search.collectionLocation.id &&
