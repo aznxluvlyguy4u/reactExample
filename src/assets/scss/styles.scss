@@ -207,7 +207,6 @@ h2.section-title {
 
 .products {
   margin-bottom: 20px;
-  margin-top: 20px;
 
   div[class^="col-"] {
     margin-bottom: 20px;
@@ -220,6 +219,8 @@ h2.section-title {
     position: relative;
     top: 0px;
     left: 0px;
+    margin-top: 40px;
+    margin-bottom: 0px;
 
     .unavailable {
       position: absolute;
@@ -244,9 +245,10 @@ h2.section-title {
     }
 
     h4 {
-      margin-top: 4px;
+      margin-top: 0px;
       display: block;
-      margin-bottom: 2px;
+      margin-bottom: 0px;
+      padding: 0;
       position: relative;
       z-index: 10;
       top: 0px;
