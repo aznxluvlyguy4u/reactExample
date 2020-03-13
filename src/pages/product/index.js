@@ -441,9 +441,8 @@ class DetailPage extends Component {
                           : ""
                       }
                     />
-                    {/* <img src={product.images[0].url}></img> */}
                   </div>
-                  <div className="small-images">
+                  <div className="small-images no-scroll">
                     {product.images &&
                       product.images.map(productImage => {
                         return (
@@ -465,10 +464,7 @@ class DetailPage extends Component {
                 className="col-lg-4 col-sm-12 product-detail-description"
               >
                 <div
-                  style={{
-                    maxHeight: "70vh",
-                    paddingBottom: "25px"
-                  }}
+                  class="product-detail-description-overflow no-scroll"
                 >
                   <h2>
                     <a style={{ color: "black" }} href="/">

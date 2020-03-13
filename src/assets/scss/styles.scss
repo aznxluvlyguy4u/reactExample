@@ -305,6 +305,14 @@ h2.section-title {
   text-transform: uppercase;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @media (max-width: 992px) {
   .products {
     .product {
