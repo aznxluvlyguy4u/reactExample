@@ -80,7 +80,6 @@ class ProductBookingForm extends Component {
       this.bookingSelectElement.updateStateValue(productBookingForm.booking);
       this.deliveryLocationSelectElement.updateStateValue(productBookingForm.location.delivery);
       this.collectionLocationSelectElement.updateStateValue(productBookingForm.location.collection);
-      console.log(productBookingForm.booking);
       this.datePickerSelectElement.updateDateRange(productBookingForm.booking.period.start, productBookingForm.booking.period.end);
       await this.setState({
         productBookingForm
@@ -575,6 +574,18 @@ class ProductBookingForm extends Component {
                     <div>
                       <Formik
                         validationSchema={productBookingFormValidation}
+                        initialValues={{
+                          bookingItem: this.state.productBookingForm.booking,
+                          deliveryLocation: this.state.productBookingForm
+                            .location.delivery,
+                          collectionLocation: this.state.productBookingForm
+                            .location.collection,
+                          deliveryDate: this.state.productBookingForm.period
+                            .start,
+                          collectionDate: this.state.productBookingForm.period
+                            .end,
+                          qty: this.props.product.qty
+                        }}
                         onSubmit={this.onSubmit.bind(this)}
                       >
                         {({ setFieldValue }) => (
