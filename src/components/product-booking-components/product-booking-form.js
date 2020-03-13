@@ -17,6 +17,7 @@ class ProductBookingForm extends Component {
   constructor(props) {
     super(props);
     const cart = LocalStorageUtil.getCart() || [];
+    this.bookingSelectElement = React.createRef();
     this.deliveryLocationSelectElement = React.createRef();
     this.collectionLocationSelectElement = React.createRef();
     this.datePickerSelectElement = React.createRef();
@@ -69,57 +70,73 @@ class ProductBookingForm extends Component {
     } = this.state;
     const bookingDropDown = await this.setUpCartItemSelection(cart);
     await this.setState({ bookingDropDown });
-    const { searchReducer } = this.props;
+    const { searchReducer, locationReducer } = this.props;
 
-    if (searchReducer.search.deliveryLocation) {
-      productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
-      dateRangeAvailability.delivery = true;
-      availabilityGraphRequest.location.delivery = searchReducer.search.deliveryLocation;
-      this.deliveryLocationSelectElement.updateStateValue(searchReducer.search.deliveryLocation);
+    if (searchReducer.search.booking) {
+      productBookingForm.booking = bookingDropDown.find(x => x.id === searchReducer.search.booking.id);
+      productBookingForm.location.delivery = locationReducer.selectboxLocations.find(x => x.id === productBookingForm.booking.location.delivery.id);
+      productBookingForm.location.collection = locationReducer.selectboxLocations.find(x => x.id === productBookingForm.booking.location.delivery.id);
+      
+      this.bookingSelectElement.updateStateValue(productBookingForm.booking);
+      this.deliveryLocationSelectElement.updateStateValue(productBookingForm.location.delivery);
+      this.collectionLocationSelectElement.updateStateValue(productBookingForm.location.collection);
+      console.log(productBookingForm.booking);
+      this.datePickerSelectElement.updateDateRange(productBookingForm.booking.period.start, productBookingForm.booking.period.end);
       await this.setState({
-        productBookingForm,
-        dateRangeAvailability,
-        availabilityGraphRequest,
+        productBookingForm
       });
+    } else {
+      if (searchReducer.search.deliveryLocation) {
+        productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
+        dateRangeAvailability.delivery = true;
+        availabilityGraphRequest.location.delivery = searchReducer.search.deliveryLocation;
+        this.deliveryLocationSelectElement.updateStateValue(searchReducer.search.deliveryLocation);
+        await this.setState({
+          productBookingForm,
+          dateRangeAvailability,
+          availabilityGraphRequest,
+        });
+      }
+
+      if (searchReducer.search.collectionLocation) {
+        productBookingForm.location.collection = searchReducer.search.collectionLocation;
+        this.collectionLocationSelectElement.updateStateValue(searchReducer.search.collectionLocation);
+        dateRangeAvailability.collection = true;
+        availabilityGraphRequest.location.collection = searchReducer.search.collectionLocation;
+
+        await this.setState({
+          productBookingForm,
+          dateRangeAvailability,
+        });
+      }
+
+      if (searchReducer.search.collectionDate) {
+        productBookingForm.period.end = moment(
+          searchReducer.search.collectionDate
+        );
+        dateRangeAvailability.collectionDate = true;
+        this.datePickerSelectElement.updateEndDate(searchReducer.search.collectionDate);
+
+        await this.setState({
+          productBookingForm,
+          dateRangeAvailability,
+        });
+      }
+
+      if (searchReducer.search.deliveryDate) {
+        productBookingForm.period.start = moment(
+          searchReducer.search.deliveryDate
+        );
+        this.datePickerSelectElement.updateStartDate(searchReducer.search.deliveryDate);
+        dateRangeAvailability.deliveryDate = true;
+        await this.setState({
+          productBookingForm,
+          dateRangeAvailability,
+        });
+        await this.getProduct();
+      }
     }
 
-    if (searchReducer.search.collectionLocation) {
-      productBookingForm.location.collection = searchReducer.search.collectionLocation;
-      this.collectionLocationSelectElement.updateStateValue(searchReducer.search.collectionLocation);
-      dateRangeAvailability.collection = true;
-      availabilityGraphRequest.location.collection = searchReducer.search.collectionLocation;
-
-      await this.setState({
-        productBookingForm,
-        dateRangeAvailability,
-      });
-    }
-
-    if (searchReducer.search.collectionDate) {
-      productBookingForm.period.end = moment(
-        searchReducer.search.collectionDate
-      );
-      dateRangeAvailability.collectionDate = true;
-      this.datePickerSelectElement.updateEndDate(searchReducer.search.collectionDate);
-
-      await this.setState({
-        productBookingForm,
-        dateRangeAvailability,
-      });
-    }
-
-    if (searchReducer.search.deliveryDate) {
-      productBookingForm.period.start = moment(
-        searchReducer.search.deliveryDate
-      );
-      this.datePickerSelectElement.updateStartDate(searchReducer.search.deliveryDate);
-      dateRangeAvailability.deliveryDate = true;
-      await this.setState({
-        productBookingForm,
-        dateRangeAvailability,
-      });
-      await this.getProduct();
-    }
     await this.updateAvailabilityGraph(productBookingForm.period.start);
   }
 
@@ -546,6 +563,7 @@ class ProductBookingForm extends Component {
                                   setFieldValue={setFieldValue}
                                   component={CustomSelect}
                                   onSelect={this.setFormFromBooking.bind(this)}
+                                  selectRef={ ref => (this.bookingSelectElement = ref)}
                                 />
                               </div>
                               <div className="form-inline mx-0 px-0">

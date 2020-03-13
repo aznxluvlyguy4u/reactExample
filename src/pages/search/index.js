@@ -5,22 +5,25 @@ import Router from "next/router";
 import { isEmpty } from "lodash";
 import moment from "moment";
 
+import LocalStorageUtil from "../../utils/localStorageUtil";
+
 // Actions:
 import {
   updateSearch,
   updateSearchObject,
   updateSearchCollectionLocation,
-  updateSearchDeliveryLocation
+  updateSearchDeliveryLocation,
+  updateSearchBooking,
+  updateSearchCollectionDate,
+  updateSearchDeliveryDate,
 } from "../../actions/searchActions";
 import { updateLocalSearch } from "../../actions/localSearchActions";
 
 // Components:
 import Default from "../../layouts/default";
 import Loader from "../../components/loader";
-import Pagination from "../../components/pagination";
 import SearchEdit from "../../components/searchComponents/searchedit/searchEdit";
 import ProductTiles from "../../components/product-tiles/product-tiles";
-import CategoryTiles from "../../components/category/categoryTiles";
 import RecommendedProducts from "../../components/recommended-products/recommendedProducts";
 
 // Utils:
@@ -237,8 +240,23 @@ class SearchPage extends Component {
     await this.getProducts("append");
   }
 
-  mergeObj(obj) {
-    //this.props.updateSearchObject(obj);
+  async mergeObj(obj) {
+    if (obj.booking) {
+
+      const cart = await LocalStorageUtil.getCart();
+      const booking = cart.find(x => x.id === obj.booking.id);
+      const { locationReducer } = this.props;
+
+      setTimeout(() => {
+        this.props.updateSearchBooking(obj.booking);
+        this.props.updateSearchDeliveryLocation(locationReducer.selectboxLocations.find(x => x.id === booking.location.delivery.id));
+        this.props.updateSearchCollectionLocation(locationReducer.selectboxLocations.find(x => x.id === booking.location.collection.id));
+        this.props.updateSearchCollectionDate(booking.period.end);
+        this.props.updateSearchDeliveryDate(booking.period.start);
+
+      }, 300);
+    }
+    
     if (obj.deliveryLocation) {
       setTimeout(() => {
         this.props.updateSearchDeliveryLocation(obj.deliveryLocation);
@@ -372,5 +390,8 @@ export default connect(mapStateToProps, {
   updateSearchObject,
   updateLocalSearch,
   updateSearchDeliveryLocation,
-  updateSearchCollectionLocation
+  updateSearchCollectionLocation,
+  updateSearchBooking,
+  updateSearchCollectionDate,
+  updateSearchDeliveryDate,
 })(SearchPage);

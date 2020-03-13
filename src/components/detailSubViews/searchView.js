@@ -2,19 +2,16 @@ import { Field, Form, Formik } from 'formik';
 import { isEmpty } from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import searchReducer from '../../reducers/searchReducer';
-import locationReducer from '../../reducers/locationReducer';
-import localSearchReducer from '../../reducers/localSearchReducer';
 import DatePicker from '../formComponents/datepicker/datepicker';
 import CustomSelect from '../formComponents/select/customSelect';
 import localSearchValidation from './searchViewValidation';
-import ConfigurationModal from './configurationModal';
 import {
   updateLocalSearch,
   updateLocalSearchDeliveryLocation,
   updateLocalSearchCollectionLocation,
   updateLocalSearchDeliveryDate,
   updateLocalSearchCollectionDate,
+  updateLocalSearchBooking,
 } from '../../actions/localSearchActions';
 import Steps from './steps';
 
@@ -203,5 +200,6 @@ export default connect(
     updateLocalSearchCollectionLocation,
     updateLocalSearchDeliveryDate,
     updateLocalSearchCollectionDate,
+    updateLocalSearchBooking,
   }
 )(SearchView);

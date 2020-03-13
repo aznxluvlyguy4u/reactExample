@@ -45,6 +45,7 @@ class RecommendedAccessoryView extends Component {
     return (
       <div
         className="recommended-accessories no-scrollbar"
+        style={{maxHeight: "400px", overflow: "scroll"}}
       >
         {this.state.productOptionalAccessories.length > 0
           && (this.state.productOptionalAccessories.map((item, index) => 

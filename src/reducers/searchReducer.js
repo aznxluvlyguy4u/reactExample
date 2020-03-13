@@ -3,6 +3,7 @@ import moment from 'moment';
 const initialState = {
   search: {
     keyword: '',
+    booking: '',
     deliveryLocation: '',
     collectionLocation: '',
     deliveryDate: moment().format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString(),
@@ -52,6 +53,13 @@ function searchReducer(state = initialState, action) {
       search4.collectionDate = action.payload
       return Object.assign({}, state, {
         search: search4
+      });
+
+    case 'UPDATE_SEARCH_BOOKING':
+      let search5 = state.search
+      search5.booking = action.payload
+      return Object.assign({}, state, {
+        search: search5,
       });
 
     default:

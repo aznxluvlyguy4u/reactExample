@@ -90,7 +90,6 @@ class DatePicker extends Component {
       );
       await this.setState({ visibleYearMonth });
       if (this.props.updateVisibleMonth) {
-        console.log("updatey");
         this.props.updateVisibleMonth(visibleYearMonth);
       }
     } else if (!this.state.visibleYearMonth) {

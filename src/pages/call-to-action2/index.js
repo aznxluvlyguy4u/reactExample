@@ -17,7 +17,7 @@ class CallToAction1Page extends Component {
           <div className="container about">
             <div className="row">
               <div className="col-lg-12">
-                <h1 class="main-title">Call to action 1</h1>
+                <h1 className="main-title">Call to action 1</h1>
               </div>
             </div>
 

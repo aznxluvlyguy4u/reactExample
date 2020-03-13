@@ -52,6 +52,10 @@ export function updateLocalSearchCollectionDate(collectionDate) {
   return { type: 'UPDATE_LOCAL_SEARCH_COLLECTION_DATE', payload: collectionDate };
 }
 
+export function updateLocalSearchBooking(booking) {
+  return { type: 'UPDATE_LOCAL_SEARCH_BOOKING', payload: booking };
+}
+
 export function updateLocalSearchProductQuantity(quantity) {
   return { type: 'UPDATE_LOCAL_SEARCH_PRODUCT_QUANTITY', payload: quantity };
 }

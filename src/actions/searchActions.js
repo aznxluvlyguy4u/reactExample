@@ -4,6 +4,10 @@ export function updateSearch(search) {
   return { type: 'UPDATE_SEARCH', search };
 }
 
+export function updateSearchBooking(booking) {
+  return { type: 'UPDATE_SEARCH_BOOKING', payload: booking };
+}
+
 export function updateSearchDeliveryLocation(deliveryLocation) {
   return { type: 'UPDATE_SEARCH_DELIVERY_LOCATION', payload: deliveryLocation };
 }

@@ -464,7 +464,7 @@ class DetailPage extends Component {
                 className="col-lg-4 col-sm-12 product-detail-description"
               >
                 <div
-                  class="product-detail-description-overflow no-scroll"
+                  className="product-detail-description-overflow no-scroll"
                 >
                   <h2>
                     <a style={{ color: "black" }} href="/">
