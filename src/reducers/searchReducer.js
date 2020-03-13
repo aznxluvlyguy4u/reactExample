@@ -7,9 +7,7 @@ const initialState = {
     deliveryLocation: '',
     collectionLocation: '',
     deliveryDate: moment().format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString(),
-    // deliveryDate: moment().toISOString(),
     collectionDate: moment(new Date()).add(1, 'days').format('YYYY-MM-DDTHH:mm:ss.ssZ'), //.toISOString()
-    // collectionDate: moment(new Date()).add(1, 'days').toISOString()
   },
 };
 

@@ -242,13 +242,20 @@ class SearchPage extends Component {
 
   async mergeObj(obj) {
     if (obj.booking) {
-
       const cart = await LocalStorageUtil.getCart();
       const booking = cart.find(x => x.id === obj.booking.id);
       const { locationReducer } = this.props;
 
       setTimeout(() => {
-        this.props.updateSearchBooking(obj.booking);
+        const bookingSelected = {
+          id: obj.booking.id,
+          name: obj.booking.name,
+          value: {
+            id: obj.booking.id,
+            name: obj.booking.name,
+          },
+        };
+        this.props.updateSearchBooking(bookingSelected);
         this.props.updateSearchDeliveryLocation(locationReducer.selectboxLocations.find(x => x.id === booking.location.delivery.id));
         this.props.updateSearchCollectionLocation(locationReducer.selectboxLocations.find(x => x.id === booking.location.collection.id));
         this.props.updateSearchCollectionDate(booking.period.end);

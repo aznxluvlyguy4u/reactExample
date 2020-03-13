@@ -12,18 +12,18 @@ class SearchEdit extends Component {
     super(props);
     this.state = {
       locations: [],
-      initialValues: {}
+      initialValues: {},
+      setup: false
     };
     this.deliveryLocationSelectElement = React.createRef();
     this.collectionLocationSelectElement = React.createRef();
+    this.bookingSelectElement = React.createRef();
   }
 
   async componentDidMount() {
     this.setState({
       locations: this.props.locationReducer.selectboxLocations,
     });
-    console.log(this.props.locationReducer.selectboxLocations);
-
     const bookingDropDown = await this.setUpCartItemSelection();
     await this.setState({ bookingDropDown });
   }
@@ -32,7 +32,22 @@ class SearchEdit extends Component {
     if (prevProps.locationReducer.selectboxLocations !== this.props.locationReducer.selectboxLocations) {
       this.setState({
         locations: this.props.locationReducer.selectboxLocations
-      })
+      });
+    }
+
+    if(this.state.bookingDropDown && this.bookingSelectElement.updateStateValue && !this.state.setup) {
+      const { searchReducer } = this.props;
+      const { search } = searchReducer;
+      const matchBookingCriteria = this.state.bookingDropDown.find(x =>
+        x.location.delivery.id === search.deliveryLocation.id &&
+        x.location.collection.id === search.collectionLocation.id &&
+        x.period.start === search.deliveryDate && 
+        x.period.end === search.collectionDate,
+      );
+      if (matchBookingCriteria) {
+        this.bookingSelectElement.updateStateValue(matchBookingCriteria);
+        this.setState({setup: true});
+      }
     }
   }
 
@@ -81,6 +96,7 @@ class SearchEdit extends Component {
             validationSchema={validation ? searchEditValidation : undefined}
             enableReinitialize
             initialValues={{
+              booking: this.props.searchReducer.search.booking,
               deliveryLocation: this.props.searchReducer.search.deliveryLocation,
               collectionLocation: this.props.searchReducer.search.collectionLocation,
               collectionDate: this.props.searchReducer.search.collectionDate,
@@ -105,7 +121,8 @@ class SearchEdit extends Component {
                             options={this.state.bookingDropDown}
                             name="booking"
                             setFieldValue={setFieldValue}
-                            component={CustomSelect} />
+                            component={CustomSelect}
+                            selectRef={ ref => (this.bookingSelectElement = ref)}/>
                         </div>
                         <div className="edit-row">
                           <label htmlFor="deliveryLocation">
