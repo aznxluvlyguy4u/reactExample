@@ -23,8 +23,8 @@ const CheckoutBillingInformationFormSchema = Yup.object().shape({
     .required('This is a required field'),
   streetNumber: Yup.string()
     .required('This is a required field'),
-  streetNumberBlock: Yup.string()
-    .required('This is a required field'),
+  streetNumberBlock: Yup.string(),
+    //.required('This is a required field'),
   postalCode: Yup.string()
     .required('This is a required field'),
   country: Yup.string()

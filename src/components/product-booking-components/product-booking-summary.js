@@ -21,7 +21,7 @@ class ProductBookingSummary extends Component {
               <img
                 src="static/images/back-arrow-white.svg"
                 alt="previous"
-                onClick={ () => this.props.setStep(1) }
+                onClick={() => this.props.setStep(1)}
               />
             </div>
             <div className="col-md-11 equal-height-columns">
@@ -33,7 +33,8 @@ class ProductBookingSummary extends Component {
                   <div className="col-md-2">
                     <img
                       className="img-fluid"
-                      src="/static/images/success.png" />
+                      src="/static/images/success.png"
+                    />
                   </div>
                 </div>
                 <div className="row">
@@ -46,15 +47,24 @@ class ProductBookingSummary extends Component {
                   </div>
                   <div className="col-8">
                     <h3 className="main-title">
-                      {this.props.product.description && this.props.product.description.section1 
-                      && this.props.product.description.section1.head 
-                      ? this.props.product.description.section1.head : this.props.product.name}
+                      {this.props.product.description &&
+                      this.props.product.description.section1 &&
+                      this.props.product.description.section1.head
+                        ? this.props.product.description.section1.head
+                        : this.props.product.name}
                     </h3>
-                    {this.props.product.description && this.props.product.description.section1 
-                      && this.props.product.description.section1.paragraph && (
-                        <span>{this.props.product.description.section1.paragraph}</span>
+                    {this.props.product.description &&
+                      this.props.product.description.section1 &&
+                      this.props.product.description.section1.paragraph && (
+                        <span>
+                          {this.props.product.description.section1.paragraph}
+                        </span>
                       )}
-                      <div className="tag-line">tagline</div>
+                    {this.props.product && this.props.product.tagline && (
+                      <div className="tag-line">
+                        {this.props.product.tagline}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="row">
@@ -64,7 +74,10 @@ class ProductBookingSummary extends Component {
                 </div>
                 <div className="row">
                   <div className="col-12">
-                    <h4>People who selected this Item also add the following Water Toys to their trip</h4>
+                    <h4>
+                      People who selected this Item also add the following Water
+                      Toys to their trip
+                    </h4>
                   </div>
                 </div>
               </div>
@@ -73,7 +86,11 @@ class ProductBookingSummary extends Component {
         </div>
         <div className="col-md-5 equal-height-columns">
           <div className="white-bg h-100 p-5">
-            <ProductBookingRentalDetails closeModal={ () => this.props.closeModal() } product={this.props.product} cartItemIndex={this.props.cartItemIndex}></ProductBookingRentalDetails>
+            <ProductBookingRentalDetails
+              closeModal={() => this.props.closeModal()}
+              product={this.props.product}
+              cartItemIndex={this.props.cartItemIndex}
+            ></ProductBookingRentalDetails>
           </div>
         </div>
       </div>
@@ -81,6 +98,4 @@ class ProductBookingSummary extends Component {
   }
 }
 
-export default connect()(
-  ProductBookingSummary
-);
+export default connect()(ProductBookingSummary);

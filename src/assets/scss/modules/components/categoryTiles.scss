@@ -5,6 +5,7 @@ $slideHeight: 240px;
   .category-tile {
     background-position: center center;
     height: $slideHeight;
+    min-height: $slideHeight;
     display: flex;
     justify-content: center;
     background-size: cover;
@@ -15,6 +16,10 @@ $slideHeight: 240px;
       color: white;
     }
   }
+}
+
+.slider-frame {
+  min-height: $slideHeight !important;
 }
 
 .first-carousel {
