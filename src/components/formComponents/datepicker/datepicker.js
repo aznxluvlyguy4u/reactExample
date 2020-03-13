@@ -81,8 +81,12 @@ class DatePicker extends Component {
   async onFocusChange(pickerFocusedInput) {
 
     await this.setState({ focusedInput: pickerFocusedInput });
+
     if (!pickerFocusedInput) {
       this.setState({ visibleYearMonth: null });
+      if(this.props.rangeCheck) {
+        this.props.rangeCheck(this.state.startDate, this.state.endDate);
+      }
     }
     else if (this.state.startDate !== null && !this.state.visibleYearMonth) {
       const visibleYearMonth = moment.utc(

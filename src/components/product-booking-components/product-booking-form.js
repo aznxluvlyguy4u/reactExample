@@ -366,6 +366,35 @@ class ProductBookingForm extends Component {
     this.calculateAvailabilityGraph(availabilityGraphRequest);
   }
 
+  async rangeCheck(startDate, endDate) {
+    const { availabilityGraph, productBookingForm, availabilityGraphRequest } = this.state;
+    const rangeUnavailable = availabilityGraph.find(
+      x =>
+        moment(x.date).isSameOrAfter(
+          moment(startDate),
+          "day"
+        ) &&
+        moment(x.date).isSameOrBefore(
+          moment(endDate),
+          "day"
+        ) &&
+        !x.available
+    );
+
+    if (rangeUnavailable) {
+      productBookingForm.period.start = null;
+      productBookingForm.period.end = null;
+      this.datePickerSelectElement.updateDateRange(null, null);
+      availabilityGraphRequest.period.start = null;
+      availabilityGraphRequest.period.end = null;
+
+      await this.setState({
+        productBookingForm,
+        availabilityGraph,
+      });
+    }
+  }
+
   async setFormFromBooking(cartItem) {
     this.updateDateRangeAvailability("booking", true);
     this.setState({ accessories: [] });
@@ -649,6 +678,9 @@ class ProductBookingForm extends Component {
                                   updateVisibleMonth={this.updateAvailabilityGraph.bind(
                                     this
                                   )}
+                                  rangeCheck={
+                                    this.rangeCheck.bind(this)
+                                  }
                                   loadingAvailabilityGraph={
                                     this.state.loadingAvailabilityGraph
                                   }
