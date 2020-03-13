@@ -38,7 +38,7 @@ class Tiles extends Component {
                     <div className="row">
                       {this.props.category.productGroups.map((item, index) => {
                         return (
-                          <div className="col-lg-3 col-md-4 col-sm-6">
+                          <div className="col-lg-3 col-md-4 col-sm-6 py-0 my-0">
                             <Link>
                               <a
                                 key={index}

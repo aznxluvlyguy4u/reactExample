@@ -14,6 +14,7 @@ import {
 import { orderCartItems } from "../../../../utils/rest/requests/orders";
 import CartUtils from "../../../../utils/mapping/cart/cartUtils";
 import Loader from "../../../../components/loader";
+import moment from "moment";
 
 const options = [
   {
@@ -72,9 +73,13 @@ class CheckoutPayForm extends Component {
 
   async setNewOrder(cartItem, paymentMethod) {
     // New order/ payment intent
+    const period = {
+      start: moment(cartItem.period.start).set({ minute:0,second:0,millisecond:0 }),
+      end: moment(cartItem.period.end).set({ minute:0,second:0,millisecond:0 })
+    };
     const request = new PlaceOrderRequest(
       cartItem.location,
-      cartItem.period,
+      period,
       cartItem.products,
       cartItem.contactInformation,
       cartItem.billingInformation,
