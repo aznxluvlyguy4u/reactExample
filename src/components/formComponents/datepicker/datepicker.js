@@ -186,11 +186,11 @@ class DatePicker extends Component {
     this.setState({ startDate: startDateMoment, endDate: endDateMoment, visibleYearMonth });
     this.props.setFieldValue(
       "deliveryDate",
-      startDateMoment.format("YYYY-MM-DDTHH:mm:ss.000")
+      startDateMoment ? startDateMoment.format("YYYY-MM-DDTHH:mm:ss.000") : null,
     );
     this.props.setFieldValue(
       "collectionDate",
-      endDateMoment.format("YYYY-MM-DDTHH:mm:ss.000")
+      endDateMoment ? endDateMoment.format("YYYY-MM-DDTHH:mm:ss.000") : null,
     );
   }
 

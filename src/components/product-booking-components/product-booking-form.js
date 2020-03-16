@@ -69,10 +69,11 @@ class ProductBookingForm extends Component {
       availabilityGraphRequest,
     } = this.state;
     const bookingDropDown = await this.setUpCartItemSelection(cart);
-    await this.setState({ bookingDropDown });
-    const { searchReducer, locationReducer } = this.props;
 
-    if (searchReducer.search.booking) {
+    await this.setState({ bookingDropDown });
+    const { searchReducer, locationReducer, cartItemIndex } = this.props;
+
+    if (searchReducer.search.booking && !cartItemIndex) {
       productBookingForm.booking = bookingDropDown.find(x => x.id === searchReducer.search.booking.id);
       productBookingForm.location.delivery = locationReducer.selectboxLocations.find(x => x.id === productBookingForm.booking.location.delivery.id);
       productBookingForm.location.collection = locationReducer.selectboxLocations.find(x => x.id === productBookingForm.booking.location.delivery.id);
@@ -84,6 +85,11 @@ class ProductBookingForm extends Component {
       await this.setState({
         productBookingForm
       });
+    } else if (cartItemIndex) {
+      const cartItem = cart[cartItemIndex];
+      productBookingForm.booking = bookingDropDown.find(x => x.id === cartItem.id);
+      this.bookingSelectElement.updateStateValue(productBookingForm.booking);
+      this.setFormFromBooking(cartItem);
     } else {
       if (searchReducer.search.deliveryLocation) {
         productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
@@ -220,10 +226,6 @@ class ProductBookingForm extends Component {
   }
 
   async setUpCartItemSelection(cart) {
-    const accessories = this.props.product.accessories.filter(
-      val => val.type === "OPTIONAL"
-    );
-    this.props.setProductOptionalAccessories(accessories);
 
     const start = new Date(new Date().setDate(new Date().getDate() + 1));
     const end = new Date(new Date().setDate(new Date().getDate() + 2));
@@ -737,7 +739,8 @@ class ProductBookingForm extends Component {
                                 </div>
                                 <div className="col-6">
                                   <button
-                                    className="search-button-full"
+                                    disabled={!this.state.loadingAvailabilityGraph ? false : true}
+                                    className={!this.state.loadingAvailabilityGraph ? "search-button-full" : "search-button-full disabled"}
                                     type="submit"
                                   >
                                     <i className="icon-cart" />
