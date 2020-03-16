@@ -443,10 +443,10 @@ class ProductBookingForm extends Component {
       availabilityGraphRequest.quantity = productBookingForm.qty;
       this.quantityInputElement.updateStateValue(productBookingForm.qty);
 
-      if (availabilityGraphRequest.location.delivery.name){
+      if (availabilityGraphRequest.location.delivery.name) {
         this.updateDateRangeAvailability("delivery", true);
       }
-      if (availabilityGraphRequest.location.collection.name){
+      if (availabilityGraphRequest.location.collection.name) {
         this.updateDateRangeAvailability("collection", true);
       }
 

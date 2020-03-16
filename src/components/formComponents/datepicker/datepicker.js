@@ -56,6 +56,7 @@ class DatePicker extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    
     const { startDate, endDate } = this.props;
 
     if (
@@ -154,6 +155,10 @@ class DatePicker extends Component {
       visibleYearMonth = null;
     }
     this.setState({ startDate: startDateMoment, visibleYearMonth });
+    this.props.setFieldValue(
+      "deliveryDate",
+      startDateMoment.format("YYYY-MM-DDTHH:mm:ss.000")
+    );
   }
 
   updateEndDate(endDate) {
@@ -163,17 +168,30 @@ class DatePicker extends Component {
       visibleYearMonth = null;
     }
     this.setState({ endDate: endDateMoment, visibleYearMonth });
+    this.props.setFieldValue(
+      "collectionDate",
+      endDateMoment.format("YYYY-MM-DDTHH:mm:ss.000")
+    );
   }
 
   updateDateRange(startDate, endDate) {
     const startDateMoment = startDate ? moment.utc(startDate) : null;
     const endDateMoment = endDate ? moment.utc(endDate) : null;
     let { visibleYearMonth } = this.state;
+    
 
     if (startDateMoment === null || endDateMoment === null) {
       visibleYearMonth = null;
     }
     this.setState({ startDate: startDateMoment, endDate: endDateMoment, visibleYearMonth });
+    this.props.setFieldValue(
+      "deliveryDate",
+      startDateMoment.format("YYYY-MM-DDTHH:mm:ss.000")
+    );
+    this.props.setFieldValue(
+      "collectionDate",
+      endDateMoment.format("YYYY-MM-DDTHH:mm:ss.000")
+    );
   }
 
   updateVisibleMonth(val) {
