@@ -200,6 +200,7 @@ class CheckoutBillingInformationForm extends Component {
                     <a
                       style={{ textDecoration: "underline", color: "#00" }}
                       href="https://www.oceanpremium.com/general-terms-conditions/"
+                      target="_blank"
                     >
                       Terms and Conditions
                     </a>

@@ -15,10 +15,6 @@ const CheckoutBillingInformationFormSchema = Yup.object().shape({
   phoneNumber: Yup.number()
     .min(2, 'Too Short!')
     .required('This is a required field'),
-  company: Yup.string()
-    .required('This is a required field'),
-  vatNumber: Yup.string()
-    .required('This is a required field'),
   streetName: Yup.string()
     .required('This is a required field'),
   streetNumber: Yup.string()
