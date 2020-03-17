@@ -280,6 +280,9 @@ class DatePicker extends Component {
         {this.returnValidation()}
         {this.props.loadingAvailabilityGraph == true &&
           "Checking Availability..."}
+        {this.props.loadingAvailabilityGraph == false && !this.state.startDate && (
+          <span>selected dates not available, please change dates</span>
+        )}
       </div>
     );
   }
