@@ -37,13 +37,12 @@ class CheckoutBookingConfigure extends Component {
       );
     }
     
-    console.log("cart length", cart[this.state.cartItemIndex].products.length);
     if (cart[this.state.cartItemIndex].products.length === 0) {
       this.props.backToBookings();
       cart.splice(this.state.cartItemIndex,1);
 
       if (cart.length === 0) {
-        LocalStorageUtil.emptyCart();
+        LocalStorageUtil.setCart(null);
       } else {
         LocalStorageUtil.setCart(cart);
       }

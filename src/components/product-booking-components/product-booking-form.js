@@ -74,7 +74,7 @@ class ProductBookingForm extends Component {
     const { searchReducer, cartItemIndex } = this.props;
 
     
-    if (cartItemIndex) {
+    if (cartItemIndex && bookingDropDown.length > cartItemIndex) {
       const cartItem = cart[cartItemIndex];
       productBookingForm.booking = bookingDropDown.find(x => x.id === cartItem.id);
       this.bookingSelectElement.updateStateValue(productBookingForm.booking);

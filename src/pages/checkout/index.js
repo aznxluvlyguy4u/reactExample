@@ -51,10 +51,14 @@ class CheckoutPage extends Component {
     if (this.state.cart && this.state.cart.length > 0) {
       this.setState({ loading: true });
       const orderRequests = await this.getProductsFromCartItems();
-      await checkCartAvailability(orderRequests).then(response => {
-        this.setBookingAvailabilityMap(response.data.products);
-      });
-    } else {
+      if (orderRequests.length > 0) {
+        await checkCartAvailability(orderRequests).then(response => {
+          this.setBookingAvailabilityMap(response.data.products);
+        });
+      } else {
+        this.setBookingAvailabilityMap([]);
+        this.setState({ loading: false });
+      }
     }
   }
 
@@ -305,9 +309,13 @@ class CheckoutPage extends Component {
       this.props.setCart(cart);
       LocalStorageUtil.setCart(cart);
       const orderRequests = await this.getProductsFromCartItems();
-      await checkCartAvailability(orderRequests).then(response => {
-        this.setBookingAvailabilityMap(response.data.products);
-      });
+      if (orderRequests.length > 0) { 
+        await checkCartAvailability(orderRequests).then(response => {
+          this.setBookingAvailabilityMap(response.data.products);
+        });
+      } else {
+        this.setBookingAvailabilityMap([]);
+      }
       this.setState({ loading: false });
     } else {
       this.setState({ loading: false });
@@ -333,9 +341,14 @@ class CheckoutPage extends Component {
       this.props.setCart(cart);
       LocalStorageUtil.setCart(cart);
       const orderRequests = await this.getProductsFromCartItems();
-      await checkCartAvailability(orderRequests).then(response => {
-        this.setBookingAvailabilityMap(response.data.products);
-      });
+      if (orderRequests.length > 0) {
+        await checkCartAvailability(orderRequests).then(response => {
+          this.setBookingAvailabilityMap(response.data.products);
+        });
+      } else {
+        this.setBookingAvailabilityMap([]);
+      }
+      
       this.setState({ loading: false });
     } else {
       this.setState({ loading: false });
