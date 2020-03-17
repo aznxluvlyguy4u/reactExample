@@ -323,14 +323,15 @@ class ProductBookingForm extends Component {
       }
 
       const { productBookingForm } = this.state;
+      
       const rangeUnavailable = availabilityResult.data.availabilityGraph.find(
         x =>
           moment(x.date).isSameOrAfter(
-            moment(availabilityGraphRequest.period.start),
+            moment(productBookingForm.period.start),
             "day"
           ) &&
           moment(x.date).isSameOrBefore(
-            moment(availabilityGraphRequest.period.end),
+            moment(productBookingForm.period.end),
             "day"
           ) &&
           !x.available
@@ -339,7 +340,7 @@ class ProductBookingForm extends Component {
       if (rangeUnavailable) {
         productBookingForm.period.start = null;
         productBookingForm.period.end = null;
-        if(this.datePickerSelectElement) {
+        if (this.datePickerSelectElement) {
           this.datePickerSelectElement.updateDateRange(null, null);
         }
         availabilityGraphRequest.period.start = null;
@@ -400,7 +401,6 @@ class ProductBookingForm extends Component {
   }
 
   async setFormFromBooking(cartItem) {
-    console.log("I get called");
     this.updateDateRangeAvailability("booking", true);
     this.setState({ accessories: [] });
 
