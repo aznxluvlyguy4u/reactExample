@@ -71,62 +71,63 @@ class ProductBookingForm extends Component {
     const bookingDropDown = await this.setUpCartItemSelection(cart);
 
     await this.setState({ bookingDropDown });
-    const { searchReducer, locationReducer, cartItemIndex } = this.props;
+    const { searchReducer, cartItemIndex } = this.props;
 
-    if (searchReducer.search.booking && !cartItemIndex) {
-      productBookingForm.booking = bookingDropDown.find(x => x.id === searchReducer.search.booking.id);
-      productBookingForm.location.delivery = locationReducer.selectboxLocations.find(x => x.id === productBookingForm.booking.location.delivery.id);
-      productBookingForm.location.collection = locationReducer.selectboxLocations.find(x => x.id === productBookingForm.booking.location.delivery.id);
-      
-      this.bookingSelectElement.updateStateValue(productBookingForm.booking);
-      this.deliveryLocationSelectElement.updateStateValue(productBookingForm.location.delivery);
-      this.collectionLocationSelectElement.updateStateValue(productBookingForm.location.collection);
-      this.datePickerSelectElement.updateDateRange(productBookingForm.booking.period.start, productBookingForm.booking.period.end);
-      await this.setState({
-        productBookingForm
-      });
-    } else if (cartItemIndex) {
+    
+    if (cartItemIndex) {
       const cartItem = cart[cartItemIndex];
       productBookingForm.booking = bookingDropDown.find(x => x.id === cartItem.id);
       this.bookingSelectElement.updateStateValue(productBookingForm.booking);
-      this.setFormFromBooking(cartItem);
-    } else {
-      if (searchReducer.search.deliveryLocation) {
-        productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
-        dateRangeAvailability.delivery = true;
-        availabilityGraphRequest.location.delivery = searchReducer.search.deliveryLocation;
-        this.deliveryLocationSelectElement.updateStateValue(searchReducer.search.deliveryLocation);
-        await this.setState({
-          productBookingForm,
-          dateRangeAvailability,
-          availabilityGraphRequest,
-        });
-      }
+      dateRangeAvailability.booking = true;
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability
+      });
+    } else if (searchReducer.search.booking && !cartItemIndex) {
+      productBookingForm.booking = bookingDropDown.find(x => x.id === searchReducer.search.booking.id);
+      this.bookingSelectElement.updateStateValue(productBookingForm.booking);
+      dateRangeAvailability.booking = true;
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability
+      });
+    }
 
-      if (searchReducer.search.collectionLocation) {
-        productBookingForm.location.collection = searchReducer.search.collectionLocation;
-        this.collectionLocationSelectElement.updateStateValue(searchReducer.search.collectionLocation);
-        dateRangeAvailability.collection = true;
-        availabilityGraphRequest.location.collection = searchReducer.search.collectionLocation;
+    if (searchReducer.search.deliveryLocation) {
+      productBookingForm.location.delivery = searchReducer.search.deliveryLocation;
+      dateRangeAvailability.delivery = true;
+      availabilityGraphRequest.location.delivery = searchReducer.search.deliveryLocation;
+      this.deliveryLocationSelectElement.updateStateValue(searchReducer.search.deliveryLocation);
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+        availabilityGraphRequest,
+      });
+    }
 
-        await this.setState({
-          productBookingForm,
-          dateRangeAvailability,
-        });
-      }
+    if (searchReducer.search.collectionLocation) {
+      productBookingForm.location.collection = searchReducer.search.collectionLocation;
+      this.collectionLocationSelectElement.updateStateValue(searchReducer.search.collectionLocation);
+      dateRangeAvailability.collection = true;
+      availabilityGraphRequest.location.collection = searchReducer.search.collectionLocation;
 
-      if (searchReducer.search.collectionDate) {
-        productBookingForm.period.end = moment(
-          searchReducer.search.collectionDate
-        );
-        dateRangeAvailability.collectionDate = true;
-        this.datePickerSelectElement.updateEndDate(searchReducer.search.collectionDate);
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+      });
+    }
 
-        await this.setState({
-          productBookingForm,
-          dateRangeAvailability,
-        });
-      }
+    if (searchReducer.search.collectionDate) {
+      productBookingForm.period.end = moment(
+        searchReducer.search.collectionDate
+      );
+      dateRangeAvailability.collectionDate = true;
+      this.datePickerSelectElement.updateEndDate(searchReducer.search.collectionDate);
+
+      await this.setState({
+        productBookingForm,
+        dateRangeAvailability,
+      });
 
       if (searchReducer.search.deliveryDate) {
         productBookingForm.period.start = moment(
@@ -338,7 +339,9 @@ class ProductBookingForm extends Component {
       if (rangeUnavailable) {
         productBookingForm.period.start = null;
         productBookingForm.period.end = null;
-        this.datePickerSelectElement.updateDateRange(null, null);
+        if(this.datePickerSelectElement) {
+          this.datePickerSelectElement.updateDateRange(null, null);
+        }
         availabilityGraphRequest.period.start = null;
         availabilityGraphRequest.period.end = null;
       }
@@ -397,6 +400,7 @@ class ProductBookingForm extends Component {
   }
 
   async setFormFromBooking(cartItem) {
+    console.log("I get called");
     this.updateDateRangeAvailability("booking", true);
     this.setState({ accessories: [] });
 

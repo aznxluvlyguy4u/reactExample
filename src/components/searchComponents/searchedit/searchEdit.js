@@ -38,7 +38,7 @@ class SearchEdit extends Component {
     const { searchReducer } = this.props;
     const { search } = searchReducer;
 
-    if(this.state.bookingDropDown 
+    if (this.state.bookingDropDown 
       && this.bookingSelectElement.updateStateValue 
       && search.deliveryLocation
       && search.collectionLocation
@@ -53,7 +53,8 @@ class SearchEdit extends Component {
       );
       if (matchBookingCriteria) {
         this.bookingSelectElement.updateStateValue(matchBookingCriteria);
-        this.setState({setup: true});
+        this.props.onChange({ bookingOnly: matchBookingCriteria });
+        this.setState({ setup: true });
       }
     }
   }
@@ -86,6 +87,12 @@ class SearchEdit extends Component {
     this.deliveryLocationSelectElement.updateStateValue(locationReducer.selectboxLocations.find(x => x.id === booking.location.delivery.id));
     this.collectionLocationSelectElement.updateStateValue(locationReducer.selectboxLocations.find(x => x.id === booking.location.collection.id));
 
+    if (this.props.onChange) {
+      this.props.onChange(obj);
+    }
+  }
+
+  changeDateRange(obj) {
     if (this.props.onChange) {
       this.props.onChange(obj);
     }
@@ -170,9 +177,7 @@ class SearchEdit extends Component {
                           <Field
                             validation={validation}
                             placeholders={['Pick up', 'Return']}
-                            onChange={
-                              onChange || null
-                            }
+                            onChange={this.changeDateRange.bind(this)}
                             startDate={this.props.searchReducer.search.deliveryDate}
                             endDate={this.props.searchReducer.search.collectionDate}
                             name="collectionDate"

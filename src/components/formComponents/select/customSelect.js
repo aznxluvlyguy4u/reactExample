@@ -52,9 +52,10 @@ class CustomSelect extends Component {
   }
 
   updateStateValue(value) {
-    const { setFieldValue, field } = this.props;
-    setFieldValue(field.name, value);
-    this.setState({value});
+    const { setFieldValue, field, options } = this.props;
+    const valueToSet = value ? options.find(x => x.id === value.id) : null;
+    setFieldValue(field.name, valueToSet);
+    this.setState({value: valueToSet});
   }
   
   onChange(value) {

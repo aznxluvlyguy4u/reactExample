@@ -88,13 +88,13 @@ class SearchPage extends Component {
       deliveryLocation: obj.deliveryLocation,
       collectionLocation: obj.collectionLocation,
       deliveryDate: obj.deliveryDate,
-      collectionDate: obj.collectionDate
+      collectionDate: obj.collectionDate,
+      booking: null
     };
   }
 
   async componentDidMount() {
     const { keyword, deliveryLocation, collectionLocation } = this.props;
-
     if (keyword !== "") {
       this.meta = {
         title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`,
@@ -105,7 +105,6 @@ class SearchPage extends Component {
     if (deliveryLocation !== "" && collectionLocation !== "") {
       this.setState({ notFound: false });
       await this.getProducts("update");
-      // await this.getCategories();
     } else {
       this.setState({ notFound: true, loading: false });
     }
@@ -241,6 +240,21 @@ class SearchPage extends Component {
   }
 
   async mergeObj(obj) {
+
+    if (obj.bookingOnly) {
+      setTimeout(() => {
+        const bookingSelected = {
+          id: obj.bookingOnly.id,
+          name: obj.bookingOnly.name,
+          value: {
+            id: obj.bookingOnly.id,
+            name: obj.bookingOnly.name,
+          },
+        };
+        this.props.updateSearchBooking(bookingSelected);
+      }, 100);
+    }
+
     if (obj.booking) {
       const cart = await LocalStorageUtil.getCart();
       const booking = cart.find(x => x.id === obj.booking.id);
@@ -274,6 +288,20 @@ class SearchPage extends Component {
       setTimeout(() => {
         this.props.updateSearchCollectionLocation(obj.collectionLocation);
       }, 100);
+    }
+
+    if (obj.deliveryDate) {
+      setTimeout(() => {
+        this.props.updateSearchDeliveryDate(obj.deliveryDate);
+      }, 100);
+      console.info("handle delivery date change");
+    }
+
+    if (obj.collectionDate) {
+      setTimeout(() => {
+        this.props.updateSearchCollectionDate(obj.collectionDate);
+      }, 100);
+      console.info("handle delivery date change");
     }
 
     setTimeout(() => {
