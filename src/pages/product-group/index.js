@@ -204,11 +204,7 @@ class ProductGroupPage extends Component {
                   {products.map(product => (
                     <img
                       key={product.id}
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "130px"
-                      }}
+                      className="img-fluid"
                       src={product.images[0].url}
                     />
                   ))}

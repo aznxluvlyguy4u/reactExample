@@ -594,7 +594,7 @@ class ProductBookingForm extends Component {
                         }}
                         onSubmit={this.onSubmit.bind(this)}
                       >
-                        {({ setFieldValue }) => (
+                        {({ errors, setFieldValue }) => (
                           <Form>
                             <div>
                               <div className="bookingItem form-block mx-0 px-0">
@@ -744,7 +744,7 @@ class ProductBookingForm extends Component {
                                 <div className="col-6">
                                   <button
                                     disabled={!this.state.loadingAvailabilityGraph ? false : true}
-                                    className={!this.state.loadingAvailabilityGraph ? "search-button-full" : "search-button-full disabled"}
+                                    className={!this.state.loadingAvailabilityGraph && _.isEmpty(errors) ? "search-button-full" : "search-button-full disabled"}
                                     type="submit"
                                   >
                                     <i className="icon-cart" />

@@ -58,7 +58,7 @@ class CheckoutLogistics extends Component {
                   <div className="col-6">
                     <div className="logistics-header">
                       <h2>Pick-Up</h2>
-                      {this.props.cartItem.location.collection.name} -{" "}
+                      {this.props.cartItem.location.delivery.name} -{" "}
                       {moment(this.props.cartItem.period.start).format(
                         "DD.MM.YYYY"
                       )}
@@ -72,7 +72,7 @@ class CheckoutLogistics extends Component {
                   <div className="col-6">
                     <div className="logistics-header">
                       <h2>Drop-Off</h2>
-                      {this.props.cartItem.location.delivery.name} -{" "}
+                      {this.props.cartItem.location.collection.name} -{" "}
                       {moment(this.props.cartItem.period.end).format(
                         "DD.MM.YYYY"
                       )}
