@@ -550,8 +550,10 @@ class ProductBookingForm extends Component {
     const availabilityGraphRequest = this.state.availabilityGraphRequest;
     const productBookingForm = this.state.productBookingForm;
 
-    availabilityGraphRequest.period.start = dates.startDate;
-    availabilityGraphRequest.period.end = dates.endDate;
+    if (dates.startDate && dates.endDate) {
+      availabilityGraphRequest.period.start = dates.startDate;
+      availabilityGraphRequest.period.end = dates.endDate;
+    }
     productBookingForm.period.start = dates.startDate;
     productBookingForm.period.end = dates.endDate;
     await this.setState({
