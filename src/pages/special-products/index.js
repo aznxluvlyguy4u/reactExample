@@ -64,11 +64,11 @@ class SpecialProducts extends Component {
             <div className="top-banner-content">
               <h2>{content.fields.topBannerTitle}</h2>
               <h5>{content.fields.topBannerSubtitle}</h5>
-              <Link>
+              {/* <Link>
                 <a className="yellow-button">
                   {content.fields.topBannerButtonText}
                 </a>
-              </Link>
+              </Link> */}
             </div>
             <div className="container">
               <div id="rich-text-body" className="mt-5 mb-5">
