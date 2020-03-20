@@ -546,6 +546,21 @@ class ProductBookingForm extends Component {
     await this.updateAvailabilityGraph(productBookingForm.period.start);
   }
 
+  async focusChange(dates) {
+    const availabilityGraphRequest = this.state.availabilityGraphRequest;
+    const productBookingForm = this.state.productBookingForm;
+
+    availabilityGraphRequest.period.start = dates.startDate;
+    availabilityGraphRequest.period.end = dates.endDate;
+    productBookingForm.period.start = dates.startDate;
+    productBookingForm.period.end = dates.endDate;
+    await this.setState({
+      availabilityGraphRequest,
+      productBookingForm
+    });
+
+  }
+
   render() {
     return (
       <div className="row">
@@ -700,6 +715,9 @@ class ProductBookingForm extends Component {
                                   }
                                   loadingAvailabilityGraph={
                                     this.state.loadingAvailabilityGraph
+                                  }
+                                  focusChange={
+                                    this.focusChange.bind(this)
                                   }
                                   selectRef={ ref => (this.datePickerSelectElement = ref)}
                                   component={DatePicker}

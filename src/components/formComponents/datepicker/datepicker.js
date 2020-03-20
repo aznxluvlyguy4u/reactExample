@@ -104,6 +104,10 @@ class DatePicker extends Component {
         this.props.updateVisibleMonth(visibleYearMonth);
       }
     }
+
+    if (this.props.focusChange) {
+      this.props.focusChange({startDate: this.state.startDate, endDate: this.state.endDate});
+    }
   }
 
   handleChange = (startDate, endDate) => {
