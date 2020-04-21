@@ -42,7 +42,6 @@ export { OFFICES_ENDPOINT_BASE_URL };
 //     case 'dev':
 //       return DEV_URL;
 //     case 'staging':
-//       console.log('test');
 //       return STAGING_URL;
 //     case 'prod':
 //       return PROD_URL;

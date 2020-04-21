@@ -7,8 +7,6 @@ const validate = (values) => {
   //   errors.email = 'Invalid email address';
   // }
 
-  // console.log("special character "+/^(?=.[!@#$%^&*(),.?":{}|<>])/.test(values.password))
-
   // if (!values.password) {
   //   errors.password = 'Please fill in a password';
   // }

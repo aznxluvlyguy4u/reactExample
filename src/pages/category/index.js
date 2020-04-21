@@ -79,7 +79,7 @@ class CategoryPage extends Component {
 
   render() {
     const { categories, category, visible } = this.state;
-    console.log(category);
+
     if (category) {
       return (
         <Default meta={meta} nav="fixed">

@@ -38,7 +38,6 @@ class SpecialProducts extends Component {
 
   setData(data) {
     this.setState({ content: data });
-    console.log(data);
   }
 
   render() {

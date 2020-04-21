@@ -114,7 +114,7 @@ class IndexPage extends Component {
               "display-none": !this.state.visible
             })}
           >
-            <img src="/images/Ellipse 2.png" />
+            <img src="/static/images/Ellipse 2.png" />
           </div>
           <div
             className={classnames("scroll-down-arrow", {
@@ -123,7 +123,7 @@ class IndexPage extends Component {
           >
             <img
               onClick={() => this.scrollTo()}
-              src="/images/down-arrow.png"
+              src="/static/images/down-arrow.png"
             />
           </div>
           <SearchFormWrapper />
@@ -135,13 +135,13 @@ class IndexPage extends Component {
           {categories &&
             categories.map((category, categoryIndex) => {
               return (
-                <Fragment>
+                <Fragment key={categoryIndex}>
                   {bannerContent &&
                     bannerContent.map((bannerData, bannerIndex) => {
                       if (categoryIndex == 1 && bannerIndex == 0) {
-                        return <Banner data={bannerData} />;
+                        return <Banner key={bannerIndex} data={bannerData} />;
                       } else if (categoryIndex == 3 && bannerIndex == 1) {
-                        return <Banner data={bannerData} />;
+                        return <Banner key={bannerIndex} data={bannerData} />;
                       }
                     })}
                   <Tiles category={category} subHeading={true} />
@@ -161,7 +161,7 @@ class IndexPage extends Component {
                             your life easier.
                           </div>
                         </div>
-                        <img src="/images/banner-image-3.png" />
+                        <img src="/static/images/banner-image-3.png" />
                       </div>
                     </div>
                   )}

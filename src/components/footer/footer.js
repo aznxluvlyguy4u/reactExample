@@ -13,7 +13,7 @@ const Footer = () => (
             <Link href="/"><a href="/">Explore</a></Link>
           </li>
           <li>
-            <Link href="https://www.oceanpremium.com/shop/"><a href="https://www.oceanpremium.com/shop/">Shop</a></Link>
+            <Link href="//www.oceanpremium.com/shop/"><a href="//www.oceanpremium.com/shop/">Shop</a></Link>
           </li>
         </ul>
       </div>
@@ -21,7 +21,7 @@ const Footer = () => (
         <h2>Legal</h2>
         <ul>
           <li>
-            <a target="_blank" href="https://www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>
+            <a target="_blank" href="//www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>
           </li>
           <li>
             <Link href="/privacy-policy"><a href="/privacy-policy">Privacy Policy</a></Link>
