@@ -12,6 +12,7 @@ import '../assets/scss/styles.scss';
 import SelectboxLocation from '../utils/mapping/locations/SelectboxLocation';
 import LocalStorageUtil from '../utils/localStorageUtil';
 import 'bootstrap/dist/css/bootstrap-grid.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 /**
 * @param {object} initialState

@@ -6,7 +6,7 @@ const port = parseInt(process.env.PORT, 10) || 3000;
 // false if not production
 const dev = process.env.NODE_ENV !== 'production';
 let app = null;
-app = next({ dev, dir: './src' });
+app = next({ dev });
 const handle = app.getRequestHandler();
 
 app

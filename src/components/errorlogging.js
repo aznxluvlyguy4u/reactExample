@@ -1,7 +1,7 @@
-import * as Sentry from '@sentry/browser';
+//import * as Sentry from '@sentry/browser';
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 
 export default class ErrorLogging extends Component {
   // constructor(props) {
@@ -10,19 +10,19 @@ export default class ErrorLogging extends Component {
   // }
 
   componentDidMount() {
-    if (process.env.STAGE === 'prod') {
-      dotenv.config();
-      Sentry.init({
-        dsn: 'https://733cb82e193b4ed88b7e5aa074bbcd10@sentry.io/1441370',
-      });
-    }
+    // if (process.env.STAGE === 'prod') {
+    //   dotenv.config();
+    //   Sentry.init({
+    //     dsn: 'https://733cb82e193b4ed88b7e5aa074bbcd10@sentry.io/1441370',
+    //   });
+    // }
   }
 
   componentDidCatch(error, errorInfo) {
-    if (process.env.STAGE === 'prod') {
-      // this.setState({ error });
-      Sentry.captureException(error, { extra: errorInfo });
-    }
+    // if (process.env.STAGE === 'prod') {
+    //   // this.setState({ error });
+    //   Sentry.captureException(error, { extra: errorInfo });
+    // }
   }
 
   render() {

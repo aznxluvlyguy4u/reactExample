@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Slide, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
 import ErrorLogging from '../components/errorlogging';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';

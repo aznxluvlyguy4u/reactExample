@@ -16,7 +16,7 @@ class Header extends React.Component {
 
     this.menuItems = [
       { id: 1, title: 'Rentals',  isExternal: false, slug: '' },
-      { id: 2, title: 'Shop',  isExternal: true, slug: 'https://www.oceanpremium.com/shop/' },
+      { id: 2, title: 'Shop',  isExternal: true, slug: '//www.oceanpremium.com/shop/' },
       { id: 3, title: 'About',  isExternal: false, slug: 'about' },
       { id: 4, title: 'Contact',  isExternal: false, slug: 'contact' },
       { id: 5, title: 'Cart',  isExternal: false, slug: 'checkout', icon: true,
