@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 
 import Carousel from "nuka-carousel";
 import slugify from "slugify";
@@ -34,7 +34,7 @@ class CategoryTiles extends Component {
 
   category(item) {
     return (
-      <Link>
+      // <Link>
         <a
           href={`/category?id=${item.id}&slug=${slugify(item.name)}`}
           as={`/category/${item.id}/${slugify(item.name)}`}
@@ -51,7 +51,7 @@ class CategoryTiles extends Component {
             <span>{item.name && this.toUpperCase(item.name)}</span>
           </div>
         </a>
-      </Link>
+      // </Link>
     );
   }
 

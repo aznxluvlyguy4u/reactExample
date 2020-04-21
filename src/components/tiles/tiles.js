@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Link from "next/link";
 import slugify from "slugify";
 
 class Tiles extends Component {
@@ -38,34 +37,30 @@ class Tiles extends Component {
                     <div className="row">
                       {this.props.category.productGroups.map((item, index) => {
                         return (
-                          <div className="col-lg-3 col-md-4 col-sm-6 py-0 my-0">
-                            <Link>
-                              <a
-                                key={index}
-                                // href={`/detail?id=${item.id}&slug=${slugify(
-                                //   item.name
-                                // )}`}
-                                // as={`/detail/${item.id}/${slugify(item.name)}`}
-                                href={`/product-group?id=${
-                                  item.id
-                                }&slug=${slugify(item.name)}`}
-                                as={`/product-group/${item.id}/${slugify(
-                                  item.name
-                                )}`}
-                              >
-                                <div className="product">
-                                  <img
-                                    alt={item.name}
-                                    src={
-                                      item.imageThumbnail
-                                        ? item.imageThumbnail.url
-                                        : "/static/images/flyboard.png"
-                                    }
-                                  />
-                                  <h4>{item.name}</h4>
-                                </div>
-                              </a>
-                            </Link>
+                          <div
+                            key={item.name + index}
+                            className="col-lg-3 col-md-4 col-sm-6 py-0 my-0"
+                          >
+                            <a
+                              href={`/product-group?id=${
+                                item.id
+                              }&slug=${slugify(item.name)}`}
+                              as={`/product-group/${item.id}/${slugify(
+                                item.name
+                              )}`}
+                            >
+                              <div className="product">
+                                <img
+                                  alt={item.name}
+                                  src={
+                                    item.imageThumbnail
+                                      ? item.imageThumbnail.url
+                                      : "/static/images/flyboard.png"
+                                  }
+                                />
+                                <h4>{item.name}</h4>
+                              </div>
+                            </a>
                           </div>
                         );
                       })}

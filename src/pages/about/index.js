@@ -49,7 +49,7 @@ class AboutPage extends Component {
               <img
                 alt="scroll"
                 onClick={() => this.scrollTo("general-contact")}
-                src="/static/images/Vector 9.png"
+                src="/static/images/down-arrow.png"
               />
             </div>
           </div>

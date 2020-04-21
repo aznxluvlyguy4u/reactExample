@@ -137,7 +137,7 @@ class ProductGroupPage extends Component {
             >
               <img
                 onClick={() => this.scrollTo()}
-                src="/static/images/Vector 9.png"
+                src="/static/images/down-arrow.png"
               />
             </div>
           </div>

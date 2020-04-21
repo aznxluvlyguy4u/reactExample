@@ -114,7 +114,7 @@ class IndexPage extends Component {
               "display-none": !this.state.visible
             })}
           >
-            <img src="/static/images/Ellipse 2.png" />
+            <img src="/images/Ellipse 2.png" />
           </div>
           <div
             className={classnames("scroll-down-arrow", {
@@ -123,7 +123,7 @@ class IndexPage extends Component {
           >
             <img
               onClick={() => this.scrollTo()}
-              src="/static/images/Vector 9.png"
+              src="/images/down-arrow.png"
             />
           </div>
           <SearchFormWrapper />
@@ -161,7 +161,7 @@ class IndexPage extends Component {
                             your life easier.
                           </div>
                         </div>
-                        <img src="/static/images/banner-image-3.png" />
+                        <img src="/images/banner-image-3.png" />
                       </div>
                     </div>
                   )}
