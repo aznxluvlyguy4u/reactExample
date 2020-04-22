@@ -266,9 +266,10 @@ class DatePicker extends Component {
           onFocusChange={this.onFocusChange.bind(this)}
           block
           isDayBlocked={dateMoment => {
+            if (!this.props.availabilityGraph) return false;
+            
             if (this.props.loadingAvailabilityGraph == true) return true;
 
-            if (!this.props.availabilityGraph) return false;
             const existingAvailability = this.props.availabilityGraph.find(
               availability => {
                 return moment(availability.date).isSame(dateMoment, "day");
