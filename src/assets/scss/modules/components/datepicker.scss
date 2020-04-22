@@ -52,6 +52,7 @@
 
 .DateRangePicker {
   font-family: $font-stack !important;
+  z-index: 99999;
 }
 
 .DateRangePickerInput__block {
