@@ -309,8 +309,8 @@ class ProductBookingForm extends Component {
       const availabilityResult = await checkAvailabilityGraph(
         availabilityGraphRequest
       )
-        .then(res => res)
-        .catch(err => err);
+        //.then(res => res)
+        //.catch(err => err);
 
       if (
         !availabilityResult.data ||

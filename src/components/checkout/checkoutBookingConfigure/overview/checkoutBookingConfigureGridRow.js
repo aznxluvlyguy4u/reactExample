@@ -11,7 +11,18 @@ class CheckoutBookingConfigureGridRow extends Component {
   }
 
   returnAvailabilityIcon(item) {
-    if (item.quantityAvailable === 0) {
+    if (item.availabilityState) {
+      switch (item.availabilityState) {
+        case 'AVAILABLE':
+          return <img height="20" width="20" src="/static/images/available.png" />;
+        case 'AVAILABLE_BUT_DELAYED':
+          return <img height="20" width="20" src="/static/images/available.png" />;
+        case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
+            return <img height="20" width="20" src="/static/images/available.png" />;
+        case 'NOT_AVAILABLE':
+          return <img height="20" width="20" src="/static/images/unavailable.png" />;
+      }
+    } else if (item.quantityAvailable === 0) {
       return <img className="availabilityImage" src="/static/images/unavailable.png" alt="unavailable" title="The product is unavialable"/>
     }
 
@@ -44,6 +55,7 @@ class CheckoutBookingConfigureGridRow extends Component {
           </div>
           <div className="col-3 align-self-center">
             <h3>{this.props.rowItem.item.name}</h3>
+            {this.props.rowItem.item.note && (<p className="from-price">{this.props.rowItem.item.note}</p>)}
             {this.props.rowItem.item.rates &&
               this.props.rowItem.item.rates.length > 0 && (
                 <p className="from-price">

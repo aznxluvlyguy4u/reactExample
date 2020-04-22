@@ -27,7 +27,7 @@ const colourStyles = {
     fontWeight: 'bold',
     width: '100%',
   }),
-  menu: styles => ({ ...styles, borderRadius: '0px', zIndex: 9999 }),
+  menu: styles => ({ ...styles, borderRadius: '0px', zIndex: 99999999 }),
   placeholder: styles => ({ ...styles, color: '#D3D3D3' }),
   singleValue: styles => ({ ...styles, color: '#19303B' }),
   noOptionsMessage: styles => ({ ...styles, color: '#D3D3D3', fontSize: '11px' }),

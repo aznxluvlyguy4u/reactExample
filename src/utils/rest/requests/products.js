@@ -108,3 +108,13 @@ export function getProductById(id, deliveryLocation) {
     }
   }).then(handleRestResponse);
 }
+
+export function getProductGroupById(id) {
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/groups?q[id_eq]=${id}`;
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: "application/json"
+    }
+  }).then(handleRestResponse);
+}

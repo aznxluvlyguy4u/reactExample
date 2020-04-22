@@ -54,7 +54,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) {
         await checkCartAvailability(orderRequests).then(response => {
           this.setBookingAvailabilityMap(response.data.products);
-        });
+        }).catch(err => this.setState({loading: false}));
       } else {
         this.setBookingAvailabilityMap([]);
         this.setState({ loading: false });
@@ -312,7 +312,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) { 
         await checkCartAvailability(orderRequests).then(response => {
           this.setBookingAvailabilityMap(response.data.products);
-        });
+        }).catch(err => this.setState({loading: false}));
       } else {
         this.setBookingAvailabilityMap([]);
       }
@@ -344,7 +344,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) {
         await checkCartAvailability(orderRequests).then(response => {
           this.setBookingAvailabilityMap(response.data.products);
-        });
+        }).catch(err => this.setState({loading: false}));
       } else {
         this.setBookingAvailabilityMap([]);
       }

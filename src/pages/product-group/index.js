@@ -9,7 +9,7 @@ import Loader from "../../components/loader";
 import ProductTiles from "../../components/product-tiles/product-tiles";
 
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
-import { getByGroupId } from "../../utils/rest/requests/products";
+import { getByGroupId, getProductGroupById } from "../../utils/rest/requests/products";
 import { getCategories } from "../../utils/rest/requests/categories";
 
 const meta = {
@@ -44,18 +44,24 @@ class ProductGroupPage extends Component {
 
   async retrieveProductGroup() {
     try {
-      const response = await getCategories();
-      if (!response.data) return;
+      const productGroupRes = await getProductGroupById(this.props.id);
+      if (!productGroupRes && !productGroupRes.data) return;
+      
+      const productGroup = productGroupRes.data[0];
+      this.setState({productGroup});
 
-      response.data.forEach(category => {
-        if (!category.productGroups) return;
-        category.productGroups.forEach(productGroup => {
-          if (productGroup.id === this.props.id) {
-            this.setState({ productGroup });
-            return;
-          }
-        });
-      });
+      // const response = await getCategories();
+      // if (!response.data) return;
+
+      // response.data.forEach(category => {
+      //   if (!category.productGroups) return;
+      //   category.productGroups.forEach(productGroup => {
+      //     if (productGroup.id === this.props.id) {
+      //       this.setState({ productGroup });
+      //       return;
+      //     }
+      //   });
+      // });
     } catch (error) {
       this.setState({
         categories: []
@@ -177,21 +183,9 @@ class ProductGroupPage extends Component {
             <h1 className="product-group-heading">Gallery</h1>
             <div className="row">
               <div className="col-sm-12 col-md-6 product-group-text">
-                <div className="text-group">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book.
-                </div>
-                <div className="text-group">
-                  It has survived not only five centuries, but also the leap
-                  into electronic typesetting, remaining essentially unchanged.
-                </div>
-                <div className="text-group">
-                  It was popularised in the 1960s with the release of Letraset
-                  sheets containing Lorem Ipsum passages.
-                </div>
+                {productGroup && productGroup.galleryDescription && (<div className="text-group">
+                  {productGroup.galleryDescription}
+                </div>)}
               </div>
               <div className="col-sm-12 col-md-6">
                 <div
