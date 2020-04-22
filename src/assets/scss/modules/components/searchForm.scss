@@ -11,9 +11,14 @@
       width: 100%;
       display: block;
       font-size: 12px;
-      font-weight: bold;
+      font-weight: normal;
       margin-bottom: 5px;
       text-transform: uppercase
+    }
+
+    .bolded {
+      color: black;
+      font-weight: bold;
     }
 
     input {
@@ -57,7 +62,7 @@
   font-size: 18px;
   padding-top: 10px;
   padding-bottom: 10px;
-  border-radius: 3px;
+  border-radius: 2px;
   cursor: pointer;
   margin-top: 10px;
 }

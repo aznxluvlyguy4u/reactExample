@@ -76,12 +76,12 @@ class Header extends React.Component {
       return (
         <li key={menuItem.id}>
            {menuItem.isExternal ?
-              <a target="_blank" href={`${menuItem.slug}`}> {menuItem.title}</a>
+              <a class="header-menu-item" target="_blank" href={`${menuItem.slug}`}> {menuItem.title}</a>
             :
               <Link
                 key={menuItem.title}
                 href={`/${menuItem.slug}`}>
-                <a>{menuItem.title}</a>
+                <a class="header-menu-item">{menuItem.title}</a>
               </Link>
             }
         </li>
@@ -99,7 +99,7 @@ class Header extends React.Component {
         ) : (
           <div className="logo-wrapper">
             <Link href="/">
-              <a><img className="logo" alt="Logo" src={navType === 'fixed' ? '/static/images/logo_dark.png' : '/static/images/logo.png'} height="25" width="120" /></a>
+              <a><img className="logo" alt="Logo" src={navType === 'fixed' ? '/static/images/logo_dark.png' : '/static/images/logo.png'} height="35" width="192" /></a>
             </Link>
           </div>
         )}

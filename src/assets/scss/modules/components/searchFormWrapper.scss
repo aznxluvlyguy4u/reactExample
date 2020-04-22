@@ -6,9 +6,10 @@
 .searchform-wrapper {
   background-color: white;
   position: relative;
-  padding: 30px;
+  padding: 35px;
   margin-top: 20vh;
   margin-bottom: 40px;
+  border-radius: 5px;
   @include for-tablet-portrait-up {
     width: 500px;
   }
@@ -18,12 +19,15 @@
 
   h1 {
     font-size: 36px;
+    font-weight: bold;
     margin: 0;
   }
 
   h3 {
-    font-weight: lighter;
-    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 17.2px;
+    line-height: 30px;
   }
 }
 

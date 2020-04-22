@@ -9,7 +9,7 @@ export default class SearchFormWrapper extends Component {
           <div className="col">
             <div className="searchform-wrapper">
               <h1>Water toys anytime anywhere</h1>
-              <h3>Discover the best water toys for your next adventure on the high seas.</h3>
+              <h3>Discover the largest collection of water toy rentals for your next adventure on the high seas.</h3>
               <SearchForm />
             </div>
           </div>

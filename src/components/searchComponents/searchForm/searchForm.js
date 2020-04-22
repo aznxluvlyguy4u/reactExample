@@ -76,19 +76,42 @@ class SearchForm extends Component {
             <Form>
               <div>
                 <div className="keyword form-block mx-0 px-0">
-                  <label htmlFor="keyword">I am looking for</label>
+                  <label class="bolded" htmlFor="keyword">I am looking for</label>
                   <Field
                     name="keyword"
                     onChange={e => {
                       this.props.updateSearchKeyword(e.target.value);
                     }}
-                    placeholder="Anything, anywhere..."
+                    placeholder="Jetskis, Seabobs..."
                     component={CustomInputComponent}
                   />
                 </div>
-                <div className="form-inline mx-0 px-0">
+                <div className="date form-block search-form-wrap px-0 mt-4">
+                  <div className="label-wrapper">
+                    <label htmlFor="collectionDateRange"><span class="bolded">PICK-UP</span> Date</label>
+                    <label htmlFor="collectionDateRange"><span class="bolded">DROP-OFF</span> Date</label>
+                  </div>
+                  <Field
+                    placeholders={["Date", "Date"]}
+                    onChange={e => {
+                      if (e.hasOwnProperty("deliveryDate")) {
+                        this.props.updateSearchDeliveryDate(e.deliveryDate);
+                      }
+                      if (e.hasOwnProperty("collectionDate")) {
+                        this.props.updateSearchCollectionDate(e.collectionDate);
+                      }
+                    }}
+                    setFieldValue={setFieldValue}
+                    name="collectionDate"
+                    placeholder="Date"
+                    startDate={this.props.searchReducer.search.deliveryDate}
+                    endDate={this.props.searchReducer.search.collectionDate}
+                    component={DatePicker}
+                  />
+                </div>
+                <div className="form-inline mx-0 px-0 mt-3 mb-2">
                   <div className="location form-block pr-1">
-                    <label htmlFor="deliveryLocation">Pick up</label>
+                    <label htmlFor="deliveryLocation"><span class="bolded">PICK-UP</span> Location</label>
                     <Field
                       options={this.props.locationReducer.selectboxLocations}
                       onChange={e => {
@@ -109,14 +132,14 @@ class SearchForm extends Component {
                         }
                       }}
                       name="deliveryLocation"
-                      placeholder="Location"
+                      placeholder="Point A"
                       value={this.props.searchReducer.search.deliveryLocation}
                       setFieldValue={setFieldValue}
                       component={CustomSelect}
                     />
                   </div>
                   <div className="location form-block ml-2 px-0">
-                    <label htmlFor="collectionLocation">Return</label>
+                    <label htmlFor="collectionLocation"><span class="bolded">DROP-OFF</span> Location</label>
                     <Field
                       options={this.props.locationReducer.selectboxLocations}
                       onChange={e => {
@@ -131,35 +154,12 @@ class SearchForm extends Component {
                         });
                       }}
                       name="collectionLocation"
-                      placeholder="Location"
+                      placeholder="Point B"
                       value={this.props.searchReducer.search.collectionLocation}
                       setFieldValue={setFieldValue}
                       component={CustomSelect}
                     />
                   </div>
-                </div>
-                <div className="date form-block search-form-wrap px-0">
-                  <div className="label-wrapper">
-                    <label htmlFor="collectionDateRange">Pick up Date</label>
-                    <label htmlFor="collectionDateRange">Return Date</label>
-                  </div>
-                  <Field
-                    placeholders={["Date", "Date"]}
-                    onChange={e => {
-                      if (e.hasOwnProperty("deliveryDate")) {
-                        this.props.updateSearchDeliveryDate(e.deliveryDate);
-                      }
-                      if (e.hasOwnProperty("collectionDate")) {
-                        this.props.updateSearchCollectionDate(e.collectionDate);
-                      }
-                    }}
-                    setFieldValue={setFieldValue}
-                    name="collectionDate"
-                    placeholder="Date"
-                    startDate={this.props.searchReducer.search.deliveryDate}
-                    endDate={this.props.searchReducer.search.collectionDate}
-                    component={DatePicker}
-                  />
                 </div>
                 <button className="search-button-full" type="submit">
                   Search

@@ -117,3 +117,17 @@
   font-weight: normal;
   font-style: italic;
 }
+
+@font-face {
+  font-family: 'Avenir-Black';
+  src: url('/static/fonts/Avenir/AvenirLTStd-Black.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir-Light';
+  src: url('/static/fonts/Avenir/AvenirLTStd-Light.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
