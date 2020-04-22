@@ -11,6 +11,9 @@ class CheckoutBookingConfigureSummary extends Component {
 
   render() {
     if (this.props.cartItem) {
+      const item = this.props.productBookingMap.find(p => p.id === this.props.cartItem.id);
+      const availability = (item.availability && item.availability.length > 0) ? item.availability[0] : null
+
       return (
         <div className="checkout-configure checkout-configure-summary">
           <h1>
@@ -62,7 +65,7 @@ class CheckoutBookingConfigureSummary extends Component {
           <div className="row costs">
             <div className="col-8">Rental Fee</div>
             <div className="col-4">
-              € {this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))}
+              € {availability.totalCostProducts/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
             </div>
           </div>
           <div className="col-8">
@@ -76,11 +79,11 @@ class CheckoutBookingConfigureSummary extends Component {
             />
             Transport Costs
           </div>
-          <div className="col-4">€ 0.00</div>
+            <div className="col-4">€ {availability.totalTransportCosts}</div>
           <div className="row costs">
             <div className="col-8 rowHead">Total Costs</div>
             <div className="col-4">
-              € {this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))}
+              € {availability.totalPrice/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
             </div>
           </div>
         </div>
