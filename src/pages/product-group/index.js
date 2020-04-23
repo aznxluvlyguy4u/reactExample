@@ -189,9 +189,9 @@ class ProductGroupPage extends Component {
             <h1 className="product-group-heading">Gallery</h1>
             <div className="row">
               <div className="col-sm-12 col-md-6 product-group-text">
-                {productGroup && productGroup.galleryDescription && (
+                {productGroup && productGroup.summary && (
                   <div className="text-group">
-                    {productGroup.galleryDescription}
+                    {productGroup.summary}
                   </div>
                 )}
               </div>
