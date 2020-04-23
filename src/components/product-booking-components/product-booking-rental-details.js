@@ -23,6 +23,8 @@ class ProductBookingRentalDetails extends Component {
       (x) => x.quantity > 0
     );
 
+    console.log(props.product);
+
     let rentalFee =
       Number(props.product.rates[0].price) *
       parseInt(cartItemProduct.quantity) *
@@ -105,6 +107,7 @@ class ProductBookingRentalDetails extends Component {
 
   render() {
     const product = this.state.product;
+    console.log(product, this.state.accessories);
     return (
       <div>
         <div className="form rental-details">

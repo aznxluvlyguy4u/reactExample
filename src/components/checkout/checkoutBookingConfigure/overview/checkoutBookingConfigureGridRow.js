@@ -16,9 +16,9 @@ class CheckoutBookingConfigureGridRow extends Component {
         case 'AVAILABLE':
           return <img height="20" width="20" src="/static/images/available.png" />;
         case 'AVAILABLE_BUT_DELAYED':
-          return <img height="20" width="20" src="/static/images/available.png" />;
+          return <img height="20" width="20" src="/static/images/alert.png" />;
         case 'AVAILABLE_BUT_ACCESSORY_NOT_AVAILABLE':
-            return <img height="20" width="20" src="/static/images/available.png" />;
+            return <img height="20" width="20" src="/static/images/alert.png" />;
         case 'NOT_AVAILABLE':
           return <img height="20" width="20" src="/static/images/unavailable.png" />;
       }
@@ -37,6 +37,7 @@ class CheckoutBookingConfigureGridRow extends Component {
 
   render() {
     if (this.props.rowItem) {
+      console.log(this.props.rowItem);
       return (
         <div className="row my-4">
           <div className="col-1 align-self-center">
@@ -55,7 +56,7 @@ class CheckoutBookingConfigureGridRow extends Component {
           </div>
           <div className="col-3 align-self-center">
             <h3>{this.props.rowItem.item.name}</h3>
-            {this.props.rowItem.item.note && (<p className="from-price">{this.props.rowItem.item.note}</p>)}
+            {this.props.rowItem.itemDetails.note && (<p className="from-price">{this.props.rowItem.itemDetails.note}</p>)}
             {this.props.rowItem.item.rates &&
               this.props.rowItem.item.rates.length > 0 && (
                 <p className="from-price">

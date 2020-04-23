@@ -9,13 +9,16 @@ import Loader from "../../components/loader";
 import ProductTiles from "../../components/product-tiles/product-tiles";
 
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
-import { getByGroupId, getProductGroupById } from "../../utils/rest/requests/products";
+import {
+  getByGroupId,
+  getProductGroupById,
+} from "../../utils/rest/requests/products";
 import { getCategories } from "../../utils/rest/requests/categories";
 
 const meta = {
   title: "Oceanpremium - Product Group",
   description:
-    "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
+    "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts",
 };
 
 class ProductGroupPage extends Component {
@@ -25,14 +28,14 @@ class ProductGroupPage extends Component {
       products: null,
       error: null,
       selectedProduct: null,
-      productGroup: null
+      productGroup: null,
     };
   }
 
   static async getInitialProps({ query }) {
     return {
       id: parseInt(query.id),
-      slug: query.slug
+      slug: query.slug,
     };
   }
 
@@ -46,9 +49,9 @@ class ProductGroupPage extends Component {
     try {
       const productGroupRes = await getProductGroupById(this.props.id);
       if (!productGroupRes && !productGroupRes.data) return;
-      
+
       const productGroup = productGroupRes.data[0];
-      this.setState({productGroup});
+      this.setState({ productGroup });
 
       // const response = await getCategories();
       // if (!response.data) return;
@@ -64,7 +67,7 @@ class ProductGroupPage extends Component {
       // });
     } catch (error) {
       this.setState({
-        categories: []
+        categories: [],
       });
       handleGeneralError(error);
     }
@@ -75,12 +78,12 @@ class ProductGroupPage extends Component {
     try {
       const response = await getByGroupId(id);
       this.setState({
-        products: response.data
+        products: response.data,
       });
     } catch (error) {
       //handleGeneralError(error);
       this.setState({
-        error: "No Products Found!"
+        error: "No Products Found!",
       });
     }
   }
@@ -94,7 +97,7 @@ class ProductGroupPage extends Component {
       visible = true;
     }
     this.setState({
-      visible
+      visible,
     });
   };
 
@@ -102,7 +105,7 @@ class ProductGroupPage extends Component {
     scroller.scrollTo("scroll-to-element", {
       duration: 500,
       delay: 0,
-      smooth: "easeInOutQuart"
+      smooth: "easeInOutQuart",
     });
   }
 
@@ -116,10 +119,13 @@ class ProductGroupPage extends Component {
           <div
             className="prodcut-group-background"
             style={{
-              backgroundImage: `url(${(productGroup &&
+              backgroundImage:
+                productGroup &&
+                productGroup.images &&
                 productGroup.images[0] &&
-                productGroup.images[0].fullImageUrl) ||
-                "/static/images/product-group-static-img.png"})`
+                productGroup.images[0].url
+                  ? `url(${productGroup.images[0].url})`
+                  : 'url("/static/images/product-group-static-img.png")',
             }}
           ></div>
           <div className="category-text">
@@ -131,14 +137,14 @@ class ProductGroupPage extends Component {
           <div style={{ position: "relative", top: "70px" }}>
             <div
               className={classnames("scroll-down-circle", {
-                "display-none": !this.state.visible
+                "display-none": !this.state.visible,
               })}
             >
               <img src="/static/images/Ellipse 2.png" />
             </div>
             <div
               className={classnames("scroll-down-arrow", {
-                "display-none": !this.state.visible
+                "display-none": !this.state.visible,
               })}
             >
               <img
@@ -183,9 +189,11 @@ class ProductGroupPage extends Component {
             <h1 className="product-group-heading">Gallery</h1>
             <div className="row">
               <div className="col-sm-12 col-md-6 product-group-text">
-                {productGroup && productGroup.galleryDescription && (<div className="text-group">
-                  {productGroup.galleryDescription}
-                </div>)}
+                {productGroup && productGroup.galleryDescription && (
+                  <div className="text-group">
+                    {productGroup.galleryDescription}
+                  </div>
+                )}
               </div>
               <div className="col-sm-12 col-md-6">
                 <div
@@ -195,7 +203,7 @@ class ProductGroupPage extends Component {
                     gridTemplateColumns: "auto auto auto",
                   }}
                 >
-                  {products.map(product => (
+                  {products.map((product) => (
                     <img
                       key={product.id}
                       className="img-fluid"

@@ -65,7 +65,7 @@ class CheckoutBookingConfigureSummary extends Component {
           <div className="row costs">
             <div className="col-8">Rental Fee</div>
             <div className="col-4">
-              € {availability.totalCostProducts/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
+              € {Number(availability.totalCostProducts) + Number(availability.totalCostAccessories)/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
             </div>
           </div>
           <div className="col-8">
@@ -83,7 +83,7 @@ class CheckoutBookingConfigureSummary extends Component {
           <div className="row costs">
             <div className="col-8 rowHead">Total Costs</div>
             <div className="col-4">
-              € {availability.totalPrice/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
+              € {Number(availability.totalPrice) + Number(availability.totalTransportCosts)/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
             </div>
           </div>
         </div>
