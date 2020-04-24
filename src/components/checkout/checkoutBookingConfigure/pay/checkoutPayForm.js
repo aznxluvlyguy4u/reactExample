@@ -11,7 +11,7 @@ import {
   handleGeneralError,
   handlePaymentError
 } from "../../../../utils/rest/error/toastHandler";
-import { orderCartItems } from "../../../../utils/rest/requests/orders";
+import { orderCartItems, createPaymentIntent } from "../../../../utils/rest/requests/orders";
 import CartUtils from "../../../../utils/mapping/cart/cartUtils";
 import Loader from "../../../../components/loader";
 import moment from "moment";
@@ -86,15 +86,15 @@ class CheckoutPayForm extends Component {
       paymentMethod,
     ).returnOrder();
     this.setState({ loading: true });
-    orderCartItems(request)
+    createPaymentIntent(request)
       .then(res => {
         if (res.code === 201) {
           this.setState({
             loading: false,
-            order: res.data
+            //order: res.data
           });
-          this.setOrder(res.data);
-          this.setPaymentIntent(res.data.paymentIntent);
+          //this.setOrder(res.data);
+          this.setPaymentIntent(res.data);
         }
       })
       .catch(err => {
@@ -243,7 +243,7 @@ class CheckoutPayForm extends Component {
           <div className="col-6">
             <div className="bordered-container">
               {this.state.paymentMethod === "CARD" &&
-                this.state.order &&
+                //this.state.order &&
                 this.state.stripe &&
                 this.getPaymentIntent() && (
                   <Fragment>
@@ -302,7 +302,7 @@ class CheckoutPayForm extends Component {
                   </Fragment>
                 )}
               {this.state.paymentMethod === "BANK_TRANSFER" &&
-                this.state.order &&
+                //this.state.order &&
                 this.state.stripe && 
                 !this.state.loading && (
                   <Fragment>
