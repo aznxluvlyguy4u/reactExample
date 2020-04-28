@@ -37,7 +37,6 @@ class CheckoutBookingConfigureGridRow extends Component {
 
   render() {
     if (this.props.rowItem) {
-      console.log(this.props.rowItem);
       return (
         <div className="row my-4">
           <div className="col-1 align-self-center">

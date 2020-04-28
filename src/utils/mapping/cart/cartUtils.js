@@ -66,9 +66,17 @@ export default class CartUtils {
   }
 
   getCartItemTotal(cartItem, availability) {
-    const days = this.dayCount(cartItem);
+    //const days = this.dayCount(cartItem);
     let total = 0;
 
+    if (!availability) return total.toFixed(2);
+    if (!availability.availability) return total.toFixed(2);
+    if (availability.availability.length === 0) return total.toFixed(2);
+
+    availability.availability.map(av => {
+      total += parseFloat(av.totalPrice) + parseFloat(av.totalTransportCosts)
+    });
+    /*
     cartItem.products.map(product => {
       total += this.getProductTotal(
         days,
@@ -84,6 +92,7 @@ export default class CartUtils {
           : product.accessories
       );
     });
+    */
 
     return total.toFixed(2);
   }

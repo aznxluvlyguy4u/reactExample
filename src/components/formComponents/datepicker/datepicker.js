@@ -42,11 +42,11 @@ class DatePicker extends Component {
     const { startDate, endDate } = this.props;
     if (startDate !== null && startDate !== undefined) {
       this.setState({
-        startDate: moment.utc(startDate)
+        startDate: moment.utc(startDate).endOf('day')
       });
     }
     if (endDate !== null && endDate !== undefined) {
-      this.setState({ endDate: moment.utc(endDate) });
+      this.setState({ endDate: moment.utc(endDate).endOf('day') });
     }
   }
 
@@ -68,8 +68,8 @@ class DatePicker extends Component {
     } else {
       if (!startDate) return;
       if (!endDate) return;
-      const startDateMoment = moment.utc(startDate);
-      const endDateMoment = moment.utc(endDate);
+      const startDateMoment = moment.utc(startDate).endOf('day');
+      const endDateMoment = moment.utc(endDate).endOf('day');
       if (prevProps.startDate !== startDate && startDate) {
         this.setState({ startDate: startDateMoment });
       }
@@ -92,13 +92,13 @@ class DatePicker extends Component {
     else if (this.state.startDate !== null && !this.state.visibleYearMonth) {
       const visibleYearMonth = moment.utc(
         new Date(this.state.startDate).setDate(1)
-      );
+      ).endOf('day');
       await this.setState({ visibleYearMonth });
       if (this.props.updateVisibleMonth) {
         this.props.updateVisibleMonth(visibleYearMonth);
       }
     } else if (!this.state.visibleYearMonth) {
-      const visibleYearMonth = moment.utc(new Date().setDate(1));
+      const visibleYearMonth = moment.utc(new Date().setDate(1)).endOf('day');
       await this.setState({ visibleYearMonth });
       if (this.props.updateVisibleMonth) {
         this.props.updateVisibleMonth(visibleYearMonth);
@@ -112,7 +112,7 @@ class DatePicker extends Component {
 
   handleChange = (startDate, endDate) => {
     if (startDate !== null) {
-      this.setState({ startDate: moment.utc(startDate) });
+      this.setState({ startDate: moment.utc(startDate).endOf('day') });
       this.props.onChange
         ? this.props.onChange({
             deliveryDate: startDate.format("YYYY-MM-DDTHH:mm:ss.ssZ")
@@ -125,7 +125,7 @@ class DatePicker extends Component {
     }
 
     if (endDate !== null) {
-      this.setState({ endDate: moment.utc(endDate) });
+      this.setState({ endDate: moment.utc(endDate).endOf('day') });
       this.props.onChange
         ? this.props.onChange({
             collectionDate: endDate.format("YYYY-MM-DDTHH:mm:ss.ssZ")
@@ -139,7 +139,7 @@ class DatePicker extends Component {
 
     if (endDate === null && startDate !== null) {
       let addedDay = moment(startDate).add(1, "d");
-      this.setState({ endDate: moment.utc(addedDay) });
+      this.setState({ endDate: moment.utc(addedDay).endOf('day') });
       this.props.onChange
         ? this.props.onChange({
             collectionDate: addedDay.format("YYYY-MM-DDTHH:mm:ss.ssZ")
@@ -153,7 +153,7 @@ class DatePicker extends Component {
   };
 
   updateStartDate(startDate) {
-    const startDateMoment = startDate ? moment.utc(startDate) : null;
+    const startDateMoment = startDate ? moment.utc(startDate).endOf('day') : null;
     let { visibleYearMonth } = this.state;
     if (startDateMoment === null) {
       visibleYearMonth = null;
@@ -166,7 +166,7 @@ class DatePicker extends Component {
   }
 
   updateEndDate(endDate) {
-    const endDateMoment = endDate ? moment.utc(endDate) : null;
+    const endDateMoment = endDate ? moment.utc(endDate).endOf('day') : null;
     let { visibleYearMonth } = this.state;
     if (endDateMoment === null) {
       visibleYearMonth = null;
@@ -179,8 +179,8 @@ class DatePicker extends Component {
   }
 
   updateDateRange(startDate, endDate) {
-    const startDateMoment = startDate ? moment.utc(startDate) : null;
-    const endDateMoment = endDate ? moment.utc(endDate) : null;
+    const startDateMoment = startDate ? moment.utc(startDate).endOf('day') : null;
+    const endDateMoment = endDate ? moment.utc(endDate).endOf('day') : null;
     let { visibleYearMonth } = this.state;
     
 

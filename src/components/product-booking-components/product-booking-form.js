@@ -153,6 +153,7 @@ class ProductBookingForm extends Component {
 
     let cart = this.state.cart;
     const period = { start: values.deliveryDate, end: values.collectionDate };
+
     const location = {
       collection: {
         id: values.collectionLocation.id,

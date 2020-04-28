@@ -83,6 +83,8 @@ class CheckoutPage extends Component {
     }
     this.state.cart.map(orderItem => {
       if (orderItem.isAvailable) {
+        if (!orderItem.products) return;
+
         orderItem.products.map(product => {
           orderRequests.push({
             id: product.id,
@@ -111,6 +113,8 @@ class CheckoutPage extends Component {
   async setBookingAvailabilityMap(productAvailability) {
     const productBookingMap = [];
     this.state.cart.map(booking => {
+      if (!booking.products) return;
+      
       booking.products.map(product => {
         const availabilityIndex = productAvailability.findIndex(
           productLookup => {

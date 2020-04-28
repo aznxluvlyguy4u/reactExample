@@ -112,15 +112,19 @@ class CheckoutPayForm extends Component {
   };
 
   updateSelectedPaymentMethod(event) {
-    this.setNewOrder(this.props.cartItem, event.currentTarget.value);
     this.setState({ paymentMethod: event.currentTarget.value });
     this.props.updateSelectedPaymentMethod(event.currentTarget.value);
+
+    if (event.currentTarget.value === "BANK_TRANSFER") return;
+    this.setNewOrder(this.props.cartItem, event.currentTarget.value);
   }
 
   setSelected(value) {
-    this.setNewOrder(this.props.cartItem, value);
     this.setState({ paymentMethod: value });
     this.props.updateSelectedPaymentMethod(value);
+
+    if (value === "BANK_TRANSFER") return;
+    this.setNewOrder(this.props.cartItem, value);
   }
 
   async setPaymentIntent(paymentIntent) {
@@ -250,7 +254,7 @@ class CheckoutPayForm extends Component {
                     <h2 className="mt-0 divider">Credit Card</h2>
                     <table>
                       <tbody>
-                        <tr>
+                        {/* <tr>
                           <td>4% Credit Card Fee</td>
                           <td className="text-right">
                             €{" "}
@@ -260,7 +264,7 @@ class CheckoutPayForm extends Component {
                               4
                             )}
                           </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <td>Rental Fee</td>
                           <td className="text-right">
@@ -275,11 +279,15 @@ class CheckoutPayForm extends Component {
                           <td>Total Costs</td>
                           <td className="text-right">
                             €{" "}
-                            {cartUtils.getCartItemTotalWithFee(
+                            {cartUtils.getCartItemTotal(
+                              this.props.cartItem,
+                              this.props.productBookingMap
+                            )}
+                            {/* {cartUtils.getCartItemTotalWithFee(
                               this.props.cartItem,
                               this.props.productBookingMap,
                               4
-                            )}
+                            )} */}
                           </td>
                         </tr>
                       </tbody>
@@ -330,11 +338,11 @@ class CheckoutPayForm extends Component {
                         <br />
                         123they
                       </p>
-                      <p>
+                      {/* <p>
                         <strong>Payment ID</strong>
                         <br />
                         {this.state.order.orderId}
-                      </p>
+                      </p> */}
                     </div>
                   </Fragment>
                 )}

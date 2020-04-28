@@ -23,8 +23,6 @@ class ProductBookingRentalDetails extends Component {
       (x) => x.quantity > 0
     );
 
-    console.log(props.product);
-
     let rentalFee =
       Number(props.product.rates[0].price) *
       parseInt(cartItemProduct.quantity) *
@@ -48,7 +46,6 @@ class ProductBookingRentalDetails extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.state.cartItem);
     if (this.state.cartItem) {
       const orderRequests = await this.getProductsFromCartItem(
         this.state.cartItem
@@ -107,7 +104,7 @@ class ProductBookingRentalDetails extends Component {
 
   render() {
     const product = this.state.product;
-    console.log(product, this.state.accessories);
+
     return (
       <div>
         <div className="form rental-details">
@@ -184,7 +181,7 @@ class ProductBookingRentalDetails extends Component {
           </div>
           <div className="row">
             <div className="col-8">Rental Fee</div>
-            <div className="col-4 text-right">€ {this.state.rentalFee}</div>
+            {product  && <div className="col-4 text-right">€ {Number(product.totalCostProducts) + Number(product.totalCostAccessories)}</div>}
           </div>
           <div className="row">
             <div className="col-8">
@@ -203,7 +200,7 @@ class ProductBookingRentalDetails extends Component {
           <div className="row">
             <div className="col-8">Total Costs</div>
             {product && product.totalTransportCosts && (
-              <div className="col-4 text-right">€ {product.totalPrice}</div>
+              <div className="col-4 text-right">€ {Number(product.totalPrice) + Number(product.totalTransportCosts)}</div>
             )}
           </div>
         </div>
