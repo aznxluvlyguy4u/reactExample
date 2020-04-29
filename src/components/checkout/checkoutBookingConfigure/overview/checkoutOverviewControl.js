@@ -4,6 +4,10 @@ import CheckoutBookingConfigureSummary from "./checkoutBookingConfigureSummary";
 import CheckoutControl from "./checkout/checkoutControl";
 import CheckoutPayForm from "../pay/checkoutPayForm";
 import CartUtils from "../../../../utils/mapping/cart/cartUtils";
+import { handleGeneralError } from "../../../../utils/rest/error/toastHandler";
+import PlaceOrderRequest from "../../../../utils/mapping/products/placeOrderRequest";
+import { orderCartItems } from "../../../../utils/rest/requests/orders";
+import moment from "moment";
 
 const cartUtils = new CartUtils();
 
@@ -27,7 +31,8 @@ class CheckoutOverviewControl extends Component {
       },
       checkoutState: "logistics",
       configure: props.configure,
-      configureAll: props.configureAll
+      configureAll: props.configureAll,
+      loading: false
     };
   }
 
@@ -56,6 +61,25 @@ class CheckoutOverviewControl extends Component {
 
   updateSelectedPaymentMethod(value) {
     this.setState({selectedPaymentMethod : value})
+  }
+
+  async setBankTransfer() {
+    const cartItem = this.state.cartItem;
+    const period = {
+      start: moment(cartItem.period.start).set({ minute:0,second:0,millisecond:0 }),
+      end: moment(cartItem.period.end).set({ minute:0,second:0,millisecond:0 })
+    };
+    const request = new PlaceOrderRequest(
+      cartItem.location,
+      period,
+      cartItem.products,
+      cartItem.contactInformation,
+      cartItem.billingInformation,
+      cartItem.logistics,
+      "BANK_TRANSFER",
+    ).returnOrder();
+
+    return orderCartItems(request);
   }
 
   render() {
@@ -201,7 +225,18 @@ class CheckoutOverviewControl extends Component {
                       <button
                         type="text"
                         className="yellow-outline-button mt-3"
-                        onClick={() => this.props.completeBooking(this.state.cartItemIndex, true)}
+                        disabled={this.state.loading ? "true": ""}
+                        onClick={async () => {
+                          try {
+                            await this.setState({loading: true});
+                            await this.setBankTransfer();
+                            this.props.completeBooking(this.state.cartItemIndex, true);
+                            await this.setState({loading: false});
+                          } catch (err) {
+                            handleGeneralError(err);
+                            await this.setState({loading: false});
+                          }
+                        }}
                       >
                         Complete Booking
                       </button>
