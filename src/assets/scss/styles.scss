@@ -73,12 +73,12 @@
 
 @include for-desktop-up {
   .container {
-    max-width: 1145px !important;
+    max-width: 1245px !important;
   }
 }
 @include for-big-desktop-up {
   .container {
-    max-width: 1450px !important;
+    max-width: 1550px !important;
   }
 }
 
@@ -92,6 +92,9 @@
   border-radius: 3px;
   cursor: pointer;
   font-size: 18px;
+  line-height: 25px;
+  font-family: 'Tyros Pro';
+  font-style: normal;
   display: block;
   align-items: center;
   justify-content: center;
@@ -219,7 +222,7 @@ h2.section-title {
     position: relative;
     top: 0px;
     left: 0px;
-    margin-top: 40px;
+    margin-top: 70px;
     margin-bottom: 0px;
 
     .unavailable {
@@ -269,6 +272,10 @@ h2.section-title {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.showmore-wrapper {
+  margin-top: 35px;
 }
 
 .showmore {

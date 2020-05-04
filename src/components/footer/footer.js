@@ -6,7 +6,7 @@ import Link from 'next/link';
 const Footer = () => (
   <div className="container footer">
     <div className="row">
-      <div className="col-md-4">
+      <div className="col-lg-2 col-md-2 col-sm-6">
         <h2>Site</h2>
         <ul>
           <li>
@@ -17,18 +17,7 @@ const Footer = () => (
           </li>
         </ul>
       </div>
-      <div className="col-md-4">
-        <h2>Legal</h2>
-        <ul>
-          <li>
-            <a target="_blank" href="//www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>
-          </li>
-          <li>
-            <Link href="/privacy-policy"><a href="/privacy-policy">Privacy Policy</a></Link>
-          </li>
-        </ul>
-      </div>
-      <div className="col-md-4">
+      <div className="col-lg-2 col-md-2 col-sm-6">
         <h2>Help</h2>
         <ul>
           <li>
@@ -39,8 +28,19 @@ const Footer = () => (
           </li>
         </ul>
       </div>
+      <div className="col-lg-2 col-md-2 col-sm-6">
+        <h2>Legal</h2>
+        <ul>
+          <li>
+            <a target="_blank" href="//www.oceanpremium.com/general-terms-conditions/">Terms and conditions</a>
+          </li>
+          <li>
+            <Link href="/privacy-policy"><a href="/privacy-policy">Privacy Policy</a></Link>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div className="row">
+    <div className="row logo-line">
       <div className="col">
         <img className="logo" alt="logo" src="/static/images/logo_dark.png" height="35" width="150" />
       </div>

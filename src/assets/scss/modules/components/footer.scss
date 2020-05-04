@@ -25,18 +25,25 @@
     }
   }
 
+  .logo-line {
+    margin-top: 70px;
+    border-top: 0.25px solid #bdbdbd;
+  }
 
   .logo {
-    margin-top:50px;
-    height:35px;
+    margin-top: 20px;
+    height: 35px;
   }
 
   .copyright-wrapper {
     width: 100%;
-    text-align:center;
-    font-size: 18px;
-    color: #C4C4C4;
-    font-weight: regular;
+    text-align: center;
+    color: #c4c4c4;
+    font-family: Tyros Pro;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 16px;
     padding-top: 40px;
     padding-bottom: 40px;
   }

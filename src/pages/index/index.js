@@ -67,6 +67,9 @@ class IndexPage extends Component {
   async retrieveCategories() {
     try {
       const response = await getCategories();
+      response.data.forEach(category => {
+        category.productGroups = category.productGroups.slice(0, 8);
+      });
       this.setState({
         categories: response.data
       });

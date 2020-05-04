@@ -79,20 +79,20 @@ class CategoryTiles extends Component {
                   wrapAround
                   renderCenterLeftControls={({ previousSlide }) => (
                     <div className="left-arrow">
-                      <img
+                      {/* <img
                         src="/static/images/angle-left.png"
                         className="icon"
                         onClick={previousSlide}
-                      />
+                      /> */}
                     </div>
                   )}
                   renderCenterRightControls={({ nextSlide }) => (
                     <div className="right-arrow">
-                      <img
+                      {/* <img
                         src="/static/images/angle-right.png"
                         className="icon"
                         onClick={nextSlide}
-                      />
+                      /> */}
                     </div>
                   )}
                   renderBottomCenterControls={({ currentSlide }) =>

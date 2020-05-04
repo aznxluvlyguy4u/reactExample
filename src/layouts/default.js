@@ -15,6 +15,7 @@ const Default = ({
     <Meta props={meta} />
     <Header nav={nav} search={search} />
     { children }
+    <div className="line"></div>
     <Footer />
   </ErrorLogging>
 );

@@ -65,13 +65,13 @@ class Tiles extends Component {
                         );
                       })}
                     </div>
-                    <div className="row">
+                    <div className="row showmore-wrapper">
                       <div className="col">
                         <a
-                          href={`/search?category=${this.props.category.id}`}
+                          href={`/category?id=${this.props.category.id}`}
                           className="showmore"
                         >
-                          Show More &gt;
+                          Show all &gt;
                         </a>
                       </div>
                     </div>
