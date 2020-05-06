@@ -332,8 +332,8 @@ class SearchPage extends Component {
             <div className="col" style={{paddingLeft: 0, paddingRight: 0}}>
               <h1 className="search-title">
                 You searched for{" "}
-                {this.props.query && <span className="uppercase">{this.props.query}</span>}{" "}
-                {!this.props.query && <span className="uppercase">All</span>}
+                {this.props.keyword && <span className="uppercase">{this.props.keyword}</span>}{" "}
+                {!this.props.keyword && <span className="uppercase">All</span>}
               </h1>
               <h3>
                 Compare our models and add the perfect one to your booking
