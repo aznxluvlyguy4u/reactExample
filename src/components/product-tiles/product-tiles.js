@@ -124,8 +124,8 @@ class ProductTiles extends Component {
                           <h4 className="title">{item.name}</h4>
                           <hr style={{border: "0.292173px solid #C7C7C7"}}></hr>
                           <div className="description">
-                            {item.description.section1
-                              ? item.description.section1.paragraph
+                            {item.descriptionTagline
+                              ? item.descriptionTagline
                               : "--"}
                           </div>
 

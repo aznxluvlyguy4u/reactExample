@@ -163,9 +163,14 @@ class ProductGroupPage extends Component {
               </h1>
               <div className="row">
                 <div className="col-sm-12 col-md-6 product-group-text">
-                  <div className="text-group">
-                    {(productGroup && productGroup.description) || ""}
-                  </div>
+                  {productGroup && productGroup.description && (
+                    <div
+                      className="text-group"
+                      dangerouslySetInnerHTML={{
+                        __html: productGroup.description,
+                      }}
+                    ></div>
+                  )}
                 </div>
                 <div className="col-sm-12 col-md-6">
                   {productGroup && productGroup.video && (
@@ -192,27 +197,29 @@ class ProductGroupPage extends Component {
             <div className="row">
               <div className="col-sm-12 col-md-6 product-group-text">
                 {productGroup && productGroup.summary && (
-                  <div className="text-group">
-                    {productGroup.summary}
-                  </div>
+                  <div className="text-group" dangerouslySetInnerHTML={{
+                    __html: productGroup.summary,
+                  }}></div>
                 )}
               </div>
               <div className="col-sm-12 col-md-6">
-                {productGroup && productGroup.images && (<div
-                  style={{
-                    position: "relative",
-                    display: "grid",
-                    gridTemplateColumns: "auto auto auto",
-                  }}
-                >
-                  {productGroup.images.map((product) => (
-                    <img
-                      key={product.url}
-                      className="img-fluid"
-                      src={product.url}
-                    />
-                  ))}
-                </div>)}
+                {productGroup && productGroup.images && (
+                  <div
+                    style={{
+                      position: "relative",
+                      display: "grid",
+                      gridTemplateColumns: "auto auto auto",
+                    }}
+                  >
+                    {productGroup.images.map((product) => (
+                      <img
+                        key={product.url}
+                        className="img-fluid"
+                        src={product.url}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

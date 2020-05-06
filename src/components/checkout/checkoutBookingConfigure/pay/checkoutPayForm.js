@@ -276,6 +276,15 @@ class CheckoutPayForm extends Component {
                           </td>
                         </tr>
                         <tr>
+                          <td>Transport Costs</td>
+                          <td className="text-right">
+                            €{" "}
+                            {cartUtils.getCartItemTransportCosts(
+                              this.props.productBookingMap
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
                           <td>Total Costs</td>
                           <td className="text-right">
                             €{" "}

@@ -16,7 +16,7 @@ export default class PlaceOrderRequest {
       firstName: contactInformation.firstName,
       surName: contactInformation.surname,
       emailAddress: contactInformation.emailAddress,
-      phoneNumber: `${logistics.phonePrefix} ${contactInformation.phoneNumber}`,
+      phoneNumber: `${contactInformation.phoneNumber}`,
       type: contactInformation.affiliation.value,
       pickupAddress: logistics.pickUp,
       dropoffAddress: logistics.dropOff,
