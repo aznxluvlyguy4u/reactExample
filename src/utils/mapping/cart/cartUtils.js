@@ -65,6 +65,20 @@ export default class CartUtils {
     return (0).toFixed(2);
   }
 
+  getCartItemTransportCosts(availability) {
+    let total = 0;
+
+    if (!availability) return total.toFixed(2);
+    if (!availability.availability) return total.toFixed(2);
+    if (availability.availability.length === 0) return total.toFixed(2);
+
+    availability.availability.map(av => {
+      total += parseFloat(av.totalTransportCosts)
+    });
+
+    return total.toFixed(2);
+  }
+
   getCartItemTotal(cartItem, availability) {
     //const days = this.dayCount(cartItem);
     let total = 0;

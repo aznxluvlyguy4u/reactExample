@@ -6,7 +6,7 @@ export default {
     right: 0,
     bottom: 0,
     backgroundColor: '#19303b',
-    zIndex: 4002,
+    zIndex: 99999999,
   },
   content: {
     top: '50%',

@@ -579,11 +579,10 @@ class ProductBookingForm extends Component {
             <div className="col-md-11 equal-height-columns">
               <div className="white-bg h-100 p-5">
                 <div className="row">
-                  <div className="col-md-9">
+                  <div className="col-lg-9 col-md-9 col-sm-12">
                     <h3>Add {this.props.product.name}</h3>
-                    <p>Add to an existing booking or create a new one!</p>
                   </div>
-                  <div className="col-md-3">
+                  <div className="col-lg-3 col-md-3 col-sm-12">
                     {this.props.product.images.length > 0 && (
                       <img
                         className="img-fluid"
@@ -591,6 +590,11 @@ class ProductBookingForm extends Component {
                         src={this.props.product.images[0].url}
                       />
                     )}
+                  </div>
+                </div>
+                <div className="row" style={{marginTop: 0}}>
+                  <div className="col-lg-12 col-md-12 col-sm-12" style={{marginTop: 0}}>
+                  <p style={{marginTop: 0}}>Add to an existing booking or create a new one!</p>
                   </div>
                 </div>
                 <div className="row">
@@ -616,7 +620,7 @@ class ProductBookingForm extends Component {
                           <Form>
                             <div>
                               <div className="bookingItem form-block mx-0 px-0">
-                                <label htmlFor="bookingItem">
+                                <label className="bolded" htmlFor="bookingItem">
                                   Add to Booking
                                 </label>
                                 <Field
@@ -632,8 +636,8 @@ class ProductBookingForm extends Component {
                               </div>
                               <div className="form-inline mx-0 px-0">
                                 <div className="location form-block pr-1">
-                                  <label htmlFor="deliveryLocation uppercase">
-                                    Pick-up Location
+                                  <label className="uppercase" htmlFor="deliveryLocation">
+                                    <span className="bolded">PICK-UP</span> Location
                                   </label>
                                   <Field
                                     options={
@@ -653,8 +657,8 @@ class ProductBookingForm extends Component {
                                   />
                                 </div>
                                 <div className="location form-block ml-2 px-0">
-                                  <label htmlFor="collectionLocation uppercase">
-                                    Drop-Off Location
+                                  <label className="uppercase" htmlFor="collectionLocation">
+                                  <span className="bolded">DROP-OFF</span> Location
                                   </label>
                                   <Field
                                     options={
@@ -676,11 +680,11 @@ class ProductBookingForm extends Component {
                               </div>
                               <div className="date form-block search-form-wrap px-0">
                                 <div className="label-wrapper">
-                                  <label htmlFor="collectionDateRange uppercase">
-                                    Pick-up Date
+                                  <label className="uppercase" htmlFor="collectionDateRange">
+                                    <span className="bolded">Pick-up</span> Date
                                   </label>
-                                  <label htmlFor="collectionDateRange uppercase">
-                                    Drop-off Date
+                                  <label className="uppercase" htmlFor="collectionDateRange">
+                                    <span className="bolded">Drop-off</span> Date
                                   </label>
                                 </div>
 
@@ -727,8 +731,8 @@ class ProductBookingForm extends Component {
                                 />
                               </div>
                               <div className="row">
-                                <div className="col-5">
-                                  <strong>
+                                <div className="col-5 currency">
+                                  <strong className="price">
                                     € {this.props.product.rates[0].price}
                                   </strong>{" "}
                                   EUR
@@ -769,7 +773,7 @@ class ProductBookingForm extends Component {
                                     type="submit"
                                   >
                                     <i className="icon-cart" />
-                                    Add to booking
+                                    {" "}Add to booking
                                   </button>
                                 </div>
                               </div>

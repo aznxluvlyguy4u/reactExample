@@ -65,25 +65,27 @@ class CheckoutBookingConfigureSummary extends Component {
           <div className="row costs">
             <div className="col-8">Rental Fee</div>
             <div className="col-4">
-              € {Number(availability.totalCostProducts) + Number(availability.totalCostAccessories)/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
+              € {this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))}
             </div>
           </div>
-          <div className="col-8">
-            <img
-              src="static/images/down.png"
-              style={{
-                width: "10px",
-                height: "5px",
-                marginRight: "5px"
-              }}
-            />
-            Transport Costs
+          <div className="row costs">
+            <div className="col-8">
+              <img
+                src="static/images/down.png"
+                style={{
+                  width: "10px",
+                  height: "5px",
+                  marginRight: "5px"
+                }}
+              />
+              Transport Costs
+            </div>
+            <div className="col-4">€ {this.state.cartUtils.getCartItemTransportCosts(this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))/*availability.totalTransportCosts*/}</div>
           </div>
-            <div className="col-4">€ {availability.totalTransportCosts}</div>
           <div className="row costs">
             <div className="col-8 rowHead">Total Costs</div>
             <div className="col-4">
-              € {Number(availability.totalPrice) + Number(availability.totalTransportCosts)/*this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))*/}
+              € {this.state.cartUtils.getCartItemTotal(this.props.cartItem, this.props.productBookingMap.find(p => p.id === this.props.cartItem.id))}
             </div>
           </div>
         </div>

@@ -51,7 +51,7 @@ class CategoryTiles extends Component {
                 : "/static/images/flyboard.png"
             }
           />
-          <span style={{ paddingLeft: 22, paddingRight: 32 }}>
+          <span style={{ paddingLeft: 22, paddingRight: 40 }}>
             {item.name && this.toUpperCase(item.name)}
           </span>
         </div>
