@@ -26,7 +26,7 @@ export default class MenuContainer extends React.Component {
   render() {
     const { width, open } = this.state;
     const { children } = this.props;
-    if (width <= 800) {
+    if (width <= 1070) {
       return (
         <div className={`mobile-menu ${open ? 'open' : ''}`}>
           <Menu

@@ -73,7 +73,7 @@ class CheckoutBookingConfigureSummary extends Component {
               src="static/images/down.png"
               style={{
                 width: "10px",
-                height: "10px",
+                height: "5px",
                 marginRight: "5px"
               }}
             />

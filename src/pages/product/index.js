@@ -441,7 +441,7 @@ class DetailPage extends Component {
                       }
                     />
                   </div>
-                  <div className="small-images no-scroll">
+                  <div className="small-images no-scrollbar">
                     {product.images &&
                       product.images.map(productImage => {
                         return (
@@ -463,7 +463,7 @@ class DetailPage extends Component {
                 className="col-lg-4 col-sm-12 product-detail-description"
               >
                 <div
-                  className="product-detail-description-overflow no-scroll"
+                  className="product-detail-description-overflow no-scrollbar"
                 >
                   <h2>
                     <a style={{ color: "black" }} href="/">

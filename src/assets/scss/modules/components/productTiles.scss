@@ -25,7 +25,7 @@
   min-height: 18.83px;
   left: 0px;
   top: 10px;
-  background: #19303B;
+  background: #19303b;
   align-self: flex-end;
   margin: 16px 0px;
   font-weight: 800;
@@ -42,23 +42,28 @@
   border: 1.56px solid #c7c7c7;
   box-sizing: border-box;
   width: 107.12px;
-  height: 35.71px;
+  height: 30px;
   border-radius: 40px;
   justify-content: space-evenly;
   display: flex;
 }
 
 .plus-minus {
-  font-size: 1.5rem;
   color: #fab900;
-  line-height: 30px;
+  font-family: Avenir-Light;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16.7922px;
+  line-height: 31px;
   cursor: pointer;
 }
 
 .value {
-  line-height: 35px;
+  font-family: Avenir-Light;
+  font-style: normal;
   font-weight: 500;
-  font-size: 19.5px;
+  font-size: 16.7922px;
+  line-height: 31px;
   margin: 0px 16px;
 }
 
@@ -81,13 +86,35 @@
 }
 
 .add-btn {
-  padding: 8px 5px;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 9.26945px;
+  line-height: 13px;
+  padding: 8px 8px;
   width: 100%;
-  height: 36px;
+  max-height: 30px;
   background: #fab900;
   color: white;
   text-align: center;
   cursor: pointer;
+  margin-left: 15px;
+}
+
+.currency {
+  font-family: Avenir-Light;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12.8556px;
+  line-height: 18px;
+}
+
+.price {
+  font-family: Avenir-Black;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 14.0243px;
+  line-height: 18px;
 }
 
 h4 {

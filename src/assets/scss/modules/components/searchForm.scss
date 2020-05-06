@@ -34,7 +34,7 @@
       -webkit-appearance: none;
 
       @include placeholder {
-        color: $input-color;
+        color: #19303B; //$input-color;
       }
 
       .inline {
@@ -59,7 +59,11 @@
   background-color: $yellow;
   border: none;
   color: white;
-  font-size: 18px;
+  font-family: Tyros Pro;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 17.1388px;
+  line-height: 24px;
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 2px;

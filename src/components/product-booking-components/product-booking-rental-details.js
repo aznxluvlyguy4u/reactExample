@@ -187,10 +187,15 @@ class ProductBookingRentalDetails extends Component {
             <div className="col-8">
               <img
                 src="static/images/down.png"
-                style={{ width: "10px", height: "10px", marginRight: "5px" }}
+                style={{ width: "10px", height: "5px", marginRight: "5px" }}
               />
               Transport Costs
             </div>
+            {!product && (
+              <div className="col-4 text-right">
+                Loading...
+              </div>
+            )}
             {product && product.totalTransportCosts && (
               <div className="col-4 text-right">
                 € {product.totalTransportCosts}

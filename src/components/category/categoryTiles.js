@@ -35,28 +35,51 @@ class CategoryTiles extends Component {
   category(item) {
     return (
       // <Link>
-        <a
-          href={`/category?id=${item.id}&slug=${slugify(item.name)}`}
-          as={`/category/${item.id}/${slugify(item.name)}`}
-          key={item.id}
+      <a
+        href={`/category?id=${item.id}&slug=${slugify(item.name)}`}
+        as={`/category/${item.id}/${slugify(item.name)}`}
+        key={item.id}
+      >
+        <div
+          className="category-tile"
+          style={{ maxWidth: 200, minHeight: 240 }}
         >
-          <div className="category-tile">
-            <img
-              src={
-                item.images.length
-                  ? item.imageThumbnail.url
-                  : "/static/images/flyboard.png"
-              }
-            />
-            <span>{item.name && this.toUpperCase(item.name)}</span>
-          </div>
-        </a>
+          <img
+            src={
+              item.images.length
+                ? item.imageThumbnail.url
+                : "/static/images/flyboard.png"
+            }
+          />
+          <span style={{ paddingLeft: 22, paddingRight: 32 }}>
+            {item.name && this.toUpperCase(item.name)}
+          </span>
+        </div>
+      </a>
       // </Link>
     );
   }
 
   toUpperCase(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  slidesToShow() {
+    if (!this.state.width) return 5;
+
+    if (this.state.width < 800) {
+      return 2;
+    }
+
+    if (this.state.width < 1000) {
+      return 3;
+    }
+
+    if (this.state.width < 1100) {
+      return 4;
+    }
+
+    return 5;
   }
 
   render() {
@@ -72,10 +95,10 @@ class CategoryTiles extends Component {
                   className="category-tile"
                   autoplay
                   autoplayInterval={2000}
-                  cellSpacing={20}
+                  //cellSpacing={5}
                   dragging
                   slidesToScroll={1}
-                  slidesToShow={this.state.slideNumber}
+                  slidesToShow={this.slidesToShow()}
                   wrapAround
                   renderCenterLeftControls={({ previousSlide }) => (
                     <div className="left-arrow">
@@ -99,7 +122,7 @@ class CategoryTiles extends Component {
                     (currentSlide = null)
                   }
                 >
-                  {this.props.categories.map(category => {
+                  {this.props.categories.map((category) => {
                     return this.category(category);
                   })}
                 </Carousel>

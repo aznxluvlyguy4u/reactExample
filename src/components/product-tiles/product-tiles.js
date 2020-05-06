@@ -91,7 +91,7 @@ class ProductTiles extends Component {
                       return (
                         <div
                           key={index}
-                          className={this.props.search ? "col-lg-3 col-md-3 col-sm-6 product-tile" : "col-lg-4 col-md-4 col-sm-6 product-tile"}
+                          className={this.props.search ? "col-lg-3 col-md-6 col-sm-6 product-tile" : "col-lg-4 col-md-6 col-sm-6 product-tile"}
                         >
                           <Link
                             href={`/product?id=${item.id}&slug=${slugify(
@@ -133,8 +133,8 @@ class ProductTiles extends Component {
                             <div className="tag-line">{item.tagline}</div>
                           )}
 
-                          <div>
-                            <strong>€ {item.rates[0].price}</strong> EUR
+                          <div className="currency">
+                            <strong className="price">€ {item.rates[0].price}</strong> EUR
                             <div className="per-day-text">per day</div>
                           </div>
                           <div style={{ display: "flex" }}>
@@ -162,7 +162,7 @@ class ProductTiles extends Component {
                                 className="add-btn"
                               >
                                 <i className="icon-cart"></i>
-                                Add to booking
+                              {" "}Add to booking
                               </div>
                             </div>
                           </div>
