@@ -44,7 +44,8 @@
   color: $black;
   background-color: $white;
   @include transition(background-color 300ms linear);
-  @include box-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
+  //@include box-shadow(0px 4px 10px rgba(0, 0, 0, 0.05));
+  border-bottom: 1px solid #F2F2F2;
 
   .cart-icon {
     background-image: url("/static/images/cart_dark.png");

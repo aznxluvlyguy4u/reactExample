@@ -30,7 +30,7 @@ import RecommendedProducts from "../../components/recommended-products/recommend
 import { CreateQueryParams } from "../../utils/queryparams";
 import {
   getProducts,
-  getRecomendedProductsByGroupIds
+  getRecomendedProductsByGroupIds,
 } from "../../utils/rest/requests/products";
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 
@@ -46,11 +46,11 @@ class SearchPage extends Component {
       loading: true,
       notFound: false,
       locations: [],
-      searchUpdated: false
+      searchUpdated: false,
     };
     this.meta = {
       title: "Search | OCEAN PREMIUM - Water toys Anytime Anywhere",
-      description: "Index description"
+      description: "Index description",
     };
     this.counter = 0;
     this.mergeObj = this.mergeObj.bind(this);
@@ -89,7 +89,7 @@ class SearchPage extends Component {
       collectionLocation: obj.collectionLocation,
       deliveryDate: obj.deliveryDate,
       collectionDate: obj.collectionDate,
-      booking: null
+      booking: null,
     };
   }
 
@@ -98,7 +98,7 @@ class SearchPage extends Component {
     if (keyword !== "") {
       this.meta = {
         title: `You searched for ${keyword} | OCEAN PREMIUM - Water toys Anytime Anywhere`,
-        description: "Index description"
+        description: "Index description",
       };
     }
 
@@ -117,7 +117,7 @@ class SearchPage extends Component {
       collectionLocation,
       collectionDate,
       deliveryDate,
-      category_id
+      category_id,
     } = this.props;
 
     // if locations are in memory retrieve the locations by
@@ -132,24 +132,24 @@ class SearchPage extends Component {
         let search = {
           keyword,
           collectionDate,
-          deliveryDate
+          deliveryDate,
         };
 
         if (deliveryLocation !== "" && deliveryLocation !== null) {
           search.deliveryLocation = this.props.locationReducer.selectboxLocations.find(
-            item => item.id === Number(deliveryLocation)
+            (item) => item.id === Number(deliveryLocation)
           );
         }
 
         if (collectionLocation !== "" && collectionLocation !== null) {
           search.collectionLocation = this.props.locationReducer.selectboxLocations.find(
-            item => item.id === Number(collectionLocation)
+            (item) => item.id === Number(collectionLocation)
           );
         }
 
         this.props.updateSearch(search);
         this.setState({
-          searchUpdated: true
+          searchUpdated: true,
         });
       } catch (error) {
         handleGeneralError(error);
@@ -184,7 +184,7 @@ class SearchPage extends Component {
       deliveryLocation,
       collectionLocation,
       collectionDate,
-      deliveryDate
+      deliveryDate,
     } = this.props;
 
     let { current_page, products } = this.state;
@@ -205,7 +205,7 @@ class SearchPage extends Component {
 
       const products = response.data;
       const recomendedProducts = await getRecomendedProductsByGroupIds(
-        products.map(x => x.productGroup.id)
+        products.map((x) => x.productGroup.id)
       );
       this.setState({
         notFound: false,
@@ -215,7 +215,7 @@ class SearchPage extends Component {
         total_page_count: Math.ceil(
           response.meta.totalRowCount / response.meta.perPage
         ),
-        current_page: response.meta.page
+        current_page: response.meta.page,
       });
     } catch (error) {
       this.setState({ loading: false });
@@ -240,7 +240,6 @@ class SearchPage extends Component {
   }
 
   async mergeObj(obj) {
-
     if (obj.bookingOnly) {
       setTimeout(() => {
         const bookingSelected = {
@@ -257,7 +256,7 @@ class SearchPage extends Component {
 
     if (obj.booking) {
       const cart = await LocalStorageUtil.getCart();
-      const booking = cart.find(x => x.id === obj.booking.id);
+      const booking = cart.find((x) => x.id === obj.booking.id);
       const { locationReducer } = this.props;
 
       setTimeout(() => {
@@ -270,14 +269,21 @@ class SearchPage extends Component {
           },
         };
         this.props.updateSearchBooking(bookingSelected);
-        this.props.updateSearchDeliveryLocation(locationReducer.selectboxLocations.find(x => x.id === booking.location.delivery.id));
-        this.props.updateSearchCollectionLocation(locationReducer.selectboxLocations.find(x => x.id === booking.location.collection.id));
+        this.props.updateSearchDeliveryLocation(
+          locationReducer.selectboxLocations.find(
+            (x) => x.id === booking.location.delivery.id
+          )
+        );
+        this.props.updateSearchCollectionLocation(
+          locationReducer.selectboxLocations.find(
+            (x) => x.id === booking.location.collection.id
+          )
+        );
         this.props.updateSearchCollectionDate(booking.period.end);
         this.props.updateSearchDeliveryDate(booking.period.start);
-
       }, 300);
     }
-    
+
     if (obj.deliveryLocation) {
       setTimeout(() => {
         this.props.updateSearchDeliveryLocation(obj.deliveryLocation);
@@ -312,13 +318,10 @@ class SearchPage extends Component {
 
   render() {
     const {
-      // categories,
       products,
       recomendedProducts,
       loading,
       notFound,
-      total_page_count,
-      current_page
     } = this.state;
 
     return (
@@ -326,39 +329,30 @@ class SearchPage extends Component {
         <SearchEdit onChange={this.mergeObj} />
         <div className="container">
           <div className="row">
-            <div className="col">
-              <h1 className="main-title">Search Results</h1>
+            <div className="col" style={{paddingLeft: 0, paddingRight: 0}}>
+              <h1 className="search-title">
+                You searched for{" "}
+                {this.props.query && <span className="uppercase">{this.props.query}</span>}{" "}
+                {!this.props.query && <span className="uppercase">All</span>}
+              </h1>
+              <h3>
+                Compare our models and add the perfect one to your booking
+              </h3>
             </div>
           </div>
           <div className="row">
             <div className="col">
               {notFound === true ? (
-                <h2>No results found for your search query</h2>
+                <h1 className="search-title">
+                  No results found for your search query
+                </h1>
               ) : null}
 
               {isEmpty(products) ? null : (
                 <Fragment>
-                  <div className="row">
-                    <div className="col">
-                      <div className="searchresult-title">
-                        <h2 className="section-title">Matching Water Toys</h2>
-                        <span>
-                          Search through hundreds of Water Toys and add them to
-                          your trip!
-                        </span>
-                      </div>
-                    </div>
-                  </div>
                   <div className="row products">
-                    <ProductTiles products={products} />
+                    <ProductTiles products={products} search={true} />
                   </div>
-                  {/* {categories.length && (
-                    <div style={{ position: "relative", top: "-65px" }}>
-                      <CategoryTiles categories={recomendedProducts} />
-                    </div>
-
-                    RecommendedProducts
-                  )} */}
                   {recomendedProducts.length && (
                     <div style={{ position: "relative", top: "-65px" }}>
                       <RecommendedProducts products={recomendedProducts} />
@@ -416,7 +410,7 @@ class SearchPage extends Component {
 const mapStateToProps = ({ searchReducer, locationReducer }) => {
   return {
     searchReducer,
-    locationReducer
+    locationReducer,
   };
 };
 

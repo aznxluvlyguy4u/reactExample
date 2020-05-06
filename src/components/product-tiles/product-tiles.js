@@ -91,7 +91,7 @@ class ProductTiles extends Component {
                       return (
                         <div
                           key={index}
-                          className="col-lg-4 col-md-4 col-sm-6 product-tile"
+                          className={this.props.search ? "col-lg-3 col-md-3 col-sm-6 product-tile" : "col-lg-4 col-md-4 col-sm-6 product-tile"}
                         >
                           <Link
                             href={`/product?id=${item.id}&slug=${slugify(
@@ -118,39 +118,15 @@ class ProductTiles extends Component {
                                       : "/static/images/flyboard.png"
                                   }
                                 />
-                                {/* {item.rates[0].quantityAvailable == 0 && (
-                                  <div
-                                    style={{
-                                      position: "absolute",
-                                      top: "10px",
-                                      padding: "8px",
-                                      backgroundColor: "rgb(255, 121, 7)",
-                                      color: "white"
-                                    }}
-                                  >
-                                    Currently unavailable
-                                  </div>
-                                )} */}
                               </div>
                             </a>
                           </Link>
-                          <h4>{item.name}</h4>
-                          <hr></hr>
+                          <h4 className="title">{item.name}</h4>
+                          <hr style={{border: "0.292173px solid #C7C7C7"}}></hr>
                           <div className="description">
                             {item.description.section1
                               ? item.description.section1.paragraph
                               : "--"}
-                            <div
-                              style={{
-                                position: "absolute",
-                                top: "0px",
-                                width: "100%",
-                                height: "100%",
-                                background:
-                                  "linear-gradient(180deg, transparent, white)",
-                                zIndex: "3"
-                              }}
-                            ></div>
                           </div>
 
                           {item.tagline && (
@@ -158,7 +134,7 @@ class ProductTiles extends Component {
                           )}
 
                           <div>
-                            <strong>€ {item.rates[0].price}</strong>EUR
+                            <strong>€ {item.rates[0].price}</strong> EUR
                             <div className="per-day-text">per day</div>
                           </div>
                           <div style={{ display: "flex" }}>

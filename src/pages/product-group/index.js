@@ -128,11 +128,13 @@ class ProductGroupPage extends Component {
                   : 'url("/static/images/product-group-static-img.png")',
             }}
           ></div>
-          <div className="category-text">
-            <h1 style={{ color: "white" }}>
-              {(productGroup && productGroup.name) || slug}
-            </h1>
-            <h3></h3>
+          <div className="container">
+            <div className="category-text">
+              <h1 style={{ color: "white" }}>
+                {(productGroup && productGroup.name) || slug}
+              </h1>
+              <h3></h3>
+            </div>
           </div>
           <div style={{ position: "relative", top: "70px" }}>
             <div
@@ -196,21 +198,21 @@ class ProductGroupPage extends Component {
                 )}
               </div>
               <div className="col-sm-12 col-md-6">
-                <div
+                {productGroup && productGroup.images && (<div
                   style={{
                     position: "relative",
                     display: "grid",
                     gridTemplateColumns: "auto auto auto",
                   }}
                 >
-                  {products.map((product) => (
+                  {productGroup.images.map((product) => (
                     <img
-                      key={product.id}
+                      key={product.url}
                       className="img-fluid"
-                      src={product.images[0].url}
+                      src={product.url}
                     />
                   ))}
-                </div>
+                </div>)}
               </div>
             </div>
           </div>

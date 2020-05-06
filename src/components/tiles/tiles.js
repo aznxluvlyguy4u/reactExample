@@ -65,7 +65,7 @@ class Tiles extends Component {
                         );
                       })}
                     </div>
-                    <div className="row showmore-wrapper">
+                    {this.props.showAll && <div className="row showmore-wrapper">
                       <div className="col">
                         <a
                           href={`/category?id=${this.props.category.id}`}
@@ -74,7 +74,7 @@ class Tiles extends Component {
                           Show all &gt;
                         </a>
                       </div>
-                    </div>
+                    </div>}
                   </div>
                 </div>
               </div>

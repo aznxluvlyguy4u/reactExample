@@ -89,9 +89,11 @@ class CategoryPage extends Component {
               backgroundImage: (category && category.images && category.images[0] && category.images[0].url) ? `url(${category.images[0].url})` : 'url("/static/images/static-category-img.png")'
             }}
           ></div>
-          <div className="category-text">
-            <h1 style={{ color: "white" }}>{category.name}</h1>
-            <h3>{category.subtitle || ''}</h3>
+          <div className="container">
+            <div className="category-text">
+              <h1 style={{ color: "white" }}>{category.name}</h1>
+              <h3>{category.subtitle || ''}</h3>
+            </div>
           </div>
           <div>
             <div
@@ -115,7 +117,7 @@ class CategoryPage extends Component {
           <div name="scroll-to-element"></div>
           <div className="container tiles">
             <Tiles category={this.state.category} />
-            <div style={{ position: "relative", paddingBottom: "20px" }}>
+            <div style={{ position: "relative", paddingBottom: "175px" }}>
               <CategoryTiles categories={this.state.categories} />
             </div>
           </div>

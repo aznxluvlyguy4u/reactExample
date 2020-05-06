@@ -147,7 +147,7 @@ class IndexPage extends Component {
                         return <Banner key={bannerIndex} data={bannerData} />;
                       }
                     })}
-                  <Tiles category={category} subHeading={true} />
+                  <Tiles category={category} subHeading={true} showAll={true} />
                   {categoryIndex === this.state.categories.length - 1 && (
                     <div className="row">
                       <div className="col banner">

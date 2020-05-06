@@ -7,17 +7,25 @@
 .description {
   position: relative;
   margin: 16px 0px;
-  height: 80px;
+  min-height: 32px;
+  font-family: Tyros Pro;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10.4246px;
+  line-height: 16px;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
 }
 
 .tag-line {
-  padding: 0.784762px 19.619px;
-  max-width: 100px;
+  padding: 0.744615px 16.44615px;
+  max-width: 58px;
   min-height: 18.83px;
   left: 0px;
   top: 10px;
-  background: #fab900;
+  background: #19303B;
   align-self: flex-end;
   margin: 16px 0px;
   font-weight: 800;
@@ -80,4 +88,19 @@
   color: white;
   text-align: center;
   cursor: pointer;
+}
+
+h4 {
+  font-family: Tyros Pro;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 11.9138px;
+  line-height: 16px;
+}
+
+h4.title {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
 }
