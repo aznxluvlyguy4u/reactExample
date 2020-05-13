@@ -70,14 +70,14 @@ class AboutPage extends Component {
                   </p>
                 </div>
                 <div className="col-md-4 col-lg-4 col-sm-12">
-                  <img src="static/images/about/WaterToys.png" />
+                  <img src="/static/images/about/WaterToys.png" />
                 </div>
               </div>
             </div>
 
             <div className="row section align-items-center">
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/WeSpecialise.png" />
+                <img src="/static/images/about/WeSpecialise.png" />
               </div>
               <div className="col-md-8 col-lg-8 col-sm-12">
                 <h1>We specialize</h1>
@@ -102,13 +102,13 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/Availability.png" />
+                <img src="/static/images/about/Availability.png" />
               </div>
             </div>
 
             <div className="row section align-items-center">
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/ShortNotice.png" />
+                <img src="/static/images/about/ShortNotice.png" />
               </div>
               <div className="col-md-8 col-lg-8 col-sm-12">
                 <h1>Short Notice</h1>
@@ -129,13 +129,13 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/FastResponse.png" />
+                <img src="/static/images/about/FastResponse.png" />
               </div>
             </div>
 
             <div className="row section align-items-center">
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/AnytimeAnywhere.png" />
+                <img src="/static/images/about/AnytimeAnywhere.png" />
               </div>
               <div className="col-md-8 col-lg-8 col-sm-12">
                 <h1>Delivery Anytime, Anywhere!</h1>
@@ -159,13 +159,13 @@ class AboutPage extends Component {
                 </p>
               </div>
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/One-Way.png" />
+                <img src="/static/images/about/One-Way.png" />
               </div>
             </div>
 
             <div className="row section align-items-center">
               <div className="col-md-4 col-lg-4 col-sm-12">
-                <img src="static/images/about/NoCompromise.png" />
+                <img src="/static/images/about/NoCompromise.png" />
               </div>
               <div className="col-md-8 col-lg-8 col-sm-12">
                 <h1>No Compromise</h1>
@@ -180,7 +180,7 @@ class AboutPage extends Component {
             <div className="section">
               <h3>We deliver all over the Carribbean</h3>
               <img
-                src="static/images/about/carribbean-ports.png"
+                src="/static/images/about/carribbean-ports.png"
                 className="img-fluid"
                 alt="Map of Carribbean delivery"
               />
@@ -189,7 +189,7 @@ class AboutPage extends Component {
             <div className="section">
               <h3>We deliver all over the Mediteranean</h3>
               <img
-                src="static/images/about/mediteranean-ports.png"
+                src="/static/images/about/mediteranean-ports.png"
                 className="img-fluid"
                 alt="Map of Mediteranean delivery"
               />

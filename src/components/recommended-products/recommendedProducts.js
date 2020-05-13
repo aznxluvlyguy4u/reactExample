@@ -34,7 +34,7 @@ class RecommendedProducts extends Component {
 
   product(item) {
     return (
-      <Link key={item.id} href={`/product-group?id=${item.id}&slug=${slugify(item.name)}`}>
+      <Link key={item.id} href={`/rent/${slugify(item.name)}-rental`}>
         <a
           href={`/product?id=${item.id}&slug=${slugify(item.name)}`}
           as={`/product/${item.id}/${slugify(item.name)}`}

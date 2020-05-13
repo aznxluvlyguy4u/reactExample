@@ -398,12 +398,9 @@ class DetailPage extends Component {
       return (
         <div>
           <a
-            href={`/product-group?id=${product.productGroup.id}&slug=${slugify(
+            href={`/rent/${slugify(
               product.productGroup.name
-            )}`}
-            as={`/product-group/${product.id}/${slugify(
-              product.productGroup.name
-            )}`}
+            )}-rental`}
             style={{ position: "absolute", left: "25px", top: "65px" }}
           >
             <img
@@ -472,12 +469,7 @@ class DetailPage extends Component {
                     >{" "}
                     <a
                       style={{ color: "black" }}
-                      href={`/product-group?id=${
-                        product.productGroup.id
-                      }&slug=${slugify(product.productGroup.name)}`}
-                      as={`/product-group/${product.id}/${slugify(
-                        product.productGroup.name
-                      )}`}
+                      href={`/rent/${slugify(product.productGroup.name)}-rental`}
                     >
                       {" "}
                       {product.productGroup.name}

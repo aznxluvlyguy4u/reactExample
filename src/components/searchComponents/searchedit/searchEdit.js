@@ -168,7 +168,7 @@ class SearchEdit extends Component {
                             component={CustomSelect} 
                             selectRef={ ref => (this.collectionLocationSelectElement = ref)}/>
                         </div>
-                        <div className="other-wrapper" style={{paddingTop: "27px", paddingRight: "20px"}}><img className="img-fluid" style={{maxHeight: "26px"}} src="static/images/arrow-right.png" /></div>
+                        <div className="other-wrapper" style={{paddingTop: "27px", paddingRight: "20px"}}><img className="img-fluid" style={{maxHeight: "26px"}} src="/static/images/arrow-right.png" /></div>
                         <div className="other-wrapper">
                           <div className="label-wrapper">
                             <label htmlFor="collectionDateRange">From</label>

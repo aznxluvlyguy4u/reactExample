@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { scroller } from "react-scroll";
 import Iframe from "react-iframe";
 import classnames from "classnames";
-import Modal from "react-modal";
+import { withRouter } from 'next/router'
 
 import Default from "../../layouts/default";
 import Loader from "../../components/loader";
@@ -10,10 +10,9 @@ import ProductTiles from "../../components/product-tiles/product-tiles";
 
 import { handleGeneralError } from "../../utils/rest/error/toastHandler";
 import {
-  getByGroupId,
-  getProductGroupById,
+  getByGroupSlug,
+  getProductGroupBySlug,
 } from "../../utils/rest/requests/products";
-import { getCategories } from "../../utils/rest/requests/categories";
 
 const meta = {
   title: "Oceanpremium - Product Group",
@@ -32,39 +31,26 @@ class ProductGroupPage extends Component {
     };
   }
 
-  static async getInitialProps({ query }) {
-    return {
-      id: parseInt(query.id),
-      slug: query.slug,
-    };
+  static async getInitialProps(props) {
+    return {};
   }
 
   async componentDidMount() {
-    await this.retrieveProductGroup();
-    await this.retreiveProducts();
+    this.retrieveProductGroup().then().catch(err => {});
+    this.retreiveProducts().then().catch(err => {});
     window.addEventListener("scroll", this.handleScroll);
   }
 
   async retrieveProductGroup() {
     try {
-      const productGroupRes = await getProductGroupById(this.props.id);
+      // TODO: Hacky, but requested by client
+      let slug = this.props.router.query.product_group_slug.replace("-rental", "");
+
+      const productGroupRes = await getProductGroupBySlug(slug);
       if (!productGroupRes && !productGroupRes.data) return;
 
       const productGroup = productGroupRes.data[0];
       this.setState({ productGroup });
-
-      // const response = await getCategories();
-      // if (!response.data) return;
-
-      // response.data.forEach(category => {
-      //   if (!category.productGroups) return;
-      //   category.productGroups.forEach(productGroup => {
-      //     if (productGroup.id === this.props.id) {
-      //       this.setState({ productGroup });
-      //       return;
-      //     }
-      //   });
-      // });
     } catch (error) {
       this.setState({
         categories: [],
@@ -74,9 +60,11 @@ class ProductGroupPage extends Component {
   }
 
   async retreiveProducts() {
-    const { id, slug } = this.props;
+    const { router } = this.props;
     try {
-      const response = await getByGroupId(id);
+      // TODO: Hacky, but requested by client
+      let slug = router.query.product_group_slug.replace("-rental", "");
+      const response = await getByGroupSlug(slug);
       this.setState({
         products: response.data,
       });
@@ -215,7 +203,7 @@ class ProductGroupPage extends Component {
                       <img
                         key={product.url}
                         className="img-fluid"
-                        style={{objectFit: "contain"}}
+                        style={{minHeight: 197.5}}
                         src={product.url}
                       />
                     ))}
@@ -269,4 +257,4 @@ class ProductGroupPage extends Component {
   }
 }
 
-export default ProductGroupPage;
+export default withRouter(ProductGroupPage);

@@ -42,12 +42,7 @@ class Tiles extends Component {
                             className="col-lg-3 col-md-4 col-sm-6 py-0 my-0"
                           >
                             <a
-                              href={`/product-group?id=${
-                                item.id
-                              }&slug=${slugify(item.name)}`}
-                              as={`/product-group/${item.id}/${slugify(
-                                item.name
-                              )}`}
+                              href={`/rent/${slugify(item.name)}-rental`}
                             >
                               <div className="product">
                                 <img

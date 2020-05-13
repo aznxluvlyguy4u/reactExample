@@ -94,6 +94,17 @@ export function getByGroupId(productGroupId) {
   }).then(handleRestResponse);
 }
 
+export function getByGroupSlug(productGroupSlug) {
+  const per_page = 8;
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/inventory?q[product_group_name_eq]=${productGroupSlug}`;
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: "application/json"
+    }
+  }).then(handleRestResponse);
+}
+
 export function getProductById(id, deliveryLocation) {
   let params = "";
   if (deliveryLocation) {
@@ -111,6 +122,16 @@ export function getProductById(id, deliveryLocation) {
 
 export function getProductGroupById(id) {
   const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/groups?q[id_eq]=${id}`;
+  return fetch(url, {
+    method: "GET",
+    headers: {
+      Accept: "application/json"
+    }
+  }).then(handleRestResponse);
+}
+
+export function getProductGroupBySlug(slug) {
+  const url = `${PRODUCTS_ENDPOINT_BASE_URL}/products/groups?q[name_eq]=${slug}`;
   return fetch(url, {
     method: "GET",
     headers: {

@@ -41,7 +41,7 @@ class CheckoutBookingConfigureGridRow extends Component {
         <div className="row my-4">
           <div className="col-1 align-self-center">
             <a onClick={() => this.props.openModalAndSetItem()}>
-              <img src="static/images/delete.png" />
+              <img src="/static/images/delete.png" />
             </a>
           </div>
           <div className="col-2 align-self-center">

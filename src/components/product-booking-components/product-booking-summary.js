@@ -19,7 +19,7 @@ class ProductBookingSummary extends Component {
           <div className="row h-100 no-gutters">
             <div className="col-md-1 equal-height-columns">
               <img
-                src="static/images/back-arrow-white.svg"
+                src="/static/images/back-arrow-white.svg"
                 alt="previous"
                 onClick={() => this.props.setStep(1)}
               />

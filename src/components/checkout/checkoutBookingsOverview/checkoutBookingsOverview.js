@@ -118,7 +118,7 @@ class CheckoutBookingsOverview extends Component {
                   >
                     <div className="col-1 align-self-center">
                       <a onClick={() => this.openModalAndSetItem(index)}>
-                        <img src="static/images/delete.png" />
+                        <img src="/static/images/delete.png" />
                       </a>
                     </div>
                     <div className="col-3">
@@ -160,7 +160,7 @@ class CheckoutBookingsOverview extends Component {
                                           : "d-none"
                                       }
                                     >
-                                      <img src="static/images/add.png" />
+                                      <img src="/static/images/add.png" />
                                     </td>
                                   ])}
                                 </tr>
@@ -186,7 +186,7 @@ class CheckoutBookingsOverview extends Component {
                       >
                         Configure
                       </button>
-                      <img className={cartItem.isAvailable ? "d-none" : "img-fluid"} src="static/images/unavailable.png" style={{maxHeight: '20px'}}/>
+                      <img className={cartItem.isAvailable ? "d-none" : "img-fluid"} src="/static/images/unavailable.png" style={{maxHeight: '20px'}}/>
                     </div>
                   </div>
                 ))}

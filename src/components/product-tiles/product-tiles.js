@@ -109,7 +109,7 @@ class ProductTiles extends Component {
                                   style={{
                                     width: "100%",
                                     height: "214px",
-                                    objectFit: "cover"
+                                    objectFit: "contain"
                                   }}
                                   alt={item.name}
                                   src={

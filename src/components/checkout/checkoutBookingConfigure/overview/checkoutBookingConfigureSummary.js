@@ -54,7 +54,7 @@ class CheckoutBookingConfigureSummary extends Component {
             <div className="col-5 self-align-center text-center">
               <img
                 className="availabilityImage"
-                src="static/images/alert.png"
+                src="/static/images/alert.png"
               />
             </div>
             <div className="col-7">
@@ -71,7 +71,7 @@ class CheckoutBookingConfigureSummary extends Component {
           <div className="row costs">
             <div className="col-8">
               <img
-                src="static/images/down.png"
+                src="/static/images/down.png"
                 style={{
                   width: "10px",
                   height: "5px",

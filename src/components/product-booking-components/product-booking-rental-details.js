@@ -186,7 +186,7 @@ class ProductBookingRentalDetails extends Component {
           <div className="row">
             <div className="col-8">
               <img
-                src="static/images/down.png"
+                src="/static/images/down.png"
                 style={{ width: "10px", height: "5px", marginRight: "5px" }}
               />
               Transport Costs

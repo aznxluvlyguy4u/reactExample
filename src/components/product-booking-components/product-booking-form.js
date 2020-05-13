@@ -571,7 +571,7 @@ class ProductBookingForm extends Component {
           <div className="row h-100 no-gutters">
             <div className="col-md-1 equal-height-columns">
               <img
-                src="static/images/back-arrow-white.svg"
+                src="/static/images/back-arrow-white.svg"
                 alt="previous"
                 onClick={() => this.props.closeModal()}
               />
@@ -741,7 +741,7 @@ class ProductBookingForm extends Component {
                                 <div className="col-7">
                                   <div className="unavailable d-none">
                                     <span className="yellow-text uppercase">
-                                      <img src="static/images/alert.png" /> Not
+                                      <img src="/static/images/alert.png" /> Not
                                       available
                                     </span>
                                     <br />
