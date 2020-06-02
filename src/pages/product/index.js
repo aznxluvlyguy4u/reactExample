@@ -29,7 +29,7 @@ import {
   setProductOptionalAccessories,
   setProductConfigurations,
   setTotalSteps,
-  setCurrentStep
+  setCurrentStep,
 } from "../../actions/localSearchActions";
 import { updateCart, addToCart, setCart } from "../../actions/cartActions";
 
@@ -44,7 +44,7 @@ class DetailPage extends Component {
     section4: "attention.png",
     section5: "plus.png",
     section6: "award.png",
-    section7: "dimensions.png"
+    section7: "dimensions.png",
   };
 
   constructor(props) {
@@ -54,7 +54,7 @@ class DetailPage extends Component {
       product: undefined,
       configurations: [],
       total: undefined,
-      selectedProductUrl: null
+      selectedProductUrl: null,
     };
 
     this.addToCart = this.addToCart.bind(this);
@@ -73,7 +73,7 @@ class DetailPage extends Component {
 
   static async getInitialProps({ query }) {
     return {
-      id: parseInt(query.id)
+      id: parseInt(query.id),
     };
   }
 
@@ -144,14 +144,14 @@ class DetailPage extends Component {
         this.props.setTotalSteps(4);
 
         const accessories = [];
-        response.data.accessories.map(item => {
+        response.data.accessories.map((item) => {
           item.quantity = 0;
           accessories.push(item);
         });
 
         // Only show accessories that are labeled as OPTIONAL as  optional accessories
-        const optional = accessories.filter(val => val.type === "OPTIONAL");
-        const mandatory = accessories.filter(val => val.type === "MANDATORY");
+        const optional = accessories.filter((val) => val.type === "OPTIONAL");
+        const mandatory = accessories.filter((val) => val.type === "MANDATORY");
 
         this.props.setProductAccessories(accessories);
         this.props.setProductOptionalAccessories(optional);
@@ -164,11 +164,11 @@ class DetailPage extends Component {
 
       if (response.data.configurations) {
         const array = [];
-        response.data.configurations.map(item =>
+        response.data.configurations.map((item) =>
           array.push({
             id: item.id,
             name: item.name,
-            value: item.values[0].name
+            value: item.values[0].name,
           })
         );
         this.props.setProductConfigurations(array);
@@ -201,9 +201,9 @@ class DetailPage extends Component {
   /* eslint class-methods-use-this: ["error", { "exceptMethods": ["productForDateRangeAndLocationsExist","cartItemHasProductForDateRangeAndLocations"] }] */
   productForDateRangeAndLocationsExist(existingCartItems, orderDetails) {
     return existingCartItems.some(
-      cartItem =>
+      (cartItem) =>
         cartItem.products.findIndex(
-          cartProduct => cartProduct.id === orderDetails.selectedProduct.id
+          (cartProduct) => cartProduct.id === orderDetails.selectedProduct.id
         ) >= 0 &&
         moment(cartItem.period.start).isSame(
           moment(orderDetails.deliveryDate),
@@ -223,7 +223,7 @@ class DetailPage extends Component {
   cartItemHasProductForDateRangeAndLocations(cartItem, orderDetails) {
     return (
       cartItem.products.findIndex(
-        cartItemProduct =>
+        (cartItemProduct) =>
           cartItemProduct.id === orderDetails.selectedProduct.id
       ) >= 0 &&
       moment(cartItem.period.start).isSame(
@@ -247,20 +247,20 @@ class DetailPage extends Component {
 
     let mergedItems = [];
     if (this.productForDateRangeAndLocationsExist(existingItems, order)) {
-      mergedItems = existingItems.map(cartItem => {
+      mergedItems = existingItems.map((cartItem) => {
         if (this.cartItemHasProductForDateRangeAndLocations(cartItem, order)) {
-          cartItem.products.map(cartItemProduct => {
+          cartItem.products.map((cartItemProduct) => {
             if (cartItemProduct.id === order.selectedProduct.id) {
               cartItemProduct.quantity += order.productQuantity;
               if (cartItemProduct.accessories) {
-                order.productOptionalAccessories.map(productAccessory => {
+                order.productOptionalAccessories.map((productAccessory) => {
                   if (
                     productAccessory.quantity > 0 &&
                     cartItemProduct.accessories.some(
-                      accessory => accessory.id === productAccessory.id
+                      (accessory) => accessory.id === productAccessory.id
                     )
                   ) {
-                    cartItemProduct.accessories.map(existingAccessory => {
+                    cartItemProduct.accessories.map((existingAccessory) => {
                       if (existingAccessory.id === productAccessory.id) {
                         existingAccessory.quantity += productAccessory.quantity;
                       }
@@ -272,7 +272,7 @@ class DetailPage extends Component {
               } else {
                 cartItemProduct.accessories.push(
                   order.productOptionalAccessories.map(
-                    accessory => accessory.quantity > 0
+                    (accessory) => accessory.quantity > 0
                   )
                 );
               }
@@ -299,7 +299,7 @@ class DetailPage extends Component {
 
   changeAccesoire(val) {
     const index = this.state.accessories.findIndex(
-      item => item.id === JSON.parse(val.dropdown).id
+      (item) => item.id === JSON.parse(val.dropdown).id
     );
     this.state.accessories[index] = JSON.parse(val.dropdown);
     this.setState({ accessories: this.state.accessories });
@@ -307,7 +307,7 @@ class DetailPage extends Component {
 
   onChangeConfiguration(val) {
     const index = this.state.configurations.findIndex(
-      item => item.id === JSON.parse(val.configuration).id
+      (item) => item.id === JSON.parse(val.configuration).id
     );
     this.state.configurations[index] = JSON.parse(val.configuration);
     this.setState({ configurations: this.state.configurations });
@@ -344,7 +344,7 @@ class DetailPage extends Component {
   addProdcut(product) {
     product.qty += 1;
     this.setState({
-      products: this.state.products
+      products: this.state.products,
     });
   }
 
@@ -353,13 +353,13 @@ class DetailPage extends Component {
       product.qty -= 1;
     }
     this.setState({
-      products: this.state.products
+      products: this.state.products,
     });
   }
 
   onImageClicked(selectedProductUrl) {
     this.setState({
-      selectedProductUrl
+      selectedProductUrl,
     });
   }
 
@@ -388,7 +388,7 @@ class DetailPage extends Component {
     this.setState({
       modalIsOpen: true,
       requestedProduct: item,
-      step: 1
+      step: 1,
     });
   }
 
@@ -398,16 +398,14 @@ class DetailPage extends Component {
       return (
         <div>
           <a
-            href={`/rent/${slugify(
-              product.productGroup.name
-            )}-rental`}
+            href={`/rent/${slugify(product.productGroup.name)}-rental`}
             style={{ position: "absolute", left: "25px", top: "65px" }}
           >
             <img
               style={{
                 height: "35px",
                 position: "relative",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
               src="/static/images/back.png"
             ></img>
@@ -418,7 +416,7 @@ class DetailPage extends Component {
               <div
                 className="fullWidthImage"
                 style={{
-                  backgroundImage: `url(${product.images[0].fullImageUrl})`
+                  backgroundImage: `url(${product.images[0].fullImageUrl})`,
                 }}
               ></div>
             )}
@@ -426,7 +424,7 @@ class DetailPage extends Component {
             <div className="row" style={{ marginTop: "60px" }}>
               <div
                 style={{ maxHeight: "100vh" }}
-                className="col-lg-8 col-sm-12"
+                className="col-lg-6 col-sm-12"
               >
                 <div className="images">
                   <div className="main-image">
@@ -440,11 +438,11 @@ class DetailPage extends Component {
                   </div>
                   <div className="small-images no-scrollbar">
                     {product.images &&
-                      product.images.map(productImage => {
+                      product.images.map((productImage) => {
                         return (
                           <img
                             src={productImage.url}
-                            onClick={e => {
+                            onClick={(e) => {
                               this.onImageClicked(productImage.url);
                             }}
                           />
@@ -453,15 +451,9 @@ class DetailPage extends Component {
                   </div>
                 </div>
               </div>
-              <div
-                style={{
-                  overflow: "scroll"
-                }}
-                className="col-lg-4 col-sm-12 product-detail-description"
-              >
-                <div
-                  className="product-detail-description-overflow no-scrollbar"
-                >
+
+              <div className="col-lg-6 col-sm-12 product-detail-description pl-5">
+                <div className="product-detail-description-overflow no-scrollbar">
                   <h2>
                     <a style={{ color: "black" }} href="/">
                       Rental
@@ -469,7 +461,9 @@ class DetailPage extends Component {
                     >{" "}
                     <a
                       style={{ color: "black" }}
-                      href={`/rent/${slugify(product.productGroup.name)}-rental`}
+                      href={`/rent/${slugify(
+                        product.productGroup.name
+                      )}-rental`}
                     >
                       {" "}
                       {product.productGroup.name}
@@ -480,12 +474,12 @@ class DetailPage extends Component {
                     </span>
                   </h2>
                   <h1 className="main-title">{product.name}</h1>
-                  <p>{product.description && product.description.summary}</p>
-                  {product.description && product.description.tagline && (
+                  <p>{product.description && product.description.tagline}</p>
+                  {/* {product.description && product.description.tagline && (
                     <div className="tag-line">
                       {product.description && product.description.tagline}
                     </div>
-                  )}
+                  )} */}
 
                   <div>
                     <strong>€ {product.rates[0].price}</strong> EUR
@@ -497,7 +491,7 @@ class DetailPage extends Component {
                       marginBottom: "32px",
                       marginBottom: "25px",
                       borderBottom: "solid 1.3px lightgrey",
-                      paddingBottom: "25px"
+                      paddingBottom: "25px",
                     }}
                   >
                     <div className="col-md-4 counter">
@@ -524,9 +518,10 @@ class DetailPage extends Component {
                       </div>
                     </div>
                   </div>
-                  {Object.keys(product.description).map(item => {
+                  {Object.keys(product.description).map((item) => {
                     return (
-                      item != "dimensions" && (
+                      item != "dimensions" &&
+                      item != "tagline" && (
                         <div>
                           <div style={{ display: "flex" }}>
                             <img
@@ -543,7 +538,7 @@ class DetailPage extends Component {
                           <div
                             style={{ marginBottom: "32px" }}
                             dangerouslySetInnerHTML={{
-                              __html: product.description[item].paragraph
+                              __html: product.description[item].paragraph,
                             }}
                           />
                         </div>
@@ -568,7 +563,7 @@ class DetailPage extends Component {
                 right: 0,
                 bottom: 0,
                 backgroundColor: "#19303b",
-                zIndex: 4002
+                zIndex: 4002,
               },
               content: {
                 top: "50%",
@@ -578,8 +573,8 @@ class DetailPage extends Component {
                 transform: "translate(-50%, -50%)",
                 backgroundColor: "transparent",
                 border: "none",
-                width: "80%"
-              }
+                width: "80%",
+              },
             }}
             portalClassName="product-tile-modal"
           >
@@ -618,14 +613,14 @@ const mapStateToProps = ({
   searchReducer,
   locationReducer,
   localSearchReducer,
-  cartReducer
+  cartReducer,
 }) => {
   return {
     searchReducer,
     locationReducer,
     localSearchReducer,
     rootReducer,
-    cartReducer
+    cartReducer,
   };
 };
 
@@ -642,5 +637,5 @@ export default connect(mapStateToProps, {
   setTotalSteps,
   setCurrentStep,
   resetLocalSearch,
-  setCart
+  setCart,
 })(DetailPage);

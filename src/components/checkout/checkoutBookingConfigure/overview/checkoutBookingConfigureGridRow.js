@@ -55,11 +55,10 @@ class CheckoutBookingConfigureGridRow extends Component {
           </div>
           <div className="col-3 align-self-center">
             <h3>{this.props.rowItem.item.name}</h3>
-            {this.props.rowItem.itemDetails.note && (<p className="from-price">{this.props.rowItem.itemDetails.note}</p>)}
             {this.props.rowItem.item.rates &&
               this.props.rowItem.item.rates.length > 0 && (
                 <p className="from-price">
-                  from € {this.props.rowItem.item.rates[0].price}
+                  €{this.props.rowItem.item.rates[0].price} / day
                 </p>
               )}
           </div>
@@ -68,6 +67,7 @@ class CheckoutBookingConfigureGridRow extends Component {
               id={this.props.rowItem.index}
               name="qty"
               placeholder="Quantity"
+              noZero={true}
               value={this.props.rowItem.quantity}
               changeValue={value => this.props.counterUpdate(value)}
             />
@@ -77,6 +77,7 @@ class CheckoutBookingConfigureGridRow extends Component {
           </div>
           <div className="col-2 align-self-center text-center">
             {this.props.rowItem.itemDetails && (this.returnAvailabilityIcon(this.props.rowItem.itemDetails))}
+            {this.props.rowItem.itemDetails.note && (<p className="from-price">{this.props.rowItem.itemDetails.note}</p>)}
           </div>
         </div>
       );

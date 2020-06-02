@@ -22,17 +22,23 @@ class CheckoutOverviewControl extends Component {
       displaySection: {
         overview: true,
         checkout: false,
-        pay: false
+        pay: false,
       },
       validated: {
-        overview: cartUtils.cartItemsAllAvailable(props.cart[props.configureIndex], props.productBookingMap),
-        checkout: props.cart[props.configureIndex].logistics && props.cart[props.configureIndex].contactInformation && props.cart[props.configureIndex].billingInformation,
-        pay: false
+        overview: cartUtils.cartItemsAllAvailable(
+          props.cart[props.configureIndex],
+          props.productBookingMap
+        ),
+        checkout:
+          props.cart[props.configureIndex].logistics &&
+          props.cart[props.configureIndex].contactInformation &&
+          props.cart[props.configureIndex].billingInformation,
+        pay: false,
       },
       checkoutState: "logistics",
       configure: props.configure,
       configureAll: props.configureAll,
-      loading: false
+      loading: false,
     };
   }
 
@@ -42,7 +48,7 @@ class CheckoutOverviewControl extends Component {
         displaySection: {
           overview: section === "overview",
           checkout: section === "checkout",
-          pay: section === "pay"
+          pay: section === "pay",
         },
       });
     }
@@ -50,7 +56,10 @@ class CheckoutOverviewControl extends Component {
 
   updateCartItem(cartItemIndex, cartItem) {
     let cart = this.state.cart;
-    cart[cartItemIndex] = cartItem;
+    if (cartItem) {
+      cart[cartItemIndex] = cartItem;
+    }
+
     this.setState({ cart });
     this.props.updateCart(cart);
   }
@@ -60,14 +69,22 @@ class CheckoutOverviewControl extends Component {
   }
 
   updateSelectedPaymentMethod(value) {
-    this.setState({selectedPaymentMethod : value})
+    this.setState({ selectedPaymentMethod: value });
   }
 
   async setBankTransfer() {
     const cartItem = this.state.cartItem;
     const period = {
-      start: moment(cartItem.period.start).set({ minute:0,second:0,millisecond:0 }),
-      end: moment(cartItem.period.end).set({ minute:0,second:0,millisecond:0 })
+      start: moment(cartItem.period.start).set({
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      }),
+      end: moment(cartItem.period.end).set({
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      }),
     };
     const request = new PlaceOrderRequest(
       cartItem.location,
@@ -76,7 +93,7 @@ class CheckoutOverviewControl extends Component {
       cartItem.contactInformation,
       cartItem.billingInformation,
       cartItem.logistics,
-      "BANK_TRANSFER",
+      "BANK_TRANSFER"
     ).returnOrder();
 
     return orderCartItems(request);
@@ -98,7 +115,10 @@ class CheckoutOverviewControl extends Component {
                     >
                       Overview{" "}
                       {this.state.validated.overview && (
-                        <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                        <img
+                          className="ml-2"
+                          src="/static/images/yellow-elipse-tick.png"
+                        />
                       )}
                     </a>
                     <span className="inactive"> / </span>
@@ -121,7 +141,10 @@ class CheckoutOverviewControl extends Component {
                         Checkout
                       </a>
                       {this.state.validated.checkout && (
-                        <img className="ml-2" src="/static/images/yellow-elipse-tick.png" />
+                        <img
+                          className="ml-2"
+                          src="/static/images/yellow-elipse-tick.png"
+                        />
                       )}
                     </span>
                     <span className="inactive"> / </span>
@@ -144,6 +167,7 @@ class CheckoutOverviewControl extends Component {
                   </h1>
                   {this.state.displaySection.overview && (
                     <CheckoutBookingConfigure
+                      availability={this.props.availability}
                       cart={this.state.cart}
                       products={this.props.products}
                       configureIndex={this.props.configureIndex}
@@ -151,36 +175,54 @@ class CheckoutOverviewControl extends Component {
                       updateAccessoryCounter={this.props.updateAccessoryCounter}
                       productBookingMap={this.props.productBookingMap}
                       backToBookings={this.props.backToBookings}
+                      updateCartItem={(cartItem) => {
+                        this.updateCartItem(this.state.cartItemIndex, cartItem);
+                      }}
                     />
                   )}
                   {this.state.displaySection.checkout && (
                     <CheckoutControl
                       cartItem={this.state.cartItem}
                       displayHeading={true}
-                      updateCartItem={cartItem =>
+                      updateCartItem={(cartItem) =>
                         this.updateCartItem(this.state.cartItemIndex, cartItem)
                       }
-                      checkoutState={state => this.setCheckoutState(state)}
+                      checkoutState={(state) => this.setCheckoutState(state)}
                       checkoutControlState={this.state.checkoutState}
-                      moveToPayment={() => this.goToSection("pay", this.state.cartItem.billingInformation)}
+                      moveToPayment={() =>
+                        this.goToSection(
+                          "pay",
+                          this.state.cartItem.billingInformation
+                        )
+                      }
                     />
                   )}
                   {this.state.displaySection.pay && (
                     <CheckoutPayForm
                       cartItem={this.state.cartItem}
                       handleSubmit={this.handlePaymentMethod}
-                      updateSelectedPaymentMethod={(value) => this.updateSelectedPaymentMethod(value)}
-                      completeBooking={() => this.props.completeBooking(this.state.cartItemIndex, false)}
-                      productBookingMap={this.props.productBookingMap.find(p => p.id === this.state.cartItem.id)}
+                      updateSelectedPaymentMethod={(value) =>
+                        this.updateSelectedPaymentMethod(value)
+                      }
+                      completeBooking={() =>
+                        this.props.completeBooking(
+                          this.state.cartItemIndex,
+                          false
+                        )
+                      }
+                      productBookingMap={this.props.productBookingMap.find(
+                        (p) => p.id === this.state.cartItem.id
+                      )}
                     />
                   )}
                 </div>
                 <div className="col-4">
                   <div className="bordered-container">
                     {this.props.productBookingMap && (
-                        <CheckoutBookingConfigureSummary
+                      <CheckoutBookingConfigureSummary
                         cartItem={this.state.cart[this.props.configureIndex]}
                         productBookingMap={this.props.productBookingMap}
+                        availability={this.props.availability}
                       />
                     )}
                   </div>
@@ -196,21 +238,24 @@ class CheckoutOverviewControl extends Component {
                         </button>
                       </Fragment>
                     )}
-                    {this.state.displaySection.overview && this.state.validated.overview
-                    && (
-                      <Fragment>
-                        <button
-                          type="button"
-                          className="search-button-full mt-3"
-                          onClick={() => {
-                            this.goToSection("checkout", this.state.validated.overview);
-                          }}
-                          disabled={!this.state.validated.overview}
-                        >
-                          Checkout
-                        </button>
-                      </Fragment>
-                    )}
+                    {this.state.displaySection.overview &&
+                      this.state.validated.overview && (
+                        <Fragment>
+                          <button
+                            type="button"
+                            className="search-button-full mt-3"
+                            onClick={() => {
+                              this.goToSection(
+                                "checkout",
+                                this.state.validated.overview
+                              );
+                            }}
+                            disabled={!this.state.validated.overview}
+                          >
+                            Checkout
+                          </button>
+                        </Fragment>
+                      )}
                     {this.state.displaySection.checkout && (
                       <button
                         type="submit"
@@ -221,26 +266,30 @@ class CheckoutOverviewControl extends Component {
                         Next
                       </button>
                     )}
-                    {this.state.displaySection.pay && this.state.selectedPaymentMethod === 'BANK_TRANSFER' && (
-                      <button
-                        type="text"
-                        className="yellow-outline-button mt-3"
-                        disabled={this.state.loading ? "true": ""}
-                        onClick={async () => {
-                          try {
-                            await this.setState({loading: true});
-                            await this.setBankTransfer();
-                            this.props.completeBooking(this.state.cartItemIndex, true);
-                            await this.setState({loading: false});
-                          } catch (err) {
-                            handleGeneralError(err);
-                            await this.setState({loading: false});
-                          }
-                        }}
-                      >
-                        Complete Booking
-                      </button>
-                    )}
+                    {this.state.displaySection.pay &&
+                      this.state.selectedPaymentMethod === "BANK_TRANSFER" && (
+                        <button
+                          type="text"
+                          className="yellow-outline-button mt-3"
+                          disabled={this.state.loading ? "true" : ""}
+                          onClick={async () => {
+                            try {
+                              await this.setState({ loading: true });
+                              await this.setBankTransfer();
+                              this.props.completeBooking(
+                                this.state.cartItemIndex,
+                                true
+                              );
+                              await this.setState({ loading: false });
+                            } catch (err) {
+                              handleGeneralError(err);
+                              await this.setState({ loading: false });
+                            }
+                          }}
+                        >
+                          Complete Booking
+                        </button>
+                      )}
                   </div>
                 </div>
               </div>

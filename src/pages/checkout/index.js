@@ -10,7 +10,7 @@ import {
   emptyCart,
   setCart,
   addToCart,
-  removeFromCart
+  removeFromCart,
 } from "../../actions/cartActions";
 import CheckoutBookingsOverview from "../../components/checkout/checkoutBookingsOverview/checkoutBookingsOverview";
 import CheckoutOverviewControl from "../../components/checkout/checkoutBookingConfigure/overview/checkoutOverviewControl";
@@ -22,8 +22,8 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+  },
 };
 
 class CheckoutPage extends Component {
@@ -37,7 +37,8 @@ class CheckoutPage extends Component {
       configureIndex: undefined,
       configureAll: false,
       orderFailed: false,
-      orderSuccess: false
+      orderSuccess: false,
+      rootAvailability: null,
     };
   }
 
@@ -52,9 +53,12 @@ class CheckoutPage extends Component {
       this.setState({ loading: true });
       const orderRequests = await this.getProductsFromCartItems();
       if (orderRequests.length > 0) {
-        await checkCartAvailability(orderRequests).then(response => {
-          this.setBookingAvailabilityMap(response.data.products);
-        }).catch(err => this.setState({loading: false}));
+        await checkCartAvailability(orderRequests)
+          .then((response) => {
+            this.setBookingAvailabilityMap(response.data.products);
+            this.setState({ rootAvailability: response.data });
+          })
+          .catch((err) => this.setState({ loading: false }));
       } else {
         this.setBookingAvailabilityMap([]);
         this.setState({ loading: false });
@@ -65,7 +69,9 @@ class CheckoutPage extends Component {
   async getValidatedCartItems() {
     const cart = LocalStorageUtil.getCart();
     if (cart) {
-      await cart.map(booking => {
+      await cart.map((booking) => {
+        if (!booking) return;
+
         if (moment(booking.period.start).isSameOrBefore(moment(new Date()))) {
           booking.isAvailable = false;
         } else {
@@ -81,11 +87,13 @@ class CheckoutPage extends Component {
     if (!this.state.cart) {
       return [];
     }
-    this.state.cart.map(orderItem => {
+    this.state.cart.map((orderItem) => {
+      if (!orderItem) return;
+
       if (orderItem.isAvailable) {
         if (!orderItem.products) return;
 
-        orderItem.products.map(product => {
+        orderItem.products.map((product) => {
           orderRequests.push({
             id: product.id,
             quantity: product.quantity,
@@ -96,9 +104,9 @@ class CheckoutPage extends Component {
               ),
               end: moment(orderItem.period.end).format(
                 "YYYY-MM-DDTHH:mm:ss.000Z"
-              )
+              ),
             },
-            accessories: product.accessories
+            accessories: product.accessories,
           });
           return;
         });
@@ -112,19 +120,22 @@ class CheckoutPage extends Component {
 
   async setBookingAvailabilityMap(productAvailability) {
     const productBookingMap = [];
-    this.state.cart.map(booking => {
+    this.state.cart.map((booking) => {
+      if (!booking) return;
       if (!booking.products) return;
-      
-      booking.products.map(product => {
+
+      booking.products.map((product) => {
         const availabilityIndex = productAvailability.findIndex(
-          productLookup => {
+          (productLookup) => {
             return (
               productLookup.id === product.id &&
               moment(productLookup.period.start).isSame(
-                moment(booking.period.start), "day"
+                moment(booking.period.start),
+                "day"
               ) &&
               moment(productLookup.period.end).isSame(
-                moment(booking.period.end), "day"
+                moment(booking.period.end),
+                "day"
               ) &&
               productLookup.location.delivery.id ===
                 booking.location.delivery.id &&
@@ -135,7 +146,7 @@ class CheckoutPage extends Component {
         );
         if (availabilityIndex > -1) {
           const mapIndex = productBookingMap.findIndex(
-            bookingMap => bookingMap.id === booking.id
+            (bookingMap) => bookingMap.id === booking.id
           );
           if (mapIndex > -1) {
             productBookingMap[mapIndex].availability.push(
@@ -144,7 +155,7 @@ class CheckoutPage extends Component {
           } else {
             productBookingMap.push({
               id: booking.id,
-              availability: [productAvailability[availabilityIndex]]
+              availability: [productAvailability[availabilityIndex]],
             });
           }
         }
@@ -160,7 +171,7 @@ class CheckoutPage extends Component {
   closeModal = () => {
     this.setState({
       modalIsOpen: false,
-      orderFormStep: 1
+      orderFormStep: 1,
     });
   };
 
@@ -203,17 +214,35 @@ class CheckoutPage extends Component {
     }
   }
 
-  updateCart(cart) {
-    this.setState({ cart });
+  async updateCart(cart) {
+    await this.setState({ cart });
     this.props.setCart(cart);
     LocalStorageUtil.setCart(cart);
+
+    console.log(cart, this.state.cart);
+
+    if (this.state.cart && this.state.cart.length > 0) {
+      this.setState({ loading: true });
+      const orderRequests = await this.getProductsFromCartItems();
+      if (orderRequests.length > 0) {
+        await checkCartAvailability(orderRequests)
+          .then((response) => {
+            this.setBookingAvailabilityMap(response.data.products);
+            this.setState({ rootAvailability: response.data });
+          })
+          .catch((err) => this.setState({ loading: false }));
+      } else {
+        this.setBookingAvailabilityMap([]);
+        this.setState({ loading: false });
+      }
+    }
   }
 
   closeSuccessModal = () => {
     if (this.state.configureAll && this.state.cart.length > 0) {
       this.setConfigureAll();
       this.setState({
-        orderSuccess: false
+        orderSuccess: false,
       });
     } else {
       this.setState({
@@ -221,14 +250,14 @@ class CheckoutPage extends Component {
         orderSuccess: false,
         configureAll: false,
         configure: false,
-        configureIndex: undefined
+        configureIndex: undefined,
       });
     }
   };
 
   closeFailedModal = () => {
     this.setState({
-      orderFailed: false
+      orderFailed: false,
     });
   };
 
@@ -240,7 +269,7 @@ class CheckoutPage extends Component {
     this.setState({
       bookingsOverview: false,
       configure: true,
-      configureIndex: cartItemIndex
+      configureIndex: cartItemIndex,
     });
   }
 
@@ -249,7 +278,7 @@ class CheckoutPage extends Component {
       bookingsOverview: false,
       configure: true,
       configureIndex: 0,
-      configureAll: true
+      configureAll: true,
     });
   }
 
@@ -257,7 +286,7 @@ class CheckoutPage extends Component {
     this.setState({
       bookingsOverview: true,
       configure: false,
-      configureIndex: undefined
+      configureIndex: undefined,
     });
   }
 
@@ -266,20 +295,20 @@ class CheckoutPage extends Component {
       bookingsOverview: true,
       configure: false,
       configureAll: false,
-      configureIndex: undefined
+      configureIndex: undefined,
     });
   }
 
   captureCheckoutRequirements() {
     this.setState({
       configure: false,
-      configureAll: false
+      configureAll: false,
     });
   }
 
   async completeBooking(cartItemIndex, pending) {
     this.setState({
-      loading: true
+      loading: true,
     });
     if (cartItemIndex !== undefined) {
       let cartItem = this.state.cart[cartItemIndex];
@@ -294,7 +323,7 @@ class CheckoutPage extends Component {
       LocalStorageUtil.setCart(cart);
       await this.setState({
         loading: false,
-        orderSuccess: true
+        orderSuccess: true,
       });
     }
   }
@@ -302,10 +331,10 @@ class CheckoutPage extends Component {
   async updateProductCounter(cartId, productId, productCount) {
     this.setState({ loading: true });
     const cart = this.state.cart;
-    const cartItem = cart.find(c => c.id === cartId);
+    const cartItem = cart.find((c) => c.id === cartId);
     const product =
       cartItem && cartItem.products
-        ? cartItem.products.find(p => p.id === productId)
+        ? cartItem.products.find((p) => p.id === productId)
         : undefined;
     if (product) {
       product.quantity = productCount;
@@ -313,10 +342,13 @@ class CheckoutPage extends Component {
       this.props.setCart(cart);
       LocalStorageUtil.setCart(cart);
       const orderRequests = await this.getProductsFromCartItems();
-      if (orderRequests.length > 0) { 
-        await checkCartAvailability(orderRequests).then(response => {
-          this.setBookingAvailabilityMap(response.data.products);
-        }).catch(err => this.setState({loading: false}));
+      if (orderRequests.length > 0) {
+        await checkCartAvailability(orderRequests)
+          .then((response) => {
+            this.setBookingAvailabilityMap(response.data.products);
+            this.setState({ rootAvailability: response.data });
+          })
+          .catch((err) => this.setState({ loading: false }));
       } else {
         this.setBookingAvailabilityMap([]);
       }
@@ -329,14 +361,14 @@ class CheckoutPage extends Component {
   async updateAccessoryCounter(cartId, productId, accessoryId, accessoryCount) {
     this.setState({ loading: true });
     const cart = this.state.cart;
-    const cartItem = cart.find(c => c.id === cartId);
+    const cartItem = cart.find((c) => c.id === cartId);
     const product =
       cartItem && cartItem.products
-        ? cartItem.products.find(p => p.id === productId)
+        ? cartItem.products.find((p) => p.id === productId)
         : undefined;
     const accessory =
       product && product.accessories
-        ? product.accessories.find(a => a.id === accessoryId)
+        ? product.accessories.find((a) => a.id === accessoryId)
         : undefined;
 
     if (accessory) {
@@ -346,13 +378,16 @@ class CheckoutPage extends Component {
       LocalStorageUtil.setCart(cart);
       const orderRequests = await this.getProductsFromCartItems();
       if (orderRequests.length > 0) {
-        await checkCartAvailability(orderRequests).then(response => {
-          this.setBookingAvailabilityMap(response.data.products);
-        }).catch(err => this.setState({loading: false}));
+        await checkCartAvailability(orderRequests)
+          .then((response) => {
+            this.setBookingAvailabilityMap(response.data.products);
+            this.setState({ rootAvailability: response.data });
+          })
+          .catch((err) => this.setState({ loading: false }));
       } else {
         this.setBookingAvailabilityMap([]);
       }
-      
+
       this.setState({ loading: false });
     } else {
       this.setState({ loading: false });
@@ -367,7 +402,7 @@ class CheckoutPage extends Component {
         meta={{
           title: "checkout page | OCEAN PREMIUM",
           description:
-            "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts"
+            "The Leaders in Water Toys Rentals - Water Toys Sales for Megayachts",
         }}
       >
         {!this.state.loading &&
@@ -376,7 +411,7 @@ class CheckoutPage extends Component {
         this.props.cartReducer.items.length > 0 ? (
           <CheckoutBookingsOverview
             setConfigureAll={this.setConfigureAll.bind(this)}
-            setConfigureItem={cartItemIndex =>
+            setConfigureItem={(cartItemIndex) =>
               this.setConfigureItem(cartItemIndex)
             }
             updateCart={this.updateCart.bind(this)}
@@ -407,6 +442,7 @@ class CheckoutPage extends Component {
           this.state.cart[this.state.configureIndex] &&
           this.state.productBookingMap && (
             <CheckoutOverviewControl
+              availability={this.state.rootAvailability}
               cart={this.state.cart}
               configureIndex={this.state.configureIndex}
               configure={true}
@@ -435,7 +471,7 @@ class CheckoutPage extends Component {
             <p>Please check your Email inbox for the details</p>
             <a
               className="button-border fullwidth"
-              onClick={e => {
+              onClick={(e) => {
                 this.closeSuccessModal();
               }}
             >
@@ -459,7 +495,7 @@ class CheckoutPage extends Component {
             </p>
             <a
               className="button-border fullwidth"
-              onClick={e => {
+              onClick={(e) => {
                 this.closeFailedModal();
               }}
             >
@@ -475,7 +511,7 @@ class CheckoutPage extends Component {
 const mapStateToProps = ({ localSearchReducer, cartReducer }) => {
   return {
     localSearchReducer,
-    cartReducer
+    cartReducer,
   };
 };
 
@@ -483,5 +519,5 @@ export default connect(mapStateToProps, {
   addToCart,
   removeFromCart,
   emptyCart,
-  setCart
+  setCart,
 })(CheckoutPage);

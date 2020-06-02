@@ -25,7 +25,7 @@ class Tiles extends Component {
                     {this.props.subHeading ? (
                       <span className="sub-heading">
                         Search through hundreds of Water Toys and add them to
-                        your trip!
+                        your yacht charter!
                       </span>
                     ) : (
                       <div style={{ borderTop: "2px solid #D3D3D3" }}></div>

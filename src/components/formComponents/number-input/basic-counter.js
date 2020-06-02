@@ -23,6 +23,7 @@ class BasicCounter extends Component {
 
   render() {
     const { value } = this.state;
+    console.log(this.props.noZero);
     return (
       <div>
         <input id={this.props.id} name={this.props.name} type="hidden" value={value} onChange={e => this.setState({value: e.target.value})} />

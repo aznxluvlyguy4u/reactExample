@@ -16,7 +16,7 @@ class CheckoutBookingConfigure extends Component {
       modalIsOpen: false,
       cart: props.cart,
       cartItemIndex: props.configureIndex,
-      cartItem: props.cart[props.configureIndex]
+      cartItem: props.cart[props.configureIndex],
     };
 
     this.openModal = this.openModal.bind(this);
@@ -36,10 +36,10 @@ class CheckoutBookingConfigure extends Component {
         1
       );
     }
-    
+
     if (cart[this.state.cartItemIndex].products.length === 0) {
       this.props.backToBookings();
-      cart.splice(this.state.cartItemIndex,1);
+      cart.splice(this.state.cartItemIndex, 1);
 
       if (cart.length === 0) {
         LocalStorageUtil.setCart(null);
@@ -53,6 +53,12 @@ class CheckoutBookingConfigure extends Component {
       this.setState({ cart: cart, modalIsOpen: false, cartIndex: undefined });
       this.props.setCart(cart);
     }
+
+    setTimeout(() => {
+      if (!this.props.updateCartItem) return;
+      console.log("UPDATING...");
+      this.props.updateCartItem(cart[this.state.cartItemIndex]);
+    }, 10);
   }
 
   configureAll() {
@@ -90,14 +96,18 @@ class CheckoutBookingConfigure extends Component {
           {this.state.cartItem &&
             this.state.cartItem.products.map((product, pIndex) => (
               <div key={`${this.state.cartItem.id}_${product.id}`}>
-                <div className="row my-2">
-                  <div className="col-6">Product</div>
-                  <div className="col-2">Qty</div>
-                  <div className="col-2">Price</div>
-                  <div className="col-2">Availability</div>
-                </div>
+                {pIndex === 0 && (
+                  <div>
+                    <div className="row my-2">
+                      <div className="col-6">Product</div>
+                      <div className="col-2">Qty</div>
+                      <div className="col-2">Price</div>
+                      <div className="col-2">Availability</div>
+                    </div>
 
-                <div className="divider my-3"></div>
+                    <div className="divider my-3"></div>
+                  </div>
+                )}
 
                 <CheckoutBookingConfigureGridRow
                   rowItem={{
@@ -113,9 +123,9 @@ class CheckoutBookingConfigure extends Component {
                       this.props.productBookingMap,
                       this.props.cart[this.props.configureIndex].id,
                       product
-                    )
+                    ),
                   }}
-                  counterUpdate={value =>
+                  counterUpdate={(value) =>
                     this.props.updateProductCounter(
                       this.state.cartItem.id,
                       product.id,
@@ -143,7 +153,7 @@ class CheckoutBookingConfigure extends Component {
                               this.props.cart[this.props.configureIndex].id,
                               product
                             )
-                            .accessories.filter(x => x.id === accessory.id)
+                            .accessories.filter((x) => x.id === accessory.id)
                             .length > 0
                             ? cartUtils
                                 .getProductDetailsAndAvailability(
@@ -152,11 +162,11 @@ class CheckoutBookingConfigure extends Component {
                                   product
                                 )
                                 .accessories.filter(
-                                  x => x.id === accessory.id
+                                  (x) => x.id === accessory.id
                                 )[0]
-                            : undefined
+                            : undefined,
                       }}
-                      counterUpdate={value =>
+                      counterUpdate={(value) =>
                         this.props.updateAccessoryCounter(
                           this.state.cartItem.id,
                           product.id,
@@ -206,5 +216,5 @@ class CheckoutBookingConfigure extends Component {
   }
 }
 export default connect(null, {
-  setCart
+  setCart,
 })(CheckoutBookingConfigure);

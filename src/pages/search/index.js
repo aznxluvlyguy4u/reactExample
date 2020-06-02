@@ -317,22 +317,19 @@ class SearchPage extends Component {
   }
 
   render() {
-    const {
-      products,
-      recomendedProducts,
-      loading,
-      notFound,
-    } = this.state;
+    const { products, recomendedProducts, loading, notFound } = this.state;
 
     return (
       <Default nav="fixed" search meta={this.meta}>
         <SearchEdit onChange={this.mergeObj} />
         <div className="container">
           <div className="row">
-            <div className="col" style={{paddingLeft: 0, paddingRight: 0}}>
+            <div className="col" style={{ paddingLeft: 0, paddingRight: 0 }}>
               <h1 className="search-title">
                 You searched for{" "}
-                {this.props.keyword && <span className="uppercase">{this.props.keyword}</span>}{" "}
+                {this.props.keyword && (
+                  <span className="uppercase">{this.props.keyword}</span>
+                )}{" "}
                 {!this.props.keyword && <span className="uppercase">All</span>}
               </h1>
               <h3>
@@ -353,9 +350,22 @@ class SearchPage extends Component {
                   <div className="row products">
                     <ProductTiles products={products} search={true} />
                   </div>
+                  <h3>
+                    People who searched for{" "}
+                    {this.props.keyword && (
+                      <span className="uppercase">{this.props.keyword}</span>
+                    )}{" "}
+                    {!this.props.keyword && (
+                      <span className="uppercase">All</span>
+                    )}{" "}
+                    also added the following Water Toys to their trip
+                  </h3>
                   {recomendedProducts.length && (
                     <div style={{ position: "relative", top: "-65px" }}>
-                      <RecommendedProducts products={recomendedProducts} />
+                      <RecommendedProducts
+                        slideNumber={5}
+                        products={recomendedProducts}
+                      />
                     </div>
                   )}
 

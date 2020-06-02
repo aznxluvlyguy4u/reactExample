@@ -3,6 +3,7 @@ import { isEmpty } from "lodash";
 import Link from "next/link";
 import moment from "moment";
 import { connect } from "react-redux";
+import { withRouter } from "next/router";
 import rootReducer from "../../reducers/rootReducer";
 import LocalStorageUtil from "../../utils/localStorageUtil";
 import { checkCartAvailability } from "../../utils/rest/requests/cart";
@@ -42,6 +43,8 @@ class ProductBookingRentalDetails extends Component {
       accessories,
       rentalFee,
       product: null,
+      tCostsExpanded: false,
+      availability: null,
     };
   }
 
@@ -65,7 +68,7 @@ class ProductBookingRentalDetails extends Component {
             return;
 
           const product = response.data.products[0];
-          this.setState({ product });
+          this.setState({ product, availability: response.data });
         } catch (err) {
           console.log(err);
         }
@@ -104,12 +107,13 @@ class ProductBookingRentalDetails extends Component {
 
   render() {
     const product = this.state.product;
+    const availability = this.state.availability;
 
     return (
       <div>
         <div className="form rental-details">
           <h3 className="main-title">Rental Details</h3>
-          <div className="row">
+          <div className="row mb-2">
             <div className="col-4">
               <strong>Rental Period</strong>
             </div>
@@ -119,7 +123,7 @@ class ProductBookingRentalDetails extends Component {
                 : `${this.state.dayCount} day`}
             </div>
           </div>
-          <div className="row">
+          <div className="row mb-2">
             <div className="col-4">
               <strong>Pick-Up</strong>
               <br />
@@ -133,7 +137,7 @@ class ProductBookingRentalDetails extends Component {
               {this.state.cartItem.location.delivery.name}
             </div>
           </div>
-          <div className="row">
+          <div className="row mb-2">
             <div className="col-4">
               <strong>Drop-Off</strong>
               <br />
@@ -147,7 +151,7 @@ class ProductBookingRentalDetails extends Component {
               {this.state.cartItem.location.collection.name}
             </div>
           </div>
-          <div className="row">
+          <div className="row mb-2">
             <div className="col-4">
               <strong>Items</strong>
             </div>
@@ -166,53 +170,143 @@ class ProductBookingRentalDetails extends Component {
               ))}
             </div>
           </div>
-          <div className="row">
+          {/* <div className="row mb-2">
             <div className="col-4">
               <strong>Notes</strong>
             </div>
             <div className="col-8">
               A security deposit will be charged before picking up your order.
             </div>
-          </div>
-          <div className="row">
+          </div> */}
+          <div className="row mb-2">
             <div className="col-12">
               <hr className="page-divide" />
             </div>
           </div>
-          <div className="row">
+          <div className="row mt-2">
             <div className="col-8">Rental Fee</div>
-            {product  && <div className="col-4 text-right">€ {Number(product.totalCostProducts) + Number(product.totalCostAccessories)}</div>}
+            {product && (
+              <div className="col-4 text-right">
+                €{" "}
+                {(Number(product.totalCostProducts) +
+                  Number(product.totalCostAccessories)).toFixed(2)}
+              </div>
+            )}
           </div>
-          <div className="row">
-            <div className="col-8">
-              <img
-                src="/static/images/down.png"
-                style={{ width: "10px", height: "5px", marginRight: "5px" }}
-              />
+          <div className="row mt-2">
+            <div
+              className="col-8"
+              onClick={(e) => {
+                this.setState({
+                  tCostsExpanded: !this.state.tCostsExpanded,
+                });
+              }}
+            >
+              {!this.state.tCostsExpanded && (
+                <img
+                  src="/static/images/down.png"
+                  style={{
+                    width: "10px",
+                    height: "5px",
+                    marginRight: "5px",
+                  }}
+                />
+              )}
+              {this.state.tCostsExpanded && (
+                <img
+                  src="/static/images/up.png"
+                  style={{
+                    width: "10px",
+                    height: "5px",
+                    marginRight: "5px",
+                  }}
+                />
+              )}
               Transport Costs
             </div>
-            {!product && (
-              <div className="col-4 text-right">
-                Loading...
-              </div>
-            )}
+            {!product && <div className="col-4 text-right">Loading...</div>}
             {product && product.totalTransportCosts && (
               <div className="col-4 text-right">
-                € {product.totalTransportCosts}
+                € {Number(product.totalTransportCosts).toFixed(2)}
               </div>
             )}
           </div>
-          <div className="row">
+
+          {this.state.tCostsExpanded && (
+            <div>
+              <div className="row mt-2">
+                <div className="col-8">Delivery {"&"} Pickup</div>
+                {availability && (
+                  <div className="col-4 text-right">
+                    € {availability.totalDeliveryOnBoard}
+                  </div>
+                )}
+                {!availability && (
+                  <div className="col-4 text-right">
+                    € 0.00
+                  </div>
+                )}
+              </div>
+              <div className="row mt-2">
+                <div className="col-8">Shipping</div>
+                {availability && (
+                  <div className="col-4 text-right">
+                    € {availability.totalShippingCosts}
+                  </div>
+                )}
+                {!availability && (
+                  <div className="col-4 text-right">
+                    € 0.00
+                  </div>
+                )}
+              </div>
+              <div className="row mt-2">
+                <div className="col-8">Reallocation</div>
+                {availability && (
+                  <div className="col-4 text-right">
+                    € {availability.totalRelocationFees}
+                  </div>
+                )}
+                {!availability && (
+                  <div className="col-4 text-right">
+                    € 0.00
+                  </div>
+                )}
+              </div>
+              <div className="row mt-2">
+                <div className="col-8">Handeling</div>
+                {availability && (
+                  <div className="col-4 text-right">
+                    € {availability.totalHandlingCosts}
+                  </div>
+                )}
+                {!availability && (
+                  <div className="col-4 text-right">
+                    € 0.00
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="row mt-2">
             <div className="col-8">Total Costs</div>
             {product && product.totalTransportCosts && (
-              <div className="col-4 text-right">€ {Number(product.totalPrice) + Number(product.totalTransportCosts)}</div>
+              <div className="col-4 text-right">
+                €{" "}
+                {(Number(product.totalPrice) +
+                  Number(product.totalTransportCosts)).toFixed(2)}
+              </div>
             )}
           </div>
         </div>
 
         <br />
         <button
-          onClick={() => this.props.closeModal()}
+          onClick={() => {
+            this.props.closeModal();
+            this.props.router.push("/");
+          }}
           className="search-button-border"
         >
           Continue Shopping
@@ -244,4 +338,7 @@ const mapStateToProps = ({ rootReducer, localSearchReducer }) => {
   };
 };
 
-export default connect(mapStateToProps, {})(ProductBookingRentalDetails);
+export default connect(
+  mapStateToProps,
+  {}
+)(withRouter(ProductBookingRentalDetails));

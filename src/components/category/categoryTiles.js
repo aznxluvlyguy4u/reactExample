@@ -51,7 +51,7 @@ class CategoryTiles extends Component {
                 : "/static/images/flyboard.png"
             }
           />
-          <span style={{ paddingLeft: 22, paddingRight: 40 }}>
+          <span className="text-center">
             {item.name && this.toUpperCase(item.name)}
           </span>
         </div>
@@ -93,13 +93,13 @@ class CategoryTiles extends Component {
               <div className="slider-container">
                 <Carousel
                   className="category-tile"
-                  autoplay
+                  //autoplay
                   autoplayInterval={2000}
-                  //cellSpacing={5}
+                  cellSpacing={10}
                   dragging
                   slidesToScroll={1}
                   slidesToShow={this.slidesToShow()}
-                  wrapAround
+                  //wrapAround
                   renderCenterLeftControls={({ previousSlide }) => (
                     <div className="left-arrow">
                       {/* <img

@@ -117,9 +117,9 @@ class ProductGroupPage extends Component {
             }}
           ></div>
           <div className="container">
-            <div className="category-text">
+            <div className="category-text" style={{width: "65%"}}>
               <h1 style={{ color: "white" }}>
-                {(productGroup && productGroup.name) || slug}
+                {(productGroup && productGroup.name) || slug} Rentals
               </h1>
               <h3></h3>
             </div>
@@ -147,7 +147,7 @@ class ProductGroupPage extends Component {
           <div className="container">
             <div className="products-container">
               <h1 className="product-group-heading">
-                {(productGroup && productGroup.name) || slug} Rentals
+                Rent a {(productGroup && productGroup.name) || slug}
               </h1>
               <div className="row">
                 <div className="col-sm-12 col-md-6 product-group-text">

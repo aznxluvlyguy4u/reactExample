@@ -128,12 +128,17 @@ export default class CartUtils {
   }
 
   getItemCount(cartItem) {
-    const products = cartItem.products.length;
-    let accessories = 0;
+    //const products = cartItem.products.length;
+    let count = 0;
     cartItem.products.map(product => {
-      accessories += product.accessories.length;
+      count += product.quantity;
+      product.accessories.forEach(acc => {
+        count += acc.quantity;
+      })
+      //accessories += product.accessories.length;
     });
-    return products + accessories;
+    //return products + accessories;
+    return count;
   }
 
   cartItemsAllAvailable(cartItem, availability) {
