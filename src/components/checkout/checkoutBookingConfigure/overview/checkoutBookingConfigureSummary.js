@@ -61,12 +61,12 @@ class CheckoutBookingConfigureSummary extends Component {
               {this.state.cartUtils.getItemCount(this.props.cartItem)}
             </div>
           </div>
-          {/* <div className="row mb-3">
+          <div className="row mb-3">
             <div className="col-5 rowHead">Notes</div>
             <div className="col-7">
-              A security deposit will be charged before picking up your order.
+              Security deposit will be charged before delivery.
             </div>
-          </div> */}
+          </div>
           {/* <div
             className={
               this.state.cartUtils.cartItemsAllAvailable(
@@ -92,8 +92,7 @@ class CheckoutBookingConfigureSummary extends Component {
             <div className="col-8">Rental Fee</div>
             <div className="col-4">
               €{" "}
-              {this.state.cartUtils.getCartItemTotal(
-                this.props.cartItem,
+              {this.state.cartUtils.getCartItemRentalFee(
                 this.props.productBookingMap.find(
                   (p) => p.id === this.props.cartItem.id
                 )

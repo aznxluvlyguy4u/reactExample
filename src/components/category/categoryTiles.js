@@ -101,21 +101,23 @@ class CategoryTiles extends Component {
                   slidesToShow={this.slidesToShow()}
                   //wrapAround
                   renderCenterLeftControls={({ previousSlide }) => (
-                    <div className="left-arrow">
-                      {/* <img
+                    <div style={{paddingLeft: 20, cursor: "pointer"}}>
+                      <img
                         src="/static/images/angle-left.png"
                         className="icon"
+                        style={{maxHeight: 25}}
                         onClick={previousSlide}
-                      /> */}
+                      />
                     </div>
                   )}
                   renderCenterRightControls={({ nextSlide }) => (
-                    <div className="right-arrow">
-                      {/* <img
+                    <div style={{paddingRight: 20, cursor: "pointer"}}>
+                      <img
                         src="/static/images/angle-right.png"
                         className="icon"
+                        style={{maxHeight: 25}}
                         onClick={nextSlide}
-                      /> */}
+                      />
                     </div>
                   )}
                   renderBottomCenterControls={({ currentSlide }) =>

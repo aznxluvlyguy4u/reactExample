@@ -269,8 +269,7 @@ class CheckoutPayForm extends Component {
                           <td>Rental Fee</td>
                           <td className="text-right">
                             €{" "}
-                            {cartUtils.getCartItemTotal(
-                              this.props.cartItem,
+                            {cartUtils.getCartItemRentalFee(
                               this.props.productBookingMap
                             )}
                           </td>

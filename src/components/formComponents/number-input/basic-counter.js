@@ -23,18 +23,18 @@ class BasicCounter extends Component {
 
   render() {
     const { value } = this.state;
-    console.log(this.props.noZero);
+    
     return (
       <div>
         <input id={this.props.id} name={this.props.name} type="hidden" value={value} onChange={e => this.setState({value: e.target.value})} />
         <div className="counter">
-          <div onClick={() => this.changeValue(-1)} className="plus-minus">
+          <button disabled={this.props.noZero && value === 1} onClick={() => this.changeValue(-1)} className={`plus-minus ${(this.props.noZero && value === 1) ? 'disabled': ''}`}>
             -
-          </div>
+          </button>
           <div className="value">{value}</div>
-          <div onClick={() => this.changeValue(1)} className="plus-minus">
+          <button onClick={() => this.changeValue(1)} className="plus-minus">
             +
-          </div>
+          </button>
         </div>
       </div>
     );

@@ -214,12 +214,12 @@ class CheckoutPage extends Component {
     }
   }
 
-  async updateCart(cart) {
+  async updateCart(cart, refresh) {
     await this.setState({ cart });
     this.props.setCart(cart);
     LocalStorageUtil.setCart(cart);
 
-    console.log(cart, this.state.cart);
+    if (!refresh) return;
 
     if (this.state.cart && this.state.cart.length > 0) {
       this.setState({ loading: true });
@@ -414,7 +414,10 @@ class CheckoutPage extends Component {
             setConfigureItem={(cartItemIndex) =>
               this.setConfigureItem(cartItemIndex)
             }
-            updateCart={this.updateCart.bind(this)}
+            updateCart={async (cart, refresh) => {
+              console.log("Overview update cart");
+              await this.updateCart(cart, refresh);
+            }}
             cart={this.state.cart}
             productBookingMap={this.state.productBookingMap}
           />
@@ -447,7 +450,10 @@ class CheckoutPage extends Component {
               configureIndex={this.state.configureIndex}
               configure={true}
               backToBookings={this.backToBookings.bind(this)}
-              updateCart={this.updateCart.bind(this)}
+              updateCart={async (cart, refresh) => {
+                console.log("Control update cart");
+                await this.updateCart(cart, refresh);
+              }}
               completeBooking={this.completeBooking.bind(this)}
               updateProductCounter={this.updateProductCounter.bind(this)}
               updateAccessoryCounter={this.updateAccessoryCounter.bind(this)}

@@ -15,6 +15,7 @@ class CheckoutBookingConfigure extends Component {
     this.state = {
       modalIsOpen: false,
       cart: props.cart,
+      cartIndex: { pIndex: null, aIndex: null },
       cartItemIndex: props.configureIndex,
       cartItem: props.cart[props.configureIndex],
     };
@@ -26,7 +27,17 @@ class CheckoutBookingConfigure extends Component {
 
   removeFromCartAndClose() {
     let cart = this.state.cart;
-    if (this.state.cartIndex.aIndex) {
+    console.log(this.state.cartIndex);
+    if (this.state.cartIndex.aIndex !== null) {
+      console.log("Removing accessory: ");
+      console.log(
+        cart[this.state.cartItemIndex].products[this.state.cartIndex.pIndex]
+      );
+      console.log(
+        cart[this.state.cartItemIndex].products[this.state.cartIndex.pIndex]
+          .accessories
+      );
+
       cart[this.state.cartItemIndex].products[
         this.state.cartIndex.pIndex
       ].accessories.splice(this.state.cartIndex.aIndex, 1);
@@ -133,7 +144,7 @@ class CheckoutBookingConfigure extends Component {
                     )
                   }
                   openModalAndSetItem={() =>
-                    this.openModalAndSetItem({ pIndex })
+                    this.openModalAndSetItem({ pIndex, aIndex: null })
                   }
                 />
                 <div className="divider my-3" />

@@ -124,8 +124,26 @@ class RecommendedProducts extends Component {
                   slidesToScroll={1}
                   slidesToShow={this.slidesToShow()}
                   wrapAround
-                  renderCenterLeftControls={({ previousSlide }) => <div></div>}
-                  renderCenterRightControls={({ nextSlide }) => <div></div>}
+                  renderCenterLeftControls={({ previousSlide }) => (
+                    <div style={{paddingLeft: 20, cursor: "pointer"}}>
+                      <img
+                        src="/static/images/angle-left.png"
+                        className="icon"
+                        style={{maxHeight: 25}}
+                        onClick={previousSlide}
+                      />
+                    </div>
+                  )}
+                  renderCenterRightControls={({ nextSlide }) => (
+                    <div style={{paddingRight: 20, cursor: "pointer"}}>
+                      <img
+                        src="/static/images/angle-right.png"
+                        className="icon"
+                        style={{maxHeight: 25}}
+                        onClick={nextSlide}
+                      />
+                    </div>
+                  )}
                   renderBottomCenterControls={({ currentSlide }) =>
                     (currentSlide = null)
                   }

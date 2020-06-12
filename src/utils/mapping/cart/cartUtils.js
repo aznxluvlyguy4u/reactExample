@@ -79,8 +79,21 @@ export default class CartUtils {
     return total.toFixed(2);
   }
 
+  getCartItemRentalFee(availability) {
+    let total = 0;
+
+    if (!availability) return total.toFixed(2);
+    if (!availability.availability) return total.toFixed(2);
+    if (availability.availability.length === 0) return total.toFixed(2);
+
+    availability.availability.map(av => {
+      total += parseFloat(av.totalCostProducts) + parseFloat(av.totalCostAccessories)
+    });
+
+    return total.toFixed(2);
+  }
+
   getCartItemTotal(cartItem, availability) {
-    //const days = this.dayCount(cartItem);
     let total = 0;
 
     if (!availability) return total.toFixed(2);
@@ -90,23 +103,6 @@ export default class CartUtils {
     availability.availability.map(av => {
       total += parseFloat(av.totalPrice) + parseFloat(av.totalTransportCosts)
     });
-    /*
-    cartItem.products.map(product => {
-      total += this.getProductTotal(
-        days,
-        product.quantity,
-        availability
-          ? availability.availability.find(p => p.id === product.id).rates
-          : product.rates
-      );
-      total += this.getAccessoriesTotal(
-        days,
-        availability
-          ? availability.availability.find(p => p.id === product.id).accessories
-          : product.accessories
-      );
-    });
-    */
 
     return total.toFixed(2);
   }

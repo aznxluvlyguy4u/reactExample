@@ -154,7 +154,14 @@
   }
 
   .plus-minus {
-    color: $grey;
+    //color: $grey;
+    background: transparent;
+    border: unset;
+  }
+
+  .plus-minus.disabled {
+    display: hidden !important;
+    visibility: hidden;
   }
 
   .divider {

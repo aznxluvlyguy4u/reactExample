@@ -1,8 +1,8 @@
 export default class SelectboxLocation {
   constructor(location) {
-    if (location.cityArea) {
+    if (location.cruisingArea) {
       this.id = location.id;
-      this.label = `${location.cityArea} - ${location.name}`;
+      this.label = `${location.cruisingArea} - ${location.name}`;
       this.name = location.name;
       this.value = {
         id: location.id,

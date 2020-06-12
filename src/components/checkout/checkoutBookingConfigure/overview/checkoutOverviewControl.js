@@ -54,14 +54,14 @@ class CheckoutOverviewControl extends Component {
     }
   }
 
-  updateCartItem(cartItemIndex, cartItem) {
+  updateCartItem(cartItemIndex, cartItem, refresh) {
     let cart = this.state.cart;
     if (cartItem) {
       cart[cartItemIndex] = cartItem;
     }
 
     this.setState({ cart });
-    this.props.updateCart(cart);
+    this.props.updateCart(cart, refresh);
   }
 
   setCheckoutState(state) {
@@ -176,7 +176,7 @@ class CheckoutOverviewControl extends Component {
                       productBookingMap={this.props.productBookingMap}
                       backToBookings={this.props.backToBookings}
                       updateCartItem={(cartItem) => {
-                        this.updateCartItem(this.state.cartItemIndex, cartItem);
+                        this.updateCartItem(this.state.cartItemIndex, cartItem, true);
                       }}
                     />
                   )}
@@ -185,7 +185,7 @@ class CheckoutOverviewControl extends Component {
                       cartItem={this.state.cartItem}
                       displayHeading={true}
                       updateCartItem={(cartItem) =>
-                        this.updateCartItem(this.state.cartItemIndex, cartItem)
+                        this.updateCartItem(this.state.cartItemIndex, cartItem, false)
                       }
                       checkoutState={(state) => this.setCheckoutState(state)}
                       checkoutControlState={this.state.checkoutState}

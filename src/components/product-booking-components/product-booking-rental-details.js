@@ -170,14 +170,14 @@ class ProductBookingRentalDetails extends Component {
               ))}
             </div>
           </div>
-          {/* <div className="row mb-2">
+          <div className="row mb-2">
             <div className="col-4">
               <strong>Notes</strong>
             </div>
             <div className="col-8">
-              A security deposit will be charged before picking up your order.
+              Security deposit will be charged before delivery.
             </div>
-          </div> */}
+          </div>
           <div className="row mb-2">
             <div className="col-12">
               <hr className="page-divide" />
@@ -188,8 +188,10 @@ class ProductBookingRentalDetails extends Component {
             {product && (
               <div className="col-4 text-right">
                 €{" "}
-                {(Number(product.totalCostProducts) +
-                  Number(product.totalCostAccessories)).toFixed(2)}
+                {(
+                  Number(product.totalCostProducts) +
+                  Number(product.totalCostAccessories)
+                ).toFixed(2)}
               </div>
             )}
           </div>
@@ -242,9 +244,7 @@ class ProductBookingRentalDetails extends Component {
                   </div>
                 )}
                 {!availability && (
-                  <div className="col-4 text-right">
-                    € 0.00
-                  </div>
+                  <div className="col-4 text-right">€ 0.00</div>
                 )}
               </div>
               <div className="row mt-2">
@@ -255,9 +255,7 @@ class ProductBookingRentalDetails extends Component {
                   </div>
                 )}
                 {!availability && (
-                  <div className="col-4 text-right">
-                    € 0.00
-                  </div>
+                  <div className="col-4 text-right">€ 0.00</div>
                 )}
               </div>
               <div className="row mt-2">
@@ -268,9 +266,7 @@ class ProductBookingRentalDetails extends Component {
                   </div>
                 )}
                 {!availability && (
-                  <div className="col-4 text-right">
-                    € 0.00
-                  </div>
+                  <div className="col-4 text-right">€ 0.00</div>
                 )}
               </div>
               <div className="row mt-2">
@@ -281,9 +277,7 @@ class ProductBookingRentalDetails extends Component {
                   </div>
                 )}
                 {!availability && (
-                  <div className="col-4 text-right">
-                    € 0.00
-                  </div>
+                  <div className="col-4 text-right">€ 0.00</div>
                 )}
               </div>
             </div>
@@ -294,8 +288,10 @@ class ProductBookingRentalDetails extends Component {
             {product && product.totalTransportCosts && (
               <div className="col-4 text-right">
                 €{" "}
-                {(Number(product.totalPrice) +
-                  Number(product.totalTransportCosts)).toFixed(2)}
+                {(
+                  Number(product.totalPrice) +
+                  Number(product.totalTransportCosts)
+                ).toFixed(2)}
               </div>
             )}
           </div>

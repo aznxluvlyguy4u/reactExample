@@ -241,7 +241,7 @@ class ProductGroupPage extends Component {
           <div className="page-wrapper">
             <div style={{ textAlign: "center", marginTop: "150px" }}>
               <h1>{error}</h1>
-              This is temporary until backend is up to date.
+              There are no products available
             </div>
           </div>
         </Default>
