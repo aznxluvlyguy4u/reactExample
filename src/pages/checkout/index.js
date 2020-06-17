@@ -55,7 +55,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) {
         await checkCartAvailability(orderRequests)
           .then((response) => {
-            this.setBookingAvailabilityMap(response.data.products);
+            this.setBookingAvailabilityMap(response.data.products, response.data);
             this.setState({ rootAvailability: response.data });
           })
           .catch((err) => this.setState({ loading: false }));
@@ -118,7 +118,7 @@ class CheckoutPage extends Component {
     return orderRequests;
   }
 
-  async setBookingAvailabilityMap(productAvailability) {
+  async setBookingAvailabilityMap(productAvailability, rootAvailability) {
     const productBookingMap = [];
     this.state.cart.map((booking) => {
       if (!booking) return;
@@ -156,6 +156,7 @@ class CheckoutPage extends Component {
             productBookingMap.push({
               id: booking.id,
               availability: [productAvailability[availabilityIndex]],
+              rootAvailability
             });
           }
         }
@@ -227,7 +228,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) {
         await checkCartAvailability(orderRequests)
           .then((response) => {
-            this.setBookingAvailabilityMap(response.data.products);
+            this.setBookingAvailabilityMap(response.data.products, response.data);
             this.setState({ rootAvailability: response.data });
           })
           .catch((err) => this.setState({ loading: false }));
@@ -345,7 +346,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) {
         await checkCartAvailability(orderRequests)
           .then((response) => {
-            this.setBookingAvailabilityMap(response.data.products);
+            this.setBookingAvailabilityMap(response.data.products, response.data);
             this.setState({ rootAvailability: response.data });
           })
           .catch((err) => this.setState({ loading: false }));
@@ -380,7 +381,7 @@ class CheckoutPage extends Component {
       if (orderRequests.length > 0) {
         await checkCartAvailability(orderRequests)
           .then((response) => {
-            this.setBookingAvailabilityMap(response.data.products);
+            this.setBookingAvailabilityMap(response.data.products, response.data);
             this.setState({ rootAvailability: response.data });
           })
           .catch((err) => this.setState({ loading: false }));

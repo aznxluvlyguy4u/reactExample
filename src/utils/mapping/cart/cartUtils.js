@@ -68,6 +68,10 @@ export default class CartUtils {
   getCartItemTransportCosts(availability) {
     let total = 0;
 
+    if (availability.rootAvailability) {
+      return parseFloat(availability.rootAvailability.totalTransportCosts).toFixed(2);
+    }
+
     if (!availability) return total.toFixed(2);
     if (!availability.availability) return total.toFixed(2);
     if (availability.availability.length === 0) return total.toFixed(2);
@@ -82,12 +86,16 @@ export default class CartUtils {
   getCartItemRentalFee(availability) {
     let total = 0;
 
+    if (availability.rootAvailability) {
+      return parseFloat(availability.rootAvailability.totalPrice).toFixed(2);
+    }
+
     if (!availability) return total.toFixed(2);
     if (!availability.availability) return total.toFixed(2);
     if (availability.availability.length === 0) return total.toFixed(2);
 
     availability.availability.map(av => {
-      total += parseFloat(av.totalCostProducts) + parseFloat(av.totalCostAccessories)
+      total += parseFloat(av.totalPrice)
     });
 
     return total.toFixed(2);
@@ -95,6 +103,10 @@ export default class CartUtils {
 
   getCartItemTotal(cartItem, availability) {
     let total = 0;
+
+    if (availability.rootAvailability) {
+      return parseFloat(availability.rootAvailability.grandTotalPrice).toFixed(2);
+    }
 
     if (!availability) return total.toFixed(2);
     if (!availability.availability) return total.toFixed(2);

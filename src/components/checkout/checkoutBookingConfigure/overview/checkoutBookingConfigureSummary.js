@@ -202,6 +202,7 @@ class CheckoutBookingConfigureSummary extends Component {
             <div className="col-8 rowHead">Total Costs</div>
             <div className="col-4">
               €{" "}
+              {/* {availability.grandTotalPrice} */}
               {this.state.cartUtils.getCartItemTotal(
                 this.props.cartItem,
                 this.props.productBookingMap.find(
