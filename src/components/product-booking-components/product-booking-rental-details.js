@@ -226,10 +226,10 @@ class ProductBookingRentalDetails extends Component {
               )}
               Transport Costs
             </div>
-            {!product && <div className="col-4 text-right">Loading...</div>}
-            {product && product.totalTransportCosts && (
+            {!availability && <div className="col-4 text-right">Loading...</div>}
+            {availability && availability.totalTransportCosts && (
               <div className="col-4 text-right">
-                € {Number(product.totalTransportCosts).toFixed(2)}
+                € {Number(availability.totalTransportCosts).toFixed(2)}
               </div>
             )}
           </div>

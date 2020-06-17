@@ -113,9 +113,10 @@ class ProductTiles extends Component {
                                   }}
                                   alt={item.name}
                                   src={
-                                    item.images[0].url != "ui/product.png"
-                                      ? item.images[0].url
-                                      : "/static/images/flyboard.png"
+                                    item.imageThumbnail ? item.imageThumbnail.url : "/static/images/flyboard.png" 
+                                    // item.images[0].url != "ui/product.png"
+                                    //   ? item.images[0].url
+                                    //   : "/static/images/flyboard.png"
                                   }
                                 />
                               </div>

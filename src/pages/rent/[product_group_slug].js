@@ -65,10 +65,19 @@ class ProductGroupPage extends Component {
       // TODO: Hacky, but requested by client
       let slug = router.query.product_group_slug.replace("-rental", "");
       const response = await getByGroupSlug(slug);
+
+      if (response.data.length === 0) {
+        this.setState({
+          error: "No Products Found!",
+        });
+        return;
+      }
+
       this.setState({
         products: response.data,
       });
     } catch (error) {
+      console.log(error);
       //handleGeneralError(error);
       this.setState({
         error: "No Products Found!",
@@ -119,7 +128,7 @@ class ProductGroupPage extends Component {
           <div className="container">
             <div className="category-text" style={{width: "65%"}}>
               <h1 style={{ color: "white" }}>
-                {(productGroup && productGroup.name) || slug} Rentals
+                {(productGroup && productGroup.displayName) || slug} Rentals
               </h1>
               <h3></h3>
             </div>
@@ -147,7 +156,7 @@ class ProductGroupPage extends Component {
           <div className="container">
             <div className="products-container">
               <h1 className="product-group-heading">
-                Rent a {(productGroup && productGroup.name) || slug}
+                Rent a {(productGroup && productGroup.displayName) || slug}
               </h1>
               <div className="row">
                 <div className="col-sm-12 col-md-6 product-group-text">

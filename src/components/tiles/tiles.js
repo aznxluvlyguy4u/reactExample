@@ -46,14 +46,14 @@ class Tiles extends Component {
                             >
                               <div className="product">
                                 <img
-                                  alt={item.name}
+                                  alt={item.displayName}
                                   src={
                                     item.imageThumbnail
                                       ? item.imageThumbnail.url
                                       : "/static/images/flyboard.png"
                                   }
                                 />
-                                <h4>{item.name}</h4>
+                                <h4>{item.displayName}</h4>
                               </div>
                             </a>
                           </div>

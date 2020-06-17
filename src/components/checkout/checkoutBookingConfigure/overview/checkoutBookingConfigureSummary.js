@@ -133,11 +133,12 @@ class CheckoutBookingConfigureSummary extends Component {
             <div className="col-4">
               €{" "}
               {
-                this.state.cartUtils.getCartItemTransportCosts(
-                  this.props.productBookingMap.find(
-                    (p) => p.id === this.props.cartItem.id
-                  )
-                ) /*availability.totalTransportCosts*/
+                // this.state.cartUtils.getCartItemTransportCosts(
+                //   this.props.productBookingMap.find(
+                //     (p) => p.id === this.props.cartItem.id
+                //   )
+                // ) 
+                parseFloat(availability.totalTransportCosts || 0).toFixed(2)
               }
             </div>
           </div>
