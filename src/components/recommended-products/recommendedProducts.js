@@ -61,7 +61,7 @@ class RecommendedProducts extends Component {
                 zIndex: 10,
                 borderRadius: 5,
               }}
-              alt={item.name}
+              alt={item.displayName}
               src={
                 item.imageThumbnail
                   ? item.imageThumbnail.url
@@ -74,7 +74,7 @@ class RecommendedProducts extends Component {
                 textAlign: 'left'
               }}
             >
-              {item.name}
+              {item.displayName}
             </h4>
           </div>
         </a>
