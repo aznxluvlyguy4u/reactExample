@@ -185,13 +185,9 @@ class ProductBookingRentalDetails extends Component {
           </div>
           <div className="row mt-2">
             <div className="col-8">Rental Fee</div>
-            {product && (
+            {availability && (
               <div className="col-4 text-right">
-                €{" "}
-                {(
-                  Number(product.totalCostProducts) +
-                  Number(product.totalCostAccessories)
-                ).toFixed(2)}
+                € {Number(availability.totalPrice).toFixed(2)}
               </div>
             )}
           </div>
@@ -226,7 +222,9 @@ class ProductBookingRentalDetails extends Component {
               )}
               Transport Costs
             </div>
-            {!availability && <div className="col-4 text-right">Loading...</div>}
+            {!availability && (
+              <div className="col-4 text-right">Loading...</div>
+            )}
             {availability && availability.totalTransportCosts && (
               <div className="col-4 text-right">
                 € {Number(availability.totalTransportCosts).toFixed(2)}
@@ -285,13 +283,9 @@ class ProductBookingRentalDetails extends Component {
 
           <div className="row mt-2">
             <div className="col-8">Total Costs</div>
-            {product && product.totalTransportCosts && (
+            {availability && availability.grandTotalPrice && (
               <div className="col-4 text-right">
-                €{" "}
-                {(
-                  Number(product.totalPrice) +
-                  Number(product.totalTransportCosts)
-                ).toFixed(2)}
+                € {Number(availability.grandTotalPrice).toFixed(2)}
               </div>
             )}
           </div>
